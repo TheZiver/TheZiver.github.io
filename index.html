@@ -25,42 +25,48 @@
             border-radius: 5px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             text-align: left;
+            overflow: hidden; /* Needed for text animation to hide overflow */
+            position: relative; /* Needed for text animation positioning */
+        }
+
+        h1, h2, h3 {
+            font-weight: bold;
+            text-align: left;
+            animation: colorChange 0.5s infinite alternate; /* Color change animation */
         }
 
         h1 {
-            font-family: 'Roboto', sans-serif; /* Explicit Roboto font */
             font-size: 2.8em;
-            color: #00bcd4;
-            text-shadow: none;
             letter-spacing: -0.02em;
             margin-bottom: 35px;
-            text-align: left;
-            font-weight: bold;
         }
 
         h2 {
-            font-family: 'Roboto', sans-serif; /* Explicit Roboto font */
             font-size: 2em;
-            color: #00bcd4;
-            text-shadow: none;
             margin-top: 50px;
             margin-bottom: 25px;
-            text-align: left;
-            font-weight: bold;
         }
 
         h3 {
-            font-family: 'Roboto', sans-serif; /* Explicit Roboto font */
             font-size: 1.4em;
-            color: #bbbbbb;
-            text-shadow: none;
             margin-top: 35px;
             margin-bottom: 15px;
-            font-weight: bold;
+            color: #bbbbbb; /* Keep h3 color as grey, override colorChange for specific color */
+        }
+        h3 {
+            color: #bbbbbb !important; /* Override colorChange for h3 specifically */
+        }
+
+
+        @keyframes colorChange {
+            0% { color: #00bcd4; }
+            25% { color: #ff4081; }
+            50% { color: #4caf50; }
+            75% { color: #ffc107; }
+            100% { color: #00bcd4; }
         }
 
         p, ul, ol {
-            font-family: 'Roboto', sans-serif; /* Explicit Roboto font */
             font-size: 1.15em;
             line-height: 1.8;
             margin-bottom: 25px;
@@ -76,7 +82,6 @@
         }
 
         a {
-            font-family: 'Roboto', sans-serif; /* Explicit Roboto font */
             color: #4dd0e1;
             text-decoration: underline;
             transition: color 0.2s ease;
@@ -87,10 +92,8 @@
         }
 
         .warning {
-            font-family: 'Roboto', sans-serif; /* Explicit Roboto font */
             color: #ffc107;
             font-weight: bold;
-            text-shadow: none;
         }
 
         hr {
@@ -99,20 +102,57 @@
             margin: 50px 0;
         }
 
-        p[style*="W O W"] {
-            font-family: 'Roboto', sans-serif; /* Explicit Roboto font */
-            text-align: center;
-            font-size: 1.3em;
+        .fish-animation {
+            white-space: nowrap;
+            font-size: 4em;
+            color: #4dd0e1;
+            display: inline-block;
+            animation: fishSwim 15s linear infinite;
+            padding-left: 100%;
             margin-bottom: 40px;
-            color: #9e9e9e;
-            font-weight: normal;
         }
+
+        @keyframes fishSwim {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Animation for color change */
+        .fish-symbol {
+            display: inline-block;
+            animation: colorChange 5s infinite alternate;
+        }
+
+        /* Different animation delay for each symbol to create wave effect */
+        .fish-symbol:nth-child(5n+1) { animation-delay: 0s; }
+        .fish-symbol:nth-child(5n+2) { animation-delay: 0.2s; }
+        .fish-symbol:nth-child(5n+3) { animation-delay: 0.4s; }
+        .fish-symbol:nth-child(5n+4) { animation-delay: 0.6s; }
+        .fish-symbol:nth-child(5n+5) { animation-delay: 0.8s; }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>FISH <>< COMMUNITY</h1>
-    <p style="text-align: center; font-size: 1.4em; margin-bottom: 50px; text-align:center; color:#9e9e9e;">W O W</p>
+    
+    <div class="fish-animation">
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+    </div>
 
     <hr>
 
@@ -149,12 +189,12 @@
     <hr>
 
     <h2>DAILY VRCHAT EVENT</h2>
-    <h3># **DAILY VRCHAT** :dvrc:</h3>
+    <h3>DAILY VRCHAT</h3>
     <p>Public event that lets people freely express themselves without many restrictions. People are given the freedom to be as chaotic, offensive, and loud as they wish to be.</p>
     <p>The main objective of <b>DAILY VRCHAT</b> is to maintain a public <b><><</b> group instance for <b>2 hours</b>, inviting anyone from the internet to join. Join the <b><><</b> group here: <a href="https://vrc.group/FISH.9566">https://vrc.group/FISH.9566</a></p>
     <p>After the event, everyone will be kicked from the instance</p>
 
-    <h3># **THERE ARE 2 RULES!**</h3>
+    <h3>THERE ARE 2 RULES!</h3>
     <ul>
         <li>1) NSFW avatars are not allowed.</li>
         <li>2) Crasher avatars are not allowed.</li>
@@ -162,9 +202,9 @@
     <p>If you break these rules you will be kicked or banned from joining <b>DAILY VRCHAT</b></p>
     <p>Check the Discord Events channel for more details. A link to the world instance will be posted to #🔥instance-link at the start of the event.</p>
 
-    <h3># :warning:<b>WARNING!</b> :warning:</h3>
-    <p class="warning">This daily event is not your safe space. Moderators won’t assist you with any hateful, racist, or homophobic behavior. And will only enforce 2 rules, If you get easily emotionally distressed <b>DO NOT GO TO THIS EVENT</b></p>
-    <p>VRChat’s Terms of Service and Guidelines still apply, and violations could result in your account being banned.</p>
+    <h3>WARNING!</h3>
+    <p class="warning">This daily event is not your safe space. Moderators won't assist you with any hateful, racist, or homophobic behavior. And will only enforce 2 rules, If you get easily emotionally distressed <b>DO NOT GO TO THIS EVENT</b></p>
+    <p>VRChat's Terms of Service and Guidelines still apply, and violations could result in your account being banned.</p>
 
     <hr>
 
@@ -228,7 +268,7 @@
     <p>This store sells 3d models like fish, eggs and avatar assets like:</p>
 
     <ul>
-        <li><b>The LUXURY CUBE</b> is a knee accessory made out of 192 polygons, 4 bones, 19 blendshapes, gold matcap, fish scale normal map. It also has the 69 vertice in the middle that has no purpose :D</li>
+        <li><b>The LUXURY CUBE</b> is a knee accessory made out of 192 polygons, 4 bones, 19 blendshapes, gold matcap, fish scale normal map. It also has the 69 vertex in the middle that has no purpose :D</li>
         <li><b>The FISHING FLAG</b> is a VRChat avatar tool designed for cheating game worlds and exploring inaccessible areas.</li>
         <li><b>The LUXURY PIPE</b> has 816 polygons, 8 bones, 2 shape keys, gold matcap, fish scale normal map and sound effects</li>
     </ul>
@@ -266,7 +306,21 @@
     </ol>
 
     <hr>
-    <p style="text-align: center; margin-top: 50px; font-size: 0.9em; color: #9e9e9e;"><><</p>
+    
+    <div class="fish-animation">
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+    </div>
 </div>
 </body>
 </html>
