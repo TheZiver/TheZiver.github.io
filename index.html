@@ -1,60 +1,99 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>FISH <>< COMMUNITY - Old School Style</title>
+<title>FISH <>< - VAPORWAVE</title>
 <style>
 body {
-    font-family: monospace;
-    background-color: #f0f0f0;
-    color: #000080; /* Dark Blue */
-    margin: 20px;
+    font-family: sans-serif;
+    background: linear-gradient(45deg, #ff69b4, #87cefa); /* Pink to Light Blue Gradient */
+    color: #f0f8ff; /* Alice Blue - very light almost white blue */
+    margin: 0;
+    overflow: hidden; /* Prevent scrollbars for background animation */
+    animation: gradientBG 15s linear infinite; /* Background Gradient Animation */
 }
-h1 {
-    color: #800000; /* Maroon */
-    text-align: center;
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
-p {
-    line-height: 1.6;
-}
-.button-link {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #cccccc; /* Light Gray */
-    color: #000000; /* Black */
-    text-decoration: none;
-    border: 1px solid #888888; /* Gray Border */
-    margin: 5px;
-    border-radius: 5px;
-}
-.button-link:hover {
-    background-color: #bbbbbb; /* Slightly Darker Gray */
-}
+
 .container {
     width: 80%;
-    margin: auto;
-    padding: 20px;
-    background-color: #ffffff; /* White Background for Content */
-    border: 1px solid #aaaaaa; /* Light Gray Border */
-    border-radius: 10px;
+    margin: 50px auto;
+    padding: 40px;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black for content box */
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.8); /* Pink glow box shadow */
+    text-align: center;
+}
+
+h1 {
+    font-size: 3em;
+    color: #b0e0e6; /* Powder Blue */
+    text-shadow: 2px 2px 4px #ff69b4; /* Pink text shadow */
+    letter-spacing: 0.1em;
+    margin-bottom: 30px;
+    animation: neonGlow 2s ease-in-out infinite alternate; /* Neon Glow Animation */
+}
+
+@keyframes neonGlow {
+    from { text-shadow: 2px 2px 4px #ff69b4; }
+    to { text-shadow: 2px 2px 15px #ff69b4; }
+}
+
+p {
+    font-size: 1.2em;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.button-link {
+    display: inline-block;
+    padding: 15px 30px;
+    margin: 10px;
+    background-color: #00ced1; /* Dark Cyan */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 30px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover */
+    box-shadow: 0 0 10px rgba(0, 206, 209, 0.7); /* Cyan button shadow */
+    animation: buttonPulse 2s linear infinite; /* Button Pulse Animation */
+}
+
+.button-link:hover {
+    background-color: #00b2b5; /* Slightly darker cyan on hover */
+    transform: scale(1.05); /* Slight scale up on hover */
+}
+
+@keyframes buttonPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 206, 209, 0.7); }
+    50% { box-shadow: 0 0 20px rgba(0, 206, 209, 0.9); }
+}
+
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), #00ced1, rgba(255, 255, 255, 0)); /* Cyan gradient line */
+    margin: 40px 0;
 }
 </style>
 </head>
 <body>
 <div class="container">
-    <h1>Welcome to FISH <>< COMMUNITY</h1>
-    <p>This is the old-school website for the FISH <>< COMMUNITY, a place for structured chaos and creative expression in VRCHAT.</p>
+    <h1>FISH <>< COMMUNITY</h1>
+    <p>Ｖａｐｏｒｗａｖｅ Ｔｈｅｍｅｄ Ｗｅｂｓｉｔｅ</p>
 
-    <center> <!-- Using <center> tag for retro feel -->
-        <a href="meaning.html" class="button-link">Meaning of <><</a>
-        <a href="principles.html" class="button-link">Community Principles</a>
-        <a href="daily_vrchat.html" class="button-link">DAILY VRCHAT Event</a>
-        <a href="fish_verified.html" class="button-link">FISH VERIFIED</a>
-        <a href="luxury_trash.html" class="button-link">LUXURY TRASH</a>
-        <a href="rose_fish.html" class="button-link">ROSE FISH</a>
-    </center>
+    <a href="meaning.html" class="button-link">Meaning of <><</a>
+    <a href="principles.html" class="button-link">Community Principles</a>
+    <a href="daily_vrchat.html" class="button-link">DAILY VRCHAT Event</a>
+    <a href="fish_verified.html" class="button-link">FISH VERIFIED</a>
+    <a href="luxury_trash.html" class="button-link">LUXURY TRASH</a>
+    <a href="rose_fish.html" class="button-link">ROSE FISH</a>
 
     <hr>
-    <p>Explore the different sections using the buttons above.</p>
+    <p>Ｅｘｐｌｏｒｅ ｔｈｅ ｄｉｆｆｅｒｅｎｔ ｓｅｃｔｉｏｎｓ ｕｓｉｎｇ ｔｈｅ ｂｕｔｔｏｎｓ ａｂｏｖｅ．</p>
 </div>
 </body>
 </html>

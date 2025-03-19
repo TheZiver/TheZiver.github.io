@@ -1,50 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>FISH VERIFIED Communities</title>
+<title>FISH VERIFIED Communities - VAPORWAVE</title>
 <style>
 body {
-    font-family: monospace;
-    background-color: #f0f0f0;
-    color: #000080;
-    margin: 20px;
+    font-family: sans-serif;
+    background: linear-gradient(45deg, #ff69b4, #87cefa);
+    color: #f0f8ff;
+    margin: 0;
+    overflow: hidden;
+    animation: gradientBG 15s linear infinite;
 }
-h1 {
-    color: #800000;
-    text-align: center;
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
-h2 {
-    color: #800000;
-}
-p {
-    line-height: 1.6;
-}
-ul, ol {
-    line-height: 1.6;
-}
-a {
-    color: #008000;
-}
+
 .container {
     width: 80%;
-    margin: auto;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #aaaaaa;
-    border-radius: 10px;
+    margin: 50px auto;
+    padding: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
 }
+
+h1 {
+    font-size: 3em;
+    color: #b0e0e6;
+    text-shadow: 2px 2px 4px #ff69b4;
+    letter-spacing: 0.1em;
+    margin-bottom: 30px;
+    animation: neonGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+    from { text-shadow: 2px 2px 4px #ff69b4; }
+    to { text-shadow: 2px 2px 15px #ff69b4; }
+}
+
+h2 {
+    color: #b0e0e6;
+    text-shadow: 1px 1px 2px #ff69b4;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 1.2em;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+ul, ol {
+    font-size: 1.2em;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    padding-left: 30px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+a {
+    color: #00ffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #ff69b4;
+}
+
 .back-button {
     display: inline-block;
-    padding: 10px 20px;
-    background-color: #cccccc;
-    color: #000000;
+    padding: 15px 30px;
+    margin-top: 30px;
+    background-color: #00ced1;
+    color: #fff;
     text-decoration: none;
-    border: 1px solid #888888;
-    margin-top: 20px;
-    border-radius: 5px;
+    border-radius: 30px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 206, 209, 0.7);
+    animation: buttonPulse 2s linear infinite;
 }
+
 .back-button:hover {
-    background-color: #bbbbbb;
+    background-color: #00b2b5;
+    transform: scale(1.05);
+}
+
+@keyframes buttonPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 206, 209, 0.7); }
+    50% { box-shadow: 0 0 20px rgba(0, 206, 209, 0.9); }
 }
 </style>
 </head>
