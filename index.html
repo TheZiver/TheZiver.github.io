@@ -1,106 +1,104 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>FISH <>< COMMUNITY - VAPORWAVE</title>
+<title>FISH <>< COMMUNITY - VAPORWAVE (VRChat Style)</title>
 <style>
 body {
-    font-family: sans-serif;
-    background: linear-gradient(45deg, #ff69b4, #87cefa);
-    color: #f0f8ff;
+    font-family: sans-serif; /* Keeping sans-serif as it's clean like VRChat UI */
+    background: #121212; /* Dark background like VRChat */
+    color: #e0e0e0; /* Light gray text for readability on dark background */
     margin: 0;
-    overflow-x: hidden; /* Prevent horizontal scrollbar */
-    animation: gradientBG 15s linear infinite;
-}
-
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    overflow-x: hidden;
 }
 
 .container {
-    width: 80%;
-    max-width: 960px; /* Limit container width for readability */
-    margin: 50px auto;
-    padding: 40px;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
-    text-align: left; /* Align text to left for better readability in long content */
+    width: 85%; /* Slightly wider container to feel more spacious */
+    max-width: 1200px; /* Wider max width for larger screens */
+    margin: 30px auto; /* Reduced top margin */
+    padding: 30px; /* Adjusted padding */
+    background-color: #1e1e1e; /* Slightly lighter dark background for container */
+    border-radius: 8px; /* Rounded corners like VRChat UI elements */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    text-align: left;
 }
 
 h1 {
-    font-size: 3em;
-    color: #b0e0e6;
-    text-shadow: 2px 2px 4px #ff69b4;
-    letter-spacing: 0.1em;
-    margin-bottom: 30px;
-    text-align: center; /* Center main heading */
-    animation: neonGlow 2s ease-in-out infinite alternate;
-}
-
-@keyframes neonGlow {
-    from { text-shadow: 2px 2px 4px #ff69b4; }
-    to { text-shadow: 2px 2px 15px #ff69b4; }
+    font-size: 2.5em; /* Slightly smaller and more formal heading */
+    color: #00bcd4; /* Teal/Cyan accent color like VRChat UI */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Subtler text shadow */
+    letter-spacing: 0.05em; /* Reduced letter spacing */
+    margin-bottom: 25px; /* Adjusted margin */
+    text-align: left; /* Left-aligned heading, more UI-like */
+    animation: none; /* Removed neon glow animation */
 }
 
 h2 {
-    color: #b0e0e6;
-    text-shadow: 1px 1px 2px #ff69b4;
-    margin-top: 40px;
-    margin-bottom: 20px;
-    text-align: center; /* Center section headings */
+    color: #00bcd4; /* Teal/Cyan accent color for section headings */
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5); /* Subtler text shadow */
+    margin-top: 30px; /* Adjusted margin */
+    margin-bottom: 15px; /* Adjusted margin */
+    text-align: left; /* Left-aligned section headings */
 }
 
 h3 {
-    color: #b0e0e6;
-    text-shadow: 1px 1px 2px #ff69b4;
-    margin-top: 30px;
-    margin-bottom: 15px;
+    color: #bbbbbb; /* Lighter gray for subheadings */
+    text-shadow: none; /* Removed text shadow for subheadings */
+    margin-top: 25px; /* Adjusted margin */
+    margin-bottom: 10px; /* Adjusted margin */
 }
 
 p, ul, ol {
-    font-size: 1.2em;
-    line-height: 1.8;
-    margin-bottom: 20px;
+    font-size: 1em; /* Slightly smaller font size for body text */
+    line-height: 1.6; /* Adjusted line height */
+    margin-bottom: 15px; /* Adjusted margin */
 }
 
 ul, ol {
-    padding-left: 30px;
+    padding-left: 25px; /* Adjusted padding */
 }
 
 li {
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* Adjusted margin */
 }
 
 a {
-    color: #00ffff;
+    color: #4dd0e1; /* Lighter teal/cyan for links */
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
 }
 
 a:hover {
-    color: #ff69b4;
+    color: #00e5ff; /* Brighter teal/cyan on hover */
 }
 
 .warning {
-    color: #ffff00;
+    color: #ffc107; /* Yellow warning color, more UI-like than bright yellow */
     font-weight: bold;
-    text-shadow: 1px 1px 2px #ff0000;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5); /* Subtler text shadow */
 }
 
 hr {
     border: none;
-    height: 2px;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0), #00ced1, rgba(255, 255, 255, 0));
-    margin: 40px 0;
+    height: 1px; /* Thinner horizontal rule */
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.1), #4dd0e1, rgba(255, 255, 255, 0.1)); /* Teal/Cyan gradient hr */
+    margin: 30px 0; /* Adjusted margin */
+}
+
+/* Removed gradientBG and neonGlow animations, not needed for VRChat UI style */
+
+/* Style for "W O W" - more subtle */
+p[style*="W O W"] {
+    text-align: left; /* Align "W O W" left, like in the sidebar */
+    font-size: 1.2em; /* Slightly larger */
+    margin-bottom: 30px; /* More bottom margin to separate from header */
+    color: #9e9e9e; /* Muted gray color for "W O W" */
 }
 </style>
 </head>
 <body>
 <div class="container">
     <h1>FISH <>< COMMUNITY</h1>
-    <p style="text-align: center; font-size: 1.4em; margin-bottom: 50px;">W O W</p>
+    <p style="text-align: center; font-size: 1.4em; margin-bottom: 50px; text-align:left; color:#9e9e9e;">W O W</p>
 
     <hr>
 
