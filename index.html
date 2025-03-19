@@ -1,4 +1,5 @@
-COMMUNITY - VRChat"><!DOCTYPE html>
+< COMMUNITY - VRChat Website with YouTube and Thumbnail Image">
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -133,18 +134,41 @@ COMMUNITY - VRChat"><!DOCTYPE html>
         .fish-symbol:nth-child(5n+5) { animation-delay: 0.8s; }
 
         .community-image {
-            max-width: 100%;
+            max-width: 300px;
             height: auto;
             display: block;
             margin: 20px auto;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            margin: 20px 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>FISH <>< COMMUNITY</h1>
+    
+    <!-- YouTube video embedded at the top -->
+    <div class="video-container">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/plQ24noJR3w?si=oQm9TDtJhSec733t" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
 
     <div class="fish-animation">
         <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
