@@ -18,10 +18,10 @@
         }
 
         .container {
-            width: 80%;
+            width: 90%; /* Slightly wider for smaller screens */
             max-width: 850px;
             margin: 40px auto;
-            padding: 40px;
+            padding: 20px; /* Reduced padding for smaller screens initially */
             background-color: #1e1e1e;
             border-radius: 5px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -29,58 +29,105 @@
             overflow: hidden;
             position: relative;
         }
+        /* Increase padding on larger screens */
+        @media (min-width: 600px) {
+            .container {
+                width: 80%;
+                padding: 40px;
+            }
+        }
+
 
         h1, h2, h3 {
             font-weight: bold;
             text-align: left;
         }
 
-        /* H1 and H2 share the color animation */
+        /* --- New Gradient Animation for H1 and H2 --- */
         h1, h2 {
-             animation: colorChange 0.5s infinite alternate;
+            --gradient-angle: 120deg; /* Control gradient direction */
+            background: linear-gradient(
+                var(--gradient-angle),
+                #00bcd4,
+                #ff4081,
+                #4caf50,
+                #ffc107,
+                #00bcd4 /* Repeat first color for smooth loop */
+            );
+            background-size: 300% 300%; /* Make background larger than element */
+            background-clip: text;
+            -webkit-background-clip: text; /* For Safari/Chrome */
+            color: transparent;
+            /* Use text-fill-color for wider browser support, but color often works */
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 8s ease infinite; /* Apply the animation */
+             /* Ensure font-weight is still set if needed */
+            font-weight: bold;
+            text-align: left;
         }
+
+        /* Keyframes for the gradient flow animation */
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        /* --- End New Gradient Animation --- */
+
 
         h1 {
-            font-size: 2.8em;
+            font-size: 2.4em; /* Slightly smaller */
             letter-spacing: -0.02em;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
+         @media (min-width: 600px) {
+             h1 { font-size: 2.8em; margin-bottom: 35px; }
+         }
 
         h2 {
-            font-size: 2em;
-            margin-top: 50px;
-            margin-bottom: 25px;
+            font-size: 1.8em; /* Slightly smaller */
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        @media (min-width: 600px) {
+             h2 { font-size: 2em; margin-top: 50px; margin-bottom: 25px; }
         }
 
         h3 {
-            font-size: 1.4em;
-            margin-top: 35px;
+            font-size: 1.3em; /* Slightly smaller */
+            margin-top: 30px;
             margin-bottom: 15px;
             color: #bbbbbb; /* Default H3 color */
         }
-
-        @keyframes colorChange {
-            0% { color: #00bcd4; }
-            25% { color: #ff4081; }
-            50% { color: #4caf50; }
-            75% { color: #ffc107; }
-            100% { color: #00bcd4; }
+        @media (min-width: 600px) {
+             h3 { font-size: 1.4em; margin-top: 35px; }
         }
 
         p, ul, ol {
-            font-size: 1.15em;
-            line-height: 1.8;
-            margin-bottom: 25px;
+            font-size: 1.05em; /* Slightly smaller */
+            line-height: 1.7; /* Adjusted line height */
+            margin-bottom: 20px;
             color: #d0d0d0; /* Default paragraph/list color */
         }
+        @media (min-width: 600px) {
+            p, ul, ol { font-size: 1.15em; line-height: 1.8; margin-bottom: 25px; }
+        }
+
 
         ul, ol {
-            padding-left: 35px;
+            padding-left: 30px; /* Slightly less padding */
+        }
+        @media (min-width: 600px) {
+            ul, ol { padding-left: 35px; }
         }
 
+
         li {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
+         @media (min-width: 600px) {
+             li { margin-bottom: 12px; }
+         }
 
         a {
             color: #4dd0e1; /* Default link color */
@@ -100,38 +147,58 @@
         hr {
             border: 0;
             border-top: 1px solid #4dd0e1;
-            margin: 50px 0;
+            margin: 40px 0;
         }
+        @media (min-width: 600px) {
+             hr { margin: 50px 0; }
+        }
+
 
         .fish-animation {
             white-space: nowrap;
-            font-size: 4em;
+            font-size: 3em; /* Smaller fish for mobile */
             color: #4dd0e1;
-            display: inline-block;
+            display: block; /* Make it block to control overflow */
             animation: fishSwim 15s linear infinite;
-            padding-left: 100%;
-            margin-bottom: 40px;
+            width: 100%; /* Ensure it fills container before moving */
+            overflow: hidden; /* Hide fish until they swim in */
+            box-sizing: border-box;
+            margin-bottom: 30px;
+            text-align: left; /* Start animation from left */
+            padding-left: 100%; /* Start off-screen to the right */
         }
+        @media (min-width: 600px) {
+            .fish-animation {
+                font-size: 4em;
+                display: inline-block; /* Revert for larger screens */
+                width: auto; /* Revert width */
+                 margin-bottom: 40px;
+                 padding-left: 100%; /* Keep starting off-screen */
+            }
+        }
+
 
         @keyframes fishSwim {
             0% {
-                transform: translateX(0);
+                transform: translateX(0); /* Start fully off-screen right */
             }
             100% {
-                transform: translateX(-100%);
+                 transform: translateX(-200%); /* Move fully across and off-screen left */
             }
         }
 
         .fish-symbol {
             display: inline-block;
-            animation: colorChange 5s infinite alternate;
+            /* Removed colorChange animation from here if it was applied */
+             color: #4dd0e1; /* Set a base color */
         }
-
-        .fish-symbol:nth-child(5n+1) { animation-delay: 0s; }
+        /* Keep individual delays for fish swimming/staggering if needed, but not color */
+        .fish-symbol:nth-child(5n+1) { animation-delay: 0s; } /* Applies to fishSwim */
         .fish-symbol:nth-child(5n+2) { animation-delay: 0.2s; }
         .fish-symbol:nth-child(5n+3) { animation-delay: 0.4s; }
         .fish-symbol:nth-child(5n+4) { animation-delay: 0.6s; }
         .fish-symbol:nth-child(5n+5) { animation-delay: 0.8s; }
+
 
         .community-image, .meaning-image {
             max-width: 100%; /* Ensures images scale down */
@@ -143,10 +210,15 @@
         }
 
         .meaning-image {
-             max-width: 600px; /* Specific max width, but still scales down */
+             max-width: 90%; /* Adjust max width for responsiveness */
              margin-top: 30px;
              margin-bottom: 30px;
         }
+         @media (min-width: 768px) { /* Apply specific max width only on larger screens */
+            .meaning-image {
+                max-width: 600px;
+             }
+         }
 
         .video-container {
             position: relative;
@@ -230,42 +302,67 @@
         /* --- Daily VRChat Calendar Styles --- */
         #daily-vrchat-calendar-container {
             background-color: #2a2a2a; /* Slightly different background */
-            padding: 20px;
+            padding: 15px; /* Reduced padding */
             border-radius: 5px 5px 0 0; /* Round top corners only */
             margin-top: 30px;
             margin-bottom: 0; /* No margin at bottom, connect to countdown */
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
+         @media (min-width: 600px) {
+             #daily-vrchat-calendar-container { padding: 20px; }
+         }
+
 
         #daily-vrchat-calendar-container h3 {
             text-align: center;
             color: #e0e0e0; /* Match body text */
-            margin-bottom: 20px;
-            font-size: 1.6em; /* Slightly larger */
+            margin-bottom: 10px; /* Reduced margin */
+            font-size: 1.4em; /* Adjusted size */
              /* Override animation for this specific H3 */
             animation: none;
         }
+         @media (min-width: 600px) {
+             #daily-vrchat-calendar-container h3 { font-size: 1.6em; margin-bottom: 15px;}
+         }
+
+        #calendar-explanation {
+            font-size: 0.85em;
+            color: #bbbbbb;
+            text-align: center;
+            margin-top: -5px;
+            margin-bottom: 15px;
+        }
+
 
         #calendar-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
-            padding: 0 10px;
+            padding: 0 5px; /* Reduced padding */
             flex-wrap: wrap; /* Allow wrapping on smaller screens */
-            gap: 10px; /* Add gap between controls */
+            gap: 8px; /* Reduced gap */
         }
+         @media (min-width: 600px) {
+             #calendar-controls { padding: 0 10px; gap: 10px; }
+         }
+
 
         #calendar-controls button {
             background-color: #4dd0e1; /* Teal color */
             color: #121212; /* Dark text for contrast */
             border: none;
-            padding: 8px 15px;
+            padding: 6px 12px; /* Reduced padding */
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
             transition: background-color 0.2s ease;
+            font-size: 0.9em; /* Smaller button text */
         }
+         @media (min-width: 600px) {
+            #calendar-controls button { padding: 8px 15px; font-size: 1em; }
+         }
+
 
         #calendar-controls button:hover {
             background-color: #00e5ff; /* Lighter teal on hover */
@@ -274,50 +371,123 @@
         #calendar-controls-center {
             display: flex;
             align-items: center;
-            gap: 10px; /* Space between today button and month/year */
+            gap: 8px; /* Reduced Space between today button and month/year */
+            flex-grow: 1; /* Allow center section to grow */
+            justify-content: center; /* Center items within this flex container */
         }
+         @media (min-width: 600px) {
+             #calendar-controls-center { gap: 10px; flex-grow: 0; } /* Revert grow on larger screens */
+         }
 
         #month-year {
-            font-size: 1.3em;
+            font-size: 1.1em; /* Adjusted size */
             font-weight: bold;
             color: #ffffff; /* White for emphasis */
             text-align: center; /* Center text */
         }
+         @media (min-width: 600px) {
+             #month-year { font-size: 1.3em; }
+         }
 
         #goto-today {
-             /* Specific styling if needed, otherwise inherits button style */
              order: -1; /* Move Today button visually before month/year on wrap */
+             padding: 6px 10px; /* Adjusted padding */
+        }
+         @media (min-width: 600px) {
+             #goto-today { padding: 8px 12px; }
+         }
+
+        /* --- Styles for Start Day Controls --- */
+        #start-day-controls {
+            text-align: center;
+            margin-bottom: 15px; /* Space before the grid */
+            margin-top: -5px; /* Pull it slightly closer to controls above */
+            display: flex; /* Use flexbox for alignment */
+            justify-content: center; /* Center items */
+            align-items: center; /* Vertically align items */
+            gap: 8px; /* Space between label and buttons */
+            flex-wrap: wrap; /* Allow wrapping on small screens */
         }
 
+        .start-day-label {
+            font-size: 0.9em;
+            color: #bbbbbb;
+            margin-right: 5px; /* Consistent gap */
+        }
 
+        .start-day-btn {
+            background-color: #3a3a3a; /* Darker background for non-active */
+            color: #cccccc;
+            border: 1px solid #555;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .start-day-btn:hover {
+            background-color: #4a4a4a;
+            border-color: #777;
+        }
+
+        .start-day-btn.active { /* Style for the selected button */
+            background-color: #4dd0e1; /* Teal color */
+            color: #121212; /* Dark text for contrast */
+            border-color: #4dd0e1;
+            font-weight: bold;
+        }
+
+        /* --- Calendar Grid Styles --- */
         #calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+            gap: 3px; /* Reduced gap */
             text-align: center;
+            margin-top: 0; /* Remove default top margin if any */
         }
+         @media (min-width: 600px) {
+             #calendar-grid { gap: 5px; }
+         }
 
+         /* Style for dynamically generated weekday headers */
         #calendar-grid .weekday {
             font-weight: bold;
-            color: #bbbbbb; /* Match H3 color */
-            padding-bottom: 10px;
-            font-size: 0.9em;
+            color: #bbbbbb;
+            padding-bottom: 8px;
+            font-size: 0.8em;
+            text-align: center; /* Ensure text alignment */
+        }
+        @media (min-width: 600px) {
+             #calendar-grid .weekday { padding-bottom: 10px; font-size: 0.9em; }
+        }
+
+        /* Container for weekdays to avoid breaking grid layout */
+        #weekdays-row {
+            display: contents; /* Makes this div act like its children are direct children of the grid */
         }
 
         #calendar-grid .day-cell {
             background-color: #1e1e1e; /* Match container background */
-            padding: 10px 5px; /* More padding */
-            min-height: 80px; /* Ensure cells have some height */
+            padding: 5px 2px; /* Reduced padding */
+            min-height: 75px; /* Reduced min-height */
             border-radius: 3px;
-            font-size: 0.9em; /* Slightly smaller text inside cells */
+            font-size: 0.8em; /* Smaller text inside cells */
             display: flex;
             flex-direction: column; /* Stack day number and event text */
             justify-content: flex-start; /* Align content to top */
             align-items: center;
             border: 1px solid #333; /* Subtle border */
             overflow: hidden; /* Hide overflow */
-            position: relative; /* Needed for potential future overlays */
+            position: relative;
         }
+         @media (min-width: 600px) {
+             #calendar-grid .day-cell {
+                 padding: 8px 4px;
+                 min-height: 95px;
+                 font-size: 0.9em;
+             }
+         }
 
         #calendar-grid .day-cell.empty {
             background-color: transparent; /* Make empty cells less prominent */
@@ -326,16 +496,37 @@
 
         #calendar-grid .day-cell .day-number {
             font-weight: bold;
-            font-size: 1.1em; /* Make the date number slightly bigger */
+            font-size: 1em; /* Adjusted date number size */
             color: #e0e0e0;
-            margin-bottom: 5px; /* Space between date and event */
+            margin-bottom: 3px; /* Reduced space */
         }
+         @media (min-width: 600px) {
+             #calendar-grid .day-cell .day-number { font-size: 1.1em; margin-bottom: 4px;}
+         }
+
 
         #calendar-grid .day-cell .daily-event-day {
-            font-size: 0.85em; /* Smaller text for the event day */
+            font-size: 0.8em; /* Adjusted event day text size */
             color: #4dd0e1; /* Teal color for event day */
             word-wrap: break-word; /* Wrap long text */
+            margin-bottom: 2px; /* Reduced space */
+            line-height: 1.1; /* Tighter line height */
         }
+         @media (min-width: 600px) {
+             #calendar-grid .day-cell .daily-event-day { font-size: 0.85em; margin-bottom: 3px; line-height: 1.2; }
+         }
+
+        #calendar-grid .day-cell .day-location { /* Style for the location */
+            font-size: 0.7em; /* Adjusted location text size */
+            color: #9e9e9e; /* Dimmer grey color */
+            word-wrap: break-word; /* Wrap long location names */
+            line-height: 1.1; /* Tighter line height */
+        }
+         @media (min-width: 600px) {
+             #calendar-grid .day-cell .day-location { font-size: 0.75em; line-height: 1.2; }
+         }
+
+
         #calendar-grid .day-cell.today {
              background-color: #334e58; /* Highlight for current day */
              border: 1px solid #4dd0e1;
@@ -344,35 +535,59 @@
             color: #ffffff; /* White day number for today */
         }
 
-        #calendar-grid .day-cell.past .daily-event-day {
-            color: #777; /* Dim past event days */
+        #calendar-grid .day-cell.past .daily-event-day,
+        #calendar-grid .day-cell.past .day-location { /* Dim past location too */
+            color: #777;
         }
-        #calendar-grid .day-cell.invalid .daily-event-day {
-            color: #555; /* Even dimmer for days before start */
+        #calendar-grid .day-cell.invalid .daily-event-day,
+        #calendar-grid .day-cell.invalid .day-location {
+            color: #555;
         }
+        /* Ensure location doesn't show in invalid cells even if logic fails */
+        #calendar-grid .day-cell.invalid .day-location {
+            display: none;
+        }
+
 
         /* --- Countdown Timer Styles --- */
         #countdown-container {
             text-align: center;
-            padding: 15px 10px; /* More padding */
+            padding: 10px; /* Reduced padding */
             background-color: #2a2a2a; /* Match calendar background */
             border-radius: 0 0 5px 5px; /* Round bottom corners */
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-            font-size: 1.2em;
+            font-size: 1em; /* Adjusted size */
             color: #e0e0e0;
             margin-bottom: 30px; /* Space above the next HR */
         }
+         @media (min-width: 600px) {
+             #countdown-container { padding: 15px 10px; font-size: 1.2em; }
+         }
+
         #countdown-container .countdown-label {
              margin-right: 5px; /* Space after label */
+             display: block; /* Stack label above timer on small screens */
+             margin-bottom: 3px;
+        }
+        @media (min-width: 480px) { /* Display inline side-by-side on slightly larger screens */
+             #countdown-container .countdown-label { display: inline; margin-bottom: 0; }
         }
 
         #countdown-timer {
             font-weight: bold;
             color: #ffc107; /* Use warning color for emphasis */
-            margin-left: 8px; /* Space after the label text */
-            min-width: 150px; /* Give it some minimum width */
-            display: inline-block; /* Needed for min-width */
+            margin-left: 0; /* Remove left margin when stacked */
+            min-width: auto; /* Remove min-width when stacked */
+            display: block; /* Stack timer below label on small screens */
         }
+        @media (min-width: 480px) { /* Display inline side-by-side on slightly larger screens */
+            #countdown-timer {
+                display: inline-block;
+                margin-left: 8px; /* Restore space */
+                min-width: 150px; /* Restore min-width */
+            }
+        }
+
         #countdown-day-label {
             color: #00bcd4; /* Teal color for day number */
             font-weight: bold;
@@ -442,6 +657,7 @@
     <!-- START: Daily VRChat Calendar -->
     <div id="daily-vrchat-calendar-container">
         <h3>Daily VRChat Calendar (UTC)</h3>
+        <div id="calendar-explanation">Shows the event day number (since July 20, 2023) and location for each date.</div>
         <div id="calendar-controls">
             <button id="prev-month">< Prev</button>
             <div id="calendar-controls-center">
@@ -450,15 +666,14 @@
             </div>
             <button id="next-month">Next ></button>
         </div>
+         <!-- Start Day Controls -->
+        <div id="start-day-controls">
+            <span class="start-day-label">Week Starts On:</span>
+            <button id="start-sun" class="start-day-btn" data-day="0">Sunday</button>
+            <button id="start-mon" class="start-day-btn" data-day="1">Monday</button>
+        </div>
         <div id="calendar-grid">
-            <div class="weekday">Sun</div>
-            <div class="weekday">Mon</div>
-            <div class="weekday">Tue</div>
-            <div class="weekday">Wed</div>
-            <div class="weekday">Thu</div>
-            <div class="weekday">Fri</div>
-            <div class="weekday">Sat</div>
-            <!-- Day cells will be generated here by JavaScript -->
+            <!-- Weekday headers and day cells will be generated here by JavaScript -->
         </div>
     </div>
     <!-- END: Daily VRChat Calendar -->
@@ -494,7 +709,7 @@
     <!-- Start FISH VERIFIED Section -->
     <div class="fish-verified-theme">
         <h2>FISH VERIFIED COMMUNITIES <><</h2>
-        <img src="https://lh3.googleusercontent.com/d/1QTCy6DfnU4DCHk36a490xExIgqbjCBM8" alt="Fish Community Image" class="community-image" style="max-width: 300px;"> <!-- Inline style kept for specific max-width -->
+        <img src="https://lh3.googleusercontent.com/d/1QTCy6DfnU4DCHk36a490xExIgqbjCBM8" alt="Fish Community Image" class="community-image" style="max-width: 300px;">
 
         <p>The FISH VERIFIED verifies communities for the FISH <>< COMMUNITY. If a community is fish verified the owner of the verified community will be inside this vrchat group (<a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a>) and will also have the FISH-VERIFIED role on the <>< discord server.</p>
 
@@ -634,27 +849,48 @@
         const monthYearDisplay = document.getElementById('month-year');
         const prevMonthButton = document.getElementById('prev-month');
         const nextMonthButton = document.getElementById('next-month');
-        const gotoTodayButton = document.getElementById('goto-today'); // Added Today Button
+        const gotoTodayButton = document.getElementById('goto-today');
+        // Start Day Buttons
+        const startSunButton = document.getElementById('start-sun');
+        const startMonButton = document.getElementById('start-mon');
 
         // --- Countdown Elements ---
         const countdownTimerDisplay = document.getElementById('countdown-timer');
-        const countdownDayLabel = document.getElementById('countdown-day-label'); // Added Span for Day Label
+        const countdownDayLabel = document.getElementById('countdown-day-label');
 
         // --- Configuration ---
         const targetDate = new Date(Date.UTC(2023, 6, 20)); // Month is 0-indexed (6 = July)
         const today = new Date(); // Use local 'today' for initial calendar view setting
-        const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())); // Use UTC 'today' for comparisons and calculations
+        const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())); // Use UTC 'today' for comparisons
 
         let currentMonth = today.getUTCMonth(); // Use UTC month for calendar state
         let currentYear = today.getUTCFullYear(); // Use UTC year for calendar state
 
+        // State variable for starting day of the week (0 = Sunday, 1 = Monday)
+        let startDayOfWeekSetting = 1; // Default to Monday
+
+        // Load preference from localStorage if available
+        const savedStartDay = localStorage.getItem('calendarStartDay');
+        if (savedStartDay && (savedStartDay === '0' || savedStartDay === '1')) {
+            startDayOfWeekSetting = parseInt(savedStartDay, 10);
+        }
+
+        // Location mapping based on UTC day of the week (0=Sun, 1=Mon, ..., 6=Sat)
+        const locations = [
+            "YES?",                 // Sunday
+            "LUXURY TRASH",         // Monday
+            "The Fishing Mall",     // Tuesday
+            "Retrocubic Nexus",     // Wednesday
+            "Cunks Coughing City",  // Thursday
+            "YES?",                 // Friday
+            "YES?"                  // Saturday
+        ];
+
         // --- Calendar Helper Functions ---
         function getOrdinalSuffix(num) {
-            // Adjusted to handle potential 0 if calculation logic changes, though current logic returns null for < targetDate
              if (num === null || typeof num === 'undefined') return "";
-             const n = Number(num); // Ensure it's a number
-             if (n < 0) return ""; // No suffix for negative days
-
+             const n = Number(num);
+             if (n < 0) return "";
             const j = n % 10, k = n % 100;
             if (j == 1 && k != 11) return "st";
             if (j == 2 && k != 12) return "nd";
@@ -663,40 +899,52 @@
         }
 
         function calculateDailyVrchatDay(date) {
-            // Ensure input date is treated as UTC midnight
              const normalizedDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-
-            if (normalizedDate < targetDate) {
-                return null; // Date is before the target start date
-            }
-
-            const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
-            // Calculate difference in days using floor. July 20th is Day 0, July 21st is Day 1, etc.
-            const dayDifference = Math.floor((normalizedDate - targetDate) / oneDay);
-
-            // Return the calculated day number (0-based index relative to start)
-            // Return null if before start date (already handled), otherwise return the non-negative index
-            return dayDifference >= 0 ? dayDifference : null;
+             if (normalizedDate < targetDate) return null;
+             const oneDay = 24 * 60 * 60 * 1000;
+             const dayDifference = Math.floor((normalizedDate - targetDate) / oneDay);
+             return dayDifference >= 0 ? dayDifference : null;
         }
+
 
         // --- Calendar Rendering Function ---
         function renderCalendar(month, year) {
-            const dayCells = calendarGrid.querySelectorAll('.day-cell');
-            dayCells.forEach(cell => cell.remove());
+            // Clear previous cells AND weekday headers
+            calendarGrid.innerHTML = ''; // Clear everything inside the grid
 
             const monthName = new Date(Date.UTC(year, month)).toLocaleString('default', { month: 'long', timeZone: 'UTC' });
             monthYearDisplay.textContent = `${monthName} ${year}`;
 
+            // --- Generate Weekday Headers Dynamically ---
+            const weekdaysContainer = document.createElement('div');
+            weekdaysContainer.id = 'weekdays-row'; // Use the ID for potential styling/selection
+            calendarGrid.appendChild(weekdaysContainer); // Append the row first
+
+            const weekdayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            for (let i = 0; i < 7; i++) {
+                const dayIndex = (startDayOfWeekSetting + i) % 7; // Calculate correct day index based on setting
+                const weekdayDiv = document.createElement('div');
+                weekdayDiv.classList.add('weekday');
+                weekdayDiv.textContent = weekdayNames[dayIndex];
+                weekdaysContainer.appendChild(weekdayDiv); // Append header to the row
+            }
+            // --- End Weekday Header Generation ---
+
             const firstDayOfMonth = new Date(Date.UTC(year, month, 1));
             const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
-            const startingDayOfWeek = firstDayOfMonth.getUTCDay(); // 0 = Sunday
 
-            for (let i = 0; i < startingDayOfWeek; i++) {
+            // --- Calculate Offset Based on Start Day Setting ---
+            const firstDayOfMonthRaw = firstDayOfMonth.getUTCDay(); // 0=Sun, 1=Mon,... 6=Sat
+            let startingDayOffset = (firstDayOfMonthRaw - startDayOfWeekSetting + 7) % 7;
+
+            // Add empty cells for the offset
+            for (let i = 0; i < startingDayOffset; i++) {
                 const emptyCell = document.createElement('div');
                 emptyCell.classList.add('day-cell', 'empty');
-                calendarGrid.appendChild(emptyCell);
+                calendarGrid.appendChild(emptyCell); // Append empty cells after the headers row
             }
 
+            // Add day cells
             for (let day = 1; day <= daysInMonth; day++) {
                 const cellDate = new Date(Date.UTC(year, month, day));
                 const dayCell = document.createElement('div');
@@ -707,73 +955,81 @@
                 dayNumberSpan.textContent = day;
                 dayCell.appendChild(dayNumberSpan);
 
-                const dailyDay = calculateDailyVrchatDay(cellDate); // This now returns 0 for the first day
+                const dailyDay = calculateDailyVrchatDay(cellDate);
                 const dailyEventSpan = document.createElement('span');
                 dailyEventSpan.classList.add('daily-event-day');
 
                 if (dailyDay !== null) {
-                    const suffix = getOrdinalSuffix(dailyDay); // Get suffix for the calculated number
-                    dailyEventSpan.textContent = `Day ${dailyDay}${suffix}`; // Display calculated number
-                     if (cellDate < todayUTC) { // Compare with UTC today
-                        dayCell.classList.add('past');
-                    }
+                    const suffix = getOrdinalSuffix(dailyDay);
+                    dailyEventSpan.textContent = `${dailyDay}${suffix}`; // Removed "Day " prefix
+                    dayCell.appendChild(dailyEventSpan);
+
+                    // Add 'past' class only if it's truly before today (not today itself)
+                    if (cellDate.getTime() < todayUTC.getTime()) {
+                       dayCell.classList.add('past');
+                   }
+
+                    const dayOfWeek = cellDate.getUTCDay();
+                    const locationName = locations[dayOfWeek];
+                    const locationSpan = document.createElement('span');
+                    locationSpan.classList.add('day-location');
+                    locationSpan.textContent = locationName;
+                    dayCell.appendChild(locationSpan);
+
                 } else {
                     dailyEventSpan.textContent = '-';
+                    dayCell.appendChild(dailyEventSpan);
                     dayCell.classList.add('invalid');
                 }
-                dayCell.appendChild(dailyEventSpan);
 
-                // Highlight today's date using UTC comparison
+                // Check if this cell is today
                 if (year === todayUTC.getUTCFullYear() && month === todayUTC.getUTCMonth() && day === todayUTC.getUTCDate()) {
                     dayCell.classList.add('today');
+                    dayCell.classList.remove('past'); // Ensure today is not marked as past
                 }
 
-                calendarGrid.appendChild(dayCell);
+                calendarGrid.appendChild(dayCell); // Append day cell
             }
         }
 
+
         // --- Countdown Timer Function ---
         function updateCountdown() {
-            const nowUTC = new Date(); // Current time
-            const nowUTCMillis = nowUTC.getTime(); // Milliseconds since epoch (implicitly UTC)
-
-            // Calculate the next 21:00 UTC event time
+            const nowUTC = new Date();
+            const nowUTCMillis = nowUTC.getTime();
+            // Target 9 PM UTC (21:00)
             let nextEventUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 21, 0, 0, 0));
             let nextEventMillis = nextEventUTC.getTime();
 
-            // If current time is past today's 21:00 UTC, set target to tomorrow's 21:00 UTC
+             // If current time is already past 9 PM UTC today, calculate for tomorrow's 9 PM UTC
             if (nowUTCMillis >= nextEventMillis) {
                  nextEventUTC.setUTCDate(nextEventUTC.getUTCDate() + 1);
-                 nextEventMillis = nextEventUTC.getTime(); // Recalculate milliseconds for tomorrow
+                 nextEventMillis = nextEventUTC.getTime();
             }
 
-            // Calculate which Daily VRChat day number the *next* event corresponds to
             const nextDailyDayNumber = calculateDailyVrchatDay(nextEventUTC);
             const nextDaySuffix = getOrdinalSuffix(nextDailyDayNumber);
-            // Update the day label in the countdown message
             countdownDayLabel.textContent = (nextDailyDayNumber !== null) ? `${nextDailyDayNumber}${nextDaySuffix}` : "---";
-
 
             const difference = nextEventMillis - nowUTCMillis;
 
             if (difference <= 0) {
+                 // Fallback case
                  countdownTimerDisplay.textContent = "Starting soon / In Progress!";
-                 // No return here, let it tick over naturally
             } else {
-                // Calculate days, hours, minutes, seconds
                 const days = Math.floor(difference / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-                // Format the output string with zero-padding for H, M, S
-                const countdownString = `${days}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
-
-                // Update the display
-                countdownTimerDisplay.textContent = countdownString;
+                 let countdownString = "";
+                 if (days > 0) {
+                     countdownString += `${days}d `;
+                 }
+                 countdownString += `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+                countdownTimerDisplay.textContent = countdownString.trim();
             }
         }
-
 
         // --- Event Listeners ---
         prevMonthButton.addEventListener('click', () => {
@@ -794,18 +1050,40 @@
             renderCalendar(currentMonth, currentYear);
         });
 
-        // Listener for the "Today" button
         gotoTodayButton.addEventListener('click', () => {
-            // Reset calendar state to current UTC month/year
             const now = new Date();
             currentMonth = now.getUTCMonth();
             currentYear = now.getUTCFullYear();
             renderCalendar(currentMonth, currentYear);
         });
 
+        // Event Listeners for Start Day Buttons
+        function updateStartDaySelection(newStartDay) {
+            if (startDayOfWeekSetting === newStartDay) return; // No change needed
+
+            startDayOfWeekSetting = newStartDay;
+            localStorage.setItem('calendarStartDay', newStartDay.toString()); // Save preference
+
+            // Update button active states
+            startSunButton.classList.toggle('active', newStartDay === 0);
+            startMonButton.classList.toggle('active', newStartDay === 1);
+
+            // Re-render the calendar with the new setting
+            renderCalendar(currentMonth, currentYear);
+        }
+
+        startSunButton.addEventListener('click', () => updateStartDaySelection(0));
+        startMonButton.addEventListener('click', () => updateStartDaySelection(1));
+
+
         // --- Initial Setup ---
-        renderCalendar(currentMonth, currentYear); // Initial calendar render
-        updateCountdown(); // Initial countdown calculation
+        // Set initial active state for start day buttons BEFORE first render
+        startSunButton.classList.toggle('active', startDayOfWeekSetting === 0);
+        startMonButton.classList.toggle('active', startDayOfWeekSetting === 1);
+
+        // Initial render of calendar and countdown
+        renderCalendar(currentMonth, currentYear);
+        updateCountdown();
         setInterval(updateCountdown, 1000); // Update countdown every second
 
     });
