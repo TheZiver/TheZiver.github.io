@@ -5,814 +5,201 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FISH <>< COMMUNITY - VRChat Colors, Roboto Font, Readability Optimized</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* --- Base Styles --- */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            margin: 0;
-            padding: 20px 0;
-            overflow-x: hidden;
-            line-height: 1.7;
-        }
 
-        .container {
-            width: 90%; /* Slightly wider for smaller screens */
-            max-width: 850px;
-            margin: 40px auto;
-            padding: 20px; /* Reduced padding for smaller screens initially */
-            background-color: #1e1e1e;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-            text-align: left;
-            overflow: hidden;
-            position: relative;
-        }
-        /* Increase padding on larger screens */
-        @media (min-width: 600px) {
-            .container {
-                width: 80%;
-                padding: 40px;
-            }
-        }
+    <!-- === CRUCIAL PATH === -->
+    <link rel="stylesheet" href="css/style.css">
 
+    <!-- === CRUCIAL PATH === -->
+    <script src="js/script.js" defer></script>
 
-        h1, h2, h3 {
-            font-weight: bold;
-            text-align: left;
-        }
-
-        /* --- New Gradient Animation for H1 and H2 --- */
-        h1, h2 {
-            --gradient-angle: 120deg; /* Control gradient direction */
-            background: linear-gradient(
-                var(--gradient-angle),
-                #00bcd4,
-                #ff4081,
-                #4caf50,
-                #ffc107,
-                #00bcd4 /* Repeat first color for smooth loop */
-            );
-            background-size: 300% 300%; /* Make background larger than element */
-            background-clip: text;
-            -webkit-background-clip: text; /* For Safari/Chrome */
-            color: transparent;
-            /* Use text-fill-color for wider browser support, but color often works */
-            -webkit-text-fill-color: transparent;
-            animation: gradientFlow 8s ease infinite; /* Apply the animation */
-             /* Ensure font-weight is still set if needed */
-            font-weight: bold;
-            text-align: left;
-        }
-
-        /* Keyframes for the gradient flow animation */
-        @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        /* --- End New Gradient Animation --- */
-
-
-        h1 {
-            font-size: 2.4em; /* Slightly smaller */
-            letter-spacing: -0.02em;
-            margin-bottom: 30px;
-        }
-         @media (min-width: 600px) {
-             h1 { font-size: 2.8em; margin-bottom: 35px; }
-         }
-
-        h2 {
-            font-size: 1.8em; /* Slightly smaller */
-            margin-top: 40px;
-            margin-bottom: 20px;
-        }
-        @media (min-width: 600px) {
-             h2 { font-size: 2em; margin-top: 50px; margin-bottom: 25px; }
-        }
-
-        h3 {
-            font-size: 1.3em; /* Slightly smaller */
-            margin-top: 30px;
-            margin-bottom: 15px;
-            color: #bbbbbb; /* Default H3 color */
-        }
-        @media (min-width: 600px) {
-             h3 { font-size: 1.4em; margin-top: 35px; }
-        }
-
-        p, ul, ol {
-            font-size: 1.05em; /* Slightly smaller */
-            line-height: 1.7; /* Adjusted line height */
-            margin-bottom: 20px;
-            color: #d0d0d0; /* Default paragraph/list color */
-        }
-        @media (min-width: 600px) {
-            p, ul, ol { font-size: 1.15em; line-height: 1.8; margin-bottom: 25px; }
-        }
-
-
-        ul, ol {
-            padding-left: 30px; /* Slightly less padding */
-        }
-        @media (min-width: 600px) {
-            ul, ol { padding-left: 35px; }
-        }
-
-
-        li {
-            margin-bottom: 10px;
-        }
-         @media (min-width: 600px) {
-             li { margin-bottom: 12px; }
-         }
-
-        a {
-            color: #4dd0e1; /* Default link color */
-            text-decoration: underline;
-            transition: color 0.2s ease;
-        }
-
-        a:hover {
-            color: #00e5ff;
-        }
-
-        .warning {
-            color: #ffc107; /* Specific warning color */
-            font-weight: bold;
-        }
-
-        hr {
-            border: 0;
-            border-top: 1px solid #4dd0e1;
-            margin: 40px 0;
-        }
-        @media (min-width: 600px) {
-             hr { margin: 50px 0; }
-        }
-
-
-        .fish-animation {
-            white-space: nowrap;
-            font-size: 3em; /* Smaller fish for mobile */
-            color: #4dd0e1;
-            display: block; /* Make it block to control overflow */
-            animation: fishSwim 15s linear infinite;
-            width: 100%; /* Ensure it fills container before moving */
-            overflow: hidden; /* Hide fish until they swim in */
-            box-sizing: border-box;
-            margin-bottom: 30px;
-            text-align: left; /* Start animation from left */
-            padding-left: 100%; /* Start off-screen to the right */
-        }
-        @media (min-width: 600px) {
-            .fish-animation {
-                font-size: 4em;
-                display: inline-block; /* Revert for larger screens */
-                width: auto; /* Revert width */
-                 margin-bottom: 40px;
-                 padding-left: 100%; /* Keep starting off-screen */
-            }
-        }
-
-
-        @keyframes fishSwim {
-            0% {
-                transform: translateX(0); /* Start fully off-screen right */
-            }
-            100% {
-                 transform: translateX(-200%); /* Move fully across and off-screen left */
-            }
-        }
-
-        .fish-symbol {
-            display: inline-block;
-            /* Removed colorChange animation from here if it was applied */
-             color: #4dd0e1; /* Set a base color */
-        }
-        /* Keep individual delays for fish swimming/staggering if needed, but not color */
-        .fish-symbol:nth-child(5n+1) { animation-delay: 0s; } /* Applies to fishSwim */
-        .fish-symbol:nth-child(5n+2) { animation-delay: 0.2s; }
-        .fish-symbol:nth-child(5n+3) { animation-delay: 0.4s; }
-        .fish-symbol:nth-child(5n+4) { animation-delay: 0.6s; }
-        .fish-symbol:nth-child(5n+5) { animation-delay: 0.8s; }
-
-
-        .community-image, .meaning-image {
-            max-width: 100%; /* Ensures images scale down */
-            height: auto; /* Maintains aspect ratio */
-            display: block;
-            margin: 20px auto;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .meaning-image {
-             max-width: 90%; /* Adjust max width for responsiveness */
-             margin-top: 30px;
-             margin-bottom: 30px;
-        }
-         @media (min-width: 768px) { /* Apply specific max width only on larger screens */
-            .meaning-image {
-                max-width: 600px;
-             }
-         }
-
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            overflow: hidden;
-            max-width: 100%;
-            margin: 20px 0;
-        }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 5px;
-        }
-
-        /* --- Theme Styles --- */
-
-        /* FISH VERIFIED COMMUNITIES - White Theme */
-        .fish-verified-theme p,
-        .fish-verified-theme li,
-        .fish-verified-theme h3,
-        .fish-verified-theme ol {
-            color: #FFFFFF; /* White text */
-        }
-        .fish-verified-theme a {
-            color: #A7D8FF; /* Light blue links for contrast */
-        }
-        .fish-verified-theme a:hover {
-            color: #D0EFFF;
-        }
-         .fish-verified-theme h3 {
-             color: #F0F0F0 !important; /* Slightly off-white for H3 */
-         }
-         .fish-verified-theme ol li::marker { /* Style list numbers */
-             color: #FFFFFF;
-         }
-
-        /* LUXURY TRASH STORE - Gold Theme */
-        .luxury-trash-theme p,
-        .luxury-trash-theme li,
-        .luxury-trash-theme h3 {
-            color: #FFD700; /* Gold text */
-        }
-        .luxury-trash-theme a {
-            color: #FFEC8B; /* Lighter gold for links */
-        }
-        .luxury-trash-theme a:hover {
-            color: #FFFACD; /* Even lighter gold on hover */
-        }
-         .luxury-trash-theme h3 {
-             color: #FBC02D !important; /* Darker gold for H3 */
-         }
-         .luxury-trash-theme p i {
-             color: #FFEA00; /* Slightly different gold for emphasis */
-         }
-
-        /* ROSE FISH COMMUNITY - Red Theme */
-        .rose-fish-theme p,
-        .rose-fish-theme li,
-        .rose-fish-theme h3,
-        .rose-fish-theme ol {
-            color: #FF6B6B; /* Soft red text */
-        }
-        .rose-fish-theme a {
-            color: #FF8F8F; /* Lighter red for links */
-        }
-        .rose-fish-theme a:hover {
-            color: #FFBDBD; /* Even lighter red on hover */
-        }
-         .rose-fish-theme h3 {
-             color: #E57373 !important; /* Slightly different red for H3 */
-         }
-         .rose-fish-theme ol li::marker { /* Style ordered list numbers */
-            color: #FF6B6B;
-         }
-
-        /* --- Daily VRChat Calendar Styles --- */
-        #daily-vrchat-calendar-container {
-            background-color: #2a2a2a; /* Slightly different background */
-            padding: 15px; /* Reduced padding */
-            border-radius: 5px 5px 0 0; /* Round top corners only */
-            margin-top: 30px;
-            margin-bottom: 0; /* No margin at bottom, connect to countdown */
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-        }
-         @media (min-width: 600px) {
-             #daily-vrchat-calendar-container { padding: 20px; }
-         }
-
-
-        #daily-vrchat-calendar-container h3 {
-            text-align: center;
-            color: #e0e0e0; /* Match body text */
-            margin-bottom: 10px; /* Reduced margin */
-            font-size: 1.4em; /* Adjusted size */
-             /* Override animation for this specific H3 */
-            animation: none;
-        }
-         @media (min-width: 600px) {
-             #daily-vrchat-calendar-container h3 { font-size: 1.6em; margin-bottom: 15px;}
-         }
-
-        #calendar-explanation {
-            font-size: 0.85em;
-            color: #bbbbbb;
-            text-align: center;
-            margin-top: -5px;
-            margin-bottom: 15px;
-        }
-
-
-        #calendar-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 0 5px; /* Reduced padding */
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-            gap: 8px; /* Reduced gap */
-        }
-         @media (min-width: 600px) {
-             #calendar-controls { padding: 0 10px; gap: 10px; }
-         }
-
-
-        #calendar-controls button {
-            background-color: #4dd0e1; /* Teal color */
-            color: #121212; /* Dark text for contrast */
-            border: none;
-            padding: 6px 12px; /* Reduced padding */
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s ease;
-            font-size: 0.9em; /* Smaller button text */
-        }
-         @media (min-width: 600px) {
-            #calendar-controls button { padding: 8px 15px; font-size: 1em; }
-         }
-
-
-        #calendar-controls button:hover {
-            background-color: #00e5ff; /* Lighter teal on hover */
-        }
-
-        #calendar-controls-center {
-            display: flex;
-            align-items: center;
-            gap: 8px; /* Reduced Space between today button and month/year */
-            flex-grow: 1; /* Allow center section to grow */
-            justify-content: center; /* Center items within this flex container */
-        }
-         @media (min-width: 600px) {
-             #calendar-controls-center { gap: 10px; flex-grow: 0; } /* Revert grow on larger screens */
-         }
-
-        #month-year {
-            font-size: 1.1em; /* Adjusted size */
-            font-weight: bold;
-            color: #ffffff; /* White for emphasis */
-            text-align: center; /* Center text */
-        }
-         @media (min-width: 600px) {
-             #month-year { font-size: 1.3em; }
-         }
-
-        #goto-today {
-             order: -1; /* Move Today button visually before month/year on wrap */
-             padding: 6px 10px; /* Adjusted padding */
-        }
-         @media (min-width: 600px) {
-             #goto-today { padding: 8px 12px; }
-         }
-
-        /* --- Styles for Start Day Controls --- */
-        #start-day-controls {
-            text-align: center;
-            margin-bottom: 15px; /* Space before the grid */
-            margin-top: -5px; /* Pull it slightly closer to controls above */
-            display: flex; /* Use flexbox for alignment */
-            justify-content: center; /* Center items */
-            align-items: center; /* Vertically align items */
-            gap: 8px; /* Space between label and buttons */
-            flex-wrap: wrap; /* Allow wrapping on small screens */
-        }
-
-        .start-day-label {
-            font-size: 0.9em;
-            color: #bbbbbb;
-            margin-right: 5px; /* Consistent gap */
-        }
-
-        .start-day-btn {
-            background-color: #3a3a3a; /* Darker background for non-active */
-            color: #cccccc;
-            border: 1px solid #555;
-            padding: 4px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85em;
-            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-        }
-
-        .start-day-btn:hover {
-            background-color: #4a4a4a;
-            border-color: #777;
-        }
-
-        .start-day-btn.active { /* Style for the selected button */
-            background-color: #4dd0e1; /* Teal color */
-            color: #121212; /* Dark text for contrast */
-            border-color: #4dd0e1;
-            font-weight: bold;
-        }
-
-        /* --- Calendar Grid Styles --- */
-        #calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 3px; /* Reduced gap */
-            text-align: center;
-            margin-top: 0; /* Remove default top margin if any */
-        }
-         @media (min-width: 600px) {
-             #calendar-grid { gap: 5px; }
-         }
-
-         /* Style for dynamically generated weekday headers */
-        #calendar-grid .weekday {
-            font-weight: bold;
-            color: #bbbbbb;
-            padding-bottom: 8px;
-            font-size: 0.8em;
-            text-align: center; /* Ensure text alignment */
-        }
-        @media (min-width: 600px) {
-             #calendar-grid .weekday { padding-bottom: 10px; font-size: 0.9em; }
-        }
-
-        /* Container for weekdays to avoid breaking grid layout */
-        #weekdays-row {
-            display: contents; /* Makes this div act like its children are direct children of the grid */
-        }
-
-        #calendar-grid .day-cell {
-            background-color: #1e1e1e; /* Match container background */
-            padding: 5px 2px; /* Reduced padding */
-            min-height: 75px; /* Reduced min-height */
-            border-radius: 3px;
-            font-size: 0.8em; /* Smaller text inside cells */
-            display: flex;
-            flex-direction: column; /* Stack day number and event text */
-            justify-content: flex-start; /* Align content to top */
-            align-items: center;
-            border: 1px solid #333; /* Subtle border */
-            overflow: hidden; /* Hide overflow */
-            position: relative;
-        }
-         @media (min-width: 600px) {
-             #calendar-grid .day-cell {
-                 padding: 8px 4px;
-                 min-height: 95px;
-                 font-size: 0.9em;
-             }
-         }
-
-        #calendar-grid .day-cell.empty {
-            background-color: transparent; /* Make empty cells less prominent */
-            border: none;
-        }
-
-        #calendar-grid .day-cell .day-number {
-            font-weight: bold;
-            font-size: 1em; /* Adjusted date number size */
-            color: #e0e0e0;
-            margin-bottom: 3px; /* Reduced space */
-        }
-         @media (min-width: 600px) {
-             #calendar-grid .day-cell .day-number { font-size: 1.1em; margin-bottom: 4px;}
-         }
-
-
-        #calendar-grid .day-cell .daily-event-day {
-            font-size: 0.8em; /* Adjusted event day text size */
-            color: #4dd0e1; /* Teal color for event day */
-            word-wrap: break-word; /* Wrap long text */
-            margin-bottom: 2px; /* Reduced space */
-            line-height: 1.1; /* Tighter line height */
-        }
-         @media (min-width: 600px) {
-             #calendar-grid .day-cell .daily-event-day { font-size: 0.85em; margin-bottom: 3px; line-height: 1.2; }
-         }
-
-        #calendar-grid .day-cell .day-location { /* Style for the location */
-            font-size: 0.7em; /* Adjusted location text size */
-            color: #9e9e9e; /* Dimmer grey color */
-            word-wrap: break-word; /* Wrap long location names */
-            line-height: 1.1; /* Tighter line height */
-        }
-         @media (min-width: 600px) {
-             #calendar-grid .day-cell .day-location { font-size: 0.75em; line-height: 1.2; }
-         }
-
-
-        #calendar-grid .day-cell.today {
-             background-color: #334e58; /* Highlight for current day */
-             border: 1px solid #4dd0e1;
-        }
-        #calendar-grid .day-cell.today .day-number {
-            color: #ffffff; /* White day number for today */
-        }
-
-        #calendar-grid .day-cell.past .daily-event-day,
-        #calendar-grid .day-cell.past .day-location { /* Dim past location too */
-            color: #777;
-        }
-        #calendar-grid .day-cell.invalid .daily-event-day,
-        #calendar-grid .day-cell.invalid .day-location {
-            color: #555;
-        }
-        /* Ensure location doesn't show in invalid cells even if logic fails */
-        #calendar-grid .day-cell.invalid .day-location {
-            display: none;
-        }
-
-
-        /* --- Countdown Timer Styles --- */
-        #countdown-container {
-            text-align: center;
-            padding: 10px; /* Reduced padding */
-            background-color: #2a2a2a; /* Match calendar background */
-            border-radius: 0 0 5px 5px; /* Round bottom corners */
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-            font-size: 1em; /* Adjusted size */
-            color: #e0e0e0;
-            margin-bottom: 30px; /* Space above the next HR */
-        }
-         @media (min-width: 600px) {
-             #countdown-container { padding: 15px 10px; font-size: 1.2em; }
-         }
-
-        #countdown-container .countdown-label {
-             margin-right: 5px; /* Space after label */
-             display: block; /* Stack label above timer on small screens */
-             margin-bottom: 3px;
-        }
-        @media (min-width: 480px) { /* Display inline side-by-side on slightly larger screens */
-             #countdown-container .countdown-label { display: inline; margin-bottom: 0; }
-        }
-
-        #countdown-timer {
-            font-weight: bold;
-            color: #ffc107; /* Use warning color for emphasis */
-            margin-left: 0; /* Remove left margin when stacked */
-            min-width: auto; /* Remove min-width when stacked */
-            display: block; /* Stack timer below label on small screens */
-        }
-        @media (min-width: 480px) { /* Display inline side-by-side on slightly larger screens */
-            #countdown-timer {
-                display: inline-block;
-                margin-left: 8px; /* Restore space */
-                min-width: 150px; /* Restore min-width */
-            }
-        }
-
-        #countdown-day-label {
-            color: #00bcd4; /* Teal color for day number */
-            font-weight: bold;
-        }
-
-    </style>
 </head>
 <body>
 <div class="container">
-    <h1>FISH <>< COMMUNITY</h1>
+    <h1>FISH <span aria-hidden="true"><><</span> COMMUNITY</h1>
 
-    <!-- YouTube video embedded at the top -->
     <div class="video-container">
         <iframe width="560" height="315" src="https://www.youtube.com/embed/plQ24noJR3w?si=oQm9TDtJhSec733t" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
 
-    <div class="fish-animation">
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+    <div class="fish-animation" aria-hidden="true">
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
     </div>
 
     <hr>
 
-    <h2>MEANING OF FISH <><</h2>
-
-    <!-- IMPORTANT: Make sure 'meaning_of_fish.png' is in the same folder as this HTML file -->
-    <img src="meaning_of_fish.png" alt="Image explaining the meaning of FISH <><: < represents chaos increase, > represents adding structure, <>< symbolizes structured chaos." class="meaning-image">
-
-    <p>FISH <>< COMMUNITY is made out of multiple communities, each with its own leadership and rules. All communities work together and follow the same principles.</p>
-
-    <p>This is the main <>< group, you can find all the fish verified groups at "FISH VERIFIED <><" <a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a> verification group</p>
-
-    <hr>
-
-    <h2>COMMUNITY PRINCIPLES</h2>
-    <ol>
-        <li><b>FUN</b>: Don't forget to have fun</li>
-        <li><b>COMMON SENSE</b>: Not everything needs a rule, sometimes the best guide is common sense.</li>
-        <li><b>STRUCTURED CHAOS</b>: Creativity often comes from chaos. Embrace it, but don't let it control you.</li>
-        <li><b>CONFLICT AND CREATIVITY</b>: It's okay to disagree. Conflict can lead to better ideas and innovations.</li>
-        <li><b>COMMUNICATION</b>: Resolving conflicts and problems requires respectful communication. It's important to address conflicts and problems as soon as possible and not let them escalate.</li>
-        <li><b>INNOVATION</b>: Always look for better ways to do things. Innovation is the key to progress.</li>
-        <li><b>HUMILITY</b>: Don't let your ego get in the way. Everyone has something to teach you.</li>
-        <li><b>SIMPLICITY</b>: The simplest solution is often the best one. Don't overcomplicate things.</li>
-        <li><b>DECENCY</b>: Don't be a degenerate. Treat others with respect and kindness.</li>
-        <li><b>OPEN-MINDEDNESS</b>: Be open to new ideas and experiences. They're the best way to learn and grow.</li>
-        <li><b>AUTHENTICITY</b>: Don't keep pretending to be someone you're not, it's a waste of energy</li>
-        <li><b>SUCCESS AND CREATIVITY</b>: Success and money are important, but they shouldn't limit your creativity. Use them as tools for growth, not as the final goal.</li>
-    </ol>
-
-    <p>Human nature is complex. People are different, and not everyone will understand your principles or rules just because they are told to. Good and evil exist, and everyone comes from different cultures with different perspectives. Some people don't speak English or know how to communicate, and some people don't have the mental capacity or knowledge to understand complicated things. It's important to remember that things will never be perfect if humans are involved, so it's important to keep a balance between everything. <><</p>
+    <section aria-labelledby="meaning-heading">
+        <h2 id="meaning-heading">MEANING OF FISH <span aria-hidden="true"><><</span></h2>
+        <img src="images/meaning_of_fish.png"
+             alt="Image explaining the meaning of FISH <><: < represents chaos increase, > represents adding structure, <>< symbolizes structured chaos."
+             class="meaning-image"
+             loading="lazy"
+             width="600" height="338">
+        <p>FISH <span aria-hidden="true"><><</span> COMMUNITY is made out of multiple communities, each with its own leadership and rules. All communities work together and follow the same principles.</p>
+        <p>This is the main <span aria-hidden="true"><><</span> group, you can find all the fish verified groups at "FISH VERIFIED <span aria-hidden="true"><><</span>" <a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a> verification group</p>
+    </section>
 
     <hr>
 
-    <h2>DAILY VRCHAT EVENT</h2>
-
-    <!-- START: Daily VRChat Calendar -->
-    <div id="daily-vrchat-calendar-container">
-        <h3>Daily VRChat Calendar (UTC)</h3>
-        <div id="calendar-explanation">Shows the event day number (since July 20, 2023) and location for each date.</div>
-        <div id="calendar-controls">
-            <button id="prev-month">< Prev</button>
-            <div id="calendar-controls-center">
-                <button id="goto-today">Today</button>
-                <span id="month-year"></span>
-            </div>
-            <button id="next-month">Next ></button>
-        </div>
-         <!-- Start Day Controls -->
-        <div id="start-day-controls">
-            <span class="start-day-label">Week Starts On:</span>
-            <button id="start-sun" class="start-day-btn" data-day="0">Sunday</button>
-            <button id="start-mon" class="start-day-btn" data-day="1">Monday</button>
-        </div>
-        <div id="calendar-grid">
-            <!-- Weekday headers and day cells will be generated here by JavaScript -->
-        </div>
-    </div>
-    <!-- END: Daily VRChat Calendar -->
-
-    <!-- START: Countdown Timer -->
-    <div id="countdown-container">
-        <span class="countdown-label">Next Daily VRChat (<span id="countdown-day-label">---</span>) starts in:</span>
-        <span id="countdown-timer">Calculating...</span>
-    </div>
-    <!-- END: Countdown Timer -->
-
-    <hr> <!-- Separator between Calendar/Countdown and Event Description -->
-
-    <h3>DAILY VRCHAT</h3>
-    <p>Public event that lets people freely express themselves without many restrictions. People are given the freedom to be as chaotic, offensive, and loud as they wish to be.</p>
-    <p>The main objective of <b>DAILY VRCHAT</b> is to maintain a public <b><><</b> group instance for <b>2 hours</b>, inviting anyone from the internet to join (<a href="https://vrc.group/FISH.9566" target="_blank" rel="noopener noreferrer">https://vrc.group/FISH.9566</a>).</p>
-    <p>After the event, everyone will be kicked from the instance</p>
-
-    <h3>THERE ARE 2 RULES!</h3>
-    <ul>
-        <li>1) NSFW avatars are not allowed.</li>
-        <li>2) Crasher avatars are not allowed.</li>
-    </ul>
-    <p>If you break these rules you will be kicked or banned from joining <b>DAILY VRCHAT</b></p>
-    <p>Check the Discord Events channel for more details. A link to the world instance will be posted to #🔥instance-link at the start of the event. (Discord accessible via <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a>)</p>
-
-    <h3>WARNING!</h3>
-    <p class="warning">This daily event is not your safe space. Moderators won't assist you with any hateful, racist, or homophobic behavior. And will only enforce 2 rules, If you get easily emotionally distressed <b>DO NOT GO TO THIS EVENT</b></p>
-    <p>VRChat's Terms of Service and Guidelines still apply, and violations could result in your account being banned.</p>
-
-    <hr>
-
-    <!-- Start FISH VERIFIED Section -->
-    <div class="fish-verified-theme">
-        <h2>FISH VERIFIED COMMUNITIES <><</h2>
-        <img src="https://lh3.googleusercontent.com/d/1QTCy6DfnU4DCHk36a490xExIgqbjCBM8" alt="Fish Community Image" class="community-image" style="max-width: 300px;">
-
-        <p>The FISH VERIFIED verifies communities for the FISH <>< COMMUNITY. If a community is fish verified the owner of the verified community will be inside this vrchat group (<a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a>) and will also have the FISH-VERIFIED role on the <>< discord server.</p>
-
-
-        <h3>Criteria for Verification</h3>
-        <p>To get your community verified as a <>< community, you need to meet the following criteria:</p>
+    <section aria-labelledby="principles-heading">
+        <h2 id="principles-heading">COMMUNITY PRINCIPLES</h2>
         <ol>
-            <li>Your community should contribute significantly to the <>< community.</li>
+            <li><b>FUN</b>: Don't forget to have fun</li>
+            <li><b>COMMON SENSE</b>: Not everything needs a rule, sometimes the best guide is common sense.</li>
+            <li><b>STRUCTURED CHAOS</b>: Creativity often comes from chaos. Embrace it, but don't let it control you.</li>
+            <li><b>CONFLICT AND CREATIVITY</b>: It's okay to disagree. Conflict can lead to better ideas and innovations.</li>
+            <li><b>COMMUNICATION</b>: Resolving conflicts and problems requires respectful communication. It's important to address conflicts and problems as soon as possible and not let them escalate.</li>
+            <li><b>INNOVATION</b>: Always look for better ways to do things. Innovation is the key to progress.</li>
+            <li><b>HUMILITY</b>: Don't let your ego get in the way. Everyone has something to teach you.</li>
+            <li><b>SIMPLICITY</b>: The simplest solution is often the best one. Don't overcomplicate things.</li>
+            <li><b>DECENCY</b>: Don't be a degenerate. Treat others with respect and kindness.</li>
+            <li><b>OPEN-MINDEDNESS</b>: Be open to new ideas and experiences. They're the best way to learn and grow.</li>
+            <li><b>AUTHENTICITY</b>: Don't keep pretending to be someone you're not, it's a waste of energy</li>
+            <li><b>SUCCESS AND CREATIVITY</b>: Success and money are important, but they shouldn't limit your creativity. Use them as tools for growth, not as the final goal.</li>
+        </ol>
+        <p>Human nature is complex. People are different, and not everyone will understand your principles or rules just because they are told to. Good and evil exist, and everyone comes from different cultures with different perspectives. Some people don't speak English or know how to communicate, and some people don't have the mental capacity or knowledge to understand complicated things. It's important to remember that things will never be perfect if humans are involved, so it's important to keep a balance between everything. <span aria-hidden="true"><><</span></p>
+    </section>
+
+    <!-- === START CALENDAR SECTION === -->
+    <hr>
+
+    <section aria-labelledby="daily-event-heading">
+        <h2 id="daily-event-heading">DAILY VRCHAT EVENT</h2>
+
+        <!-- START: VRChat Calendar -->
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button id="cal-prev-month" class="cal-nav-btn" title="Previous Month"><</button>
+                <h3 id="cal-month-year">Month Year</h3>
+                <button id="cal-next-month" class="cal-nav-btn" title="Next Month">></button>
+                <button id="cal-goto-today" class="cal-today-btn" title="Go to Today">Today</button>
+            </div>
+
+            <div id="start-day-controls">
+                <span class="start-day-label">Week Starts On:</span>
+                <button id="cal-start-sun" class="cal-start-day-btn" data-day="0">Sunday</button>
+                <button id="cal-start-mon" class="cal-start-day-btn" data-day="1">Monday</button>
+            </div>
+
+            <!-- === ADDED: Weekday Header Row Container === -->
+            <div class="calendar-weekdays" id="calendar-weekdays">
+                <!-- Weekday names will be generated here by JS -->
+            </div>
+            <!-- === END ADDED === -->
+
+            <!-- This div is the grid body - JS populates it -->
+            <div class="calendar-body" id="calendar-grid"></div>
+        </div>
+        <!-- END: VRChat Calendar -->
+
+        <!-- START: Countdown Timer -->
+        <div id="countdown-container">
+            <span class="countdown-label">Next Daily VRChat (<span id="countdown-day-label">---</span>) starts in:</span>
+            <span id="countdown-timer">Calculating...</span>
+        </div>
+        <!-- END: Countdown Timer -->
+    </section>
+
+    <hr>
+
+    <section aria-labelledby="daily-vrchat-desc-heading">
+        <h3 id="daily-vrchat-desc-heading">DAILY VRCHAT</h3>
+        <p>Public event that lets people freely express themselves without many restrictions. People are given the freedom to be as chaotic, offensive, and loud as they wish to be.</p>
+        <p>The main objective of <b>DAILY VRCHAT</b> is to maintain a public <b><span aria-hidden="true"><><</span></b> group instance for <b>2 hours</b>, inviting anyone from the internet to join (<a href="https://vrc.group/FISH.9566" target="_blank" rel="noopener noreferrer">https://vrc.group/FISH.9566</a>).</p>
+        <p>After the event, everyone will be kicked from the instance</p>
+        <h3>THERE ARE 2 RULES!</h3>
+        <ul>
+            <li>1) NSFW avatars are not allowed.</li>
+            <li>2) Crasher avatars are not allowed.</li>
+        </ul>
+        <p>If you break these rules you will be kicked or banned from joining <b>DAILY VRCHAT</b></p>
+        <p>Check the Discord Events channel for more details. A link to the world instance will be posted to #🔥instance-link at the start of the event. (Discord accessible via <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a>)</p>
+        <h3>WARNING!</h3>
+        <p class="warning">This daily event is not your safe space. Moderators won't assist you with any hateful, racist, or homophobic behavior. And will only enforce 2 rules, If you get easily emotionally distressed <b>DO NOT GO TO THIS EVENT</b></p>
+        <p>VRChat's Terms of Service and Guidelines still apply, and violations could result in your account being banned.</p>
+    </section>
+    <!-- === END CALENDAR SECTION === -->
+
+    <hr>
+
+    <section class="fish-verified-theme" aria-labelledby="verified-heading">
+        <h2 id="verified-heading">FISH VERIFIED COMMUNITIES <span aria-hidden="true"><><</span></h2>
+        <img src="https://lh3.googleusercontent.com/d/1QTCy6DfnU4DCHk36a490xExIgqbjCBM8"
+             alt="Fish Community Image" class="community-image" style="max-width: 300px;" loading="lazy" width="300" height="300">
+        <p>The FISH VERIFIED verifies communities for the FISH <span aria-hidden="true"><><</span> COMMUNITY. If a community is fish verified the owner of the verified community will be inside this vrchat group (<a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a>) and will also have the FISH-VERIFIED role on the <span aria-hidden="true"><><</span> discord server.</p>
+        <h3>Criteria for Verification</h3>
+        <p>To get your community verified as a <span aria-hidden="true"><><</span> community, you need to meet the following criteria:</p>
+        <ol>
+            <li>Your community should contribute significantly to the <span aria-hidden="true"><><</span> community.</li>
             <li>The community must be managed by a capable person.</li>
             <li>The community must be safe for work (SFW)</li>
             <li>The community should have a clear idea behind it and be active.</li>
         </ol>
-        <p>If you believe your community could be fish verified, contact TheZiver on <>< discord server at <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a></p>
-
+        <p>If you believe your community could be fish verified, contact TheZiver on <span aria-hidden="true"><><</span> discord server at <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a></p>
         <h3>Benefits of Verification</h3>
         <p>When a community gets verified, they receive:</p>
         <ul>
-            <li>Full support from the <>< community</li>
-            <li>Dedicated text channel on the <>< discord server</li>
+            <li>Full support from the <span aria-hidden="true"><><</span> community</li>
+            <li>Dedicated text channel on the <span aria-hidden="true"><><</span> discord server</li>
             <li>Asset for displaying group member count in your vrchat world</li>
             <li>Daily vrchat starter pack access, chance to build your own daily vrchat world</li>
             <li><b>Owner of fish-verified community receives NOCLIP in all DAILY VRCHAT worlds</b></li>
         </ul>
-
         <h3>LIST OF FISH VERIFIED COMMUNITIES</h3>
         <ul>
-            <li><b>CHEESE FISH</b> avatar/world update group, makes bunch of meme avatars, Owner is cunks feet<br>
-                <b>VRChat Group:</b> <a href="https://vrc.group/CHEESE.1570" target="_blank" rel="noopener noreferrer">https://vrc.group/CHEESE.1570</a></li>
-            <li><b>VAPOR FISH</b> nostalgia time capsule, makes nostalgia. Owner is Robaws<br>
-                <b>VRChat Group:</b> <a href="https://vrc.group/VAPOR.3451" target="_blank" rel="noopener noreferrer">https://vrc.group/VAPOR.3451</a></li>
-            <li><b>GAMBLE FISH</b> casino game world inside vrchat. Owner is spidget<br>
-                <b>VRChat Group:</b> <a href="https://vrc.group/GAMBLE.0958" target="_blank" rel="noopener noreferrer">https://vrc.group/GAMBLE.0958</a><br>
-                <b>Discord Server:</b> <a href="https://discord.gg/EZmPDtFAPx" target="_blank" rel="noopener noreferrer">https://discord.gg/EZmPDtFAPx</a></li>
-            <li><b>RAT FISH</b> is a avatar/world update group, Owner is luiswillich<br>
-                <b>VRChat Group:</b> <a href="https://vrc.group/RAT.3149" target="_blank" rel="noopener noreferrer">https://vrc.group/RAT.3149</a></li>
-            <li><b>The Rusk Shack</b> is a community for people who use rusk avatars, Owner is verse<br>
-                <b>VRChat Group:</b> <a href="https://vrc.group/TRUSKS.6089" target="_blank" rel="noopener noreferrer">https://vrc.group/TRUSKS.6089</a><br>
-                <b>Discord Server:</b> <a href="https://discord.gg/theruskshack" target="_blank" rel="noopener noreferrer">https://discord.gg/theruskshack</a></li>
-            <li><b>AVIFAIR</b> is a Global gaming convention inside VR. Owner is artholic<br>
-                <b>VRChat Group:</b> <a href="https://vrc.group/AVI.9657" target="_blank" rel="noopener noreferrer">https://vrc.group/AVI.9657</a><br>
-                <b>Discord Server:</b> <a href="https://discord.gg/P5REVfSVMG" target="_blank" rel="noopener noreferrer">https://discord.gg/P5REVfSVMG</a></li>
-            <li><b>Family Friendly Cult</b> is for people who use ukon avatars. Owner is comedian_t<br>
-                <b>VRChat Group:</b> <a href="https://vrc.group/FAMILY.3738" target="_blank" rel="noopener noreferrer">https://vrc.group/FAMILY.3738</a><br>
-                <b>Discord Server:</b> <a href="https://discord.gg/BFex5YNKuy" target="_blank" rel="noopener noreferrer">https://discord.gg/BFex5YNKuy</a></li>
-            <li><b>Portal Media</b> is a VR film studio. Owner is Virtual<br>
-                <b>VRChat Group:</b> <a href="https://vrc.group/PORTAL.0170" target="_blank" rel="noopener noreferrer">https://vrc.group/PORTAL.0170</a><br>
-                <b>Discord Server:</b> <a href="https://discord.gg/Z6Xrey7rJw" target="_blank" rel="noopener noreferrer">https://discord.gg/Z6Xrey7rJw</a></li>
+            <li><b>CHEESE FISH</b> avatar/world update group, makes bunch of meme avatars, Owner is cunks feet<br><b>VRChat Group:</b> <a href="https://vrc.group/CHEESE.1570" target="_blank" rel="noopener noreferrer">https://vrc.group/CHEESE.1570</a></li>
+            <li><b>VAPOR FISH</b> nostalgia time capsule, makes nostalgia. Owner is Robaws<br><b>VRChat Group:</b> <a href="https://vrc.group/VAPOR.3451" target="_blank" rel="noopener noreferrer">https://vrc.group/VAPOR.3451</a></li>
+            <li><b>GAMBLE FISH</b> casino game world inside vrchat. Owner is spidget<br><b>VRChat Group:</b> <a href="https://vrc.group/GAMBLE.0958" target="_blank" rel="noopener noreferrer">https://vrc.group/GAMBLE.0958</a><br><b>Discord Server:</b> <a href="https://discord.gg/EZmPDtFAPx" target="_blank" rel="noopener noreferrer">https://discord.gg/EZmPDtFAPx</a></li>
+            <li><b>RAT FISH</b> is a avatar/world update group, Owner is luiswillich<br><b>VRChat Group:</b> <a href="https://vrc.group/RAT.3149" target="_blank" rel="noopener noreferrer">https://vrc.group/RAT.3149</a></li>
+            <li><b>The Rusk Shack</b> is a community for people who use rusk avatars, Owner is verse<br><b>VRChat Group:</b> <a href="https://vrc.group/TRUSKS.6089" target="_blank" rel="noopener noreferrer">https://vrc.group/TRUSKS.6089</a><br><b>Discord Server:</b> <a href="https://discord.gg/theruskshack" target="_blank" rel="noopener noreferrer">https://discord.gg/theruskshack</a></li>
+            <li><b>AVIFAIR</b> is a Global gaming convention inside VR. Owner is artholic<br><b>VRChat Group:</b> <a href="https://vrc.group/AVI.9657" target="_blank" rel="noopener noreferrer">https://vrc.group/AVI.9657</a><br><b>Discord Server:</b> <a href="https://discord.gg/P5REVfSVMG" target="_blank" rel="noopener noreferrer">https://discord.gg/P5REVfSVMG</a></li>
+            <li><b>Family Friendly Cult</b> is for people who use ukon avatars. Owner is comedian_t<br><b>VRChat Group:</b> <a href="https://vrc.group/FAMILY.3738" target="_blank" rel="noopener noreferrer">https://vrc.group/FAMILY.3738</a><br><b>Discord Server:</b> <a href="https://discord.gg/BFex5YNKuy" target="_blank" rel="noopener noreferrer">https://discord.gg/BFex5YNKuy</a></li>
+            <li><b>Portal Media</b> is a VR film studio. Owner is Virtual<br><b>VRChat Group:</b> <a href="https://vrc.group/PORTAL.0170" target="_blank" rel="noopener noreferrer">https://vrc.group/PORTAL.0170</a><br><b>Discord Server:</b> <a href="https://discord.gg/Z6Xrey7rJw" target="_blank" rel="noopener noreferrer">https://discord.gg/Z6Xrey7rJw</a></li>
         </ul>
-    </div>
-    <!-- End FISH VERIFIED Section -->
+    </section>
 
     <hr>
 
-    <!-- Start LUXURY TRASH Section -->
-    <div class="luxury-trash-theme">
-        <h2>LUXURY TRASH STORE</h2>
-        <p>LUXURY TRASH makes and sells luxury items to the FISH <>< COMMUNITY.</p>
+    <section class="luxury-trash-theme" aria-labelledby="luxury-heading">
+        <h2 id="luxury-heading">LUXURY TRASH STORE</h2>
+        <p>LUXURY TRASH makes and sells luxury items to the FISH <span aria-hidden="true"><><</span> COMMUNITY.</p>
         <p>Come visit the store at LUXURY TRASH world or go to <a href="http://theziver.booth.pm" target="_blank" rel="noopener noreferrer">theziver.booth.pm</a></p>
         <p><b>Store owner:</b> TheZiver</p>
-
         <p><i>"Success and money are important, but they shouldn't limit your creativity. Use them as tools for growth, not as the final goal."</i></p>
-
         <p>This store sells 3d models like fish, eggs and avatar assets like:</p>
-
         <ul>
             <li><b>The LUXURY CUBE</b> is a knee accessory made out of 192 polygons, 4 bones, 19 blendshapes, gold matcap, fish scale normal map. It also has the 69 vertex in the middle that has no purpose :D</li>
             <li><b>The FISHING FLAG</b> is a VRChat avatar tool designed for cheating game worlds and exploring inaccessible areas.</li>
             <li><b>The LUXURY PIPE</b> has 816 polygons, 8 bones, 2 shape keys, gold matcap, fish scale normal map and sound effects</li>
-            <li><b>LUXURY EGG</b></li>
-            <li><b>LUXURY PRE-CRACKED EGG</b></li>
-            <li><b>LUXURY STAR</b></li>
-            <li><b>LUXURY FISH</b> [Free Item]</li>
-            <li><b>FISH HAIRCLIP</b> [Free Item]</li>
-            <li><b>LUXURY TURRET (WORLD PREFAB)</b></li>
+            <li><b>LUXURY EGG</b></li><li><b>LUXURY PRE-CRACKED EGG</b></li><li><b>LUXURY STAR</b></li><li><b>LUXURY FISH</b> [Free Item]</li><li><b>FISH HAIRCLIP</b> [Free Item]</li><li><b>LUXURY TURRET (WORLD PREFAB)</b></li>
         </ul>
-    </div>
-    <!-- End LUXURY TRASH Section -->
+    </section>
 
     <hr>
 
-    <!-- Start ROSE FISH Section -->
-    <div class="rose-fish-theme">
-        <h2>ROSE FISH COMMUNITY</h2>
-        <p>Content creation community that makes content for the FISH <>< COMMUNITY. When someone joins rose fish, they get access to exclusive things.</p>
+    <section class="rose-fish-theme" aria-labelledby="rose-heading">
+        <h2 id="rose-heading">ROSE FISH COMMUNITY</h2>
+        <p>Content creation community that makes content for the FISH <span aria-hidden="true"><><</span> COMMUNITY. When someone joins rose fish, they get access to exclusive things.</p>
         <p><b>DATABASE:</b> <a href="http://rosefish.theziver.com" target="_blank" rel="noopener noreferrer">rosefish.theziver.com</a></p>
-
         <h3>Joining ROSE FISH</h3>
         <p>To join rose fish you need to make a contribution that requires human effort to create and could be easily used by the fish community members. For example:</p>
         <ul>
-            <li>Public VRChat avatar/world</li>
-            <li>3D model</li>
-            <li>Script, Code, Utility, Addon, Tool</li>
-            <li>Shaders</li>
-            <li>Videos/Animations</li>
-            <li>Music, Sound Effects (only youtube or google drive links allowed)</li>
-            <li>Drawings</li>
-            <li>Other content related to <>< that requires effort to create.</li>
+            <li>Public VRChat avatar/world</li><li>3D model</li><li>Script, Code, Utility, Addon, Tool</li><li>Shaders</li><li>Videos/Animations</li><li>Music, Sound Effects (only youtube or google drive links allowed)</li><li>Drawings</li><li>Other content related to <span aria-hidden="true"><><</span> that requires effort to create.</li>
         </ul>
-        <p>If you believe you have made a significant contribution, you can submit it on <>< discord server at <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a></p>
+        <p>If you believe you have made a significant contribution, you can submit it on <span aria-hidden="true"><><</span> discord server at <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a></p>
         <p>After submitting a contribution, all the rose fish members will participate in a voting process on discord. To receive a rose fish invitation, the contribution must receive a "YES" vote from over 60％ of the rose fish members.</p>
-        <p>We have an avatar world called: "ROSE <>< AVATARS" where we distribute our public avatars.</p>
-        <p>Please make your contributions presentable and concise and free from any NSFW content. <><</p>
-
+        <p>We have an avatar world called: "ROSE <span aria-hidden="true"><><</span> AVATARS" where we distribute our public avatars.</p>
+        <p>Please make your contributions presentable and concise and free from any NSFW content. <span aria-hidden="true"><><</span></p>
         <h3>ROSE FISH AVATAR GUIDELINES</h3>
         <ol>
             <li><b>AVATAR CONTEXT</b>: Avatar context matters, avatars designed with the intention of being sexual, offensive, or malicious are not allowed.</li>
@@ -821,273 +208,25 @@
             <li><b>PARODY COMEDY</b>: Avatars that are loud, disruptive, or malicious are allowed if they're created for comedic purposes. This includes avatars with bright colors, flashing images, and performance-heavy shaders.</li>
             <li><b>COPYRIGHT RESPONSIBILITY</b>: By submitting an avatar, users accept the risk of a DMCA strike if they violate intellectual property rights.</li>
         </ol>
-    </div>
-    <!-- End ROSE FISH Section -->
+    </section>
 
     <hr>
 
-    <div class="fish-animation">
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
-        <span class="fish-symbol">＜</span><span class="fish-symbol">＞</span><span class="fish-symbol">＜</span>
+    <div class="fish-animation" aria-hidden="true">
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // --- Calendar Elements ---
-        const calendarGrid = document.getElementById('calendar-grid');
-        const monthYearDisplay = document.getElementById('month-year');
-        const prevMonthButton = document.getElementById('prev-month');
-        const nextMonthButton = document.getElementById('next-month');
-        const gotoTodayButton = document.getElementById('goto-today');
-        // Start Day Buttons
-        const startSunButton = document.getElementById('start-sun');
-        const startMonButton = document.getElementById('start-mon');
-
-        // --- Countdown Elements ---
-        const countdownTimerDisplay = document.getElementById('countdown-timer');
-        const countdownDayLabel = document.getElementById('countdown-day-label');
-
-        // --- Configuration ---
-        const targetDate = new Date(Date.UTC(2023, 6, 20)); // Month is 0-indexed (6 = July)
-        const today = new Date(); // Use local 'today' for initial calendar view setting
-        const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())); // Use UTC 'today' for comparisons
-
-        let currentMonth = today.getUTCMonth(); // Use UTC month for calendar state
-        let currentYear = today.getUTCFullYear(); // Use UTC year for calendar state
-
-        // State variable for starting day of the week (0 = Sunday, 1 = Monday)
-        let startDayOfWeekSetting = 1; // Default to Monday
-
-        // Load preference from localStorage if available
-        const savedStartDay = localStorage.getItem('calendarStartDay');
-        if (savedStartDay && (savedStartDay === '0' || savedStartDay === '1')) {
-            startDayOfWeekSetting = parseInt(savedStartDay, 10);
-        }
-
-        // Location mapping based on UTC day of the week (0=Sun, 1=Mon, ..., 6=Sat)
-        const locations = [
-            "YES?",                 // Sunday
-            "LUXURY TRASH",         // Monday
-            "The Fishing Mall",     // Tuesday
-            "Retrocubic Nexus",     // Wednesday
-            "Cunks Coughing City",  // Thursday
-            "YES?",                 // Friday
-            "YES?"                  // Saturday
-        ];
-
-        // --- Calendar Helper Functions ---
-        function getOrdinalSuffix(num) {
-             if (num === null || typeof num === 'undefined') return "";
-             const n = Number(num);
-             if (n < 0) return "";
-            const j = n % 10, k = n % 100;
-            if (j == 1 && k != 11) return "st";
-            if (j == 2 && k != 12) return "nd";
-            if (j == 3 && k != 13) return "rd";
-            return "th";
-        }
-
-        function calculateDailyVrchatDay(date) {
-             const normalizedDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-             if (normalizedDate < targetDate) return null;
-             const oneDay = 24 * 60 * 60 * 1000;
-             const dayDifference = Math.floor((normalizedDate - targetDate) / oneDay);
-             return dayDifference >= 0 ? dayDifference : null;
-        }
-
-
-        // --- Calendar Rendering Function ---
-        function renderCalendar(month, year) {
-            // Clear previous cells AND weekday headers
-            calendarGrid.innerHTML = ''; // Clear everything inside the grid
-
-            const monthName = new Date(Date.UTC(year, month)).toLocaleString('default', { month: 'long', timeZone: 'UTC' });
-            monthYearDisplay.textContent = `${monthName} ${year}`;
-
-            // --- Generate Weekday Headers Dynamically ---
-            const weekdaysContainer = document.createElement('div');
-            weekdaysContainer.id = 'weekdays-row'; // Use the ID for potential styling/selection
-            calendarGrid.appendChild(weekdaysContainer); // Append the row first
-
-            const weekdayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            for (let i = 0; i < 7; i++) {
-                const dayIndex = (startDayOfWeekSetting + i) % 7; // Calculate correct day index based on setting
-                const weekdayDiv = document.createElement('div');
-                weekdayDiv.classList.add('weekday');
-                weekdayDiv.textContent = weekdayNames[dayIndex];
-                weekdaysContainer.appendChild(weekdayDiv); // Append header to the row
-            }
-            // --- End Weekday Header Generation ---
-
-            const firstDayOfMonth = new Date(Date.UTC(year, month, 1));
-            const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
-
-            // --- Calculate Offset Based on Start Day Setting ---
-            const firstDayOfMonthRaw = firstDayOfMonth.getUTCDay(); // 0=Sun, 1=Mon,... 6=Sat
-            let startingDayOffset = (firstDayOfMonthRaw - startDayOfWeekSetting + 7) % 7;
-
-            // Add empty cells for the offset
-            for (let i = 0; i < startingDayOffset; i++) {
-                const emptyCell = document.createElement('div');
-                emptyCell.classList.add('day-cell', 'empty');
-                calendarGrid.appendChild(emptyCell); // Append empty cells after the headers row
-            }
-
-            // Add day cells
-            for (let day = 1; day <= daysInMonth; day++) {
-                const cellDate = new Date(Date.UTC(year, month, day));
-                const dayCell = document.createElement('div');
-                dayCell.classList.add('day-cell');
-
-                const dayNumberSpan = document.createElement('span');
-                dayNumberSpan.classList.add('day-number');
-                dayNumberSpan.textContent = day;
-                dayCell.appendChild(dayNumberSpan);
-
-                const dailyDay = calculateDailyVrchatDay(cellDate);
-                const dailyEventSpan = document.createElement('span');
-                dailyEventSpan.classList.add('daily-event-day');
-
-                if (dailyDay !== null) {
-                    const suffix = getOrdinalSuffix(dailyDay);
-                    dailyEventSpan.textContent = `${dailyDay}${suffix}`; // Removed "Day " prefix
-                    dayCell.appendChild(dailyEventSpan);
-
-                    // Add 'past' class only if it's truly before today (not today itself)
-                    if (cellDate.getTime() < todayUTC.getTime()) {
-                       dayCell.classList.add('past');
-                   }
-
-                    const dayOfWeek = cellDate.getUTCDay();
-                    const locationName = locations[dayOfWeek];
-                    const locationSpan = document.createElement('span');
-                    locationSpan.classList.add('day-location');
-                    locationSpan.textContent = locationName;
-                    dayCell.appendChild(locationSpan);
-
-                } else {
-                    dailyEventSpan.textContent = '-';
-                    dayCell.appendChild(dailyEventSpan);
-                    dayCell.classList.add('invalid');
-                }
-
-                // Check if this cell is today
-                if (year === todayUTC.getUTCFullYear() && month === todayUTC.getUTCMonth() && day === todayUTC.getUTCDate()) {
-                    dayCell.classList.add('today');
-                    dayCell.classList.remove('past'); // Ensure today is not marked as past
-                }
-
-                calendarGrid.appendChild(dayCell); // Append day cell
-            }
-        }
-
-
-        // --- Countdown Timer Function ---
-        function updateCountdown() {
-            const nowUTC = new Date();
-            const nowUTCMillis = nowUTC.getTime();
-            // Target 9 PM UTC (21:00)
-            let nextEventUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 21, 0, 0, 0));
-            let nextEventMillis = nextEventUTC.getTime();
-
-             // If current time is already past 9 PM UTC today, calculate for tomorrow's 9 PM UTC
-            if (nowUTCMillis >= nextEventMillis) {
-                 nextEventUTC.setUTCDate(nextEventUTC.getUTCDate() + 1);
-                 nextEventMillis = nextEventUTC.getTime();
-            }
-
-            const nextDailyDayNumber = calculateDailyVrchatDay(nextEventUTC);
-            const nextDaySuffix = getOrdinalSuffix(nextDailyDayNumber);
-            countdownDayLabel.textContent = (nextDailyDayNumber !== null) ? `${nextDailyDayNumber}${nextDaySuffix}` : "---";
-
-            const difference = nextEventMillis - nowUTCMillis;
-
-            if (difference <= 0) {
-                 // Fallback case
-                 countdownTimerDisplay.textContent = "Starting soon / In Progress!";
-            } else {
-                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-                 let countdownString = "";
-                 if (days > 0) {
-                     countdownString += `${days}d `;
-                 }
-                 countdownString += `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
-                countdownTimerDisplay.textContent = countdownString.trim();
-            }
-        }
-
-        // --- Event Listeners ---
-        prevMonthButton.addEventListener('click', () => {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderCalendar(currentMonth, currentYear);
-        });
-
-        nextMonthButton.addEventListener('click', () => {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            renderCalendar(currentMonth, currentYear);
-        });
-
-        gotoTodayButton.addEventListener('click', () => {
-            const now = new Date();
-            currentMonth = now.getUTCMonth();
-            currentYear = now.getUTCFullYear();
-            renderCalendar(currentMonth, currentYear);
-        });
-
-        // Event Listeners for Start Day Buttons
-        function updateStartDaySelection(newStartDay) {
-            if (startDayOfWeekSetting === newStartDay) return; // No change needed
-
-            startDayOfWeekSetting = newStartDay;
-            localStorage.setItem('calendarStartDay', newStartDay.toString()); // Save preference
-
-            // Update button active states
-            startSunButton.classList.toggle('active', newStartDay === 0);
-            startMonButton.classList.toggle('active', newStartDay === 1);
-
-            // Re-render the calendar with the new setting
-            renderCalendar(currentMonth, currentYear);
-        }
-
-        startSunButton.addEventListener('click', () => updateStartDaySelection(0));
-        startMonButton.addEventListener('click', () => updateStartDaySelection(1));
-
-
-        // --- Initial Setup ---
-        // Set initial active state for start day buttons BEFORE first render
-        startSunButton.classList.toggle('active', startDayOfWeekSetting === 0);
-        startMonButton.classList.toggle('active', startDayOfWeekSetting === 1);
-
-        // Initial render of calendar and countdown
-        renderCalendar(currentMonth, currentYear);
-        updateCountdown();
-        setInterval(updateCountdown, 1000); // Update countdown every second
-
-    });
-</script>
 
 </body>
 </html>
