@@ -32,7 +32,11 @@
         h1, h2, h3 {
             font-weight: bold;
             text-align: left;
-            animation: colorChange 0.5s infinite alternate;
+        }
+
+        /* H1 and H2 share the color animation */
+        h1, h2 {
+             animation: colorChange 0.5s infinite alternate;
         }
 
         h1 {
@@ -51,7 +55,7 @@
             font-size: 1.4em;
             margin-top: 35px;
             margin-bottom: 15px;
-            color: #bbbbbb !important; /* Force color override */
+            color: #bbbbbb; /* Default H3 color */
         }
 
         @keyframes colorChange {
@@ -66,7 +70,7 @@
             font-size: 1.15em;
             line-height: 1.8;
             margin-bottom: 25px;
-            color: #d0d0d0;
+            color: #d0d0d0; /* Default paragraph/list color */
         }
 
         ul, ol {
@@ -78,7 +82,7 @@
         }
 
         a {
-            color: #4dd0e1;
+            color: #4dd0e1; /* Default link color */
             text-decoration: underline;
             transition: color 0.2s ease;
         }
@@ -88,7 +92,7 @@
         }
 
         .warning {
-            color: #ffc107;
+            color: #ffc107; /* Specific warning color */
             font-weight: bold;
         }
 
@@ -128,15 +132,22 @@
         .fish-symbol:nth-child(5n+4) { animation-delay: 0.6s; }
         .fish-symbol:nth-child(5n+5) { animation-delay: 0.8s; }
 
-        .community-image {
-            max-width: 300px;
+        .community-image, .meaning-image { /* Added .meaning-image */
+            max-width: 100%; /* Allow images to be responsive */
             height: auto;
             display: block;
             margin: 20px auto;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
-        
+
+        .meaning-image { /* Specific style for meaning image */
+             max-width: 600px; /* Limit width slightly */
+             margin-top: 30px; /* Add some space below the H2 */
+             margin-bottom: 30px; /* Add some space above the following paragraph */
+        }
+
+
         .video-container {
             position: relative;
             padding-bottom: 56.25%; /* 16:9 aspect ratio */
@@ -154,12 +165,76 @@
             height: 100%;
             border-radius: 5px;
         }
+
+        /* --- Theme Styles --- */
+
+        /* FISH VERIFIED COMMUNITIES - White Theme */
+        .fish-verified-theme p,
+        .fish-verified-theme li,
+        .fish-verified-theme h3,
+        .fish-verified-theme ol { /* Added ol */
+            color: #FFFFFF; /* White text */
+        }
+        .fish-verified-theme a {
+            color: #A7D8FF; /* Light blue links for contrast */
+        }
+        .fish-verified-theme a:hover {
+            color: #D0EFFF;
+        }
+         .fish-verified-theme h3 {
+             color: #F0F0F0 !important; /* Slightly off-white for H3, important to override default */
+         }
+         .fish-verified-theme ol li::marker { /* Style list numbers */
+             color: #FFFFFF;
+         }
+
+
+        /* LUXURY TRASH STORE - Gold Theme */
+        .luxury-trash-theme p,
+        .luxury-trash-theme li,
+        .luxury-trash-theme h3 {
+            color: #FFD700; /* Gold text */
+        }
+        .luxury-trash-theme a {
+            color: #FFEC8B; /* Lighter gold for links */
+        }
+        .luxury-trash-theme a:hover {
+            color: #FFFACD; /* Even lighter gold on hover */
+        }
+         .luxury-trash-theme h3 {
+             color: #FBC02D !important; /* Darker gold for H3, important to override default */
+         }
+         /* Style the italic quote specifically if needed */
+         .luxury-trash-theme p i {
+             color: #FFEA00; /* Slightly different gold for emphasis */
+         }
+
+        /* ROSE FISH COMMUNITY - Red Theme */
+        .rose-fish-theme p,
+        .rose-fish-theme li,
+        .rose-fish-theme h3,
+        .rose-fish-theme ol { /* Apply to ordered lists too */
+            color: #FF6B6B; /* Soft red text */
+        }
+        .rose-fish-theme a {
+            color: #FF8F8F; /* Lighter red for links */
+        }
+        .rose-fish-theme a:hover {
+            color: #FFBDBD; /* Even lighter red on hover */
+        }
+         .rose-fish-theme h3 {
+             color: #E57373 !important; /* Slightly different red for H3, important to override default */
+         }
+         .rose-fish-theme ol li::marker { /* Style ordered list numbers */
+            color: #FF6B6B;
+         }
+
     </style>
 </head>
 <body>
 <div class="container">
     <h1>FISH <>< COMMUNITY</h1>
-    
+
     <!-- YouTube video embedded at the top -->
     <div class="video-container">
         <iframe width="560" height="315" src="https://www.youtube.com/embed/plQ24noJR3w?si=oQm9TDtJhSec733t" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -183,14 +258,13 @@
     <hr>
 
     <h2>MEANING OF FISH <><</h2>
+
+    <!-- Image moved here -->
+    <img src="meaning_of_fish.png" alt="Image explaining the meaning of FISH <><: < represents chaos increase, > represents adding structure, <>< symbolizes structured chaos." class="meaning-image">
+
     <p>FISH <>< COMMUNITY is made out of multiple communities, each with its own leadership and rules. All communities work together and follow the same principles.</p>
 
-    <h3>MEANING OF FISH <><</h3>
-    <p><b><</b> represents an increase in chaos.</p>
-    <p><b>></b> represents the process of adding structure to reduce the chaos.</p>
-    <p><b><</b> despite adding structure, chaos increases again.</p>
-    <p><b><><</b> symbolizes a process where chaos increases, structure is added to create some order, but then chaos increases again, resulting in a state of <b>"STRUCTURED CHAOS"</b></p>
-    <p>This is the main <>< group, you can find all the fish verified groups at "FISH VERIFIED <><" <a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a> verification group</p> <!-- Added target blank -->
+    <p>This is the main <>< group, you can find all the fish verified groups at "FISH VERIFIED <><" <a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a> verification group</p>
 
     <hr>
 
@@ -217,7 +291,7 @@
     <h2>DAILY VRCHAT EVENT</h2>
     <h3>DAILY VRCHAT</h3>
     <p>Public event that lets people freely express themselves without many restrictions. People are given the freedom to be as chaotic, offensive, and loud as they wish to be.</p>
-    <p>The main objective of <b>DAILY VRCHAT</b> is to maintain a public <b><><</b> group instance for <b>2 hours</b>, inviting anyone from the internet to join (<a href="https://vrc.group/FISH.9566" target="_blank" rel="noopener noreferrer">https://vrc.group/FISH.9566</a>).</p> <!-- Added target blank -->
+    <p>The main objective of <b>DAILY VRCHAT</b> is to maintain a public <b><><</b> group instance for <b>2 hours</b>, inviting anyone from the internet to join (<a href="https://vrc.group/FISH.9566" target="_blank" rel="noopener noreferrer">https://vrc.group/FISH.9566</a>).</p>
     <p>After the event, everyone will be kicked from the instance</p>
 
     <h3>THERE ARE 2 RULES!</h3>
@@ -226,7 +300,7 @@
         <li>2) Crasher avatars are not allowed.</li>
     </ul>
     <p>If you break these rules you will be kicked or banned from joining <b>DAILY VRCHAT</b></p>
-    <p>Check the Discord Events channel for more details. A link to the world instance will be posted to #🔥instance-link at the start of the event. (Discord accessible via <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a>)</p> <!-- Added target blank -->
+    <p>Check the Discord Events channel for more details. A link to the world instance will be posted to #🔥instance-link at the start of the event. (Discord accessible via <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a>)</p>
 
     <h3>WARNING!</h3>
     <p class="warning">This daily event is not your safe space. Moderators won't assist you with any hateful, racist, or homophobic behavior. And will only enforce 2 rules, If you get easily emotionally distressed <b>DO NOT GO TO THIS EVENT</b></p>
@@ -234,111 +308,123 @@
 
     <hr>
 
-    <h2>FISH VERIFIED COMMUNITIES <><</h2> <!-- Added <>< -->
-    <img src="https://lh3.googleusercontent.com/d/1QTCy6DfnU4DCHk36a490xExIgqbjCBM8" alt="Fish Community Image" class="community-image" style="max-width: 300px;"> <!-- Updated potential Google Drive link pattern -->
+    <!-- Start FISH VERIFIED Section -->
+    <div class="fish-verified-theme">
+        <h2>FISH VERIFIED COMMUNITIES <><</h2>
+        <img src="https://lh3.googleusercontent.com/d/1QTCy6DfnU4DCHk36a490xExIgqbjCBM8" alt="Fish Community Image" class="community-image" style="max-width: 300px;"> <!-- Specific width style kept here -->
 
-    <p>The FISH VERIFIED verifies communities for the FISH <>< COMMUNITY. If a community is fish verified the owner of the verified community will be inside this vrchat group (<a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a>) and will also have the FISH-VERIFIED role on the <>< discord server.</p> <!-- Added target blank -->
+        <p>The FISH VERIFIED verifies communities for the FISH <>< COMMUNITY. If a community is fish verified the owner of the verified community will be inside this vrchat group (<a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a>) and will also have the FISH-VERIFIED role on the <>< discord server.</p>
 
 
-    <h3>Criteria for Verification</h3>
-    <p>To get your community verified as a <>< community, you need to meet the following criteria:</p>
-    <ol>
-        <li>Your community should contribute significantly to the <>< community.</li>
-        <li>The community must be managed by a capable person.</li>
-        <li>The community must be safe for work (SFW)</li>
-        <li>The community should have a clear idea behind it and be active.</li>
-    </ol>
-    <p>If you believe your community could be fish verified, contact TheZiver on <>< discord server at <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a></p> <!-- Added target blank -->
+        <h3>Criteria for Verification</h3>
+        <p>To get your community verified as a <>< community, you need to meet the following criteria:</p>
+        <ol>
+            <li>Your community should contribute significantly to the <>< community.</li>
+            <li>The community must be managed by a capable person.</li>
+            <li>The community must be safe for work (SFW)</li>
+            <li>The community should have a clear idea behind it and be active.</li>
+        </ol>
+        <p>If you believe your community could be fish verified, contact TheZiver on <>< discord server at <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a></p>
 
-    <h3>Benefits of Verification</h3>
-    <p>When a community gets verified, they receive:</p>
-    <ul>
-        <li>Full support from the <>< community</li>
-        <li>Dedicated text channel on the <>< discord server</li>
-        <li>Asset for displaying group member count in your vrchat world</li>
-        <li>Daily vrchat starter pack access, chance to build your own daily vrchat world <!-- Removed specific slot count, kept original wording otherwise --></li>
-        <li><b>Owner of fish-verified community receives NOCLIP in all DAILY VRCHAT worlds</b></li>
-    </ul>
+        <h3>Benefits of Verification</h3>
+        <p>When a community gets verified, they receive:</p>
+        <ul>
+            <li>Full support from the <>< community</li>
+            <li>Dedicated text channel on the <>< discord server</li>
+            <li>Asset for displaying group member count in your vrchat world</li>
+            <li>Daily vrchat starter pack access, chance to build your own daily vrchat world</li>
+            <li><b>Owner of fish-verified community receives NOCLIP in all DAILY VRCHAT worlds</b></li>
+        </ul>
 
-    <h3>LIST OF FISH VERIFIED COMMUNITIES</h3>
-    <ul>
-        <li><b>CHEESE FISH</b> avatar/world update group, makes bunch of meme avatars, Owner is cunks feet<br>
-            <b>VRChat Group:</b> <a href="https://vrc.group/CHEESE.1570" target="_blank" rel="noopener noreferrer">https://vrc.group/CHEESE.1570</a></li>
-        <li><b>VAPOR FISH</b> nostalgia time capsule, makes nostalgia. Owner is Robaws<br>
-            <b>VRChat Group:</b> <a href="https://vrc.group/VAPOR.3451" target="_blank" rel="noopener noreferrer">https://vrc.group/VAPOR.3451</a></li>
-        <li><b>GAMBLE FISH</b> casino game world inside vrchat. Owner is spidget<br>
-            <b>VRChat Group:</b> <a href="https://vrc.group/GAMBLE.0958" target="_blank" rel="noopener noreferrer">https://vrc.group/GAMBLE.0958</a><br>
-            <b>Discord Server:</b> <a href="https://discord.gg/EZmPDtFAPx" target="_blank" rel="noopener noreferrer">https://discord.gg/EZmPDtFAPx</a></li>
-        <li><b>RAT FISH</b> is a avatar/world update group, Owner is luiswillich<br>
-            <b>VRChat Group:</b> <a href="https://vrc.group/RAT.3149" target="_blank" rel="noopener noreferrer">https://vrc.group/RAT.3149</a></li>
-        <li><b>The Rusk Shack</b> is a community for people who use rusk avatars, Owner is verse<br>
-            <b>VRChat Group:</b> <a href="https://vrc.group/TRUSKS.6089" target="_blank" rel="noopener noreferrer">https://vrc.group/TRUSKS.6089</a><br>
-            <b>Discord Server:</b> <a href="https://discord.gg/theruskshack" target="_blank" rel="noopener noreferrer">https://discord.gg/theruskshack</a></li>
-        <li><b>AVIFAIR</b> is a Global gaming convention inside VR. Owner is artholic<br>
-            <b>VRChat Group:</b> <a href="https://vrc.group/AVI.9657" target="_blank" rel="noopener noreferrer">https://vrc.group/AVI.9657</a><br>
-            <b>Discord Server:</b> <a href="https://discord.gg/P5REVfSVMG" target="_blank" rel="noopener noreferrer">https://discord.gg/P5REVfSVMG</a></li>
-        <li><b>Family Friendly Cult</b> is for people who use ukon avatars. Owner is comedian_t<br>
-            <b>VRChat Group:</b> <a href="https://vrc.group/FAMILY.3738" target="_blank" rel="noopener noreferrer">https://vrc.group/FAMILY.3738</a><br>
-            <b>Discord Server:</b> <a href="https://discord.gg/BFex5YNKuy" target="_blank" rel="noopener noreferrer">https://discord.gg/BFex5YNKuy</a></li>
-        <li><b>Portal Media</b> is a VR film studio. Owner is Virtual<br>
-            <b>VRChat Group:</b> <a href="https://vrc.group/PORTAL.0170" target="_blank" rel="noopener noreferrer">https://vrc.group/PORTAL.0170</a><br>
-            <b>Discord Server:</b> <a href="https://discord.gg/Z6Xrey7rJw" target="_blank" rel="noopener noreferrer">https://discord.gg/Z6Xrey7rJw</a></li>
-    </ul> <!-- Added target blank to all external links -->
-
-    <hr>
-
-    <h2>LUXURY TRASH STORE</h2>
-    <p>LUXURY TRASH makes and sells luxury items to the FISH <>< COMMUNITY.</p>
-    <p>Come visit the store at LUXURY TRASH world or go to <a href="http://theziver.booth.pm" target="_blank" rel="noopener noreferrer">theziver.booth.pm</a></p> <!-- Added target blank -->
-    <p><b>Store owner:</b> TheZiver</p>
-
-    <p><i>"Success and money are important, but they shouldn't limit your creativity. Use them as tools for growth, not as the final goal."</i></p>
-
-    <p>This store sells 3d models like fish, eggs and avatar assets like:</p>
-
-    <ul> <!-- Updated list based *strictly* on item names found on theziver.booth.pm, kept original descriptions where they existed -->
-        <li><b>The LUXURY CUBE</b> is a knee accessory made out of 192 polygons, 4 bones, 19 blendshapes, gold matcap, fish scale normal map. It also has the 69 vertex in the middle that has no purpose :D</li>
-        <li><b>The FISHING FLAG</b> is a VRChat avatar tool designed for cheating game worlds and exploring inaccessible areas.</li>
-        <li><b>The LUXURY PIPE</b> has 816 polygons, 8 bones, 2 shape keys, gold matcap, fish scale normal map and sound effects</li>
-        <li><b>LUXURY EGG</b></li>
-        <li><b>LUXURY PRE-CRACKED EGG</b></li>
-        <li><b>LUXURY STAR</b></li>
-        <li><b>LUXURY FISH</b> [Free Item]</li> <!-- Added free item tag as on Booth -->
-        <li><b>FISH HAIRCLIP</b> [Free Item]</li> <!-- Added free item tag as on Booth -->
-        <li><b>LUXURY TURRET (WORLD PREFAB)</b></li>
-    </ul>
+        <h3>LIST OF FISH VERIFIED COMMUNITIES</h3>
+        <ul>
+            <li><b>CHEESE FISH</b> avatar/world update group, makes bunch of meme avatars, Owner is cunks feet<br>
+                <b>VRChat Group:</b> <a href="https://vrc.group/CHEESE.1570" target="_blank" rel="noopener noreferrer">https://vrc.group/CHEESE.1570</a></li>
+            <li><b>VAPOR FISH</b> nostalgia time capsule, makes nostalgia. Owner is Robaws<br>
+                <b>VRChat Group:</b> <a href="https://vrc.group/VAPOR.3451" target="_blank" rel="noopener noreferrer">https://vrc.group/VAPOR.3451</a></li>
+            <li><b>GAMBLE FISH</b> casino game world inside vrchat. Owner is spidget<br>
+                <b>VRChat Group:</b> <a href="https://vrc.group/GAMBLE.0958" target="_blank" rel="noopener noreferrer">https://vrc.group/GAMBLE.0958</a><br>
+                <b>Discord Server:</b> <a href="https://discord.gg/EZmPDtFAPx" target="_blank" rel="noopener noreferrer">https://discord.gg/EZmPDtFAPx</a></li>
+            <li><b>RAT FISH</b> is a avatar/world update group, Owner is luiswillich<br>
+                <b>VRChat Group:</b> <a href="https://vrc.group/RAT.3149" target="_blank" rel="noopener noreferrer">https://vrc.group/RAT.3149</a></li>
+            <li><b>The Rusk Shack</b> is a community for people who use rusk avatars, Owner is verse<br>
+                <b>VRChat Group:</b> <a href="https://vrc.group/TRUSKS.6089" target="_blank" rel="noopener noreferrer">https://vrc.group/TRUSKS.6089</a><br>
+                <b>Discord Server:</b> <a href="https://discord.gg/theruskshack" target="_blank" rel="noopener noreferrer">https://discord.gg/theruskshack</a></li>
+            <li><b>AVIFAIR</b> is a Global gaming convention inside VR. Owner is artholic<br>
+                <b>VRChat Group:</b> <a href="https://vrc.group/AVI.9657" target="_blank" rel="noopener noreferrer">https://vrc.group/AVI.9657</a><br>
+                <b>Discord Server:</b> <a href="https://discord.gg/P5REVfSVMG" target="_blank" rel="noopener noreferrer">https://discord.gg/P5REVfSVMG</a></li>
+            <li><b>Family Friendly Cult</b> is for people who use ukon avatars. Owner is comedian_t<br>
+                <b>VRChat Group:</b> <a href="https://vrc.group/FAMILY.3738" target="_blank" rel="noopener noreferrer">https://vrc.group/FAMILY.3738</a><br>
+                <b>Discord Server:</b> <a href="https://discord.gg/BFex5YNKuy" target="_blank" rel="noopener noreferrer">https://discord.gg/BFex5YNKuy</a></li>
+            <li><b>Portal Media</b> is a VR film studio. Owner is Virtual<br>
+                <b>VRChat Group:</b> <a href="https://vrc.group/PORTAL.0170" target="_blank" rel="noopener noreferrer">https://vrc.group/PORTAL.0170</a><br>
+                <b>Discord Server:</b> <a href="https://discord.gg/Z6Xrey7rJw" target="_blank" rel="noopener noreferrer">https://discord.gg/Z6Xrey7rJw</a></li>
+        </ul>
+    </div>
+    <!-- End FISH VERIFIED Section -->
 
     <hr>
 
-    <h2>ROSE FISH COMMUNITY</h2>
-    <p>Content creation community that makes content for the FISH <>< COMMUNITY. When someone joins rose fish, they get access to exclusive things.</p>
-    <p><b>DATABASE:</b> <a href="http://rosefish.theziver.com" target="_blank" rel="noopener noreferrer">rosefish.theziver.com</a> <!-- Added target blank. Note: Content may be historical --> </p>
+    <!-- Start LUXURY TRASH Section -->
+    <div class="luxury-trash-theme">
+        <h2>LUXURY TRASH STORE</h2>
+        <p>LUXURY TRASH makes and sells luxury items to the FISH <>< COMMUNITY.</p>
+        <p>Come visit the store at LUXURY TRASH world or go to <a href="http://theziver.booth.pm" target="_blank" rel="noopener noreferrer">theziver.booth.pm</a></p>
+        <p><b>Store owner:</b> TheZiver</p>
 
-    <h3>Joining ROSE FISH</h3>
-    <p>To join rose fish you need to make a contribution that requires human effort to create and could be easily used by the fish community members. For example:</p>
-    <ul>
-        <li>Public VRChat avatar/world</li>
-        <li>3D model</li>
-        <li>Script, Code, Utility, Addon, Tool</li>
-        <li>Shaders</li>
-        <li>Videos/Animations</li>
-        <li>Music, Sound Effects (only youtube or google drive links allowed)</li>
-        <li>Drawings</li>
-        <li>Other content related to <>< that requires effort to create.</li>
-    </ul>
-    <p>If you believe you have made a significant contribution, you can submit it on <>< discord server at <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a></p> <!-- Added target blank -->
-    <p>After submitting a contribution, all the rose fish members will participate in a voting process on discord. To receive a rose fish invitation, the contribution must receive a "YES" vote from over 60％ of the rose fish members.</p>
-    <p>We have an avatar world called: "ROSE <>< AVATARS" where we distribute our public avatars.</p>
-    <p>Please make your contributions presentable and concise and free from any NSFW content. <><</p>
+        <p><i>"Success and money are important, but they shouldn't limit your creativity. Use them as tools for growth, not as the final goal."</i></p>
 
-    <h3>ROSE FISH AVATAR GUIDELINES</h3>
-    <ol>
-        <li><b>AVATAR CONTEXT</b>: Avatar context matters, avatars designed with the intention of being sexual, offensive, or malicious are not allowed.</li>
-        <li><b>CLOTHING</b>: Avatars can wear skimpy clothing, but it must be used in a non-sexual manner.</li>
-        <li><b>GORE</b>: Avatars that show realistic violence or gore are not allowed.</li>
-        <li><b>PARODY COMEDY</b>: Avatars that are loud, disruptive, or malicious are allowed if they're created for comedic purposes. This includes avatars with bright colors, flashing images, and performance-heavy shaders.</li>
-        <li><b>COPYRIGHT RESPONSIBILITY</b>: By submitting an avatar, users accept the risk of a DMCA strike if they violate intellectual property rights.</li>
-    </ol>
+        <p>This store sells 3d models like fish, eggs and avatar assets like:</p>
+
+        <ul>
+            <li><b>The LUXURY CUBE</b> is a knee accessory made out of 192 polygons, 4 bones, 19 blendshapes, gold matcap, fish scale normal map. It also has the 69 vertex in the middle that has no purpose :D</li>
+            <li><b>The FISHING FLAG</b> is a VRChat avatar tool designed for cheating game worlds and exploring inaccessible areas.</li>
+            <li><b>The LUXURY PIPE</b> has 816 polygons, 8 bones, 2 shape keys, gold matcap, fish scale normal map and sound effects</li>
+            <li><b>LUXURY EGG</b></li>
+            <li><b>LUXURY PRE-CRACKED EGG</b></li>
+            <li><b>LUXURY STAR</b></li>
+            <li><b>LUXURY FISH</b> [Free Item]</li>
+            <li><b>FISH HAIRCLIP</b> [Free Item]</li>
+            <li><b>LUXURY TURRET (WORLD PREFAB)</b></li>
+        </ul>
+    </div>
+    <!-- End LUXURY TRASH Section -->
+
+    <hr>
+
+    <!-- Start ROSE FISH Section -->
+    <div class="rose-fish-theme">
+        <h2>ROSE FISH COMMUNITY</h2>
+        <p>Content creation community that makes content for the FISH <>< COMMUNITY. When someone joins rose fish, they get access to exclusive things.</p>
+        <p><b>DATABASE:</b> <a href="http://rosefish.theziver.com" target="_blank" rel="noopener noreferrer">rosefish.theziver.com</a></p>
+
+        <h3>Joining ROSE FISH</h3>
+        <p>To join rose fish you need to make a contribution that requires human effort to create and could be easily used by the fish community members. For example:</p>
+        <ul>
+            <li>Public VRChat avatar/world</li>
+            <li>3D model</li>
+            <li>Script, Code, Utility, Addon, Tool</li>
+            <li>Shaders</li>
+            <li>Videos/Animations</li>
+            <li>Music, Sound Effects (only youtube or google drive links allowed)</li>
+            <li>Drawings</li>
+            <li>Other content related to <>< that requires effort to create.</li>
+        </ul>
+        <p>If you believe you have made a significant contribution, you can submit it on <>< discord server at <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a></p>
+        <p>After submitting a contribution, all the rose fish members will participate in a voting process on discord. To receive a rose fish invitation, the contribution must receive a "YES" vote from over 60％ of the rose fish members.</p>
+        <p>We have an avatar world called: "ROSE <>< AVATARS" where we distribute our public avatars.</p>
+        <p>Please make your contributions presentable and concise and free from any NSFW content. <><</p>
+
+        <h3>ROSE FISH AVATAR GUIDELINES</h3>
+        <ol>
+            <li><b>AVATAR CONTEXT</b>: Avatar context matters, avatars designed with the intention of being sexual, offensive, or malicious are not allowed.</li>
+            <li><b>CLOTHING</b>: Avatars can wear skimpy clothing, but it must be used in a non-sexual manner.</li>
+            <li><b>GORE</b>: Avatars that show realistic violence or gore are not allowed.</li>
+            <li><b>PARODY COMEDY</b>: Avatars that are loud, disruptive, or malicious are allowed if they're created for comedic purposes. This includes avatars with bright colors, flashing images, and performance-heavy shaders.</li>
+            <li><b>COPYRIGHT RESPONSIBILITY</b>: By submitting an avatar, users accept the risk of a DMCA strike if they violate intellectual property rights.</li>
+        </ol>
+    </div>
+    <!-- End ROSE FISH Section -->
 
     <hr>
 
