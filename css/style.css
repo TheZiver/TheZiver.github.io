@@ -115,7 +115,7 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 20px 0; }
 .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 5px; }
 
-/* --- Theme Styles --- */
+/* Theme Styles */
 .fish-verified-theme p, .fish-verified-theme li, .fish-verified-theme h3, .fish-verified-theme ol { color: #FFFFFF; }
 .fish-verified-theme a { color: #A7D8FF; }
 .fish-verified-theme a:hover { color: #D0EFFF; }
@@ -135,9 +135,7 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .rose-fish-theme ol li::marker { color: #FF6B6B; }
 
 
-/* ========================================= */
 /* === CALENDAR STYLES ===================== */
-/* ========================================= */
 
 :root {
     --cal-bg-color: #1a1a1e;
@@ -145,21 +143,20 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     --cal-border-color: #333337;
     --cal-text-color: #e0e0e0;
     --cal-dim-text-color: #777;
-    /* --cal-weekday-color: #aaa; /* Now using dim-text-color */
 
     /* Pink Primary, Blue Secondary */
-    --cal-primary-color: #FF69B4;    /* Bright Pink (HotPink) */
-    --cal-secondary-color: #00BFFF;  /* Bright Blue (DeepSkyBlue) */
+    --cal-primary-color: #FF69B4;
+    --cal-secondary-color: #00BFFF;
 
-    --cal-today-border: var(--cal-primary-color);    /* Pink border for today */
-    --cal-event-color: var(--cal-secondary-color); /* Blue event location */
-    --cal-event-num-color: #b0c4de; /* LightSteelBlue for day number */
+    --cal-today-border: var(--cal-primary-color);
+    --cal-event-color: var(--cal-secondary-color);
+    --cal-event-num-color: #b0c4de; /* Used for ordinal event number */
 
-    --cal-button-bg: var(--cal-primary-color);       /* Nav uses Pink */
+    --cal-button-bg: var(--cal-primary-color);
     --cal-button-text: #111;
-    --cal-button-hover-bg: #ff4fa4;                 /* Darker pink for hover */
-    --cal-today-button-bg: var(--cal-secondary-color); /* Today uses Blue */
-    --cal-today-button-hover-bg: #009acd;             /* Darker blue for hover */
+    --cal-button-hover-bg: #ff4fa4;
+    --cal-today-button-bg: var(--cal-secondary-color);
+    --cal-today-button-hover-bg: #009acd;
 }
 
 .calendar-container {
@@ -191,21 +188,21 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     border: none; border-radius: 5px; padding: 6px 12px; font-size: 1em; font-weight: bold;
     cursor: pointer; transition: background-color 0.2s ease; line-height: 1; color: var(--cal-button-text);
 }
-.cal-nav-btn { background-color: var(--cal-button-bg); /* Pink */ }
-.cal-nav-btn:hover { background-color: var(--cal-button-hover-bg); /* Darker Pink */ }
-.cal-today-btn { background-color: var(--cal-today-button-bg); /* Blue */ margin-left: 10px; }
-.cal-today-btn:hover { background-color: var(--cal-today-button-hover-bg); /* Darker Blue */ }
+.cal-nav-btn { background-color: var(--cal-button-bg); }
+.cal-nav-btn:hover { background-color: var(--cal-button-hover-bg); }
+.cal-today-btn { background-color: var(--cal-today-button-bg); margin-left: 10px; }
+.cal-today-btn:hover { background-color: var(--cal-today-button-hover-bg); }
 
 @media (max-width: 480px) {
     .cal-today-btn { position: absolute; bottom: -45px; right: 5px; margin-left: 0; }
     .calendar-header { padding-bottom: 5px; }
-    #start-day-controls { margin-bottom: 45px; } /* Keep space for button */
-    .calendar-weekdays { margin-top: 45px; } /* Add space if today button overlaps */
+    #start-day-controls { margin-bottom: 45px; }
+    .calendar-weekdays { margin-top: 45px; }
 }
 
 #start-day-controls {
     text-align: center;
-    margin-bottom: 10px; /* Space before the weekday/calendar grid */
+    margin-bottom: 10px;
     margin-top: 0px;
     display: flex;
     justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -225,28 +222,23 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 }
 .cal-start-day-btn:hover { background-color: #4a4a4a; border-color: #777; }
 .cal-start-day-btn.active {
-    background-color: var(--cal-primary-color); /* Pink */ color: var(--cal-button-text);
+    background-color: var(--cal-primary-color); color: var(--cal-button-text);
     border-color: var(--cal-primary-color); font-weight: bold;
 }
 
-/* ========================================= */
-/* === ADDED: Weekday Header Styles ======== */
-/* ========================================= */
-
+/* Weekday Header Styles */
 .calendar-weekdays {
     display: grid;
-    grid-template-columns: repeat(7, 1fr); /* Align with calendar grid */
-    gap: 5px; /* Match calendar-body gap */
-    padding-bottom: 8px; /* Space above the day grid */
-    margin-bottom: 8px; /* Consistent margin */
-    border-bottom: 1px solid var(--cal-border-color); /* Separator line */
-    /* Adjust margins to align like start-day-controls */
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--cal-border-color);
     margin-left: -15px;
     margin-right: -15px;
     padding-left: 15px;
     padding-right: 15px;
 }
-/* Adjust margins for wider screens */
 @media (min-width: 600px) {
     .calendar-weekdays {
         margin-left: -20px;
@@ -259,21 +251,16 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .weekday-header {
     text-align: center;
     font-weight: bold;
-    font-size: 0.85em; /* Slightly smaller than day numbers */
-    color: var(--cal-dim-text-color); /* Use the dimmer text color */
-    padding: 4px 0; /* Add some vertical padding */
-    text-transform: uppercase; /* Optional: Make them uppercase */
+    font-size: 0.85em;
+    color: var(--cal-dim-text-color);
+    padding: 4px 0;
+    text-transform: uppercase;
 }
-/* Slightly larger font on wider screens */
 @media (min-width: 600px) {
     .weekday-header {
         font-size: 0.9em;
     }
 }
-
-/* ========================================= */
-/* == END ADDED Weekday Header Styles ====== */
-/* ========================================= */
 
 
 .calendar-body {
@@ -282,14 +269,28 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     gap: 5px;
 }
 
+/* === MODIFIED STYLES START === */
 .calendar-day {
     background-color: var(--cal-header-bg); border: 1px solid var(--cal-border-color);
-    border-radius: 4px; padding: 5px; min-height: 70px; display: flex;
-    flex-direction: column; align-items: center; justify-content: flex-start;
+    border-radius: 4px; padding: 5px; min-height: 75px; display: flex;
+    flex-direction: column; align-items: center; justify-content: flex-start; /* Align content to top */
     font-size: 0.85em; cursor: default; transition: background-color 0.2s ease;
     overflow: hidden; position: relative; text-align: center;
 }
 @media (min-width: 600px){ .calendar-day { min-height: 85px; font-size: 0.9em; padding: 8px 5px; } }
+
+.calendar-day a {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center;    /* Center horizontally */
+    justify-content: flex-start; /* Align to top */
+    height: 100%;
+    width: 100%;
+    padding: inherit; /* Use padding from parent */
+    box-sizing: border-box;
+}
 
 .calendar-day:hover { background-color: #303034; }
 
@@ -299,14 +300,43 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .calendar-day.other-month .daily-event-num { display: none; }
 .calendar-day.other-month:hover { background-color: transparent; }
 
-.calendar-day.today { border: 2px solid var(--cal-today-border); /* Pink border */ background-color: #2a2a30; }
-.calendar-day.today .day-number { font-weight: bold; color: var(--cal-primary-color); /* Pink number */ }
+.calendar-day.today { border: 2px solid var(--cal-today-border); background-color: #2a2a30; }
+.calendar-day.today .day-number { font-weight: bold; color: var(--cal-primary-color); }
 
-.calendar-day .day-number { font-size: 1.1em; color: var(--cal-text-color); margin-bottom: 3px; }
+/* Style for the Day Number (Top) */
+.calendar-day .day-number {
+    font-size: 1.1em; /* Relatively large */
+    color: var(--cal-text-color);
+    margin-top: 0px;    /* At the top */
+    margin-bottom: 2px; /* Space below */
+    line-height: 1.1;
+    display: block;     /* Own line */
+}
 
-.calendar-day .daily-event-num { font-size: 0.8em; color: var(--cal-event-num-color); margin-top: 2px; line-height: 1.1; }
+/* Style for the Ordinal Event Number (Middle) */
+.calendar-day .daily-event-num {
+    font-size: 0.8em;  /* Smaller */
+    color: var(--cal-event-num-color); /* Dimmer color */
+    margin-top: 1px;    /* Small space above */
+    margin-bottom: 1px; /* Small space below */
+    line-height: 1;
+    font-weight: normal;
+    opacity: 0.9;
+    display: block;     /* Own line */
+}
 
-.calendar-day .event-location { font-size: 0.85em; color: var(--cal-event-color); /* Blue location */ font-weight: bold; margin-top: 3px; line-height: 1.2; word-break: break-word; }
+/* Style for the Event Location (Bottom) */
+.calendar-day .event-location {
+    font-size: 0.9em;   /* Medium size */
+    color: var(--cal-event-color); /* Brighter event color */
+    font-weight: bold;
+    margin-top: 1px;    /* Small space above */
+    margin-bottom: 0px; /* No space below */
+    line-height: 1;
+    word-break: break-word;
+    display: block;     /* Own line */
+}
+/* === MODIFIED STYLES END === */
 
 
 /* --- Countdown Container Styles --- */
@@ -318,8 +348,8 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 }
 @media (min-width: 600px) { #countdown-container { padding: 15px 20px; font-size: 1.2em; } }
 
-#countdown-timer { color: var(--cal-secondary-color); /* Blue timer */ font-weight: bold; }
-#countdown-day-label { color: var(--cal-primary-color); /* Pink day label */ font-weight: bold; }
+#countdown-timer { color: var(--cal-secondary-color); font-weight: bold; }
+#countdown-day-label { color: var(--cal-primary-color); font-weight: bold; }
 
 @media (max-width: 480px) {
      #countdown-container .countdown-label { display: block; margin-bottom: 3px; }
