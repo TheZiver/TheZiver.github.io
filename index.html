@@ -5,8 +5,373 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FISH <>< COMMUNITY - VRChat Colors, Roboto Font, Readability Optimized</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css"> <!-- Make sure this path is correct -->
-    <script src="js/script.js" defer></script> <!-- Make sure this path is correct -->
+    <style>
+        /* --- Base Styles --- */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px 0;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            overflow: hidden;
+            position: relative;
+        }
+        @media (min-width: 600px) {
+            .container {
+                width: 80%;
+                padding: 40px;
+            }
+        }
+
+        h1, h2, h3 {
+            font-weight: bold;
+            text-align: left;
+        }
+
+        /* Gradient Animation for H1 and H2 */
+        h1, h2 {
+            --gradient-angle: 120deg;
+            background: linear-gradient(
+                var(--gradient-angle),
+                #00bcd4, #ff4081, #4caf50, #ffc107, #00bcd4
+            );
+            background-size: 300% 300%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 8s ease infinite;
+            font-weight: bold;
+            text-align: left;
+        }
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            font-size: 2.4em; letter-spacing: -0.02em; margin-bottom: 30px;
+        }
+         @media (min-width: 600px) { h1 { font-size: 2.8em; margin-bottom: 35px; } }
+
+        h2 {
+            font-size: 1.8em; margin-top: 40px; margin-bottom: 20px;
+        }
+        @media (min-width: 600px) { h2 { font-size: 2em; margin-top: 50px; margin-bottom: 25px; } }
+
+        h3 {
+            font-size: 1.3em; margin-top: 30px; margin-bottom: 15px; color: #bbbbbb;
+        }
+        @media (min-width: 600px) { h3 { font-size: 1.4em; margin-top: 35px; } }
+
+        p, ul, ol {
+            font-size: 1.05em; line-height: 1.7; margin-bottom: 20px; color: #d0d0d0;
+        }
+        @media (min-width: 600px) { p, ul, ol { font-size: 1.15em; line-height: 1.8; margin-bottom: 25px; } }
+
+        ul, ol { padding-left: 30px; }
+        @media (min-width: 600px) { ul, ol { padding-left: 35px; } }
+
+        li { margin-bottom: 10px; }
+         @media (min-width: 600px) { li { margin-bottom: 12px; } }
+
+        a { color: #4dd0e1; text-decoration: underline; transition: color 0.2s ease; }
+        a:hover { color: #00e5ff; }
+
+        .warning { color: #ffc107; font-weight: bold; }
+
+        hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
+        @media (min-width: 600px) { hr { margin: 50px 0; } }
+
+        .fish-animation {
+            white-space: nowrap; font-size: 3em; color: #4dd0e1; display: block;
+            animation: fishSwim 15s linear infinite; width: 100%; overflow: hidden;
+            box-sizing: border-box; margin-bottom: 30px; text-align: left; padding-left: 100%;
+        }
+        @media (min-width: 600px) {
+            .fish-animation { font-size: 4em; display: inline-block; width: auto; margin-bottom: 40px; padding-left: 100%; }
+        }
+        @keyframes fishSwim { 0% { transform: translateX(0); } 100% { transform: translateX(-200%); } }
+        .fish-symbol { display: inline-block; color: #4dd0e1; }
+        .fish-symbol:nth-child(5n+1) { animation-delay: 0s; }
+        .fish-symbol:nth-child(5n+2) { animation-delay: 0.2s; }
+        .fish-symbol:nth-child(5n+3) { animation-delay: 0.4s; }
+        .fish-symbol:nth-child(5n+4) { animation-delay: 0.6s; }
+        .fish-symbol:nth-child(5n+5) { animation-delay: 0.8s; }
+
+        .community-image, .meaning-image {
+            max-width: 100%; height: auto; display: block; margin: 20px auto;
+            border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .meaning-image { max-width: 90%; margin-top: 30px; margin-bottom: 30px; }
+         @media (min-width: 768px) { .meaning-image { max-width: 600px; } }
+
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 20px 0; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 5px; }
+
+        /* Theme Styles */
+        .fish-verified-theme p, .fish-verified-theme li, .fish-verified-theme h3, .fish-verified-theme ol { color: #FFFFFF; }
+        .fish-verified-theme a { color: #A7D8FF; }
+        .fish-verified-theme a:hover { color: #D0EFFF; }
+        .fish-verified-theme h3 { color: #F0F0F0 !important; }
+        .fish-verified-theme ol li::marker { color: #FFFFFF; }
+
+        .luxury-trash-theme p, .luxury-trash-theme li, .luxury-trash-theme h3 { color: #FFD700; }
+        .luxury-trash-theme a { color: #FFEC8B; }
+        .luxury-trash-theme a:hover { color: #FFFACD; }
+        .luxury-trash-theme h3 { color: #FBC02D !important; }
+        .luxury-trash-theme p i { color: #FFEA00; }
+
+        .rose-fish-theme p, .rose-fish-theme li, .rose-fish-theme h3, .rose-fish-theme ol { color: #FF6B6B; }
+        .rose-fish-theme a { color: #FF8F8F; }
+        .rose-fish-theme a:hover { color: #FFBDBD; }
+        .rose-fish-theme h3 { color: #E57373 !important; }
+        .rose-fish-theme ol li::marker { color: #FF6B6B; }
+
+
+        /* === CALENDAR STYLES ===================== */
+
+        :root {
+            --cal-bg-color: #1a1a1e;
+            --cal-header-bg: #222226;
+            --cal-border-color: #333337;
+            --cal-text-color: #e0e0e0;
+            --cal-dim-text-color: #777;
+
+            /* Pink Primary, Blue Secondary */
+            --cal-primary-color: #FF69B4;
+            --cal-secondary-color: #00BFFF;
+
+            --cal-today-border: var(--cal-primary-color);
+            --cal-event-color: var(--cal-secondary-color);
+            --cal-event-num-color: #b0c4de; /* Used for ordinal event number */
+
+            --cal-button-bg: var(--cal-primary-color);
+            --cal-button-text: #111;
+            --cal-button-hover-bg: #ff4fa4;
+            --cal-today-button-bg: var(--cal-secondary-color);
+            --cal-today-button-hover-bg: #009acd;
+        }
+
+        .calendar-container {
+            background-color: var(--cal-bg-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--cal-border-color);
+        }
+        @media (min-width: 600px) { .calendar-container { padding: 20px; } }
+
+        .calendar-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 5px; background-color: var(--cal-header-bg);
+            border-radius: 6px 6px 0 0; margin: -15px -15px 10px -15px; position: relative;
+        }
+        @media (min-width: 600px) { .calendar-header { padding: 12px 15px; margin: -20px -20px 15px -20px; } }
+
+        .calendar-header h3#cal-month-year {
+            margin: 0; font-size: 1.3em; font-weight: bold; text-align: center; flex-grow: 1;
+            background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important;
+            color: var(--cal-text-color) !important; -webkit-text-fill-color: initial !important; animation: none !important;
+        }
+        @media (min-width: 600px) { .calendar-header h3#cal-month-year { font-size: 1.5em; } }
+
+        .cal-nav-btn, .cal-today-btn {
+            border: none; border-radius: 5px; padding: 6px 12px; font-size: 1em; font-weight: bold;
+            cursor: pointer; transition: background-color 0.2s ease; line-height: 1; color: var(--cal-button-text);
+        }
+        .cal-nav-btn { background-color: var(--cal-button-bg); }
+        .cal-nav-btn:hover { background-color: var(--cal-button-hover-bg); }
+        .cal-today-btn { background-color: var(--cal-today-button-bg); margin-left: 10px; }
+        .cal-today-btn:hover { background-color: var(--cal-today-button-hover-bg); }
+
+        @media (max-width: 480px) {
+            .cal-today-btn { position: absolute; bottom: -45px; right: 5px; margin-left: 0; }
+            .calendar-header { padding-bottom: 5px; }
+            #start-day-controls { margin-bottom: 45px; }
+            .calendar-weekdays { margin-top: 45px; }
+        }
+
+        #start-day-controls {
+            text-align: center;
+            margin-bottom: 10px;
+            margin-top: 0px;
+            display: flex;
+            justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;
+            padding: 5px 15px 10px 15px; border-bottom: 1px solid var(--cal-border-color);
+            margin-left: -15px; margin-right: -15px;
+        }
+        @media (min-width: 600px) {
+            #start-day-controls { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; }
+        }
+
+        .start-day-label { font-size: 0.9em; color: var(--cal-text-color); margin-right: 5px; }
+
+        .cal-start-day-btn {
+            background-color: #3a3a3a; color: #cccccc; border: 1px solid #555;
+            padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85em;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .cal-start-day-btn:hover { background-color: #4a4a4a; border-color: #777; }
+        .cal-start-day-btn.active {
+            background-color: var(--cal-primary-color); color: var(--cal-button-text);
+            border-color: var(--cal-primary-color); font-weight: bold;
+        }
+
+        /* Weekday Header Styles */
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--cal-border-color);
+            margin-left: -15px;
+            margin-right: -15px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        @media (min-width: 600px) {
+            .calendar-weekdays {
+                margin-left: -20px;
+                margin-right: -20px;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+
+        .weekday-header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.85em;
+            color: var(--cal-dim-text-color);
+            padding: 4px 0;
+            text-transform: uppercase;
+        }
+        @media (min-width: 600px) {
+            .weekday-header {
+                font-size: 0.9em;
+            }
+        }
+
+
+        .calendar-body {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        /* === MODIFIED STYLES START === */
+        .calendar-day {
+            background-color: var(--cal-header-bg); border: 1px solid var(--cal-border-color);
+            border-radius: 4px; padding: 5px; min-height: 75px; display: flex;
+            flex-direction: column; align-items: center; justify-content: flex-start; /* Align content to top */
+            font-size: 0.85em; cursor: default; transition: background-color 0.2s ease;
+            overflow: hidden; position: relative; text-align: center;
+        }
+        @media (min-width: 600px){ .calendar-day { min-height: 85px; font-size: 0.9em; padding: 8px 5px; } }
+
+        .calendar-day a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center;    /* Center horizontally */
+            justify-content: flex-start; /* Align to top */
+            height: 100%;
+            width: 100%;
+            padding: inherit; /* Use padding from parent */
+            box-sizing: border-box;
+        }
+
+        .calendar-day:hover { background-color: #303034; }
+
+        .calendar-day.other-month { background-color: transparent; border-color: transparent; cursor: default; }
+        .calendar-day.other-month .day-number { color: var(--cal-dim-text-color); opacity: 0.6; }
+        .calendar-day.other-month .event-location,
+        .calendar-day.other-month .daily-event-num { display: none; }
+        .calendar-day.other-month:hover { background-color: transparent; }
+
+        .calendar-day.today { border: 2px solid var(--cal-today-border); background-color: #2a2a30; }
+        .calendar-day.today .day-number { font-weight: bold; color: var(--cal-primary-color); }
+
+        /* Style for the Day Number (Top) */
+        .calendar-day .day-number {
+            font-size: 1.1em; /* Relatively large */
+            color: var(--cal-text-color);
+            margin-top: 0px;    /* At the top */
+            margin-bottom: 2px; /* Space below */
+            line-height: 1.1;
+            display: block;     /* Own line */
+        }
+
+        /* Style for the Ordinal Event Number (Middle) */
+        .calendar-day .daily-event-num {
+            font-size: 0.8em;  /* Smaller */
+            color: var(--cal-event-num-color); /* Dimmer color */
+            margin-top: 1px;    /* Small space above */
+            margin-bottom: 1px; /* Small space below */
+            line-height: 1;
+            font-weight: normal;
+            opacity: 0.9;
+            display: block;     /* Own line */
+        }
+
+        /* Style for the Event Location (Bottom) */
+        .calendar-day .event-location {
+            font-size: 0.9em;   /* Medium size */
+            color: var(--cal-event-color); /* Brighter event color */
+            font-weight: bold;
+            margin-top: 1px;    /* Small space above */
+            margin-bottom: 0px; /* No space below */
+            line-height: 1;
+            word-break: break-word;
+            display: block;     /* Own line */
+        }
+        /* === MODIFIED STYLES END === */
+
+
+        /* --- Countdown Container Styles --- */
+        #countdown-container {
+            background-color: var(--cal-bg-color); border: 1px solid var(--cal-border-color);
+            border-radius: 8px; padding: 12px 15px; margin-top: 15px; margin-bottom: 30px;
+            text-align: center; font-size: 1.1em; color: var(--cal-text-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        @media (min-width: 600px) { #countdown-container { padding: 15px 20px; font-size: 1.2em; } }
+
+        #countdown-timer { color: var(--cal-secondary-color); font-weight: bold; }
+        #countdown-day-label { color: var(--cal-primary-color); font-weight: bold; }
+
+        @media (max-width: 480px) {
+             #countdown-container .countdown-label { display: block; margin-bottom: 3px; }
+             #countdown-timer { display: block; margin-left: 0; min-width: auto;}
+        }
+        @media (min-width: 480px) {
+             #countdown-container .countdown-label { display: inline; margin-bottom: 0; }
+             #countdown-timer { display: inline-block; margin-left: 8px; min-width: 150px; }
+        }
+
+        /* ========================================= */
+        /* == END CALENDAR STYLES ================== */
+        /* ========================================= */
+    </style>
 </head>
 <body>
 <div class="container">
@@ -16,56 +381,7 @@
         <iframe width="560" height="315" src="https://www.youtube.com/embed/plQ24noJR3w?si=oQm9TDtJhSec733t" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
 
-    <div class="fish-animation" aria-hidden="true">
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-    </div>
-
-    <hr>
-
-    <section aria-labelledby="meaning-heading">
-        <h2 id="meaning-heading">MEANING OF FISH <span aria-hidden="true"><><</span></h2>
-        <img src="images/meaning_of_fish.png"
-             alt="Image explaining the meaning of FISH <><: < represents chaos increase, > represents adding structure, <>< symbolizes structured chaos."
-             class="meaning-image"
-             loading="lazy"
-             width="600" height="338">
-         <p>FISH <span aria-hidden="true"><><</span> COMMUNITY is made out of multiple communities, each with its own leadership and rules. All communities work together and follow the same principles.</p>
-        <p>This is the main <span aria-hidden="true"><><</span> group, you can find all the fish verified groups at "FISH VERIFIED <span aria-hidden="true"><><</span>" <a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a> verification group</p>
-    </section>
-
-    <hr>
-
-    <section aria-labelledby="principles-heading">
-        <h2 id="principles-heading">COMMUNITY PRINCIPLES</h2>
-        <ol>
-            <li><b>FUN</b>: Don't forget to have fun</li>
-            <li><b>COMMON SENSE</b>: Not everything needs a rule, sometimes the best guide is common sense.</li>
-            <li><b>STRUCTURED CHAOS</b>: Creativity often comes from chaos. Embrace it, but don't let it control you.</li>
-            <li><b>CONFLICT AND CREATIVITY</b>: It's okay to disagree. Conflict can lead to better ideas and innovations.</li>
-            <li><b>COMMUNICATION</b>: Resolving conflicts and problems requires respectful communication. It's important to address conflicts and problems as soon as possible and not let them escalate.</li>
-            <li><b>INNOVATION</b>: Always look for better ways to do things. Innovation is the key to progress.</li>
-            <li><b>HUMILITY</b>: Don't let your ego get in the way. Everyone has something to teach you.</li>
-            <li><b>SIMPLICITY</b>: The simplest solution is often the best one. Don't overcomplicate things.</li>
-            <li><b>DECENCY</b>: Don't be a degenerate. Treat others with respect and kindness.</li>
-            <li><b>OPEN-MINDEDNESS</b>: Be open to new ideas and experiences. They're the best way to learn and grow.</li>
-            <li><b>AUTHENTICITY</b>: Don't keep pretending to be someone you're not, it's a waste of energy</li>
-            <li><b>SUCCESS AND CREATIVITY</b>: Success and money are important, but they shouldn't limit your creativity. Use them as tools for growth, not as the final goal.</li>
-        </ol>
-        <p>Human nature is complex. People are different, and not everyone will understand your principles or rules just because they are told to. Good and evil exist, and everyone comes from different cultures with different perspectives. Some people don't speak English or know how to communicate, and some people don't have the mental capacity or knowledge to understand complicated things. It's important to remember that things will never be perfect if humans are involved, so it's important to keep a balance between everything. <span aria-hidden="true"><><</span></p>
-    </section>
-
-    <!-- === START CALENDAR SECTION === -->
+    <!-- === START MOVED CALENDAR SECTION === -->
     <hr>
 
     <section aria-labelledby="daily-event-heading">
@@ -122,7 +438,58 @@
         <p class="warning">This daily event is not your safe space. Moderators won't assist you with any hateful, racist, or homophobic behavior. And will only enforce 2 rules, If you get easily emotionally distressed <b>DO NOT GO TO THIS EVENT</b></p>
         <p>VRChat's Terms of Service and Guidelines still apply, and violations could result in your account being banned.</p>
     </section>
-    <!-- === END CALENDAR SECTION === -->
+    <!-- === END MOVED CALENDAR SECTION === -->
+
+    <hr>
+
+    <div class="fish-animation" aria-hidden="true">
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+    </div>
+
+    <hr>
+
+    <section aria-labelledby="meaning-heading">
+        <h2 id="meaning-heading">MEANING OF FISH <span aria-hidden="true"><><</span></h2>
+        <img src="images/meaning_of_fish.png"
+             alt="Image explaining the meaning of FISH <><: < represents chaos increase, > represents adding structure, <>< symbolizes structured chaos."
+             class="meaning-image"
+             loading="lazy"
+             width="600" height="338">
+         <p>FISH <span aria-hidden="true"><><</span> COMMUNITY is made out of multiple communities, each with its own leadership and rules. All communities work together and follow the same principles.</p>
+        <p>This is the main <span aria-hidden="true"><><</span> group, you can find all the fish verified groups at "FISH VERIFIED <span aria-hidden="true"><><</span>" <a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a> verification group</p>
+    </section>
+
+    <hr>
+
+    <section aria-labelledby="principles-heading">
+        <h2 id="principles-heading">COMMUNITY PRINCIPLES</h2>
+        <ol>
+            <li><b>FUN</b>: Don't forget to have fun</li>
+            <li><b>COMMON SENSE</b>: Not everything needs a rule, sometimes the best guide is common sense.</li>
+            <li><b>STRUCTURED CHAOS</b>: Creativity often comes from chaos. Embrace it, but don't let it control you.</li>
+            <li><b>CONFLICT AND CREATIVITY</b>: It's okay to disagree. Conflict can lead to better ideas and innovations.</li>
+            <li><b>COMMUNICATION</b>: Resolving conflicts and problems requires respectful communication. It's important to address conflicts and problems as soon as possible and not let them escalate.</li>
+            <li><b>INNOVATION</b>: Always look for better ways to do things. Innovation is the key to progress.</li>
+            <li><b>HUMILITY</b>: Don't let your ego get in the way. Everyone has something to teach you.</li>
+            <li><b>SIMPLICITY</b>: The simplest solution is often the best one. Don't overcomplicate things.</li>
+            <li><b>DECENCY</b>: Don't be a degenerate. Treat others with respect and kindness.</li>
+            <li><b>OPEN-MINDEDNESS</b>: Be open to new ideas and experiences. They're the best way to learn and grow.</li>
+            <li><b>AUTHENTICITY</b>: Don't keep pretending to be someone you're not, it's a waste of energy</li>
+            <li><b>SUCCESS AND CREATIVITY</b>: Success and money are important, but they shouldn't limit your creativity. Use them as tools for growth, not as the final goal.</li>
+        </ol>
+        <p>Human nature is complex. People are different, and not everyone will understand your principles or rules just because they are told to. Good and evil exist, and everyone comes from different cultures with different perspectives. Some people don't speak English or know how to communicate, and some people don't have the mental capacity or knowledge to understand complicated things. It's important to remember that things will never be perfect if humans are involved, so it's important to keep a balance between everything. <span aria-hidden="true"><><</span></p>
+    </section>
 
     <hr>
 
@@ -221,6 +588,340 @@
         <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const calendarGrid = document.getElementById('calendar-grid');
+    const monthYearDisplay = document.getElementById('cal-month-year');
+    const prevMonthButton = document.getElementById('cal-prev-month');
+    const nextMonthButton = document.getElementById('cal-next-month');
+    const gotoTodayButton = document.getElementById('cal-goto-today');
+    const weekdaysContainer = document.getElementById('calendar-weekdays');
+    const startSunButton = document.getElementById('cal-start-sun');
+    const startMonButton = document.getElementById('cal-start-mon');
+
+    const countdownTimerDisplay = document.getElementById('countdown-timer');
+    const countdownDayLabel = document.getElementById('countdown-day-label');
+
+    const targetDate = new Date(Date.UTC(2023, 6, 20)); // Note: Month is 0-indexed (6 = July)
+    const today = new Date();
+    const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+    let currentMonth = today.getUTCMonth();
+    let currentYear = today.getUTCFullYear();
+    let startDayOfWeekSetting = 1; // Default to Monday (0=Sun, 1=Mon)
+
+    // Load saved start day preference
+    const savedStartDay = localStorage.getItem('calendarStartDay');
+    if (savedStartDay && (savedStartDay === '0' || savedStartDay === '1')) {
+        startDayOfWeekSetting = parseInt(savedStartDay, 10);
+    }
+
+    // Locations for each day of the week (0=Sunday, 1=Monday, ..., 6=Saturday)
+    // Ensure this order matches VRChat day logic if it's different from standard JS Date.getUTCDay()
+    const locations = [ "YES?", "LUXURY TRASH", "The Fishing Mall", "Retrocubic Nexus", "Cunks Coughing City", "YES?", "YES?" ];
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    // World IDs mapped to the day of the week (0=Monday, ..., 6=Sunday) - ADJUST if your week mapping differs
+    const WORLD_IDS = {
+        0: "wrld_b0812b34-cd7c-44b8-9b29-4f921a9e4d5a",  // Monday
+        1: "wrld_9806f25c-0644-4ed7-a3b9-404763bd7dbc",  // Tuesday
+        2: "wrld_a1caec89-3313-42d3-977a-3f8ac819a5a9",  // Wednesday
+        3: "wrld_94d6eb87-7246-4dd8-81c0-cb1f468f096a",  // Thursday
+        4: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355",  // Friday
+        5: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355",  // Saturday
+        6: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355"   // Sunday
+    };
+
+
+    function getOrdinalSuffix(num) {
+         if (num === null || typeof num === 'undefined') return "";
+         const n = Number(num);
+         if (isNaN(n) || n < 0) return ""; // Handle invalid input
+        const j = n % 10, k = n % 100;
+        if (j == 1 && k != 11) return "st";
+        if (j == 2 && k != 12) return "nd";
+        if (j == 3 && k != 13) return "rd";
+        return "th";
+    }
+
+    function calculateDailyVrchatDay(date) {
+         // Ensure we are comparing dates only, ignoring time
+         const normalizedDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+         if (normalizedDate < targetDate) return null; // Event hasn't started yet for this date
+
+         const oneDay = 24 * 60 * 60 * 1000;
+         // Calculate difference in days from the target start date
+         const dayDifference = Math.floor((normalizedDate - targetDate) / oneDay);
+         // Return the day number (0 for the first day, 1 for the second, etc.)
+         return (dayDifference >= 0) ? dayDifference : null;
+    }
+
+    function renderCalendar(month, year) {
+        if (!calendarGrid || !monthYearDisplay || !weekdaysContainer) {
+             console.error("Calendar base elements (grid, month/year display, or weekdays container) missing!"); return;
+        }
+
+        monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
+
+        // --- Render Weekday Headers ---
+        weekdaysContainer.innerHTML = ''; // Clear previous headers
+        const weekdayNamesShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]; // Standard order
+        let orderedWeekdays = [];
+
+        if (startDayOfWeekSetting === 1) { // Monday start
+            orderedWeekdays = weekdayNamesShort;
+        } else { // Sunday start (0)
+            orderedWeekdays = [...weekdayNamesShort.slice(6), ...weekdayNamesShort.slice(0, 6)]; // Rotate: Sun, Mon, Tue...
+        }
+
+        orderedWeekdays.forEach(dayName => {
+            const weekdayCell = document.createElement('div');
+            weekdayCell.classList.add('weekday-header');
+            weekdayCell.textContent = dayName;
+            weekdaysContainer.appendChild(weekdayCell);
+        });
+        // --- End Render Weekday Headers ---
+
+        calendarGrid.innerHTML = ''; // Clear previous days
+
+        // Calculate calendar grid details
+        const firstDayOfMonth = new Date(Date.UTC(year, month, 1));
+        const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+        const lastDayOfPrevMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+
+        // Calculate the day of the week for the 1st of the month (0=Sun, 1=Mon, ...)
+        const firstDayIndex = firstDayOfMonth.getUTCDay();
+
+        // Calculate offset needed for the first day based on the startDayOfWeekSetting
+        // (firstDayIndex - startDayOfWeekSetting + 7) % 7 gives the number of previous month days to show
+        let startingDayOffset = (firstDayIndex - startDayOfWeekSetting + 7) % 7;
+
+        // Render previous month's days
+        for (let i = 0; i < startingDayOffset; i++) {
+            const day = lastDayOfPrevMonth - startingDayOffset + 1 + i;
+            calendarGrid.appendChild(createDayCell(day, true)); // true indicates 'other-month'
+        }
+
+        // Render current month's days
+        for (let day = 1; day <= daysInMonth; day++) {
+            const cellDate = new Date(Date.UTC(year, month, day));
+            // Check if this day is today (UTC)
+            const isToday = (year === todayUTC.getUTCFullYear() && month === todayUTC.getUTCMonth() && day === todayUTC.getUTCDate());
+            calendarGrid.appendChild(createDayCell(day, false, cellDate, isToday)); // false indicates not 'other-month'
+        }
+
+        // Render next month's days to fill the grid
+        const totalCellsRendered = startingDayOffset + daysInMonth;
+        const remainingCells = (7 - (totalCellsRendered % 7)) % 7; // Use modulo 7 to handle full weeks
+        for (let i = 0; i < remainingCells; i++) {
+            calendarGrid.appendChild(createDayCell(i + 1, true)); // true indicates 'other-month'
+        }
+    }
+
+    function createDayCell(dayNumber, isOtherMonth, cellDate = null, isToday = false) {
+        const dayCell = document.createElement('div');
+        dayCell.classList.add('calendar-day');
+
+        // Create the span for the day number - always present
+        const dayNumberSpan = document.createElement('span');
+        dayNumberSpan.classList.add('day-number');
+        dayNumberSpan.textContent = dayNumber;
+
+        if (isOtherMonth) {
+            dayCell.classList.add('other-month');
+            dayCell.appendChild(dayNumberSpan); // Other month cells just show the number
+        } else if (cellDate) {
+            // Calculate event details for valid days
+            const dailyDay = calculateDailyVrchatDay(cellDate);
+
+            if (dailyDay !== null) { // Is it a day with a DAILY VRCHAT event?
+                const suffix = getOrdinalSuffix(dailyDay);
+                const instanceId = dailyDay; // Use the calculated day number as instance ID
+
+                // Determine the correct day index for WORLD_IDS (0=Mon...6=Sun)
+                const dayOfWeekForWorld = (cellDate.getUTCDay() + 6) % 7; // Converts Sun=0..Sat=6 to Mon=0..Sun=6
+                const worldId = WORLD_IDS[dayOfWeekForWorld];
+
+                // Determine the correct day index for locations (0=Sun...6=Sat)
+                const dayOfWeekForLocation = cellDate.getUTCDay();
+                const locationName = locations[dayOfWeekForLocation];
+
+                // Construct VRChat launch link
+                const baseUrl = "https://vrchat.com/home/launch?worldId=" + worldId + "&instanceId=";
+                const instanceParams = `~group(grp_2b910dc4-e984-4fd5-813c-877edcea29d2)~groupAccessType(public)~region(eu)`; // Add your actual group ID
+                const vrchatLink = baseUrl + instanceId + instanceParams;
+
+                // Create link element
+                const dayLink = document.createElement('a');
+                dayLink.href = vrchatLink;
+                dayLink.target = "_blank"; // Open in new tab
+                dayLink.rel = "noopener noreferrer"; // Security best practice
+                dayLink.title = `Join Daily VRChat #${dailyDay}${suffix}`; // Tooltip
+
+                // === MODIFIED ORDER FOR APPENDING ===
+                dayLink.appendChild(dayNumberSpan); // 1. Append Day number (Top)
+
+                const eventNumSpan = document.createElement('span'); // 2. Append Event Number (Middle)
+                eventNumSpan.classList.add('daily-event-num');
+                eventNumSpan.textContent = `${dailyDay}${suffix}`;
+                dayLink.appendChild(eventNumSpan);
+
+                if (locationName) { // 3. Append Location (Bottom), if it exists
+                    const locationSpan = document.createElement('span');
+                    locationSpan.classList.add('event-location');
+                    locationSpan.textContent = locationName;
+                    dayLink.appendChild(locationSpan);
+                }
+                // === END MODIFIED ORDER ===
+
+                dayCell.appendChild(dayLink); // Add the link containing the ordered elements to the cell
+
+            } else {
+                // Day is in the current month but before the event started or calculation failed
+                dayCell.appendChild(dayNumberSpan);
+            }
+
+            // Highlight today's date
+            if (isToday) {
+                dayCell.classList.add('today');
+            }
+        } else {
+             // Fallback for safety, though should be covered by isOtherMonth
+             dayCell.appendChild(dayNumberSpan);
+        }
+
+        return dayCell;
+    }
+
+
+    function updateCountdown() {
+        // Check if elements exist before proceeding
+        if (!countdownTimerDisplay || !countdownDayLabel) {
+            // Log error only once to avoid console spam
+            if (!window.countdownElementsMissingLogged) {
+                 console.error("Countdown timer or day label element is missing!");
+                 window.countdownElementsMissingLogged = true; // Set flag
+            }
+            return; // Stop execution if elements are missing
+        }
+
+        try {
+            const nowUTC = new Date(); // Current time in UTC
+            const nowUTCMillis = nowUTC.getTime();
+
+            // Set target event time to 9 PM (21:00) UTC today
+            let nextEventUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 21, 0, 0, 0));
+            let nextEventMillis = nextEventUTC.getTime();
+
+            // If current time is already past today's 9 PM UTC, set the target to tomorrow's 9 PM UTC
+            if (nowUTCMillis >= nextEventMillis) {
+                nextEventUTC.setUTCDate(nextEventUTC.getUTCDate() + 1);
+                nextEventMillis = nextEventUTC.getTime();
+            }
+
+            // Calculate the DAILY VRCHAT day number for the *next* event
+            const nextDailyDayNumber = calculateDailyVrchatDay(nextEventUTC);
+            const nextDaySuffix = getOrdinalSuffix(nextDailyDayNumber);
+
+            // Update the day label (e.g., "591st")
+            countdownDayLabel.textContent = (nextDailyDayNumber !== null) ? `${nextDailyDayNumber}${nextDaySuffix}` : "---";
+
+            // Calculate the time difference in milliseconds
+            const difference = nextEventMillis - nowUTCMillis;
+
+            if (difference <= 0) {
+                // Event time has passed or is happening now
+                countdownTimerDisplay.textContent = "Starting soon / In Progress!";
+            } else {
+                // Calculate remaining days, hours, minutes, seconds
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24)); // Milliseconds in a day
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // Milliseconds in an hour
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)); // Milliseconds in a minute
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                // Format the countdown string
+                let countdownString = "";
+                if (days > 0) {
+                    countdownString += `${days}d `;
+                }
+                // Always show hours, minutes, seconds, padded with zeros
+                countdownString += `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+
+                countdownTimerDisplay.textContent = countdownString.trim();
+            }
+        } catch (error) {
+             console.error("Error in updateCountdown:", error);
+             // Display error state in the UI
+             if (countdownTimerDisplay) countdownTimerDisplay.textContent = "Error calculating";
+             if (countdownDayLabel) countdownDayLabel.textContent = "Err";
+        }
+    }
+
+     // --- Calendar Navigation Functions ---
+     function goToPrevMonth() { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(currentMonth, currentYear); }
+     function goToNextMonth() { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(currentMonth, currentYear); }
+     function goToToday() { const now = new Date(); if (currentMonth !== now.getUTCMonth() || currentYear !== now.getUTCFullYear()) { currentMonth = now.getUTCMonth(); currentYear = now.getUTCFullYear(); renderCalendar(currentMonth, currentYear); } }
+
+     // --- Start Day Setting Function ---
+     function updateStartDaySelection(newStartDay) {
+         if (startDayOfWeekSetting === newStartDay) return; // No change needed
+         startDayOfWeekSetting = newStartDay;
+         localStorage.setItem('calendarStartDay', newStartDay.toString()); // Save preference
+
+         // Update button active states visually
+         if (startSunButton) startSunButton.classList.toggle('active', newStartDay === 0);
+         if (startMonButton) startMonButton.classList.toggle('active', newStartDay === 1);
+
+         // Re-render the calendar with the new setting
+         renderCalendar(currentMonth, currentYear);
+     }
+
+     // --- Event Listeners ---
+    // Add checks to ensure buttons exist before adding listeners
+    if (prevMonthButton) prevMonthButton.addEventListener('click', goToPrevMonth); else console.warn("Previous month button not found.");
+    if (nextMonthButton) nextMonthButton.addEventListener('click', goToNextMonth); else console.warn("Next month button not found.");
+    if (gotoTodayButton) gotoTodayButton.addEventListener('click', goToToday); else console.warn("Go to Today button not found.");
+    if (startSunButton) startSunButton.addEventListener('click', () => updateStartDaySelection(0)); else console.warn("Start Sunday button not found.");
+    if (startMonButton) startMonButton.addEventListener('click', () => updateStartDaySelection(1)); else console.warn("Start Monday button not found.");
+
+    // --- Initial Setup ---
+    // Check if all *essential* elements for the initial render are present
+    if (!calendarGrid || !monthYearDisplay || !countdownTimerDisplay || !countdownDayLabel || !startSunButton || !startMonButton || !weekdaysContainer) {
+         console.error("One or more essential elements for calendar/countdown initialization are missing!");
+         // Optionally display a user-facing error message on the page
+         const container = document.querySelector('.container') || document.body;
+         if (container && !document.getElementById('init-error-msg')) { // Prevent multiple error messages
+            const errorMsg = document.createElement('p');
+            errorMsg.id = 'init-error-msg';
+            errorMsg.style.color = 'red';
+            errorMsg.style.fontWeight = 'bold';
+            errorMsg.style.textAlign = 'center';
+            errorMsg.style.marginTop = '20px';
+            errorMsg.textContent = 'Error: Failed to initialize the calendar and countdown timer. Please check the browser console for details.';
+            const calendarSection = document.querySelector('section[aria-labelledby="daily-event-heading"]');
+            if (calendarSection) {
+                // Insert before the calendar container if possible
+                calendarSection.parentNode.insertBefore(errorMsg, calendarSection);
+            } else {
+                // Fallback: insert at the top of the main container
+                container.insertBefore(errorMsg, container.firstChild);
+            }
+         }
+         return; // Stop further execution if essential elements are missing
+    }
+
+    // Set initial active state for start day buttons
+    startSunButton.classList.toggle('active', startDayOfWeekSetting === 0);
+    startMonButton.classList.toggle('active', startDayOfWeekSetting === 1);
+
+    // Initial render and countdown start
+    renderCalendar(currentMonth, currentYear);
+    updateCountdown(); // Run once immediately
+    setInterval(updateCountdown, 1000); // Update countdown every second
+
+});
+</script>
 
 </body>
 </html>
