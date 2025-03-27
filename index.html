@@ -127,19 +127,19 @@
         .fish-verified-theme p, .fish-verified-theme li, .fish-verified-theme h3, .fish-verified-theme ol { color: #FFFFFF; }
         .fish-verified-theme a { color: #A7D8FF; }
         .fish-verified-theme a:hover { color: #D0EFFF; }
-        .fish-verified-theme h3 { color: #F0F0F0 !important; }
+        .fish-verified-theme h3 { color: #F0F0F0 !important; } /* Use !important cautiously */
         .fish-verified-theme ol li::marker { color: #FFFFFF; }
 
         .luxury-trash-theme p, .luxury-trash-theme li, .luxury-trash-theme h3 { color: #FFD700; }
         .luxury-trash-theme a { color: #FFEC8B; }
         .luxury-trash-theme a:hover { color: #FFFACD; }
-        .luxury-trash-theme h3 { color: #FBC02D !important; }
-        .luxury-trash-theme p i { color: #FFEA00; }
+        .luxury-trash-theme h3 { color: #FBC02D !important; } /* Use !important cautiously */
+        .luxury-trash-theme p i { color: #FFEA00; } /* Style for italic text in luxury trash */
 
         .rose-fish-theme p, .rose-fish-theme li, .rose-fish-theme h3, .rose-fish-theme ol { color: #FF6B6B; }
         .rose-fish-theme a { color: #FF8F8F; }
         .rose-fish-theme a:hover { color: #FFBDBD; }
-        .rose-fish-theme h3 { color: #E57373 !important; }
+        .rose-fish-theme h3 { color: #E57373 !important; } /* Use !important cautiously */
         .rose-fish-theme ol li::marker { color: #FF6B6B; }
 
 
@@ -172,7 +172,7 @@
             border-radius: 8px;
             padding: 15px;
             margin-top: 30px;
-            margin-bottom: 10px;
+            margin-bottom: 10px; /* Space between calendar and first timer */
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
             border: 1px solid var(--cal-border-color);
         }
@@ -181,14 +181,20 @@
         .calendar-header {
             display: flex; align-items: center; justify-content: space-between;
             padding: 10px 5px; background-color: var(--cal-header-bg);
-            border-radius: 6px 6px 0 0; margin: -15px -15px 10px -15px; position: relative;
+            border-radius: 6px 6px 0 0; margin: -15px -15px 10px -15px; position: relative; /* Adjust negative margins based on padding */
         }
         @media (min-width: 600px) { .calendar-header { padding: 12px 15px; margin: -20px -20px 15px -20px; } }
 
+        /* Override gradient text for calendar header H3 */
         .calendar-header h3#cal-month-year {
             margin: 0; font-size: 1.3em; font-weight: bold; text-align: center; flex-grow: 1;
-            background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important;
-            color: var(--cal-text-color) !important; -webkit-text-fill-color: initial !important; animation: none !important;
+            /* Reset gradient styles */
+            background: none !important;
+            -webkit-background-clip: initial !important;
+            background-clip: initial !important;
+            color: var(--cal-text-color) !important;
+            -webkit-text-fill-color: initial !important;
+            animation: none !important;
         }
         @media (min-width: 600px) { .calendar-header h3#cal-month-year { font-size: 1.5em; } }
 
@@ -201,11 +207,12 @@
         .cal-today-btn { background-color: var(--cal-today-button-bg); margin-left: 10px; }
         .cal-today-btn:hover { background-color: var(--cal-today-button-hover-bg); }
 
+        /* Responsive positioning for 'Today' button */
         @media (max-width: 480px) {
             .cal-today-btn { position: absolute; bottom: -45px; right: 5px; margin-left: 0; }
-            .calendar-header { padding-bottom: 5px; }
-            #start-day-controls { margin-bottom: 45px; }
-            .calendar-weekdays { margin-top: 45px; }
+            .calendar-header { padding-bottom: 5px; } /* Ensure content isn't cut off */
+            #start-day-controls { margin-bottom: 45px; } /* Make space for absolute positioned button */
+            .calendar-weekdays { margin-top: 45px; } /* Adjust space if needed */
         }
 
         #start-day-controls {
@@ -215,7 +222,7 @@
             display: flex;
             justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;
             padding: 5px 15px 10px 15px; border-bottom: 1px solid var(--cal-border-color);
-            margin-left: -15px; margin-right: -15px;
+            margin-left: -15px; margin-right: -15px; /* Align with container padding */
         }
         @media (min-width: 600px) {
             #start-day-controls { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; }
@@ -242,10 +249,8 @@
             padding-bottom: 8px;
             margin-bottom: 8px;
             border-bottom: 1px solid var(--cal-border-color);
-            margin-left: -15px;
-            margin-right: -15px;
-            padding-left: 15px;
-            padding-right: 15px;
+            margin-left: -15px; margin-right: -15px; /* Align with container padding */
+            padding-left: 15px; padding-right: 15px; /* Inner padding for content */
         }
         @media (min-width: 600px) {
             .calendar-weekdays {
@@ -277,7 +282,7 @@
             gap: 5px;
         }
 
-        /* === MODIFIED STYLES START === */
+        /* Calendar Day Cell Styles */
         .calendar-day {
             background-color: var(--cal-header-bg); border: 1px solid var(--cal-border-color);
             border-radius: 4px; padding: 5px; min-height: 75px; display: flex;
@@ -287,27 +292,34 @@
         }
         @media (min-width: 600px){ .calendar-day { min-height: 85px; font-size: 0.9em; padding: 8px 5px; } }
 
+        /* Link inside calendar day */
         .calendar-day a {
-            color: inherit;
-            text-decoration: none;
+            color: inherit; /* Inherit text color from parent */
+            text-decoration: none; /* Remove underline from link */
             display: flex;
             flex-direction: column; /* Stack elements vertically */
             align-items: center;    /* Center horizontally */
             justify-content: flex-start; /* Align to top */
-            height: 100%;
+            height: 100%; /* Fill the cell */
             width: 100%;
-            padding: inherit; /* Use padding from parent */
-            box-sizing: border-box;
+            padding: inherit; /* Use padding from parent .calendar-day (applied effectively via box-sizing) */
+            box-sizing: border-box; /* Include padding in width/height */
+        }
+        .calendar-day a:hover {
+            color: inherit; /* Keep color consistent on hover, rely on parent hover effect */
         }
 
-        .calendar-day:hover { background-color: #303034; }
 
+        .calendar-day:hover { background-color: #303034; } /* Hover effect for the cell */
+
+        /* Styles for days not in the current month */
         .calendar-day.other-month { background-color: transparent; border-color: transparent; cursor: default; }
         .calendar-day.other-month .day-number { color: var(--cal-dim-text-color); opacity: 0.6; }
         .calendar-day.other-month .event-location,
-        .calendar-day.other-month .daily-event-num { display: none; }
-        .calendar-day.other-month:hover { background-color: transparent; }
+        .calendar-day.other-month .daily-event-num { display: none; } /* Hide event details */
+        .calendar-day.other-month:hover { background-color: transparent; } /* No hover effect */
 
+        /* Style for today's date */
         .calendar-day.today { border: 2px solid var(--cal-today-border); background-color: #2a2a30; }
         .calendar-day.today .day-number { font-weight: bold; color: var(--cal-primary-color); }
 
@@ -315,22 +327,22 @@
         .calendar-day .day-number {
             font-size: 1.1em; /* Relatively large */
             color: var(--cal-text-color);
-            margin-top: 0px;    /* At the top */
-            margin-bottom: 2px; /* Space below */
+            margin-top: 0px;    /* Position at the very top */
+            margin-bottom: 2px; /* Small space below */
             line-height: 1.1;
-            display: block;     /* Own line */
+            display: block;     /* Ensure it takes its own line */
         }
 
         /* Style for the Ordinal Event Number (Middle) */
         .calendar-day .daily-event-num {
-            font-size: 0.8em;  /* Smaller */
+            font-size: 0.8em;  /* Smaller than day number */
             color: var(--cal-event-num-color); /* Dimmer color */
             margin-top: 1px;    /* Small space above */
             margin-bottom: 1px; /* Small space below */
             line-height: 1;
             font-weight: normal;
             opacity: 0.9;
-            display: block;     /* Own line */
+            display: block;     /* Ensure it takes its own line */
         }
 
         /* Style for the Event Location (Bottom) */
@@ -339,33 +351,66 @@
             color: var(--cal-event-color); /* Brighter event color */
             font-weight: bold;
             margin-top: 1px;    /* Small space above */
-            margin-bottom: 0px; /* No space below */
+            margin-bottom: 0px; /* No extra space at the bottom */
             line-height: 1;
-            word-break: break-word;
-            display: block;     /* Own line */
+            word-break: break-word; /* Prevent long locations from overflowing */
+            display: block;     /* Ensure it takes its own line */
+            max-width: 100%; /* Ensure it doesn't overflow horizontally */
         }
-        /* === MODIFIED STYLES END === */
 
 
-        /* --- Countdown Container Styles --- */
-        #countdown-container {
+        /* --- Countdown Container Styles (Shared) --- */
+        #countdown-container, #closing-countdown-container, #happening-now-container {
             background-color: var(--cal-bg-color); border: 1px solid var(--cal-border-color);
-            border-radius: 8px; padding: 12px 15px; margin-top: 15px; margin-bottom: 30px;
+            border-radius: 8px; padding: 12px 15px;
+            margin-top: 15px; /* Spacing after calendar or previous timer */
+            margin-bottom: 10px; /* Default bottom margin */
             text-align: center; font-size: 1.1em; color: var(--cal-text-color);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
-        @media (min-width: 600px) { #countdown-container { padding: 15px 20px; font-size: 1.2em; } }
+        /* Specific margin for the last timer before the H2 */
+        /* Apply to closing container OR happening now container if it's visible instead */
+        #closing-countdown-container,
+        #happening-now-container[style*="display: block"] ~ #closing-countdown-container, /* If happening now is visible, apply margin to closing */
+        #happening-now-container:not([style*="display: none"]) { /* If happening now is visible and closing is hidden (shouldn't happen with current JS) */
+             margin-bottom: 30px; /* More space before the "MORE ABOUT DAILY VRCHAT" heading */
+        }
+        /* Ensure default margin if happening now is hidden and closing is shown */
+         #happening-now-container[style*="display: none"] ~ #closing-countdown-container {
+             margin-bottom: 10px; /* Default bottom margin */
+         }
 
+
+        /* Larger screens */
+        @media (min-width: 600px) {
+             #countdown-container, #closing-countdown-container, #happening-now-container {
+                 padding: 15px 20px;
+                 font-size: 1.2em;
+            }
+        }
+
+        /* Specific Timer Text Styles */
         #countdown-timer { color: var(--cal-secondary-color); font-weight: bold; }
         #countdown-day-label { color: var(--cal-primary-color); font-weight: bold; }
+        #closing-countdown-timer { color: var(--cal-primary-color); font-weight: bold; }
+        #closing-countdown-day-label { color: var(--cal-primary-color); font-weight: bold; }
+        #happening-now-message { color: var(--cal-secondary-color); font-weight: bold; }
+        #happening-now-link { color: var(--cal-primary-color); font-weight: bold; text-decoration: underline; }
+        #happening-now-link:hover { color: #ff4fa4; } /* Hover color for the link */
 
+
+        /* Responsive Label/Timer Layout */
         @media (max-width: 480px) {
-             #countdown-container .countdown-label { display: block; margin-bottom: 3px; }
-             #countdown-timer { display: block; margin-left: 0; min-width: auto;}
+             /* Make labels stack above timers on small screens */
+             .countdown-label, #closing-countdown-label, #happening-now-message { display: block; margin-bottom: 3px; }
+             #countdown-timer, #closing-countdown-timer, #happening-now-link { display: block; margin-left: 0; min-width: auto; margin-top: 5px;}
+             #happening-now-link { margin-top: 8px; } /* Specific spacing for the link */
         }
         @media (min-width: 480px) {
-             #countdown-container .countdown-label { display: inline; margin-bottom: 0; }
-             #countdown-timer { display: inline-block; margin-left: 8px; min-width: 150px; }
+             /* Keep labels inline with timers on larger screens */
+             .countdown-label, #closing-countdown-label, #happening-now-message { display: inline; margin-bottom: 0; }
+             #countdown-timer, #closing-countdown-timer, #happening-now-link { display: inline-block; margin-left: 8px; min-width: 150px; }
+             #happening-now-link { margin-top: 0; }
         }
 
         /* ========================================= */
@@ -384,7 +429,7 @@
 
     <!-- === START MOVED CALENDAR SECTION === -->
     <hr>
-
+    <section aria-labelledby="daily-event-heading"> <!-- Added section wrapper for better context -->
         <!-- START: VRChat Calendar -->
         <div class="calendar-container">
             <div class="calendar-header">
@@ -410,32 +455,45 @@
         </div>
         <!-- END: VRChat Calendar -->
 
-        <!-- START: Countdown Timer -->
+        <!-- START: Countdown Timer (Modified Label) -->
         <div id="countdown-container">
-            <span class="countdown-label">Next Daily VRChat (<span id="countdown-day-label">---</span>) starts in:</span>
+            <span class="countdown-label">Next Daily VRChat (<span id="countdown-day-label">---</span>) starts at 21:00 UTC in:</span>
             <span id="countdown-timer">Calculating...</span>
         </div>
         <!-- END: Countdown Timer -->
-    </section>
 
-    <hr>
-    <section aria-labelledby="daily-event-heading">
+        <!-- START: Closing Countdown Timer (Modified Label + Added Span - NO LONGER INITIALLY HIDDEN) -->
+        <!-- ****** REMOVED style="display: none;" FROM THIS DIV ****** -->
+        <div id="closing-countdown-container">
+            <span id="closing-countdown-label">Daily VRChat (<span id="closing-countdown-day-label">---</span>) instance closes at 23:00 UTC in:</span>
+            <span id="closing-countdown-timer">Calculating...</span>
+        </div>
+        <!-- END: Closing Countdown Timer -->
+
+        <!-- START: Happening Now Container (NEW, Initially Hidden - controlled by JS) -->
+        <div id="happening-now-container" style="display: none;">
+            <span id="happening-now-message"></span><br>
+            <a id="happening-now-link" href="#" target="_blank" rel="noopener noreferrer">Click here to join the instance</a>
+        </div>
+        <!-- END: Happening Now Container -->
+
+        <!-- Moved Daily VRChat details here -->
         <h2 id="daily-event-heading">MORE ABOUT DAILY VRCHAT</h2>
-        <img src="https://lh3.googleusercontent.com/d/1EaOJeQm_VaXNrTPVGzYxCkLSmwG9E-Qe"
-        alt="Fish Community Image" class="community-image" style="max-width: 300px;" loading="lazy" width="300" height="300">
-        <p>Public event that lets people freely express themselves without many restrictions. People are given the freedom to be as chaotic, offensive, and loud as they wish to be.</p>
-        <p>The main objective of <b>DAILY VRCHAT</b> is to maintain a public <b><span aria-hidden="true">＜＞＜</span></b> group instance for <b>2 hours</b>, inviting anyone from the internet to join (<a href="https://vrc.group/FISH.9566" target="_blank" rel="noopener noreferrer">https://vrc.group/FISH.9566</a>).</p>
-        <p>After the event, everyone will be kicked from the instance</p>
-        <h3>THERE ARE 2 RULES!</h3>
-        <ul>
-            <li>1) NSFW avatars are not allowed.</li>
-            <li>2) Crasher avatars are not allowed.</li>
-        </ul>
-        <p>If you break these rules you will be kicked or banned from joining <b>DAILY VRCHAT</b></p>
-        <p>Check the Discord Events channel for more details. A link to the world instance will be posted to #🔥instance-link at the start of the event. (Discord accessible via <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a>)</p>
-        <h3>WARNING!</h3>
-        <p class="warning">This daily event is not your safe space. Moderators won't assist you with any hateful, racist, or homophobic behavior. And will only enforce 2 rules, If you get easily emotionally distressed <b>DO NOT GO TO THIS EVENT</b></p>
-        <p>VRChat's Terms of Service and Guidelines still apply, and violations could result in your account being banned.</p>
+            <img src="https://lh3.googleusercontent.com/d/1EaOJeQm_VaXNrTPVGzYxCkLSmwG9E-Qe"
+                 alt="Fish Community Image" class="community-image" style="max-width: 300px;" loading="lazy" width="300" height="300">
+            <p>Public event that lets people freely express themselves without many restrictions. People are given the freedom to be as chaotic, offensive, and loud as they wish to be.</p>
+            <p>The main objective of <b>DAILY VRCHAT</b> is to maintain a public <b><span aria-hidden="true">＜＞＜</span></b> group instance for <b>2 hours</b>, inviting anyone from the internet to join (<a href="https://vrc.group/FISH.9566" target="_blank" rel="noopener noreferrer">https://vrc.group/FISH.9566</a>).</p>
+            <p>After the event, everyone will be kicked from the instance</p>
+            <h3>THERE ARE 2 RULES!</h3>
+            <ul>
+                <li>1) NSFW avatars are not allowed.</li>
+                <li>2) Crasher avatars are not allowed.</li>
+            </ul>
+            <p>If you break these rules you will be kicked or banned from joining <b>DAILY VRCHAT</b></p>
+            <p>Check the Discord Events channel for more details. A link to the world instance will be posted to #🔥instance-link at the start of the event. (Discord accessible via <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a>)</p>
+            <h3>WARNING!</h3>
+            <p class="warning">This daily event is not your safe space. Moderators won't assist you with any hateful, racist, or homophobic behavior. And will only enforce 2 rules, If you get easily emotionally distressed <b>DO NOT GO TO THIS EVENT</b></p>
+            <p>VRChat's Terms of Service and Guidelines still apply, and violations could result in your account being banned.</p>
     </section>
     <!-- === END MOVED CALENDAR SECTION === -->
 
@@ -443,6 +501,7 @@
 
     <section aria-labelledby="meaning-heading">
         <h2 id="meaning-heading">MEANING OF FISH <span aria-hidden="true">＜＞＜</span></h2>
+        <!-- Use a valid image path or URL if "images/meaning_of_fish.png" is local -->
         <img src="images/meaning_of_fish.png"
              alt="Image explaining the meaning of FISH ＜＞＜: < represents chaos increase, > represents adding structure, ＜＞＜ symbolizes structured chaos."
              class="meaning-image"
@@ -514,7 +573,7 @@
     <section class="rose-fish-theme" aria-labelledby="rose-heading">
         <h2 id="rose-heading">ROSE FISH COMMUNITY</h2>
         <img src="https://lh3.googleusercontent.com/d/1tAe5dI01yMmozt61OVtyN4b_gTYpJh2g"
-        alt="Fish Community Image" class="community-image" style="max-width: 300px;" loading="lazy" width="300" height="300">
+             alt="Fish Community Image" class="community-image" style="max-width: 300px;" loading="lazy" width="300" height="300">
         <p><b>DATABASE:</b> <a href="http://rosefish.theziver.com" target="_blank" rel="noopener noreferrer">rosefish.theziver.com</a></p>
         <p>Content creation community that makes content for the FISH <span aria-hidden="true">＜＞＜</span> COMMUNITY. When someone joins rose fish, they get access to exclusive things.</p>
         <h3>Joining ROSE FISH</h3>
@@ -541,7 +600,7 @@
     <section class="luxury-trash-theme" aria-labelledby="luxury-heading">
         <h2 id="luxury-heading">LUXURY TRASH STORE</h2>
         <img src="https://lh3.googleusercontent.com/d/1Ug-ZoqPJnT3tbvOAVKYW_dBNJH3LdgdI "
-        alt="Fish Community Image" class="community-image" style="max-width: 300px;" loading="lazy" width="300" height="300">
+             alt="Fish Community Image" class="community-image" style="max-width: 300px;" loading="lazy" width="300" height="300">
         <p><i>"Success and money are important, but they shouldn't limit your creativity. Use them as tools for growth, not as the final goal."</i></p>
         <ul>
             <li>
@@ -553,31 +612,31 @@
                 <a href="https://theziver.booth.pm/items/4131078" target="_blank" rel="noopener noreferrer">https://theziver.booth.pm/items/4131078</a>
             </li>
             <li>
-                <b>LUXURY STAR</b> - ¥ 111<br> <!-- Note: Price updated from search -->
+                <b>LUXURY STAR</b> - ¥ 111<br>
                 <a href="https://theziver.booth.pm/items/4234569" target="_blank" rel="noopener noreferrer">https://theziver.booth.pm/items/4234569</a>
             </li>
             <li>
-                <b>LUXURY PRE-CRACKED EGG</b> - ¥ 222<br> <!-- Note: Price updated from search -->
+                <b>LUXURY PRE-CRACKED EGG</b> - ¥ 222<br>
                 <a href="https://theziver.booth.pm/items/4678138" target="_blank" rel="noopener noreferrer">https://theziver.booth.pm/items/4678138</a>
             </li>
              <li>
-                <b>LUXURY PIPE</b> - ¥ 222<br> <!-- Note: Price updated from search -->
+                <b>LUXURY PIPE</b> - ¥ 222<br>
                 <a href="https://theziver.booth.pm/items/4993637" target="_blank" rel="noopener noreferrer">https://theziver.booth.pm/items/4993637</a>
             </li>
             <li>
-                <b>FISH HAIRCLIP</b> - ¥ 0<br> <!-- Note: Price updated from search -->
+                <b>FISH HAIRCLIP</b> - ¥ 0<br>
                 <a href="https://theziver.booth.pm/items/5106312" target="_blank" rel="noopener noreferrer">https://theziver.booth.pm/items/5106312</a>
             </li>
             <li>
-                <b>FISHING FLAG (AVATAR PREFAB)</b> - ¥ 777<br> <!-- Note: Price updated from search -->
+                <b>FISHING FLAG (AVATAR PREFAB)</b> - ¥ 777<br>
                 <a href="https://theziver.booth.pm/items/5399404" target="_blank" rel="noopener noreferrer">https://theziver.booth.pm/items/5399404</a>
             </li>
             <li>
-                <b>LUXURY CUBE</b> - ¥ 1337<br> <!-- Note: Price updated from search -->
+                <b>LUXURY CUBE</b> - ¥ 1337<br>
                 <a href="https://theziver.booth.pm/items/5980910" target="_blank" rel="noopener noreferrer">https://theziver.booth.pm/items/5980910</a>
             </li>
             <li>
-                <b>LUXURY TURRET (WORLD PREFAB)</b> - ¥ 999<br> <!-- Note: Price updated from search -->
+                <b>LUXURY TURRET (WORLD PREFAB)</b> - ¥ 999<br>
                 <a href="https://theziver.booth.pm/items/6610771" target="_blank" rel="noopener noreferrer">https://theziver.booth.pm/items/6610771</a>
             </li>
         </ul>
@@ -602,6 +661,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
+    // --- Calendar Elements ---
     const calendarGrid = document.getElementById('calendar-grid');
     const monthYearDisplay = document.getElementById('cal-month-year');
     const prevMonthButton = document.getElementById('cal-prev-month');
@@ -611,15 +671,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const startSunButton = document.getElementById('cal-start-sun');
     const startMonButton = document.getElementById('cal-start-mon');
 
+    // --- Timer Elements ---
+    const countdownContainer = document.getElementById('countdown-container');
     const countdownTimerDisplay = document.getElementById('countdown-timer');
     const countdownDayLabel = document.getElementById('countdown-day-label');
 
-    const targetDate = new Date(Date.UTC(2023, 6, 20)); // Note: Month is 0-indexed (6 = July)
+    const closingCountdownContainer = document.getElementById('closing-countdown-container');
+    const closingCountdownTimerDisplay = document.getElementById('closing-countdown-timer');
+    const closingCountdownDayLabel = document.getElementById('closing-countdown-day-label');
+
+    const happeningNowContainer = document.getElementById('happening-now-container');
+    const happeningNowMessage = document.getElementById('happening-now-message');
+    const happeningNowLink = document.getElementById('happening-now-link');
+
+    // --- Constants and State ---
+    const targetDate = new Date(Date.UTC(2023, 6, 20)); // July 20, 2023 UTC (Month is 0-indexed)
     const today = new Date();
     const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
     let currentMonth = today.getUTCMonth();
     let currentYear = today.getUTCFullYear();
-    let startDayOfWeekSetting = 1; // Default to Monday (0=Sun, 1=Mon)
+    let startDayOfWeekSetting = 1; // Default: Monday (0=Sun, 1=Mon)
 
     // Load saved start day preference
     const savedStartDay = localStorage.getItem('calendarStartDay');
@@ -627,12 +698,11 @@ document.addEventListener('DOMContentLoaded', function() {
         startDayOfWeekSetting = parseInt(savedStartDay, 10);
     }
 
-    // Locations for each day of the week (0=Sunday, 1=Monday, ..., 6=Saturday)
-    // Ensure this order matches VRChat day logic if it's different from standard JS Date.getUTCDay()
-    const locations = [ "YES?", "LUXURY TRASH", "The Fishing Mall", "Retrocubic Nexus", "Cunks Coughing City", "YES?", "YES?" ];
+    // --- Data Arrays ---
+    const locations = [ "YES?", "LUXURY TRASH", "The Fishing Mall", "Retrocubic Nexus", "Cunks Coughing City", "YES?", "YES?" ]; // Index 0=Sunday, 1=Monday,...
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    // World IDs mapped to the day of the week (0=Monday, ..., 6=Sunday) - ADJUST if your week mapping differs
+    // World IDs mapped to the day of the week (Index 0=Monday, ..., 6=Sunday)
     const WORLD_IDS = {
         0: "wrld_b0812b34-cd7c-44b8-9b29-4f921a9e4d5a",  // Monday
         1: "wrld_9806f25c-0644-4ed7-a3b9-404763bd7dbc",  // Tuesday
@@ -642,12 +712,18 @@ document.addEventListener('DOMContentLoaded', function() {
         5: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355",  // Saturday
         6: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355"   // Sunday
     };
+    const VRC_GROUP_ID = "grp_2b910dc4-e984-4fd5-813c-877edcea29d2"; // Fish Group ID
 
+    // Flags for error logging
+    window.timerElementsChecked = false;
+    window.timerElementsMissing = false;
+
+    // --- Helper Functions ---
 
     function getOrdinalSuffix(num) {
          if (num === null || typeof num === 'undefined') return "";
          const n = Number(num);
-         if (isNaN(n) || n < 0) return ""; // Handle invalid input
+         if (isNaN(n) || n < 0) return "";
         const j = n % 10, k = n % 100;
         if (j == 1 && k != 11) return "st";
         if (j == 2 && k != 12) return "nd";
@@ -656,26 +732,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function calculateDailyVrchatDay(date) {
-         // Ensure we are comparing dates only, ignoring time
          const normalizedDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-         if (normalizedDate < targetDate) return null; // Event hasn't started yet for this date
-
+         if (normalizedDate < targetDate) return null; // Date is before the first event day
          const oneDay = 24 * 60 * 60 * 1000;
-         // Calculate difference in days from the target start date
+         // Calculate difference in days (0 for the first day, 1 for second, etc.)
          const dayDifference = Math.floor((normalizedDate - targetDate) / oneDay);
-         // Return the day number (0 for the first day, 1 for the second, etc.)
          return (dayDifference >= 0) ? dayDifference : null;
     }
 
+    // --- Calendar Rendering Functions ---
+
     function renderCalendar(month, year) {
+        // Check for essential calendar elements
         if (!calendarGrid || !monthYearDisplay || !weekdaysContainer) {
-             console.error("Calendar base elements (grid, month/year display, or weekdays container) missing!"); return;
+             console.error("Calendar base elements (grid, month/year display, or weekdays container) missing!");
+             if(calendarGrid) calendarGrid.innerHTML = "<p style='color: red; text-align: center;'>Error loading calendar grid.</p>";
+             return;
         }
 
         monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
 
-        // --- Render Weekday Headers ---
-        weekdaysContainer.innerHTML = ''; // Clear previous headers
+        // Render Weekday Headers
+        weekdaysContainer.innerHTML = '';
         const weekdayNamesShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]; // Standard order
         let orderedWeekdays = [];
 
@@ -691,41 +769,34 @@ document.addEventListener('DOMContentLoaded', function() {
             weekdayCell.textContent = dayName;
             weekdaysContainer.appendChild(weekdayCell);
         });
-        // --- End Render Weekday Headers ---
 
-        calendarGrid.innerHTML = ''; // Clear previous days
+        // Render Calendar Grid
+        calendarGrid.innerHTML = '';
 
-        // Calculate calendar grid details
         const firstDayOfMonth = new Date(Date.UTC(year, month, 1));
         const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
         const lastDayOfPrevMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
-
-        // Calculate the day of the week for the 1st of the month (0=Sun, 1=Mon, ...)
-        const firstDayIndex = firstDayOfMonth.getUTCDay();
-
-        // Calculate offset needed for the first day based on the startDayOfWeekSetting
-        // (firstDayIndex - startDayOfWeekSetting + 7) % 7 gives the number of previous month days to show
+        const firstDayIndex = firstDayOfMonth.getUTCDay(); // 0=Sun, 1=Mon,...
         let startingDayOffset = (firstDayIndex - startDayOfWeekSetting + 7) % 7;
 
-        // Render previous month's days
+        // Previous month's days
         for (let i = 0; i < startingDayOffset; i++) {
             const day = lastDayOfPrevMonth - startingDayOffset + 1 + i;
-            calendarGrid.appendChild(createDayCell(day, true)); // true indicates 'other-month'
+            calendarGrid.appendChild(createDayCell(day, true));
         }
 
-        // Render current month's days
+        // Current month's days
         for (let day = 1; day <= daysInMonth; day++) {
             const cellDate = new Date(Date.UTC(year, month, day));
-            // Check if this day is today (UTC)
             const isToday = (year === todayUTC.getUTCFullYear() && month === todayUTC.getUTCMonth() && day === todayUTC.getUTCDate());
-            calendarGrid.appendChild(createDayCell(day, false, cellDate, isToday)); // false indicates not 'other-month'
+            calendarGrid.appendChild(createDayCell(day, false, cellDate, isToday));
         }
 
-        // Render next month's days to fill the grid
+        // Next month's days
         const totalCellsRendered = startingDayOffset + daysInMonth;
-        const remainingCells = (7 - (totalCellsRendered % 7)) % 7; // Use modulo 7 to handle full weeks
+        const remainingCells = (7 - (totalCellsRendered % 7)) % 7; // Fill remaining grid cells
         for (let i = 0; i < remainingCells; i++) {
-            calendarGrid.appendChild(createDayCell(i + 1, true)); // true indicates 'other-month'
+            calendarGrid.appendChild(createDayCell(i + 1, true));
         }
     }
 
@@ -733,62 +804,54 @@ document.addEventListener('DOMContentLoaded', function() {
         const dayCell = document.createElement('div');
         dayCell.classList.add('calendar-day');
 
-        // Create the span for the day number - always present
         const dayNumberSpan = document.createElement('span');
         dayNumberSpan.classList.add('day-number');
         dayNumberSpan.textContent = dayNumber;
 
         if (isOtherMonth) {
             dayCell.classList.add('other-month');
-            dayCell.appendChild(dayNumberSpan); // Other month cells just show the number
+            dayCell.appendChild(dayNumberSpan);
         } else if (cellDate) {
-            // Calculate event details for valid days
-            const dailyDay = calculateDailyVrchatDay(cellDate);
+            const dailyDay = calculateDailyVrchatDay(cellDate); // Get event number for this date
 
-            if (dailyDay !== null) { // Is it a day with a DAILY VRCHAT event?
+            if (dailyDay !== null) { // If it's a valid event day
                 const suffix = getOrdinalSuffix(dailyDay);
-                const instanceId = dailyDay; // Use the calculated day number as instance ID
-
-                // Determine the correct day index for WORLD_IDS (0=Mon...6=Sun)
-                const dayOfWeekForWorld = (cellDate.getUTCDay() + 6) % 7; // Converts Sun=0..Sat=6 to Mon=0..Sun=6
+                const instanceId = dailyDay; // Use event number as instance ID
+                const dayOfWeekForWorld = (cellDate.getUTCDay() + 6) % 7; // Convert UTC day (Sun=0) to Mon=0..Sun=6 index for WORLD_IDS
                 const worldId = WORLD_IDS[dayOfWeekForWorld];
-
-                // Determine the correct day index for locations (0=Sun...6=Sat)
-                const dayOfWeekForLocation = cellDate.getUTCDay();
+                const dayOfWeekForLocation = cellDate.getUTCDay(); // Keep original UTC day for location array (Sun=0..Sat=6)
                 const locationName = locations[dayOfWeekForLocation];
 
                 // Construct VRChat launch link
                 const baseUrl = "https://vrchat.com/home/launch?worldId=" + worldId + "&instanceId=";
-                const instanceParams = `~group(grp_2b910dc4-e984-4fd5-813c-877edcea29d2)~groupAccessType(public)~region(eu)`; // Add your actual group ID
+                const instanceParams = `~group(${VRC_GROUP_ID})~groupAccessType(public)~region(eu)`; // Use const for Group ID
                 const vrchatLink = baseUrl + instanceId + instanceParams;
 
-                // Create link element
+                // Create link element to wrap content
                 const dayLink = document.createElement('a');
                 dayLink.href = vrchatLink;
-                dayLink.target = "_blank"; // Open in new tab
-                dayLink.rel = "noopener noreferrer"; // Security best practice
-                dayLink.title = `Join Daily VRChat #${dailyDay}${suffix}`; // Tooltip
+                dayLink.target = "_blank";
+                dayLink.rel = "noopener noreferrer";
+                dayLink.title = `Join Daily VRChat #${dailyDay}${suffix}`;
 
-                // === MODIFIED ORDER FOR APPENDING ===
-                dayLink.appendChild(dayNumberSpan); // 1. Append Day number (Top)
+                dayLink.appendChild(dayNumberSpan); // 1. Append Day number
 
-                const eventNumSpan = document.createElement('span'); // 2. Append Event Number (Middle)
+                const eventNumSpan = document.createElement('span'); // 2. Append Event Number (Ordinal)
                 eventNumSpan.classList.add('daily-event-num');
                 eventNumSpan.textContent = `${dailyDay}${suffix}`;
                 dayLink.appendChild(eventNumSpan);
 
-                if (locationName) { // 3. Append Location (Bottom), if it exists
+                if (locationName) { // 3. Append Location (if defined)
                     const locationSpan = document.createElement('span');
                     locationSpan.classList.add('event-location');
                     locationSpan.textContent = locationName;
                     dayLink.appendChild(locationSpan);
                 }
-                // === END MODIFIED ORDER ===
 
-                dayCell.appendChild(dayLink); // Add the link containing the ordered elements to the cell
+                dayCell.appendChild(dayLink); // Add the link containing the ordered elements
 
             } else {
-                // Day is in the current month but before the event started or calculation failed
+                // Day is in current month but before the first event day
                 dayCell.appendChild(dayNumberSpan);
             }
 
@@ -797,98 +860,170 @@ document.addEventListener('DOMContentLoaded', function() {
                 dayCell.classList.add('today');
             }
         } else {
-             // Fallback for safety, though should be covered by isOtherMonth
+             // Fallback (shouldn't happen with current logic)
              dayCell.appendChild(dayNumberSpan);
         }
 
         return dayCell;
     }
 
-
-    function updateCountdown() {
-        // Check if elements exist before proceeding
-        if (!countdownTimerDisplay || !countdownDayLabel) {
-            // Log error only once to avoid console spam
-            if (!window.countdownElementsMissingLogged) {
-                 console.error("Countdown timer or day label element is missing!");
-                 window.countdownElementsMissingLogged = true; // Set flag
+    // --- Combined Timer Update Function (Ensures both timers visible) ---
+    function updateEventTimers() {
+        // Check if all required timer elements exist (log error only once)
+        if (!window.timerElementsChecked) {
+            if (!countdownContainer || !countdownTimerDisplay || !countdownDayLabel ||
+                !closingCountdownContainer || !closingCountdownTimerDisplay || !closingCountdownDayLabel ||
+                !happeningNowContainer || !happeningNowMessage || !happeningNowLink)
+            {
+                console.error("One or more timer display elements are missing! Timers will not function correctly.");
+                 if(countdownContainer) countdownContainer.style.display = 'none';
+                 if(closingCountdownContainer) closingCountdownContainer.style.display = 'none';
+                 if(happeningNowContainer) happeningNowContainer.style.display = 'none';
+                 window.timerElementsMissing = true; // Set flag indicating failure
             }
-            return; // Stop execution if elements are missing
+             window.timerElementsChecked = true; // Mark as checked
         }
+        // If elements were missing on the first check, stop
+        if (window.timerElementsMissing) return;
 
         try {
-            const nowUTC = new Date(); // Current time in UTC
+            const nowUTC = new Date();
             const nowUTCMillis = nowUTC.getTime();
 
-            // Set target event time to 9 PM (21:00) UTC today
-            let nextEventUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 21, 0, 0, 0));
-            let nextEventMillis = nextEventUTC.getTime();
-
-            // If current time is already past today's 9 PM UTC, set the target to tomorrow's 9 PM UTC
-            if (nowUTCMillis >= nextEventMillis) {
-                nextEventUTC.setUTCDate(nextEventUTC.getUTCDate() + 1);
-                nextEventMillis = nextEventUTC.getTime();
+            // --- Calculate and Update "Starts In" Countdown ---
+            let nextStartUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 21, 0, 0, 0));
+            // If current time is past or exactly at today's 21:00 UTC, target tomorrow's 21:00 UTC
+            if (nowUTCMillis >= nextStartUTC.getTime()) {
+                nextStartUTC.setUTCDate(nextStartUTC.getUTCDate() + 1);
             }
+            const diffToStart = nextStartUTC.getTime() - nowUTCMillis;
+            const startDayNumber = calculateDailyVrchatDay(nextStartUTC); // Get event number for the upcoming start
+            const startDaySuffix = getOrdinalSuffix(startDayNumber);
 
-            // Calculate the DAILY VRCHAT day number for the *next* event
-            const nextDailyDayNumber = calculateDailyVrchatDay(nextEventUTC);
-            const nextDaySuffix = getOrdinalSuffix(nextDailyDayNumber);
+            // Update Start Countdown Display
+            countdownDayLabel.textContent = (startDayNumber !== null) ? `${startDayNumber}${startDaySuffix}` : "---";
+            countdownTimerDisplay.textContent = formatTimeDifference(diffToStart);
+            // *** Ensure Starts In timer is ALWAYS visible ***
+            countdownContainer.style.display = 'block';
 
-            // Update the day label (e.g., "591st")
-            countdownDayLabel.textContent = (nextDailyDayNumber !== null) ? `${nextDailyDayNumber}${nextDaySuffix}` : "---";
 
-            // Calculate the time difference in milliseconds
-            const difference = nextEventMillis - nowUTCMillis;
+            // --- Calculate and Update "Closes In" Countdown ---
+            let nextCloseUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 23, 0, 0, 0));
+             // If current time is past or exactly at today's 23:00 UTC, target tomorrow's 23:00 UTC
+            if (nowUTCMillis >= nextCloseUTC.getTime()) {
+                nextCloseUTC.setUTCDate(nextCloseUTC.getUTCDate() + 1);
+            }
+            const diffToClose = nextCloseUTC.getTime() - nowUTCMillis;
+            let closeEventDayUTC = new Date(nextCloseUTC);
+            closeEventDayUTC.setUTCHours(21, 0, 0, 0); // Find the corresponding start date for this closing time
+            const closeDayNumber = calculateDailyVrchatDay(closeEventDayUTC); // Get event number for the event that is closing
+            const closeDaySuffix = getOrdinalSuffix(closeDayNumber);
 
-            if (difference <= 0) {
-                // Event time has passed or is happening now
-                countdownTimerDisplay.textContent = "Starting soon / In Progress!";
-            } else {
-                // Calculate remaining days, hours, minutes, seconds
-                const days = Math.floor(difference / (1000 * 60 * 60 * 24)); // Milliseconds in a day
-                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // Milliseconds in an hour
-                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)); // Milliseconds in a minute
-                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            // Update Close Countdown Display
+            closingCountdownDayLabel.textContent = (closeDayNumber !== null) ? `${closeDayNumber}${closeDaySuffix}` : "---";
+            closingCountdownTimerDisplay.textContent = formatTimeDifference(diffToClose);
+            // *** Ensure Closes In timer is ALWAYS visible ***
+            closingCountdownContainer.style.display = 'block';
 
-                // Format the countdown string
-                let countdownString = "";
-                if (days > 0) {
-                    countdownString += `${days}d `;
+
+            // --- Determine "Happening Now" State (Controls Link Visibility) ---
+            const todayStartUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 21, 0, 0, 0));
+            const todayCloseUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 23, 0, 0, 0));
+
+            // Check if current time is strictly within today's 21:00 to 23:00 UTC window
+            if (nowUTCMillis >= todayStartUTC.getTime() && nowUTCMillis < todayCloseUTC.getTime()) {
+                // Event is currently happening
+                const currentDayNumber = calculateDailyVrchatDay(todayStartUTC);
+                const currentDaySuffix = getOrdinalSuffix(currentDayNumber);
+                const instanceId = currentDayNumber;
+
+                if (instanceId !== null) {
+                     // Construct the link for the *currently active* instance
+                     const dayOfWeekForWorld = (todayStartUTC.getUTCDay() + 6) % 7;
+                     const worldId = WORLD_IDS[dayOfWeekForWorld];
+                     const baseUrl = "https://vrchat.com/home/launch?worldId=" + worldId + "&instanceId=";
+                     const instanceParams = `~group(${VRC_GROUP_ID})~groupAccessType(public)~region(eu)`;
+                     const vrchatLink = baseUrl + instanceId + instanceParams;
+
+                     // Update and show the "Happening Now" container
+                     happeningNowMessage.textContent = `DAILY VRCHAT (${currentDayNumber}${currentDaySuffix}) IS CURRENTLY HAPPENING`;
+                     happeningNowLink.href = vrchatLink;
+                     happeningNowContainer.style.display = 'block'; // SHOW the link container
+                } else {
+                     // Error state: hide the link container if instance ID calculation fails
+                     happeningNowContainer.style.display = 'none';
+                     console.error("Could not calculate instance ID during event window.");
                 }
-                // Always show hours, minutes, seconds, padded with zeros
-                countdownString += `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
-
-                countdownTimerDisplay.textContent = countdownString.trim();
+            } else {
+                // Event is not happening right now
+                happeningNowContainer.style.display = 'none'; // HIDE the link container
             }
+
         } catch (error) {
-             console.error("Error in updateCountdown:", error);
-             // Display error state in the UI
-             if (countdownTimerDisplay) countdownTimerDisplay.textContent = "Error calculating";
-             if (countdownDayLabel) countdownDayLabel.textContent = "Err";
+            console.error("Error in updateEventTimers:", error);
+            // Modify error state to ensure main timers remain visible if possible
+            displayErrorState("Error updating timers.");
         }
     }
 
-     // --- Calendar Navigation Functions ---
-     function goToPrevMonth() { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(currentMonth, currentYear); }
-     function goToNextMonth() { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(currentMonth, currentYear); }
-     function goToToday() { const now = new Date(); if (currentMonth !== now.getUTCMonth() || currentYear !== now.getUTCFullYear()) { currentMonth = now.getUTCMonth(); currentYear = now.getUTCFullYear(); renderCalendar(currentMonth, currentYear); } }
+    // --- Helper to format time difference (e.g., "01h 05m 30s") ---
+    function formatTimeDifference(differenceMillis) {
+        if (differenceMillis <= 0) {
+            // This state might appear momentarily at the exact transition time
+            return "Now / Very Soon!";
+        }
+        const totalSeconds = Math.max(0, Math.floor(differenceMillis / 1000)); // Ensure non-negative seconds
+        const days = Math.floor(totalSeconds / (60 * 60 * 24));
+        const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+        const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+        const seconds = totalSeconds % 60;
 
-     // --- Start Day Setting Function ---
-     function updateStartDaySelection(newStartDay) {
-         if (startDayOfWeekSetting === newStartDay) return; // No change needed
-         startDayOfWeekSetting = newStartDay;
-         localStorage.setItem('calendarStartDay', newStartDay.toString()); // Save preference
+        let timeString = "";
+        if (days > 0) { timeString += `${days}d `; } // Include days part only if > 0
+        // Always show H, M, S, padded with leading zeros
+        timeString += `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+        return timeString.trim();
+    }
 
-         // Update button active states visually
-         if (startSunButton) startSunButton.classList.toggle('active', newStartDay === 0);
-         if (startMonButton) startMonButton.classList.toggle('active', newStartDay === 1);
+    // --- Helper to display errors consistently (Ensures timers remain visible) ---
+    function displayErrorState(message) {
+         console.error(message); // Log detailed error to console
+         // Attempt to show a user-friendly error state in the UI, keeping containers visible
+         if (countdownContainer) {
+             countdownContainer.style.display = 'block'; // Keep visible
+             if (countdownDayLabel) countdownDayLabel.textContent = "Err";
+             if (countdownTimerDisplay) countdownTimerDisplay.textContent = "Error";
+         }
+         if (closingCountdownContainer) {
+             closingCountdownContainer.style.display = 'block'; // Keep visible
+             if (closingCountdownDayLabel) closingCountdownDayLabel.textContent = "Err";
+             if (closingCountdownTimerDisplay) closingCountdownTimerDisplay.textContent = "Error";
+         }
+         // Ensure link is hidden on error
+         if (happeningNowContainer) happeningNowContainer.style.display = 'none';
+    }
 
-         // Re-render the calendar with the new setting
-         renderCalendar(currentMonth, currentYear);
-     }
+    // --- Calendar Navigation Functions ---
+    function goToPrevMonth() { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(currentMonth, currentYear); }
+    function goToNextMonth() { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(currentMonth, currentYear); }
+    function goToToday() { const now = new Date(); if (currentMonth !== now.getUTCMonth() || currentYear !== now.getUTCFullYear()) { currentMonth = now.getUTCMonth(); currentYear = now.getUTCFullYear(); renderCalendar(currentMonth, currentYear); } }
 
-     // --- Event Listeners ---
-    // Add checks to ensure buttons exist before adding listeners
+    // --- Start Day Setting Function ---
+    function updateStartDaySelection(newStartDay) {
+        if (startDayOfWeekSetting === newStartDay) return; // No change needed
+        startDayOfWeekSetting = newStartDay;
+        localStorage.setItem('calendarStartDay', newStartDay.toString()); // Save preference
+
+        // Update button visuals if they exist
+        if (startSunButton) startSunButton.classList.toggle('active', newStartDay === 0);
+        if (startMonButton) startMonButton.classList.toggle('active', newStartDay === 1);
+
+        // Re-render calendar with new setting
+        renderCalendar(currentMonth, currentYear);
+    }
+
+    // --- Event Listeners ---
+    // Add listeners only if the buttons exist to prevent errors
     if (prevMonthButton) prevMonthButton.addEventListener('click', goToPrevMonth); else console.warn("Previous month button not found.");
     if (nextMonthButton) nextMonthButton.addEventListener('click', goToNextMonth); else console.warn("Next month button not found.");
     if (gotoTodayButton) gotoTodayButton.addEventListener('click', goToToday); else console.warn("Go to Today button not found.");
@@ -896,41 +1031,40 @@ document.addEventListener('DOMContentLoaded', function() {
     if (startMonButton) startMonButton.addEventListener('click', () => updateStartDaySelection(1)); else console.warn("Start Monday button not found.");
 
     // --- Initial Setup ---
-    // Check if all *essential* elements for the initial render are present
-    if (!calendarGrid || !monthYearDisplay || !countdownTimerDisplay || !countdownDayLabel || !startSunButton || !startMonButton || !weekdaysContainer) {
-         console.error("One or more essential elements for calendar/countdown initialization are missing!");
-         // Optionally display a user-facing error message on the page
+    // Check essential *calendar* elements first to ensure base functionality
+    if (!calendarGrid || !monthYearDisplay || !startSunButton || !startMonButton || !weekdaysContainer) {
+         console.error("One or more essential elements for calendar initialization are missing! Calendar will not render.");
+         // Display user-facing error related to calendar init failure
          const container = document.querySelector('.container') || document.body;
-         if (container && !document.getElementById('init-error-msg')) { // Prevent multiple error messages
+         if (container && !document.getElementById('init-error-msg')) { // Prevent multiple messages
             const errorMsg = document.createElement('p');
             errorMsg.id = 'init-error-msg';
             errorMsg.style.color = 'red';
             errorMsg.style.fontWeight = 'bold';
             errorMsg.style.textAlign = 'center';
             errorMsg.style.marginTop = '20px';
-            errorMsg.textContent = 'Error: Failed to initialize the calendar and countdown timer. Please check the browser console for details.';
+            errorMsg.textContent = 'Error: Failed to initialize the calendar component. Please check the browser console for details.';
             const calendarSection = document.querySelector('section[aria-labelledby="daily-event-heading"]');
             if (calendarSection) {
-                // Insert before the calendar container if possible
                 calendarSection.parentNode.insertBefore(errorMsg, calendarSection);
             } else {
-                // Fallback: insert at the top of the main container
                 container.insertBefore(errorMsg, container.firstChild);
             }
          }
-         return; // Stop further execution if essential elements are missing
+         // Do not proceed if calendar can't initialize
+         return;
     }
 
-    // Set initial active state for start day buttons
+    // Set initial active state for start day buttons based on loaded preference
     startSunButton.classList.toggle('active', startDayOfWeekSetting === 0);
     startMonButton.classList.toggle('active', startDayOfWeekSetting === 1);
 
-    // Initial render and countdown start
+    // Initial render of the calendar and start the timer loop
     renderCalendar(currentMonth, currentYear);
-    updateCountdown(); // Run once immediately
-    setInterval(updateCountdown, 1000); // Update countdown every second
+    updateEventTimers(); // Run the timer logic once immediately on load
+    setInterval(updateEventTimers, 1000); // Update the timers every second
 
-});
+}); // End DOMContentLoaded wrapper
 </script>
 
 </body>

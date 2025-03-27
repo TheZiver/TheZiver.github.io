@@ -119,19 +119,19 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .fish-verified-theme p, .fish-verified-theme li, .fish-verified-theme h3, .fish-verified-theme ol { color: #FFFFFF; }
 .fish-verified-theme a { color: #A7D8FF; }
 .fish-verified-theme a:hover { color: #D0EFFF; }
-.fish-verified-theme h3 { color: #F0F0F0 !important; }
+.fish-verified-theme h3 { color: #F0F0F0 !important; } /* Use !important cautiously */
 .fish-verified-theme ol li::marker { color: #FFFFFF; }
 
 .luxury-trash-theme p, .luxury-trash-theme li, .luxury-trash-theme h3 { color: #FFD700; }
 .luxury-trash-theme a { color: #FFEC8B; }
 .luxury-trash-theme a:hover { color: #FFFACD; }
-.luxury-trash-theme h3 { color: #FBC02D !important; }
-.luxury-trash-theme p i { color: #FFEA00; }
+.luxury-trash-theme h3 { color: #FBC02D !important; } /* Use !important cautiously */
+.luxury-trash-theme p i { color: #FFEA00; } /* Style for italic text in luxury trash */
 
 .rose-fish-theme p, .rose-fish-theme li, .rose-fish-theme h3, .rose-fish-theme ol { color: #FF6B6B; }
 .rose-fish-theme a { color: #FF8F8F; }
 .rose-fish-theme a:hover { color: #FFBDBD; }
-.rose-fish-theme h3 { color: #E57373 !important; }
+.rose-fish-theme h3 { color: #E57373 !important; } /* Use !important cautiously */
 .rose-fish-theme ol li::marker { color: #FF6B6B; }
 
 
@@ -164,7 +164,7 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     border-radius: 8px;
     padding: 15px;
     margin-top: 30px;
-    margin-bottom: 10px;
+    margin-bottom: 10px; /* Space between calendar and first timer */
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
     border: 1px solid var(--cal-border-color);
 }
@@ -173,14 +173,20 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .calendar-header {
     display: flex; align-items: center; justify-content: space-between;
     padding: 10px 5px; background-color: var(--cal-header-bg);
-    border-radius: 6px 6px 0 0; margin: -15px -15px 10px -15px; position: relative;
+    border-radius: 6px 6px 0 0; margin: -15px -15px 10px -15px; position: relative; /* Adjust negative margins based on padding */
 }
 @media (min-width: 600px) { .calendar-header { padding: 12px 15px; margin: -20px -20px 15px -20px; } }
 
+/* Override gradient text for calendar header H3 */
 .calendar-header h3#cal-month-year {
     margin: 0; font-size: 1.3em; font-weight: bold; text-align: center; flex-grow: 1;
-    background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important;
-    color: var(--cal-text-color) !important; -webkit-text-fill-color: initial !important; animation: none !important;
+    /* Reset gradient styles */
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    color: var(--cal-text-color) !important;
+    -webkit-text-fill-color: initial !important;
+    animation: none !important;
 }
 @media (min-width: 600px) { .calendar-header h3#cal-month-year { font-size: 1.5em; } }
 
@@ -193,11 +199,12 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .cal-today-btn { background-color: var(--cal-today-button-bg); margin-left: 10px; }
 .cal-today-btn:hover { background-color: var(--cal-today-button-hover-bg); }
 
+/* Responsive positioning for 'Today' button */
 @media (max-width: 480px) {
     .cal-today-btn { position: absolute; bottom: -45px; right: 5px; margin-left: 0; }
-    .calendar-header { padding-bottom: 5px; }
-    #start-day-controls { margin-bottom: 45px; }
-    .calendar-weekdays { margin-top: 45px; }
+    .calendar-header { padding-bottom: 5px; } /* Ensure content isn't cut off */
+    #start-day-controls { margin-bottom: 45px; } /* Make space for absolute positioned button */
+    .calendar-weekdays { margin-top: 45px; } /* Adjust space if needed */
 }
 
 #start-day-controls {
@@ -207,7 +214,7 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     display: flex;
     justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;
     padding: 5px 15px 10px 15px; border-bottom: 1px solid var(--cal-border-color);
-    margin-left: -15px; margin-right: -15px;
+    margin-left: -15px; margin-right: -15px; /* Align with container padding */
 }
 @media (min-width: 600px) {
     #start-day-controls { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; }
@@ -234,10 +241,8 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     padding-bottom: 8px;
     margin-bottom: 8px;
     border-bottom: 1px solid var(--cal-border-color);
-    margin-left: -15px;
-    margin-right: -15px;
-    padding-left: 15px;
-    padding-right: 15px;
+    margin-left: -15px; margin-right: -15px; /* Align with container padding */
+    padding-left: 15px; padding-right: 15px; /* Inner padding for content */
 }
 @media (min-width: 600px) {
     .calendar-weekdays {
@@ -269,7 +274,7 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     gap: 5px;
 }
 
-/* === MODIFIED STYLES START === */
+/* Calendar Day Cell Styles */
 .calendar-day {
     background-color: var(--cal-header-bg); border: 1px solid var(--cal-border-color);
     border-radius: 4px; padding: 5px; min-height: 75px; display: flex;
@@ -279,27 +284,34 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 }
 @media (min-width: 600px){ .calendar-day { min-height: 85px; font-size: 0.9em; padding: 8px 5px; } }
 
+/* Link inside calendar day */
 .calendar-day a {
-    color: inherit;
-    text-decoration: none;
+    color: inherit; /* Inherit text color from parent */
+    text-decoration: none; /* Remove underline from link */
     display: flex;
     flex-direction: column; /* Stack elements vertically */
     align-items: center;    /* Center horizontally */
     justify-content: flex-start; /* Align to top */
-    height: 100%;
+    height: 100%; /* Fill the cell */
     width: 100%;
-    padding: inherit; /* Use padding from parent */
-    box-sizing: border-box;
+    padding: inherit; /* Use padding from parent .calendar-day (applied effectively via box-sizing) */
+    box-sizing: border-box; /* Include padding in width/height */
+}
+.calendar-day a:hover {
+    color: inherit; /* Keep color consistent on hover, rely on parent hover effect */
 }
 
-.calendar-day:hover { background-color: #303034; }
 
+.calendar-day:hover { background-color: #303034; } /* Hover effect for the cell */
+
+/* Styles for days not in the current month */
 .calendar-day.other-month { background-color: transparent; border-color: transparent; cursor: default; }
 .calendar-day.other-month .day-number { color: var(--cal-dim-text-color); opacity: 0.6; }
 .calendar-day.other-month .event-location,
-.calendar-day.other-month .daily-event-num { display: none; }
-.calendar-day.other-month:hover { background-color: transparent; }
+.calendar-day.other-month .daily-event-num { display: none; } /* Hide event details */
+.calendar-day.other-month:hover { background-color: transparent; } /* No hover effect */
 
+/* Style for today's date */
 .calendar-day.today { border: 2px solid var(--cal-today-border); background-color: #2a2a30; }
 .calendar-day.today .day-number { font-weight: bold; color: var(--cal-primary-color); }
 
@@ -307,22 +319,22 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .calendar-day .day-number {
     font-size: 1.1em; /* Relatively large */
     color: var(--cal-text-color);
-    margin-top: 0px;    /* At the top */
-    margin-bottom: 2px; /* Space below */
+    margin-top: 0px;    /* Position at the very top */
+    margin-bottom: 2px; /* Small space below */
     line-height: 1.1;
-    display: block;     /* Own line */
+    display: block;     /* Ensure it takes its own line */
 }
 
 /* Style for the Ordinal Event Number (Middle) */
 .calendar-day .daily-event-num {
-    font-size: 0.8em;  /* Smaller */
+    font-size: 0.8em;  /* Smaller than day number */
     color: var(--cal-event-num-color); /* Dimmer color */
     margin-top: 1px;    /* Small space above */
     margin-bottom: 1px; /* Small space below */
     line-height: 1;
     font-weight: normal;
     opacity: 0.9;
-    display: block;     /* Own line */
+    display: block;     /* Ensure it takes its own line */
 }
 
 /* Style for the Event Location (Bottom) */
@@ -331,33 +343,58 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     color: var(--cal-event-color); /* Brighter event color */
     font-weight: bold;
     margin-top: 1px;    /* Small space above */
-    margin-bottom: 0px; /* No space below */
+    margin-bottom: 0px; /* No extra space at the bottom */
     line-height: 1;
-    word-break: break-word;
-    display: block;     /* Own line */
+    word-break: break-word; /* Prevent long locations from overflowing */
+    display: block;     /* Ensure it takes its own line */
+    max-width: 100%; /* Ensure it doesn't overflow horizontally */
 }
-/* === MODIFIED STYLES END === */
 
 
-/* --- Countdown Container Styles --- */
-#countdown-container {
+/* --- Countdown Container Styles (Shared) --- */
+#countdown-container, #closing-countdown-container, #happening-now-container {
     background-color: var(--cal-bg-color); border: 1px solid var(--cal-border-color);
-    border-radius: 8px; padding: 12px 15px; margin-top: 15px; margin-bottom: 30px;
+    border-radius: 8px; padding: 12px 15px;
+    margin-top: 15px; /* Spacing after calendar or previous timer */
+    margin-bottom: 10px; /* Default bottom margin */
     text-align: center; font-size: 1.1em; color: var(--cal-text-color);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
-@media (min-width: 600px) { #countdown-container { padding: 15px 20px; font-size: 1.2em; } }
+/* Specific margin for the last timer before the H2 */
+#closing-countdown-container, #happening-now-container {
+     margin-bottom: 30px; /* More space before the "MORE ABOUT DAILY VRCHAT" heading */
+}
 
+/* Larger screens */
+@media (min-width: 600px) {
+     #countdown-container, #closing-countdown-container, #happening-now-container {
+         padding: 15px 20px;
+         font-size: 1.2em;
+    }
+}
+
+/* Specific Timer Text Styles */
 #countdown-timer { color: var(--cal-secondary-color); font-weight: bold; }
 #countdown-day-label { color: var(--cal-primary-color); font-weight: bold; }
+#closing-countdown-timer { color: var(--cal-primary-color); font-weight: bold; }
+#closing-countdown-day-label { color: var(--cal-primary-color); font-weight: bold; }
+#happening-now-message { color: var(--cal-secondary-color); font-weight: bold; }
+#happening-now-link { color: var(--cal-primary-color); font-weight: bold; text-decoration: underline; }
+#happening-now-link:hover { color: #ff4fa4; } /* Hover color for the link */
 
+
+/* Responsive Label/Timer Layout */
 @media (max-width: 480px) {
-     #countdown-container .countdown-label { display: block; margin-bottom: 3px; }
-     #countdown-timer { display: block; margin-left: 0; min-width: auto;}
+     /* Make labels stack above timers on small screens */
+     .countdown-label, #closing-countdown-label, #happening-now-message { display: block; margin-bottom: 3px; }
+     #countdown-timer, #closing-countdown-timer, #happening-now-link { display: block; margin-left: 0; min-width: auto; margin-top: 5px;}
+     #happening-now-link { margin-top: 8px; } /* Specific spacing for the link */
 }
 @media (min-width: 480px) {
-     #countdown-container .countdown-label { display: inline; margin-bottom: 0; }
-     #countdown-timer { display: inline-block; margin-left: 8px; min-width: 150px; }
+     /* Keep labels inline with timers on larger screens */
+     .countdown-label, #closing-countdown-label, #happening-now-message { display: inline; margin-bottom: 0; }
+     #countdown-timer, #closing-countdown-timer, #happening-now-link { display: inline-block; margin-left: 8px; min-width: 150px; }
+     #happening-now-link { margin-top: 0; }
 }
 
 /* ========================================= */

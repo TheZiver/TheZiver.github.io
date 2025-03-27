@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+    // --- Calendar Elements ---
     const calendarGrid = document.getElementById('calendar-grid');
     const monthYearDisplay = document.getElementById('cal-month-year');
     const prevMonthButton = document.getElementById('cal-prev-month');
@@ -9,15 +10,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const startSunButton = document.getElementById('cal-start-sun');
     const startMonButton = document.getElementById('cal-start-mon');
 
+    // --- Timer Elements ---
+    const countdownContainer = document.getElementById('countdown-container');
     const countdownTimerDisplay = document.getElementById('countdown-timer');
     const countdownDayLabel = document.getElementById('countdown-day-label');
 
-    const targetDate = new Date(Date.UTC(2023, 6, 20)); // Note: Month is 0-indexed (6 = July)
+    const closingCountdownContainer = document.getElementById('closing-countdown-container');
+    const closingCountdownTimerDisplay = document.getElementById('closing-countdown-timer');
+    const closingCountdownDayLabel = document.getElementById('closing-countdown-day-label');
+
+    const happeningNowContainer = document.getElementById('happening-now-container');
+    const happeningNowMessage = document.getElementById('happening-now-message');
+    const happeningNowLink = document.getElementById('happening-now-link');
+
+    // --- Constants and State ---
+    const targetDate = new Date(Date.UTC(2023, 6, 20)); // July 20, 2023 UTC (Month is 0-indexed)
     const today = new Date();
     const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
     let currentMonth = today.getUTCMonth();
     let currentYear = today.getUTCFullYear();
-    let startDayOfWeekSetting = 1; // Default to Monday (0=Sun, 1=Mon)
+    let startDayOfWeekSetting = 1; // Default: Monday (0=Sun, 1=Mon)
 
     // Load saved start day preference
     const savedStartDay = localStorage.getItem('calendarStartDay');
@@ -25,12 +37,11 @@ document.addEventListener('DOMContentLoaded', function() {
         startDayOfWeekSetting = parseInt(savedStartDay, 10);
     }
 
-    // Locations for each day of the week (0=Sunday, 1=Monday, ..., 6=Saturday)
-    // Ensure this order matches VRChat day logic if it's different from standard JS Date.getUTCDay()
-    const locations = [ "YES?", "LUXURY TRASH", "The Fishing Mall", "Retrocubic Nexus", "Cunks Coughing City", "YES?", "YES?" ];
+    // --- Data Arrays ---
+    const locations = [ "YES?", "LUXURY TRASH", "The Fishing Mall", "Retrocubic Nexus", "Cunks Coughing City", "YES?", "YES?" ]; // Index 0=Sunday, 1=Monday,...
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    // World IDs mapped to the day of the week (0=Monday, ..., 6=Sunday) - ADJUST if your week mapping differs
+    // World IDs mapped to the day of the week (Index 0=Monday, ..., 6=Sunday)
     const WORLD_IDS = {
         0: "wrld_b0812b34-cd7c-44b8-9b29-4f921a9e4d5a",  // Monday
         1: "wrld_9806f25c-0644-4ed7-a3b9-404763bd7dbc",  // Tuesday
@@ -40,12 +51,18 @@ document.addEventListener('DOMContentLoaded', function() {
         5: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355",  // Saturday
         6: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355"   // Sunday
     };
+    const VRC_GROUP_ID = "grp_2b910dc4-e984-4fd5-813c-877edcea29d2"; // Fish Group ID
 
+    // Flags for error logging
+    window.timerElementsChecked = false;
+    window.timerElementsMissing = false;
+
+    // --- Helper Functions ---
 
     function getOrdinalSuffix(num) {
          if (num === null || typeof num === 'undefined') return "";
          const n = Number(num);
-         if (isNaN(n) || n < 0) return ""; // Handle invalid input
+         if (isNaN(n) || n < 0) return "";
         const j = n % 10, k = n % 100;
         if (j == 1 && k != 11) return "st";
         if (j == 2 && k != 12) return "nd";
@@ -54,26 +71,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function calculateDailyVrchatDay(date) {
-         // Ensure we are comparing dates only, ignoring time
          const normalizedDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-         if (normalizedDate < targetDate) return null; // Event hasn't started yet for this date
-
+         if (normalizedDate < targetDate) return null; // Date is before the first event day
          const oneDay = 24 * 60 * 60 * 1000;
-         // Calculate difference in days from the target start date
+         // Calculate difference in days (0 for the first day, 1 for second, etc.)
          const dayDifference = Math.floor((normalizedDate - targetDate) / oneDay);
-         // Return the day number (0 for the first day, 1 for the second, etc.)
          return (dayDifference >= 0) ? dayDifference : null;
     }
 
+    // --- Calendar Rendering Functions ---
+
     function renderCalendar(month, year) {
+        // Check for essential calendar elements
         if (!calendarGrid || !monthYearDisplay || !weekdaysContainer) {
-             console.error("Calendar base elements (grid, month/year display, or weekdays container) missing!"); return;
+             console.error("Calendar base elements (grid, month/year display, or weekdays container) missing!");
+             if(calendarGrid) calendarGrid.innerHTML = "<p style='color: red; text-align: center;'>Error loading calendar grid.</p>";
+             return;
         }
 
         monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
 
-        // --- Render Weekday Headers ---
-        weekdaysContainer.innerHTML = ''; // Clear previous headers
+        // Render Weekday Headers
+        weekdaysContainer.innerHTML = '';
         const weekdayNamesShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]; // Standard order
         let orderedWeekdays = [];
 
@@ -89,41 +108,34 @@ document.addEventListener('DOMContentLoaded', function() {
             weekdayCell.textContent = dayName;
             weekdaysContainer.appendChild(weekdayCell);
         });
-        // --- End Render Weekday Headers ---
 
-        calendarGrid.innerHTML = ''; // Clear previous days
+        // Render Calendar Grid
+        calendarGrid.innerHTML = '';
 
-        // Calculate calendar grid details
         const firstDayOfMonth = new Date(Date.UTC(year, month, 1));
         const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
         const lastDayOfPrevMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
-
-        // Calculate the day of the week for the 1st of the month (0=Sun, 1=Mon, ...)
-        const firstDayIndex = firstDayOfMonth.getUTCDay();
-
-        // Calculate offset needed for the first day based on the startDayOfWeekSetting
-        // (firstDayIndex - startDayOfWeekSetting + 7) % 7 gives the number of previous month days to show
+        const firstDayIndex = firstDayOfMonth.getUTCDay(); // 0=Sun, 1=Mon,...
         let startingDayOffset = (firstDayIndex - startDayOfWeekSetting + 7) % 7;
 
-        // Render previous month's days
+        // Previous month's days
         for (let i = 0; i < startingDayOffset; i++) {
             const day = lastDayOfPrevMonth - startingDayOffset + 1 + i;
-            calendarGrid.appendChild(createDayCell(day, true)); // true indicates 'other-month'
+            calendarGrid.appendChild(createDayCell(day, true));
         }
 
-        // Render current month's days
+        // Current month's days
         for (let day = 1; day <= daysInMonth; day++) {
             const cellDate = new Date(Date.UTC(year, month, day));
-            // Check if this day is today (UTC)
             const isToday = (year === todayUTC.getUTCFullYear() && month === todayUTC.getUTCMonth() && day === todayUTC.getUTCDate());
-            calendarGrid.appendChild(createDayCell(day, false, cellDate, isToday)); // false indicates not 'other-month'
+            calendarGrid.appendChild(createDayCell(day, false, cellDate, isToday));
         }
 
-        // Render next month's days to fill the grid
+        // Next month's days
         const totalCellsRendered = startingDayOffset + daysInMonth;
-        const remainingCells = (7 - (totalCellsRendered % 7)) % 7; // Use modulo 7 to handle full weeks
+        const remainingCells = (7 - (totalCellsRendered % 7)) % 7; // Fill remaining grid cells
         for (let i = 0; i < remainingCells; i++) {
-            calendarGrid.appendChild(createDayCell(i + 1, true)); // true indicates 'other-month'
+            calendarGrid.appendChild(createDayCell(i + 1, true));
         }
     }
 
@@ -131,62 +143,54 @@ document.addEventListener('DOMContentLoaded', function() {
         const dayCell = document.createElement('div');
         dayCell.classList.add('calendar-day');
 
-        // Create the span for the day number - always present
         const dayNumberSpan = document.createElement('span');
         dayNumberSpan.classList.add('day-number');
         dayNumberSpan.textContent = dayNumber;
 
         if (isOtherMonth) {
             dayCell.classList.add('other-month');
-            dayCell.appendChild(dayNumberSpan); // Other month cells just show the number
+            dayCell.appendChild(dayNumberSpan);
         } else if (cellDate) {
-            // Calculate event details for valid days
-            const dailyDay = calculateDailyVrchatDay(cellDate);
+            const dailyDay = calculateDailyVrchatDay(cellDate); // Get event number for this date
 
-            if (dailyDay !== null) { // Is it a day with a DAILY VRCHAT event?
+            if (dailyDay !== null) { // If it's a valid event day
                 const suffix = getOrdinalSuffix(dailyDay);
-                const instanceId = dailyDay; // Use the calculated day number as instance ID
-
-                // Determine the correct day index for WORLD_IDS (0=Mon...6=Sun)
-                const dayOfWeekForWorld = (cellDate.getUTCDay() + 6) % 7; // Converts Sun=0..Sat=6 to Mon=0..Sun=6
+                const instanceId = dailyDay; // Use event number as instance ID
+                const dayOfWeekForWorld = (cellDate.getUTCDay() + 6) % 7; // Convert UTC day (Sun=0) to Mon=0..Sun=6 index for WORLD_IDS
                 const worldId = WORLD_IDS[dayOfWeekForWorld];
-
-                // Determine the correct day index for locations (0=Sun...6=Sat)
-                const dayOfWeekForLocation = cellDate.getUTCDay();
+                const dayOfWeekForLocation = cellDate.getUTCDay(); // Keep original UTC day for location array (Sun=0..Sat=6)
                 const locationName = locations[dayOfWeekForLocation];
 
                 // Construct VRChat launch link
                 const baseUrl = "https://vrchat.com/home/launch?worldId=" + worldId + "&instanceId=";
-                const instanceParams = `~group(grp_2b910dc4-e984-4fd5-813c-877edcea29d2)~groupAccessType(public)~region(eu)`; // Add your actual group ID
+                const instanceParams = `~group(${VRC_GROUP_ID})~groupAccessType(public)~region(eu)`; // Use const for Group ID
                 const vrchatLink = baseUrl + instanceId + instanceParams;
 
-                // Create link element
+                // Create link element to wrap content
                 const dayLink = document.createElement('a');
                 dayLink.href = vrchatLink;
-                dayLink.target = "_blank"; // Open in new tab
-                dayLink.rel = "noopener noreferrer"; // Security best practice
-                dayLink.title = `Join Daily VRChat #${dailyDay}${suffix}`; // Tooltip
+                dayLink.target = "_blank";
+                dayLink.rel = "noopener noreferrer";
+                dayLink.title = `Join Daily VRChat #${dailyDay}${suffix}`;
 
-                // === MODIFIED ORDER FOR APPENDING ===
-                dayLink.appendChild(dayNumberSpan); // 1. Append Day number (Top)
+                dayLink.appendChild(dayNumberSpan); // 1. Append Day number
 
-                const eventNumSpan = document.createElement('span'); // 2. Append Event Number (Middle)
+                const eventNumSpan = document.createElement('span'); // 2. Append Event Number (Ordinal)
                 eventNumSpan.classList.add('daily-event-num');
                 eventNumSpan.textContent = `${dailyDay}${suffix}`;
                 dayLink.appendChild(eventNumSpan);
 
-                if (locationName) { // 3. Append Location (Bottom), if it exists
+                if (locationName) { // 3. Append Location (if defined)
                     const locationSpan = document.createElement('span');
                     locationSpan.classList.add('event-location');
                     locationSpan.textContent = locationName;
                     dayLink.appendChild(locationSpan);
                 }
-                // === END MODIFIED ORDER ===
 
-                dayCell.appendChild(dayLink); // Add the link containing the ordered elements to the cell
+                dayCell.appendChild(dayLink); // Add the link containing the ordered elements
 
             } else {
-                // Day is in the current month but before the event started or calculation failed
+                // Day is in current month but before the first event day
                 dayCell.appendChild(dayNumberSpan);
             }
 
@@ -195,98 +199,170 @@ document.addEventListener('DOMContentLoaded', function() {
                 dayCell.classList.add('today');
             }
         } else {
-             // Fallback for safety, though should be covered by isOtherMonth
+             // Fallback (shouldn't happen with current logic)
              dayCell.appendChild(dayNumberSpan);
         }
 
         return dayCell;
     }
 
-
-    function updateCountdown() {
-        // Check if elements exist before proceeding
-        if (!countdownTimerDisplay || !countdownDayLabel) {
-            // Log error only once to avoid console spam
-            if (!window.countdownElementsMissingLogged) {
-                 console.error("Countdown timer or day label element is missing!");
-                 window.countdownElementsMissingLogged = true; // Set flag
+    // --- Combined Timer Update Function (MODIFIED) ---
+    function updateEventTimers() {
+        // Check if all required timer elements exist (log error only once)
+        if (!window.timerElementsChecked) {
+            if (!countdownContainer || !countdownTimerDisplay || !countdownDayLabel ||
+                !closingCountdownContainer || !closingCountdownTimerDisplay || !closingCountdownDayLabel ||
+                !happeningNowContainer || !happeningNowMessage || !happeningNowLink)
+            {
+                console.error("One or more timer display elements are missing! Timers will not function correctly.");
+                 if(countdownContainer) countdownContainer.style.display = 'none';
+                 if(closingCountdownContainer) closingCountdownContainer.style.display = 'none';
+                 if(happeningNowContainer) happeningNowContainer.style.display = 'none';
+                 window.timerElementsMissing = true; // Set flag indicating failure
             }
-            return; // Stop execution if elements are missing
+             window.timerElementsChecked = true; // Mark as checked
         }
+        // If elements were missing on the first check, stop
+        if (window.timerElementsMissing) return;
 
         try {
-            const nowUTC = new Date(); // Current time in UTC
+            const nowUTC = new Date();
             const nowUTCMillis = nowUTC.getTime();
 
-            // Set target event time to 9 PM (21:00) UTC today
-            let nextEventUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 21, 0, 0, 0));
-            let nextEventMillis = nextEventUTC.getTime();
-
-            // If current time is already past today's 9 PM UTC, set the target to tomorrow's 9 PM UTC
-            if (nowUTCMillis >= nextEventMillis) {
-                nextEventUTC.setUTCDate(nextEventUTC.getUTCDate() + 1);
-                nextEventMillis = nextEventUTC.getTime();
+            // --- Calculate and Update "Starts In" Countdown ---
+            let nextStartUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 21, 0, 0, 0));
+            // If current time is past or exactly at today's 21:00 UTC, target tomorrow's 21:00 UTC
+            if (nowUTCMillis >= nextStartUTC.getTime()) {
+                nextStartUTC.setUTCDate(nextStartUTC.getUTCDate() + 1);
             }
+            const diffToStart = nextStartUTC.getTime() - nowUTCMillis;
+            const startDayNumber = calculateDailyVrchatDay(nextStartUTC); // Get event number for the upcoming start
+            const startDaySuffix = getOrdinalSuffix(startDayNumber);
 
-            // Calculate the DAILY VRCHAT day number for the *next* event
-            const nextDailyDayNumber = calculateDailyVrchatDay(nextEventUTC);
-            const nextDaySuffix = getOrdinalSuffix(nextDailyDayNumber);
+            // Update Start Countdown Display
+            countdownDayLabel.textContent = (startDayNumber !== null) ? `${startDayNumber}${startDaySuffix}` : "---";
+            countdownTimerDisplay.textContent = formatTimeDifference(diffToStart);
+            // *** Ensure Starts In timer is ALWAYS visible ***
+            countdownContainer.style.display = 'block';
 
-            // Update the day label (e.g., "591st")
-            countdownDayLabel.textContent = (nextDailyDayNumber !== null) ? `${nextDailyDayNumber}${nextDaySuffix}` : "---";
 
-            // Calculate the time difference in milliseconds
-            const difference = nextEventMillis - nowUTCMillis;
+            // --- Calculate and Update "Closes In" Countdown ---
+            let nextCloseUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 23, 0, 0, 0));
+             // If current time is past or exactly at today's 23:00 UTC, target tomorrow's 23:00 UTC
+            if (nowUTCMillis >= nextCloseUTC.getTime()) {
+                nextCloseUTC.setUTCDate(nextCloseUTC.getUTCDate() + 1);
+            }
+            const diffToClose = nextCloseUTC.getTime() - nowUTCMillis;
+            let closeEventDayUTC = new Date(nextCloseUTC);
+            closeEventDayUTC.setUTCHours(21, 0, 0, 0); // Find the corresponding start date for this closing time
+            const closeDayNumber = calculateDailyVrchatDay(closeEventDayUTC); // Get event number for the event that is closing
+            const closeDaySuffix = getOrdinalSuffix(closeDayNumber);
 
-            if (difference <= 0) {
-                // Event time has passed or is happening now
-                countdownTimerDisplay.textContent = "Starting soon / In Progress!";
-            } else {
-                // Calculate remaining days, hours, minutes, seconds
-                const days = Math.floor(difference / (1000 * 60 * 60 * 24)); // Milliseconds in a day
-                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // Milliseconds in an hour
-                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)); // Milliseconds in a minute
-                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            // Update Close Countdown Display
+            closingCountdownDayLabel.textContent = (closeDayNumber !== null) ? `${closeDayNumber}${closeDaySuffix}` : "---";
+            closingCountdownTimerDisplay.textContent = formatTimeDifference(diffToClose);
+            // *** Ensure Closes In timer is ALWAYS visible ***
+            closingCountdownContainer.style.display = 'block';
 
-                // Format the countdown string
-                let countdownString = "";
-                if (days > 0) {
-                    countdownString += `${days}d `;
+
+            // --- Determine "Happening Now" State (Controls Link Visibility) ---
+            const todayStartUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 21, 0, 0, 0));
+            const todayCloseUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate(), 23, 0, 0, 0));
+
+            // Check if current time is strictly within today's 21:00 to 23:00 UTC window
+            if (nowUTCMillis >= todayStartUTC.getTime() && nowUTCMillis < todayCloseUTC.getTime()) {
+                // Event is currently happening
+                const currentDayNumber = calculateDailyVrchatDay(todayStartUTC);
+                const currentDaySuffix = getOrdinalSuffix(currentDayNumber);
+                const instanceId = currentDayNumber;
+
+                if (instanceId !== null) {
+                     // Construct the link for the *currently active* instance
+                     const dayOfWeekForWorld = (todayStartUTC.getUTCDay() + 6) % 7;
+                     const worldId = WORLD_IDS[dayOfWeekForWorld];
+                     const baseUrl = "https://vrchat.com/home/launch?worldId=" + worldId + "&instanceId=";
+                     const instanceParams = `~group(${VRC_GROUP_ID})~groupAccessType(public)~region(eu)`;
+                     const vrchatLink = baseUrl + instanceId + instanceParams;
+
+                     // Update and show the "Happening Now" container
+                     happeningNowMessage.textContent = `DAILY VRCHAT (${currentDayNumber}${currentDaySuffix}) IS CURRENTLY HAPPENING`;
+                     happeningNowLink.href = vrchatLink;
+                     happeningNowContainer.style.display = 'block'; // SHOW the link container
+                } else {
+                     // Error state: hide the link container if instance ID calculation fails
+                     happeningNowContainer.style.display = 'none';
+                     console.error("Could not calculate instance ID during event window.");
                 }
-                // Always show hours, minutes, seconds, padded with zeros
-                countdownString += `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
-
-                countdownTimerDisplay.textContent = countdownString.trim();
+            } else {
+                // Event is not happening right now
+                happeningNowContainer.style.display = 'none'; // HIDE the link container
             }
+
         } catch (error) {
-             console.error("Error in updateCountdown:", error);
-             // Display error state in the UI
-             if (countdownTimerDisplay) countdownTimerDisplay.textContent = "Error calculating";
-             if (countdownDayLabel) countdownDayLabel.textContent = "Err";
+            console.error("Error in updateEventTimers:", error);
+            // Modify error state to ensure main timers remain visible if possible
+            displayErrorState("Error updating timers.");
         }
     }
 
-     // --- Calendar Navigation Functions ---
-     function goToPrevMonth() { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(currentMonth, currentYear); }
-     function goToNextMonth() { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(currentMonth, currentYear); }
-     function goToToday() { const now = new Date(); if (currentMonth !== now.getUTCMonth() || currentYear !== now.getUTCFullYear()) { currentMonth = now.getUTCMonth(); currentYear = now.getUTCFullYear(); renderCalendar(currentMonth, currentYear); } }
+    // --- Helper to format time difference (e.g., "01h 05m 30s") ---
+    function formatTimeDifference(differenceMillis) {
+        if (differenceMillis <= 0) {
+            // This state might appear momentarily at the exact transition time
+            return "Now / Very Soon!";
+        }
+        const totalSeconds = Math.max(0, Math.floor(differenceMillis / 1000)); // Ensure non-negative seconds
+        const days = Math.floor(totalSeconds / (60 * 60 * 24));
+        const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+        const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+        const seconds = totalSeconds % 60;
 
-     // --- Start Day Setting Function ---
-     function updateStartDaySelection(newStartDay) {
-         if (startDayOfWeekSetting === newStartDay) return; // No change needed
-         startDayOfWeekSetting = newStartDay;
-         localStorage.setItem('calendarStartDay', newStartDay.toString()); // Save preference
+        let timeString = "";
+        if (days > 0) { timeString += `${days}d `; } // Include days part only if > 0
+        // Always show H, M, S, padded with leading zeros
+        timeString += `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+        return timeString.trim();
+    }
 
-         // Update button active states visually
-         if (startSunButton) startSunButton.classList.toggle('active', newStartDay === 0);
-         if (startMonButton) startMonButton.classList.toggle('active', newStartDay === 1);
+    // --- Helper to display errors consistently (MODIFIED FOR VISIBILITY) ---
+    function displayErrorState(message) {
+         console.error(message); // Log detailed error to console
+         // Attempt to show a user-friendly error state in the UI, keeping containers visible
+         if (countdownContainer) {
+             countdownContainer.style.display = 'block'; // Keep visible
+             if (countdownDayLabel) countdownDayLabel.textContent = "Err";
+             if (countdownTimerDisplay) countdownTimerDisplay.textContent = "Error";
+         }
+         if (closingCountdownContainer) {
+             closingCountdownContainer.style.display = 'block'; // Keep visible
+             if (closingCountdownDayLabel) closingCountdownDayLabel.textContent = "Err";
+             if (closingCountdownTimerDisplay) closingCountdownTimerDisplay.textContent = "Error";
+         }
+         // Ensure link is hidden on error
+         if (happeningNowContainer) happeningNowContainer.style.display = 'none';
+    }
 
-         // Re-render the calendar with the new setting
-         renderCalendar(currentMonth, currentYear);
-     }
+    // --- Calendar Navigation Functions ---
+    function goToPrevMonth() { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(currentMonth, currentYear); }
+    function goToNextMonth() { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(currentMonth, currentYear); }
+    function goToToday() { const now = new Date(); if (currentMonth !== now.getUTCMonth() || currentYear !== now.getUTCFullYear()) { currentMonth = now.getUTCMonth(); currentYear = now.getUTCFullYear(); renderCalendar(currentMonth, currentYear); } }
 
-     // --- Event Listeners ---
-    // Add checks to ensure buttons exist before adding listeners
+    // --- Start Day Setting Function ---
+    function updateStartDaySelection(newStartDay) {
+        if (startDayOfWeekSetting === newStartDay) return; // No change needed
+        startDayOfWeekSetting = newStartDay;
+        localStorage.setItem('calendarStartDay', newStartDay.toString()); // Save preference
+
+        // Update button visuals if they exist
+        if (startSunButton) startSunButton.classList.toggle('active', newStartDay === 0);
+        if (startMonButton) startMonButton.classList.toggle('active', newStartDay === 1);
+
+        // Re-render calendar with new setting
+        renderCalendar(currentMonth, currentYear);
+    }
+
+    // --- Event Listeners ---
+    // Add listeners only if the buttons exist to prevent errors
     if (prevMonthButton) prevMonthButton.addEventListener('click', goToPrevMonth); else console.warn("Previous month button not found.");
     if (nextMonthButton) nextMonthButton.addEventListener('click', goToNextMonth); else console.warn("Next month button not found.");
     if (gotoTodayButton) gotoTodayButton.addEventListener('click', goToToday); else console.warn("Go to Today button not found.");
@@ -294,38 +370,37 @@ document.addEventListener('DOMContentLoaded', function() {
     if (startMonButton) startMonButton.addEventListener('click', () => updateStartDaySelection(1)); else console.warn("Start Monday button not found.");
 
     // --- Initial Setup ---
-    // Check if all *essential* elements for the initial render are present
-    if (!calendarGrid || !monthYearDisplay || !countdownTimerDisplay || !countdownDayLabel || !startSunButton || !startMonButton || !weekdaysContainer) {
-         console.error("One or more essential elements for calendar/countdown initialization are missing!");
-         // Optionally display a user-facing error message on the page
+    // Check essential *calendar* elements first to ensure base functionality
+    if (!calendarGrid || !monthYearDisplay || !startSunButton || !startMonButton || !weekdaysContainer) {
+         console.error("One or more essential elements for calendar initialization are missing! Calendar will not render.");
+         // Display user-facing error related to calendar init failure
          const container = document.querySelector('.container') || document.body;
-         if (container && !document.getElementById('init-error-msg')) { // Prevent multiple error messages
+         if (container && !document.getElementById('init-error-msg')) { // Prevent multiple messages
             const errorMsg = document.createElement('p');
             errorMsg.id = 'init-error-msg';
             errorMsg.style.color = 'red';
             errorMsg.style.fontWeight = 'bold';
             errorMsg.style.textAlign = 'center';
             errorMsg.style.marginTop = '20px';
-            errorMsg.textContent = 'Error: Failed to initialize the calendar and countdown timer. Please check the browser console for details.';
+            errorMsg.textContent = 'Error: Failed to initialize the calendar component. Please check the browser console for details.';
             const calendarSection = document.querySelector('section[aria-labelledby="daily-event-heading"]');
             if (calendarSection) {
-                // Insert before the calendar container if possible
                 calendarSection.parentNode.insertBefore(errorMsg, calendarSection);
             } else {
-                // Fallback: insert at the top of the main container
                 container.insertBefore(errorMsg, container.firstChild);
             }
          }
-         return; // Stop further execution if essential elements are missing
+         // Do not proceed if calendar can't initialize
+         return;
     }
 
-    // Set initial active state for start day buttons
+    // Set initial active state for start day buttons based on loaded preference
     startSunButton.classList.toggle('active', startDayOfWeekSetting === 0);
     startMonButton.classList.toggle('active', startDayOfWeekSetting === 1);
 
-    // Initial render and countdown start
+    // Initial render of the calendar and start the timer loop
     renderCalendar(currentMonth, currentYear);
-    updateCountdown(); // Run once immediately
-    setInterval(updateCountdown, 1000); // Update countdown every second
+    updateEventTimers(); // Run the timer logic once immediately on load
+    setInterval(updateEventTimers, 1000); // Update the timers every second
 
-});
+}); // End DOMContentLoaded wrapper
