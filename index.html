@@ -130,6 +130,15 @@
         .fish-verified-theme h3 { color: #F0F0F0 !important; } /* Use !important cautiously */
         .fish-verified-theme ol li::marker { color: #FFFFFF; }
 
+        /* Placeholder Style for Certified */
+        .fish-certified-theme { /* Basic styling, can be expanded */
+            /* filter: brightness(0.9); */ /* Example: Slightly darker */
+        }
+        .fish-certified-theme p, .fish-certified-theme li, .fish-certified-theme h3, .fish-certified-theme ol { color: #cccccc; } /* Example: Dimmer text */
+        .fish-certified-theme a { color: #8bc34a; } /* Example: Different link color */
+        .fish-certified-theme a:hover { color: #aed581; }
+        .fish-certified-theme h3 { color: #e0e0e0 !important; }
+
         .luxury-trash-theme p, .luxury-trash-theme li, .luxury-trash-theme h3 { color: #FFD700; }
         .luxury-trash-theme a { color: #FFEC8B; }
         .luxury-trash-theme a:hover { color: #FFFACD; }
@@ -462,8 +471,7 @@
         </div>
         <!-- END: Countdown Timer -->
 
-        <!-- START: Closing Countdown Timer (Modified Label + Added Span - NO LONGER INITIALLY HIDDEN) -->
-        <!-- ****** REMOVED style="display: none;" FROM THIS DIV ****** -->
+        <!-- START: Closing Countdown Timer -->
         <div id="closing-countdown-container">
             <span id="closing-countdown-label">Daily VRChat (<span id="closing-countdown-day-label">---</span>) instance closes at 23:00 UTC in:</span>
             <span id="closing-countdown-timer">Calculating...</span>
@@ -472,7 +480,7 @@
         <p>Join the fish community's daily VRChat event! Just click the day on the calander and join the instance.</p>
         <p>Moderators will close the instance when the event is over. You're welcome to join the instances before the official start time.</p>
             
-        <!-- START: Happening Now Container (NEW, Initially Hidden - controlled by JS) -->
+        <!-- START: Happening Now Container (Initially Hidden - controlled by JS) -->
         <div id="happening-now-container" style="display: none;">
             <span id="happening-now-message"></span><br>
             <a id="happening-now-link" href="#" target="_blank" rel="noopener noreferrer">Click here to join the instance</a>
@@ -558,17 +566,27 @@
             <li>Owner of fish-verified community receives NOCLIP in all DAILY VRCHAT worlds</li>
         </ul>
         <h3>LIST OF FISH VERIFIED COMMUNITIES</h3>
-        <ul>
-            <li><b>CHEESE FISH</b> avatar/world update group, makes bunch of meme avatars, Owner is Cunks_Feet<br><b>VRChat Group:</b> <a href="https://vrc.group/CHEESE.1570" target="_blank" rel="noopener noreferrer">https://vrc.group/CHEESE.1570</a></li>
-            <li><b>VAPOR FISH</b> nostalgia time capsule, makes nostalgia. Owner is Robaws<br><b>VRChat Group:</b> <a href="https://vrc.group/VAPOR.3451" target="_blank" rel="noopener noreferrer">https://vrc.group/VAPOR.3451</a></li>
-            <li><b>GAMBLE FISH</b> casino game world inside vrchat. Owner is _spidget<br><b>VRChat Group:</b> <a href="https://vrc.group/GAMBLE.0958" target="_blank" rel="noopener noreferrer">https://vrc.group/GAMBLE.0958</a><br><b>Discord Server:</b> <a href="https://discord.gg/EZmPDtFAPx" target="_blank" rel="noopener noreferrer">https://discord.gg/EZmPDtFAPx</a></li>
-            <li><b>RAT FISH</b> is a avatar/world update group, Owner is Luiswillich<br><b>VRChat Group:</b> <a href="https://vrc.group/RAT.3149" target="_blank" rel="noopener noreferrer">https://vrc.group/RAT.3149</a></li>
-            <li><b>The Rusk Shack</b> is a community for people who use rusk avatars, Owner is VerSe10<br><b>VRChat Group:</b> <a href="https://vrc.group/TRUSKS.6089" target="_blank" rel="noopener noreferrer">https://vrc.group/TRUSKS.6089</a><br><b>Discord Server:</b> <a href="https://discord.gg/theruskshack" target="_blank" rel="noopener noreferrer">https://discord.gg/theruskshack</a></li>
-            <li><b>AVIFAIR</b> is a Global gaming convention inside VR. Owner is Artholic<br><b>VRChat Group:</b> <a href="https://vrc.group/AVI.9657" target="_blank" rel="noopener noreferrer">https://vrc.group/AVI.9657</a><br><b>Discord Server:</b> <a href="https://discord.gg/P5REVfSVMG" target="_blank" rel="noopener noreferrer">https://discord.gg/P5REVfSVMG</a></li>
-            <li><b>Family Friendly Cult</b> is for people who use ukon avatars. Owner is Comedian't<br><b>VRChat Group:</b> <a href="https://vrc.group/FAMILY.3738" target="_blank" rel="noopener noreferrer">https://vrc.group/FAMILY.3738</a><br><b>Discord Server:</b> <a href="https://discord.gg/BFex5YNKuy" target="_blank" rel="noopener noreferrer">https://discord.gg/BFex5YNKuy</a></li>
-            <li><b>Portal Media</b> is a VR film studio. Owner is Virtual?<br><b>VRChat Group:</b> <a href="https://vrc.group/PORTAL.0170" target="_blank" rel="noopener noreferrer">https://vrc.group/PORTAL.0170</a><br><b>Discord Server:</b> <a href="https://discord.gg/Z6Xrey7rJw" target="_blank" rel="noopener noreferrer">https://discord.gg/Z6Xrey7rJw</a></li>
+
+        <!-- MODIFIED: Empty UL with ID and loading message -->
+        <ul id="fish-verified-list">
+            <li id="verified-loading-message"><i>Loading verified communities...</i></li>
         </ul>
+        <!-- END MODIFICATION -->
+
      </section>
+
+    <hr>
+
+    <!-- NEW SECTION: Placeholder for Certified Communities -->
+    <section class="fish-certified-theme" aria-labelledby="certified-heading">
+        <h2 id="certified-heading">FISH CERTIFIED COMMUNITIES <span aria-hidden="true">＜＞＜</span></h2>
+        <!-- You might want a different image here later -->
+        <img src="https://lh3.googleusercontent.com/d/1QTCy6DfnU4DCHk36a490xExIgqbjCBM8"
+             alt="Placeholder Fish Community Image" class="community-image" style="max-width: 300px; filter: grayscale(80%);" loading="lazy" width="300" height="300">
+        <p><i>Details about FISH CERTIFIED communities will be available here in the future. This certification may represent a different level or type of recognition within the ecosystem. Stay tuned!</i></p>
+        <!-- Add any other placeholder content or styling needed -->
+    </section>
+    <!-- END NEW SECTION -->
 
     <hr>
 
@@ -869,7 +887,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return dayCell;
     }
 
-    // --- Combined Timer Update Function (Ensures both timers visible) ---
+    // --- Combined Timer Update Function ---
     function updateEventTimers() {
         // Check if all required timer elements exist (log error only once)
         if (!window.timerElementsChecked) {
@@ -1032,6 +1050,94 @@ document.addEventListener('DOMContentLoaded', function() {
     if (startSunButton) startSunButton.addEventListener('click', () => updateStartDaySelection(0)); else console.warn("Start Sunday button not found.");
     if (startMonButton) startMonButton.addEventListener('click', () => updateStartDaySelection(1)); else console.warn("Start Monday button not found.");
 
+    // --- NEW: Load Fish Verified Communities ---
+    function loadVerifiedCommunities() {
+        const listElement = document.getElementById('fish-verified-list');
+        const loadingMessage = document.getElementById('verified-loading-message');
+        const GIST_URL = "https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw"; // Your Gist URL
+
+        if (!listElement) {
+            console.error("Error: Target element #fish-verified-list not found.");
+            return; // Stop if the target UL doesn't exist
+        }
+
+        fetch(GIST_URL)
+            .then(response => {
+                if (!response.ok) {
+                    // Try to read response text even on error for more info
+                    return response.text().then(text => { 
+                        throw new Error(`HTTP error! Status: ${response.status}, Body: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Clear loading message / existing content ONLY if fetch was successful
+                listElement.innerHTML = ''; 
+
+                if (!Array.isArray(data)) {
+                     throw new Error("Fetched data is not a valid JSON array.");
+                }
+
+                if (data.length === 0) {
+                    listElement.innerHTML = '<li><i>No verified communities listed currently.</i></li>';
+                    return;
+                }
+
+                // Process and display each community
+                data.forEach(community => {
+                    // Basic validation for core fields
+                    if (!community || typeof community.name !== 'string') {
+                         console.warn("Skipping invalid community entry:", community);
+                         return; // Skip this entry
+                    }
+
+                    const listItem = document.createElement('li');
+
+                    // Basic info
+                    let content = `<b>${community.name}</b>`; // Name is required now
+                    if (community.description) {
+                        content += ` - ${community.description}`;
+                    }
+                    if (community.owner) {
+                        content += `<br><b>Owner:</b> ${community.owner}`;
+                    }
+
+                    // VRChat Group Link (check if property exists and has a non-empty string value)
+                    if (community.vrchatGroupLink && typeof community.vrchatGroupLink === 'string' && community.vrchatGroupLink.trim() !== '') {
+                        content += `<br><b>VRChat Group:</b> <a href="${community.vrchatGroupLink.trim()}" target="_blank" rel="noopener noreferrer">${community.vrchatGroupLink.trim()}</a>`;
+                    }
+
+                    // Discord Link (check if property exists and has a non-empty string value)
+                    if (community.discordLink && typeof community.discordLink === 'string' && community.discordLink.trim() !== '') {
+                        content += `<br><b>Discord Server:</b> <a href="${community.discordLink.trim()}" target="_blank" rel="noopener noreferrer">${community.discordLink.trim()}</a>`;
+                    }
+
+                    listItem.innerHTML = content;
+                    listElement.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Failed to load or process verified communities:', error);
+                // Display error in the list area
+                if (listElement) { // Check again in case it existed initially but failed mid-fetch
+                    // Ensure loading message is removed before showing error
+                    if(loadingMessage && loadingMessage.parentNode === listElement) {
+                         listElement.removeChild(loadingMessage);
+                    }
+                    // Check if list is empty before adding error to avoid duplicates
+                    if (!listElement.querySelector('.error-message')) {
+                         const errorLi = document.createElement('li');
+                         errorLi.className = 'error-message'; // Add class for potential styling
+                         errorLi.innerHTML = `<i style="color: #ff6b6b;">Error loading verified communities. Details: ${error.message}. Please try refreshing.</i>`;
+                         listElement.appendChild(errorLi);
+                    }
+                }
+            });
+    }
+    // --- END NEW CODE ---
+
+
     // --- Initial Setup ---
     // Check essential *calendar* elements first to ensure base functionality
     if (!calendarGrid || !monthYearDisplay || !startSunButton || !startMonButton || !weekdaysContainer) {
@@ -1061,10 +1167,15 @@ document.addEventListener('DOMContentLoaded', function() {
     startSunButton.classList.toggle('active', startDayOfWeekSetting === 0);
     startMonButton.classList.toggle('active', startDayOfWeekSetting === 1);
 
-    // Initial render of the calendar and start the timer loop
+    // Initial render of the calendar
     renderCalendar(currentMonth, currentYear);
+    
+    // Start the timer loop
     updateEventTimers(); // Run the timer logic once immediately on load
     setInterval(updateEventTimers, 1000); // Update the timers every second
+
+    // Call the function to load the verified communities
+    loadVerifiedCommunities();
 
 }); // End DOMContentLoaded wrapper
 </script>

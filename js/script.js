@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return dayCell;
     }
 
-    // --- Combined Timer Update Function (MODIFIED) ---
+    // --- Combined Timer Update Function ---
     function updateEventTimers() {
         // Check if all required timer elements exist (log error only once)
         if (!window.timerElementsChecked) {
@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return timeString.trim();
     }
 
-    // --- Helper to display errors consistently (MODIFIED FOR VISIBILITY) ---
+    // --- Helper to display errors consistently (Ensures timers remain visible) ---
     function displayErrorState(message) {
          console.error(message); // Log detailed error to console
          // Attempt to show a user-friendly error state in the UI, keeping containers visible
@@ -369,6 +369,94 @@ document.addEventListener('DOMContentLoaded', function() {
     if (startSunButton) startSunButton.addEventListener('click', () => updateStartDaySelection(0)); else console.warn("Start Sunday button not found.");
     if (startMonButton) startMonButton.addEventListener('click', () => updateStartDaySelection(1)); else console.warn("Start Monday button not found.");
 
+    // --- NEW: Load Fish Verified Communities ---
+    function loadVerifiedCommunities() {
+        const listElement = document.getElementById('fish-verified-list');
+        const loadingMessage = document.getElementById('verified-loading-message');
+        const GIST_URL = "https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw"; // Your Gist URL
+
+        if (!listElement) {
+            console.error("Error: Target element #fish-verified-list not found.");
+            return; // Stop if the target UL doesn't exist
+        }
+
+        fetch(GIST_URL)
+            .then(response => {
+                if (!response.ok) {
+                    // Try to read response text even on error for more info
+                    return response.text().then(text => {
+                        throw new Error(`HTTP error! Status: ${response.status}, Body: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Clear loading message / existing content ONLY if fetch was successful
+                listElement.innerHTML = '';
+
+                if (!Array.isArray(data)) {
+                     throw new Error("Fetched data is not a valid JSON array.");
+                }
+
+                if (data.length === 0) {
+                    listElement.innerHTML = '<li><i>No verified communities listed currently.</i></li>';
+                    return;
+                }
+
+                // Process and display each community
+                data.forEach(community => {
+                    // Basic validation for core fields
+                    if (!community || typeof community.name !== 'string') {
+                         console.warn("Skipping invalid community entry:", community);
+                         return; // Skip this entry
+                    }
+
+                    const listItem = document.createElement('li');
+
+                    // Basic info
+                    let content = `<b>${community.name}</b>`; // Name is required now
+                    if (community.description) {
+                        content += ` - ${community.description}`;
+                    }
+                    if (community.owner) {
+                        content += `<br><b>Owner:</b> ${community.owner}`;
+                    }
+
+                    // VRChat Group Link (check if property exists and has a non-empty string value)
+                    if (community.vrchatGroupLink && typeof community.vrchatGroupLink === 'string' && community.vrchatGroupLink.trim() !== '') {
+                        content += `<br><b>VRChat Group:</b> <a href="${community.vrchatGroupLink.trim()}" target="_blank" rel="noopener noreferrer">${community.vrchatGroupLink.trim()}</a>`;
+                    }
+
+                    // Discord Link (check if property exists and has a non-empty string value)
+                    if (community.discordLink && typeof community.discordLink === 'string' && community.discordLink.trim() !== '') {
+                        content += `<br><b>Discord Server:</b> <a href="${community.discordLink.trim()}" target="_blank" rel="noopener noreferrer">${community.discordLink.trim()}</a>`;
+                    }
+
+                    listItem.innerHTML = content;
+                    listElement.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Failed to load or process verified communities:', error);
+                // Display error in the list area
+                if (listElement) { // Check again in case it existed initially but failed mid-fetch
+                    // Ensure loading message is removed before showing error
+                    if(loadingMessage && loadingMessage.parentNode === listElement) {
+                         listElement.removeChild(loadingMessage);
+                    }
+                    // Check if list is empty before adding error to avoid duplicates
+                    if (!listElement.querySelector('.error-message')) {
+                         const errorLi = document.createElement('li');
+                         errorLi.className = 'error-message'; // Add class for potential styling
+                         errorLi.innerHTML = `<i style="color: #ff6b6b;">Error loading verified communities. Details: ${error.message}. Please try refreshing.</i>`;
+                         listElement.appendChild(errorLi);
+                    }
+                }
+            });
+    }
+    // --- END NEW CODE ---
+
+
     // --- Initial Setup ---
     // Check essential *calendar* elements first to ensure base functionality
     if (!calendarGrid || !monthYearDisplay || !startSunButton || !startMonButton || !weekdaysContainer) {
@@ -398,9 +486,14 @@ document.addEventListener('DOMContentLoaded', function() {
     startSunButton.classList.toggle('active', startDayOfWeekSetting === 0);
     startMonButton.classList.toggle('active', startDayOfWeekSetting === 1);
 
-    // Initial render of the calendar and start the timer loop
+    // Initial render of the calendar
     renderCalendar(currentMonth, currentYear);
+
+    // Start the timer loop
     updateEventTimers(); // Run the timer logic once immediately on load
     setInterval(updateEventTimers, 1000); // Update the timers every second
+
+    // Call the function to load the verified communities
+    loadVerifiedCommunities();
 
 }); // End DOMContentLoaded wrapper
