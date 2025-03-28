@@ -413,10 +413,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const certifiedLoadingMessage = certifiedListElement?.querySelector('#certified-loading-message');
 
         try {
-            if (!jsonData || typeof jsonData !== 'object' || !Array.isArray(jsonData.groups)) {
-                 throw new Error("JSON data structure is invalid. Expected an object with a 'groups' array.");
+            if (!jsonData || typeof jsonData !== 'object' || !Array.isArray(jsonData.communities)) {
+                 throw new Error("JSON data structure is invalid. Expected an object with a 'communities' array.");
             }
-            const groups = jsonData.groups;
+            const communities = jsonData.communities;
 
             // Mapping from community name to logo filename (primarily for Verified)
             const communityLogos = {
@@ -440,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let verifiedCount = 0;
             let certifiedCount = 0;
 
-            groups.forEach(community => {
+            communities.forEach(community => {
                 if (!community || typeof community.name !== 'string') {
                      console.warn("Skipping invalid community entry:", community);
                      return;
@@ -552,10 +552,10 @@ document.addEventListener('DOMContentLoaded', function() {
                  let typeName = '';
                  let baseURL = '';
 
-                 if (assetTypeKey === 'fish_community_worlds') {
+                 if (assetTypeKey === 'community_worlds') {
                      idKey = 'world_id'; linkKey = 'world_link'; nameKey = 'world_name';
                      typeName = 'World'; baseURL = 'https://vrchat.com/home/world/';
-                 } else if (assetTypeKey === 'fish_community_avatars') {
+                 } else if (assetTypeKey === 'community_avatars') {
                      idKey = 'avatar_id'; linkKey = 'avatar_link'; nameKey = 'avatar_name';
                      typeName = 'Avatar'; baseURL = 'https://vrchat.com/home/avatar/';
                  } else { return; } // Skip unknown types
@@ -646,8 +646,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadMeaningAndPrinciples(data);
                 loadFishGroups(data); // Loads both Verified and Certified
                  // Load Worlds and Avatars, checking if elements exist
-                loadFishAssets('fish_community_worlds', worldsListElement, data);
-                loadFishAssets('fish_community_avatars', avatarsListElement, data);
+                loadFishAssets('community_worlds', worldsListElement, data);
+                loadFishAssets('community_avatars', avatarsListElement, data);
             })
             .catch(error => {
                 console.error("Fatal Error: Could not fetch or process community data.", error);
