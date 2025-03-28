@@ -369,18 +369,36 @@ document.addEventListener('DOMContentLoaded', function() {
     if (startSunButton) startSunButton.addEventListener('click', () => updateStartDaySelection(0)); else console.warn("Start Sunday button not found.");
     if (startMonButton) startMonButton.addEventListener('click', () => updateStartDaySelection(1)); else console.warn("Start Monday button not found.");
 
-    // --- NEW: Load Fish Verified Communities ---
-    function loadVerifiedCommunities() {
-        const listElement = document.getElementById('fish-verified-list');
-        const loadingMessage = document.getElementById('verified-loading-message');
-        const GIST_URL = "https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw"; // Your Gist URL
+    // --- Load Fish Communities (Verified & Certified) ---
+    function loadFishCommunities() {
+        const verifiedListElement = document.getElementById('fish-verified-list');
+        const certifiedListElement = document.getElementById('fish-certified-list');
+        const verifiedLoadingMessage = document.getElementById('verified-loading-message');
+        const certifiedLoadingMessage = document.getElementById('certified-loading-message');
+        // *** CHANGED: Use local file path instead of Gist URL ***
+        const COMMUNITY_DATA_URL = "fish_community_info.json"; // Assumes file is in the same directory
 
-        if (!listElement) {
-            console.error("Error: Target element #fish-verified-list not found.");
-            return; // Stop if the target UL doesn't exist
+        // Helper to display errors in both lists
+        const displayLoadError = (error) => {
+             console.error('Failed to load or process fish communities:', error);
+             const errorMessage = `<i style="color: #ff6b6b;">Error loading communities. Details: ${error.message}. Please try refreshing.</i>`;
+             if (verifiedListElement) {
+                verifiedListElement.innerHTML = `<li class="error-message">${errorMessage}</li>`;
+             }
+             if (certifiedListElement) {
+                certifiedListElement.innerHTML = `<li class="error-message">${errorMessage}</li>`;
+             }
+        };
+
+        if (!verifiedListElement || !certifiedListElement) {
+            console.error("Error: One or both target list elements (#fish-verified-list, #fish-certified-list) not found.");
+            // Clear potential loading messages if lists don't exist
+             if(verifiedLoadingMessage) verifiedLoadingMessage.remove();
+             if(certifiedLoadingMessage) certifiedLoadingMessage.remove();
+            return; // Stop if the target ULs don't exist
         }
 
-        fetch(GIST_URL)
+        fetch(COMMUNITY_DATA_URL) // Use the local file path
             .then(response => {
                 if (!response.ok) {
                     // Try to read response text even on error for more info
@@ -391,20 +409,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                // Clear loading message / existing content ONLY if fetch was successful
-                listElement.innerHTML = '';
-
-                if (!Array.isArray(data)) {
-                     throw new Error("Fetched data is not a valid JSON array.");
+                // --- Data Structure Validation ---
+                if (!data || typeof data !== 'object' || !Array.isArray(data.groups)) {
+                     throw new Error("Fetched data structure is invalid. Expected an object with a 'groups' array.");
                 }
 
-                if (data.length === 0) {
-                    listElement.innerHTML = '<li><i>No verified communities listed currently.</i></li>';
-                    return;
-                }
+                const groups = data.groups; // Access the array within the 'groups' key
 
-                // Process and display each community
-                data.forEach(community => {
+                // --- Clear Loading Messages ---
+                verifiedListElement.innerHTML = '';
+                certifiedListElement.innerHTML = '';
+
+                let verifiedCount = 0;
+                let certifiedCount = 0;
+
+                // --- Process and Display Each Group ---
+                groups.forEach(community => {
                     // Basic validation for core fields
                     if (!community || typeof community.name !== 'string') {
                          console.warn("Skipping invalid community entry:", community);
@@ -413,48 +433,57 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const listItem = document.createElement('li');
 
-                    // Basic info
-                    let content = `<b>${community.name}</b>`; // Name is required now
+                    // Build content
+                    let content = `<b>${community.name}</b>`;
                     if (community.description) {
                         content += ` - ${community.description}`;
                     }
-                    if (community.owner) {
-                        content += `<br><b>Owner:</b> ${community.owner}`;
+                    // Use owner_displayname now
+                    if (community.owner_displayname) {
+                        content += `<br><b>Owner:</b> ${community.owner_displayname}`;
                     }
 
-                    // VRChat Group Link (check if property exists and has a non-empty string value)
-                    if (community.vrchatGroupLink && typeof community.vrchatGroupLink === 'string' && community.vrchatGroupLink.trim() !== '') {
-                        content += `<br><b>VRChat Group:</b> <a href="${community.vrchatGroupLink.trim()}" target="_blank" rel="noopener noreferrer">${community.vrchatGroupLink.trim()}</a>`;
+                    // Access links within the 'links' object using optional chaining
+                    const vrchatLink = community.links?.vrchat_group;
+                    const discordLink = community.links?.discord_server;
+
+                    if (vrchatLink && typeof vrchatLink === 'string' && vrchatLink.trim() !== '') {
+                        content += `<br><b>VRChat Group:</b> <a href="${vrchatLink.trim()}" target="_blank" rel="noopener noreferrer">${vrchatLink.trim()}</a>`;
                     }
 
-                    // Discord Link (check if property exists and has a non-empty string value)
-                    if (community.discordLink && typeof community.discordLink === 'string' && community.discordLink.trim() !== '') {
-                        content += `<br><b>Discord Server:</b> <a href="${community.discordLink.trim()}" target="_blank" rel="noopener noreferrer">${community.discordLink.trim()}</a>`;
+                    if (discordLink && typeof discordLink === 'string' && discordLink.trim() !== '') {
+                        content += `<br><b>Discord Server:</b> <a href="${discordLink.trim()}" target="_blank" rel="noopener noreferrer">${discordLink.trim()}</a>`;
                     }
 
                     listItem.innerHTML = content;
-                    listElement.appendChild(listItem);
+
+                    // --- Append to Correct List Based on Status ---
+                    if (community.status === 'FISH_VERIFIED') {
+                        verifiedListElement.appendChild(listItem);
+                        verifiedCount++;
+                    } else if (community.status === 'FISH_CERTIFIED') {
+                        certifiedListElement.appendChild(listItem);
+                        certifiedCount++;
+                    } else {
+                         console.warn(`Community "${community.name}" has an unrecognized status: ${community.status}`);
+                         // Optionally append to a default or 'other' list if needed
+                    }
                 });
+
+                // --- Add "No communities" message if lists are empty ---
+                if (verifiedCount === 0) {
+                    verifiedListElement.innerHTML = '<li><i>No verified communities listed currently.</i></li>';
+                }
+                if (certifiedCount === 0) {
+                    certifiedListElement.innerHTML = '<li><i>No certified communities listed currently.</i></li>';
+                }
+
             })
             .catch(error => {
-                console.error('Failed to load or process verified communities:', error);
-                // Display error in the list area
-                if (listElement) { // Check again in case it existed initially but failed mid-fetch
-                    // Ensure loading message is removed before showing error
-                    if(loadingMessage && loadingMessage.parentNode === listElement) {
-                         listElement.removeChild(loadingMessage);
-                    }
-                    // Check if list is empty before adding error to avoid duplicates
-                    if (!listElement.querySelector('.error-message')) {
-                         const errorLi = document.createElement('li');
-                         errorLi.className = 'error-message'; // Add class for potential styling
-                         errorLi.innerHTML = `<i style="color: #ff6b6b;">Error loading verified communities. Details: ${error.message}. Please try refreshing.</i>`;
-                         listElement.appendChild(errorLi);
-                    }
-                }
+                displayLoadError(error); // Use the helper to show errors
             });
     }
-    // --- END NEW CODE ---
+    // --- END MODIFIED CODE ---
 
 
     // --- Initial Setup ---
@@ -493,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateEventTimers(); // Run the timer logic once immediately on load
     setInterval(updateEventTimers, 1000); // Update the timers every second
 
-    // Call the function to load the verified communities
-    loadVerifiedCommunities();
+    // Call the function to load the verified & certified communities
+    loadFishCommunities(); // Renamed function call
 
 }); // End DOMContentLoaded wrapper

@@ -122,6 +122,15 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .fish-verified-theme h3 { color: #F0F0F0 !important; } /* Use !important cautiously */
 .fish-verified-theme ol li::marker { color: #FFFFFF; }
 
+/* Placeholder Style for Certified */
+.fish-certified-theme { /* Basic styling, can be expanded */
+    /* filter: brightness(0.9); */ /* Example: Slightly darker */
+}
+.fish-certified-theme p, .fish-certified-theme li, .fish-certified-theme h3, .fish-certified-theme ol { color: #cccccc; } /* Example: Dimmer text */
+.fish-certified-theme a { color: #8bc34a; } /* Example: Different link color */
+.fish-certified-theme a:hover { color: #aed581; }
+.fish-certified-theme h3 { color: #e0e0e0 !important; }
+
 .luxury-trash-theme p, .luxury-trash-theme li, .luxury-trash-theme h3 { color: #FFD700; }
 .luxury-trash-theme a { color: #FFEC8B; }
 .luxury-trash-theme a:hover { color: #FFFACD; }
@@ -361,9 +370,17 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 /* Specific margin for the last timer before the H2 */
-#closing-countdown-container, #happening-now-container {
+/* Apply to closing container OR happening now container if it's visible instead */
+#closing-countdown-container,
+#happening-now-container[style*="display: block"] ~ #closing-countdown-container, /* If happening now is visible, apply margin to closing */
+#happening-now-container:not([style*="display: none"]) { /* If happening now is visible and closing is hidden (shouldn't happen with current JS) */
      margin-bottom: 30px; /* More space before the "MORE ABOUT DAILY VRCHAT" heading */
 }
+/* Ensure default margin if happening now is hidden and closing is shown */
+ #happening-now-container[style*="display: none"] ~ #closing-countdown-container {
+     margin-bottom: 10px; /* Default bottom margin */
+ }
+
 
 /* Larger screens */
 @media (min-width: 600px) {
