@@ -230,15 +230,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 !closingCountdownContainer || !closingCountdownTimerDisplay || !closingCountdownDayLabel ||
                 !happeningNowContainer || !happeningNowMessage || !happeningNowLink)
             {
-                console.error("One or more timer display elements are missing! Timers will not function correctly.");
-                 if(countdownContainer) countdownContainer.style.display = 'none';
-                 if(closingCountdownContainer) closingCountdownContainer.style.display = 'none';
-                 if(happeningNowContainer) happeningNowContainer.style.display = 'none';
-                 window.timerElementsMissing = true; // Set flag indicating failure
+                console.warn("One or more timer display elements are missing! Timers may not function as expected (This is normal on pages other than daily.html).");
+                 // Don't hide elements globally, just don't update them if missing
+                 window.timerElementsMissing = true; // Set flag indicating missing elements
             }
              window.timerElementsChecked = true; // Mark as checked
         }
-        // If elements were missing on the first check, stop
+        // If elements were missing on the first check, stop trying to update them
         if (window.timerElementsMissing) return;
 
         try {
@@ -321,15 +319,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Helper to display errors ---
     function displayErrorState(message) {
          console.error(message);
-         if (countdownContainer) {
+         // Only update if elements exist
+         if (countdownContainer && countdownDayLabel && countdownTimerDisplay) {
              countdownContainer.style.display = 'block';
-             if (countdownDayLabel) countdownDayLabel.textContent = "Err";
-             if (countdownTimerDisplay) countdownTimerDisplay.textContent = "Error";
+             countdownDayLabel.textContent = "Err";
+             countdownTimerDisplay.textContent = "Error";
          }
-         if (closingCountdownContainer) {
+         if (closingCountdownContainer && closingCountdownDayLabel && closingCountdownTimerDisplay) {
              closingCountdownContainer.style.display = 'block';
-             if (closingCountdownDayLabel) closingCountdownDayLabel.textContent = "Err";
-             if (closingCountdownTimerDisplay) closingCountdownTimerDisplay.textContent = "Error";
+             closingCountdownDayLabel.textContent = "Err";
+             closingCountdownTimerDisplay.textContent = "Error";
          }
          if (happeningNowContainer) happeningNowContainer.style.display = 'none';
     }
@@ -346,7 +345,8 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('calendarStartDay', newStartDay.toString());
         if (startSunButton) startSunButton.classList.toggle('active', newStartDay === 0);
         if (startMonButton) startMonButton.classList.toggle('active', newStartDay === 1);
-        renderCalendar(currentMonth, currentYear);
+        // Only render calendar if it exists
+        if (calendarGrid) renderCalendar(currentMonth, currentYear);
     }
 
 
@@ -362,19 +362,16 @@ document.addEventListener('DOMContentLoaded', function() {
                      li.innerHTML = `<b>${principle.title || 'Principle'}</b>: ${principle.description || 'No description.'}`;
                      principlesListElement.appendChild(li);
                  });
-             } else {
-                 console.warn("Principles list element or data missing.");
-                 if(principlesListElement) principlesListElement.innerHTML = '<li class="error-message"><i>Could not load principles.</i></li>';
+             } else if (principlesListElement) { // Only show error if element exists but data doesn't
+                 console.warn("Principles data missing in JSON.");
+                 principlesListElement.innerHTML = '<li class="error-message"><i>Could not load principles data.</i></li>';
              }
              if (principlesNoteElement && jsonData?.community_principles?.additional_note) {
-                 // Replace escaped symbols if necessary, but handle potential HTML injection
                  const noteText = jsonData.community_principles.additional_note;
-                 principlesNoteElement.textContent = noteText; // Use textContent for safety
-                 // If HTML rendering is required (like for ＜＞＜), use innerHTML carefully after sanitization if needed
-                 // principlesNoteElement.innerHTML = noteText.replace(/＜＞＜/g, '<span aria-hidden="true">＜＞＜</span>');
-             } else {
-                  console.warn("Principles note element or data missing.");
-                  if(principlesNoteElement) principlesNoteElement.textContent = ''; // Clear placeholder
+                 principlesNoteElement.textContent = noteText;
+             } else if (principlesNoteElement) { // Only clear if element exists but data doesn't
+                  console.warn("Principles note data missing in JSON.");
+                  principlesNoteElement.textContent = ''; // Clear placeholder
              }
 
              // Load Meaning
@@ -382,55 +379,38 @@ document.addEventListener('DOMContentLoaded', function() {
                  meaningExplanationList.innerHTML = ''; // Clear loading message
                  jsonData.meaning_of_fish.explanation.forEach(item => {
                      const li = document.createElement('li');
-                     // Safely handle symbols
                      const symbolText = (item.symbol === '<' || item.symbol === '＜') ? '<' : (item.symbol === '>' || item.symbol === '＞') ? '>' : (item.symbol || '?');
                      li.innerHTML = `<b style="font-size: 1.5em; display: inline-block; width: 20px;">${symbolText}</b> - ${item.meaning || 'No explanation.'}`;
                      meaningExplanationList.appendChild(li);
                  });
-             } else {
-                 console.warn("Meaning explanation list element or data missing.");
-                 if(meaningExplanationList) meaningExplanationList.innerHTML = '<li class="error-message"><i>Could not load meaning details.</i></li>';
+             } else if (meaningExplanationList) { // Only show error if element exists but data doesn't
+                 console.warn("Meaning explanation data missing in JSON.");
+                 meaningExplanationList.innerHTML = '<li class="error-message"><i>Could not load meaning details data.</i></li>';
              }
              if (meaningSummaryElement && jsonData?.meaning_of_fish?.summary) {
                  meaningSummaryElement.innerHTML = `<b>Summary:</b> ${jsonData.meaning_of_fish.summary.replace(/＜＞＜/g, '<span aria-hidden="true">＜＞＜</span>')}`;
-             } else {
-                  console.warn("Meaning summary element or data missing.");
-                  if(meaningSummaryElement) meaningSummaryElement.innerHTML = '<i>Summary not available.</i>'; // Changed placeholder
+             } else if (meaningSummaryElement) { // Only update if element exists but data doesn't
+                  console.warn("Meaning summary data missing in JSON.");
+                  meaningSummaryElement.innerHTML = '<i>Summary data not available.</i>';
              }
         } catch (error) {
             console.error("Error loading meaning and principles:", error);
-            if(principlesListElement) principlesListElement.innerHTML = '<li class="error-message"><i>Error loading principles.</i></li>';
-            if(meaningExplanationList) meaningExplanationList.innerHTML = '<li class="error-message"><i>Error loading meaning details.</i></li>';
-            if(meaningSummaryElement) meaningSummaryElement.innerHTML = '<i class="error-message">Error loading summary.</i>';
+            // Display errors only if the corresponding element exists
+            if(principlesListElement) principlesListElement.innerHTML = '<li class="error-message"><i>Error processing principles data.</i></li>';
+            if(meaningExplanationList) meaningExplanationList.innerHTML = '<li class="error-message"><i>Error processing meaning details data.</i></li>';
+            if(meaningSummaryElement) meaningSummaryElement.innerHTML = '<i class="error-message">Error processing summary data.</i>';
         }
     }
 
     function loadFishGroups(jsonData) {
-        // Get loading message elements to remove them later
-        const verifiedLoadingMessage = document.getElementById('verified-loading-message');
-        const certifiedLoadingMessage = document.getElementById('certified-loading-message');
-
-        if (!verifiedListElement || !certifiedListElement) {
-            console.error("Error: Verified or Certified list element not found.");
-             // Clean up loading messages if lists don't exist
-             if(verifiedLoadingMessage?.parentNode) verifiedLoadingMessage.parentNode.removeChild(verifiedLoadingMessage);
-             if(certifiedLoadingMessage?.parentNode) certifiedLoadingMessage.parentNode.removeChild(certifiedLoadingMessage);
-            return;
+        // Only proceed if list elements exist on the current page
+        if (!verifiedListElement && !certifiedListElement) {
+            return; // No elements to populate
         }
 
-        // Mapping from community name to logo filename (primarily for Verified)
-        const communityLogos = {
-             "CHEESE ＜＞＜": "cheese_fish.png",
-             "VAPOR ＜＞＜": "vapor_fish.png",
-             "GAMBLE ＜＞＜": "gamble_fish.png",
-             "RAT ＜＞＜": "rat_fish.png",
-             "The Rusk Shack": "rusk_shack.png",
-             "AVIFAIR": "avifair.png",
-             "Family Friendly Cult": "family_friendly_cult.png",
-             "Portal Media": "portal_media.png"
-             // Add certified communities here if they get logos
-             // e.g., "GITHUB ＜＞＜": "github_fish.png" (if image exists)
-        };
+        // Get loading message elements to remove them later (only if parent exists)
+        const verifiedLoadingMessage = verifiedListElement?.querySelector('#verified-loading-message');
+        const certifiedLoadingMessage = certifiedListElement?.querySelector('#certified-loading-message');
 
         try {
             if (!jsonData || typeof jsonData !== 'object' || !Array.isArray(jsonData.groups)) {
@@ -438,9 +418,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const groups = jsonData.groups;
 
-            // Clear loading messages before populating
-            verifiedListElement.innerHTML = '';
-            certifiedListElement.innerHTML = '';
+            // Mapping from community name to logo filename (primarily for Verified)
+            const communityLogos = {
+                 "CHEESE ＜＞＜": "cheese_fish.png",
+                 "VAPOR ＜＞＜": "vapor_fish.png",
+                 "GAMBLE ＜＞＜": "gamble_fish.png",
+                 "RAT ＜＞＜": "rat_fish.png",
+                 "The Rusk Shack": "rusk_shack.png",
+                 "AVIFAIR": "avifair.png",
+                 "Family Friendly Cult": "family_friendly_cult.png",
+                 "Portal Media": "portal_media.png"
+                 // Add certified communities here if they get logos
+                 // e.g., "GITHUB ＜＞＜": "github_fish.png" (if image exists)
+            };
+
+
+            // Clear loading messages before populating (only if elements exist)
+            if(verifiedListElement) verifiedListElement.innerHTML = '';
+            if(certifiedListElement) certifiedListElement.innerHTML = '';
 
             let verifiedCount = 0;
             let certifiedCount = 0;
@@ -456,85 +451,79 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Build text content HTML (safe handling of names)
                 let textContentHTML = '';
-                // Sanitize name before inserting as HTML, replace fish symbol for accessibility/display
                 const communityName = community.name.replace(/</g, '<').replace(/>/g, '>').replace(/＜＞＜/g, '<span aria-hidden="true">＜＞＜</span>');
                 textContentHTML += `<b>${communityName}</b>`;
                 if (community.description) {
-                     // Wrap description in a span for styling
-                     textContentHTML += `<span>${community.description}</span>`; // Assuming description is safe text
+                     textContentHTML += `<span>${community.description}</span>`;
                 }
                 if (community.owner_displayname) {
-                    textContentHTML += `<span><b>Owner:</b> ${community.owner_displayname}</span>`; // Assuming owner name is safe text
+                    textContentHTML += `<span><b>Owner:</b> ${community.owner_displayname}</span>`;
                 }
                 const vrchatLink = community.links?.vrchat_group;
                 const discordLink = community.links?.discord_server;
                 if (vrchatLink && typeof vrchatLink === 'string' && vrchatLink.trim() !== '') {
-                    // Basic URL validation might be needed here for security if links are user-generated
                     textContentHTML += `<a href="${vrchatLink.trim()}" target="_blank" rel="noopener noreferrer">VRChat Group</a>`;
                 }
                 if (discordLink && typeof discordLink === 'string' && discordLink.trim() !== '') {
-                     // Basic URL validation might be needed here
                     textContentHTML += `<a href="${discordLink.trim()}" target="_blank" rel="noopener noreferrer">Discord Server</a>`;
                 }
-                textDiv.innerHTML = textContentHTML; // Set the inner HTML of the text div
+                textDiv.innerHTML = textContentHTML;
 
 
                 // Prepend logo if Verified and logo exists
                 if (community.status === 'FISH_VERIFIED') {
-                     const logoFilename = communityLogos[community.name]; // Check by original name
+                     const logoFilename = communityLogos[community.name];
                      if (logoFilename) {
                          const img = document.createElement('img');
-                         img.src = `images/${logoFilename}`; // Ensure images path is correct
-                         img.alt = `${community.name} Logo`; // Use original name for alt text
+                         img.src = `images/${logoFilename}`;
+                         img.alt = `${community.name} Logo`;
                          img.classList.add('community-logo');
                          img.loading = 'lazy';
                          listItem.appendChild(img); // Logo first
                      }
                 }
-                // *** No logo logic for Certified here, matching CSS/request implication ***
-                // If certified logos were added, logic would be similar to Verified.
 
                 listItem.appendChild(textDiv); // Then text div
 
-                // Append to the correct list
-                if (community.status === 'FISH_VERIFIED') {
+                // Append to the correct list (only if the list element exists)
+                if (community.status === 'FISH_VERIFIED' && verifiedListElement) {
                      verifiedListElement.appendChild(listItem);
                      verifiedCount++;
-                } else if (community.status === 'FISH_CERTIFIED') {
+                } else if (community.status === 'FISH_CERTIFIED' && certifiedListElement) {
                      certifiedListElement.appendChild(listItem);
                      certifiedCount++;
                 } else {
-                     console.warn(`Community "${community.name}" has an unrecognized status: ${community.status}`);
+                     console.warn(`Community "${community.name}" has unrecognized status or target list is missing: ${community.status}`);
                 }
             });
 
-            // Add "No communities" message if lists are empty after processing
-            if (verifiedCount === 0) {
+            // Add "No communities" message if lists exist but are empty after processing
+            if (verifiedListElement && verifiedCount === 0) {
                 verifiedListElement.innerHTML = '<li><i>No verified communities listed currently.</i></li>';
             }
-            if (certifiedCount === 0) {
+            if (certifiedListElement && certifiedCount === 0) {
                 certifiedListElement.innerHTML = '<li><i>No certified communities listed currently.</i></li>';
             }
 
         } catch (error) {
             console.error('Failed to process fish communities:', error);
             const errorMessage = `<li class="error-message"><i>Error loading communities. Details: ${error.message}.</i></li>`;
-            // Ensure loading messages are removed even on error
-            if (verifiedListElement) verifiedListElement.innerHTML = errorMessage; else if(verifiedLoadingMessage?.parentNode) verifiedLoadingMessage.parentNode.removeChild(verifiedLoadingMessage);
-            if (certifiedListElement) certifiedListElement.innerHTML = errorMessage; else if(certifiedLoadingMessage?.parentNode) certifiedLoadingMessage.parentNode.removeChild(certifiedLoadingMessage);
+            // Show error message only if the list elements exist
+            if (verifiedListElement) verifiedListElement.innerHTML = errorMessage;
+            if (certifiedListElement) certifiedListElement.innerHTML = errorMessage;
         }
     }
 
      function loadFishAssets(assetTypeKey, listElement, jsonData) {
-         const loadingMessageElement = listElement?.querySelector('li[id$="-loading-message"]'); // Find loading message by ID suffix
-
+         // Only proceed if list element exists on the current page
          if (!listElement) {
-             console.error(`Error: List element for ${assetTypeKey} not found.`);
+             // console.log(`Skipping asset loading: Element for ${assetTypeKey} not found on this page.`);
              return;
          }
 
+         const loadingMessageElement = listElement.querySelector('li[id$="-loading-message"]');
+
          try {
-             // Access the correct array in the JSON using the key (e.g., 'fish_community_worlds')
              const assetData = jsonData?.[assetTypeKey];
 
              if (!jsonData || !Array.isArray(assetData)) {
@@ -559,67 +548,36 @@ document.addEventListener('DOMContentLoaded', function() {
                  let idKey = '';
                  let linkKey = '';
                  let nameKey = '';
-                 let authorKey = 'author'; // Common key
+                 let authorKey = 'author';
                  let typeName = '';
                  let baseURL = '';
 
-                 // Determine keys based on asset type
                  if (assetTypeKey === 'fish_community_worlds') {
-                     idKey = 'world_id';
-                     linkKey = 'world_link';
-                     nameKey = 'world_name';
-                     typeName = 'World';
-                     baseURL = 'https://vrchat.com/home/world/';
+                     idKey = 'world_id'; linkKey = 'world_link'; nameKey = 'world_name';
+                     typeName = 'World'; baseURL = 'https://vrchat.com/home/world/';
                  } else if (assetTypeKey === 'fish_community_avatars') {
-                     idKey = 'avatar_id';
-                     linkKey = 'avatar_link';
-                     nameKey = 'avatar_name';
-                     typeName = 'Avatar';
-                     baseURL = 'https://vrchat.com/home/avatar/';
-                 } else {
-                     console.warn(`Unknown asset type key: ${assetTypeKey}`);
-                     return; // Skip unknown types
-                 }
+                     idKey = 'avatar_id'; linkKey = 'avatar_link'; nameKey = 'avatar_name';
+                     typeName = 'Avatar'; baseURL = 'https://vrchat.com/home/avatar/';
+                 } else { return; } // Skip unknown types
 
-                 // Extract data using determined keys
-                 id = asset[idKey];
-                 link = asset[linkKey];
-                 name = asset[nameKey];
-                 author = asset[authorKey];
+                 id = asset[idKey]; link = asset[linkKey]; name = asset[nameKey]; author = asset[authorKey];
 
-                 // Build content string
-                 content = `<b>${name || id || `Unnamed ${typeName}`}</b>`; // Use ID as fallback name
-
-                 // Display Author
-                 if (author) {
-                     content += ` by ${author}`; // Assuming author name is safe text
-                 } else if (name || id) {
-                     content += ` by <i>Unknown Author</i>`;
-                 }
-
-                 // Display ID (if different from name and exists)
-                 if (id && id !== name) {
-                     content += `<br><i>ID: ${id}</i>`;
-                 }
-
-                 // Display Link (prefer direct link, fallback to ID-based link)
+                 content = `<b>${name || id || `Unnamed ${typeName}`}</b>`;
+                 if (author) { content += ` by ${author}`; } else if (name || id) { content += ` by <i>Unknown Author</i>`; }
+                 if (id && id !== name) { content += `<br><i>ID: ${id}</i>`; }
                  if (link && typeof link === 'string' && link.trim() !== '') {
                      content += `<br><a href="${link.trim()}" target="_blank" rel="noopener noreferrer">View on VRChat</a>`;
                  } else if (id && baseURL) {
                      content += `<br><a href="${baseURL}${id}" target="_blank" rel="noopener noreferrer">View on VRChat (via ID)</a>`;
                  }
 
-                 // Only add list item if there's meaningful content (name, id, or link)
                  if (name || id || link) {
                      listItem.innerHTML = content;
                      listElement.appendChild(listItem);
                      assetCount++;
-                 } else {
-                     console.warn(`Skipping empty asset entry in ${assetTypeKey}:`, asset);
-                 }
+                 } else { console.warn(`Skipping empty asset entry in ${assetTypeKey}:`, asset); }
              });
 
-             // Add "No assets" message if list is empty after processing
              if (assetCount === 0) {
                   const assetPlural = assetTypeKey.includes('world') ? 'worlds' : 'avatars';
                   listElement.innerHTML = `<li><i>No community ${assetPlural} listed currently.</i></li>`;
@@ -628,53 +586,50 @@ document.addEventListener('DOMContentLoaded', function() {
          } catch (error) {
              console.error(`Failed to process ${assetTypeKey}:`, error);
              const assetPlural = assetTypeKey.includes('world') ? 'worlds' : 'avatars';
-             listElement.innerHTML = `<li class="error-message"><i>Error loading community ${assetPlural}. Details: ${error.message}.</i></li>`;
+             // Display error only if list element exists
+             if (listElement) {
+                 listElement.innerHTML = `<li class="error-message"><i>Error loading community ${assetPlural}. Details: ${error.message}.</i></li>`;
+             }
          } finally {
-              // Ensure loading message is removed even on error after trying to populate
-              // Re-check if loading message still exists before removing (innerHTML might have cleared it)
-              if (loadingMessageElement && loadingMessageElement.parentNode === listElement) {
+              // Ensure loading message is removed even on error (only if parent list exists)
+              if (listElement && loadingMessageElement && loadingMessageElement.parentNode === listElement) {
                   listElement.removeChild(loadingMessageElement);
               }
          }
      }
 
 
-    // --- Event Listeners ---
-    if (prevMonthButton) prevMonthButton.addEventListener('click', goToPrevMonth); else console.warn("Previous month button not found.");
-    if (nextMonthButton) nextMonthButton.addEventListener('click', goToNextMonth); else console.warn("Next month button not found.");
-    if (gotoTodayButton) gotoTodayButton.addEventListener('click', goToToday); else console.warn("Go to Today button not found.");
-    if (startSunButton) startSunButton.addEventListener('click', () => updateStartDaySelection(0)); else console.warn("Start Sunday button not found.");
-    if (startMonButton) startMonButton.addEventListener('click', () => updateStartDaySelection(1)); else console.warn("Start Monday button not found.");
+    // --- Event Listeners (Check if elements exist before adding listeners) ---
+    if (prevMonthButton) prevMonthButton.addEventListener('click', goToPrevMonth);
+    if (nextMonthButton) nextMonthButton.addEventListener('click', goToNextMonth);
+    if (gotoTodayButton) gotoTodayButton.addEventListener('click', goToToday);
+    if (startSunButton) startSunButton.addEventListener('click', () => updateStartDaySelection(0));
+    if (startMonButton) startMonButton.addEventListener('click', () => updateStartDaySelection(1));
 
 
     // --- Initial Setup & Data Fetch ---
     function initializePage() {
-        // Check essential calendar elements first
+        // Check essential calendar elements first for calendar-specific setup
         if (!calendarGrid || !monthYearDisplay || !startSunButton || !startMonButton || !weekdaysContainer) {
-            console.error("One or more essential elements for calendar initialization are missing! Calendar will not render.");
-            const container = document.querySelector('.container') || document.body;
-            // Display error message more visibly if calendar fails init
-            if (container && !document.getElementById('init-error-msg')) {
-                const errorMsg = document.createElement('p'); errorMsg.id = 'init-error-msg'; errorMsg.classList.add('error-message'); errorMsg.style.fontWeight = 'bold'; errorMsg.style.textAlign = 'center'; errorMsg.style.marginTop = '20px';
-                errorMsg.innerHTML = '<i>Error: Failed to initialize the calendar component.</i>';
-                const calendarSection = document.querySelector('.calendar-container'); // Find calendar container
-                if (calendarSection) calendarSection.parentNode.insertBefore(errorMsg, calendarSection); // Insert before calendar
-                else container.insertBefore(errorMsg, container.firstChild); // Fallback
-            }
-            // Don't return necessarily, other parts might still load, but log the error
+            // ONLY log to console if calendar elements are missing, DO NOT add page error msg
+            console.warn("One or more essential elements for calendar initialization are missing! Calendar will not render (This is expected on pages other than daily.html).");
         } else {
-             // Set initial calendar state only if elements exist
+             // Set initial calendar state ONLY if elements exist
             startSunButton.classList.toggle('active', startDayOfWeekSetting === 0);
             startMonButton.classList.toggle('active', startDayOfWeekSetting === 1);
             renderCalendar(currentMonth, currentYear);
         }
 
 
-        // Start timers (check for elements internally)
-        updateEventTimers();
-        setInterval(updateEventTimers, 1000);
+        // Start timers (check for elements internally - will fail gracefully if elements not found)
+        updateEventTimers(); // Run once immediately
+        // Only set interval if timer elements actually exist
+        if (!window.timerElementsMissing) {
+            setInterval(updateEventTimers, 1000);
+        }
 
-        // Fetch data and then load dynamic content sections
+
+        // Fetch data and then load dynamic content sections (Runs on all pages)
         fetch(GIST_DATA_URL)
             .then(response => {
                 if (!response.ok) {
@@ -687,16 +642,18 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(data => {
                 // Call functions to populate sections with fetched data
+                // These functions already check if the target elements exist on the current page
                 loadMeaningAndPrinciples(data);
                 loadFishGroups(data); // Loads both Verified and Certified
                  // Load Worlds and Avatars, checking if elements exist
-                 if (worldsListElement) loadFishAssets('fish_community_worlds', worldsListElement, data);
-                 if (avatarsListElement) loadFishAssets('fish_community_avatars', avatarsListElement, data);
+                loadFishAssets('fish_community_worlds', worldsListElement, data);
+                loadFishAssets('fish_community_avatars', avatarsListElement, data);
             })
             .catch(error => {
                 console.error("Fatal Error: Could not fetch or process community data.", error);
                 // Display a more prominent error message for critical data failure in relevant sections
                  const displayLoadError = (listEl, type) => {
+                     // Only attempt to display error if list element exists on the current page
                      if (listEl) {
                           // Clear potential loading message first
                           const loadingMsg = listEl.querySelector('li[id$="-loading-message"]');
@@ -710,7 +667,7 @@ document.addEventListener('DOMContentLoaded', function() {
                           listEl.appendChild(errorLi);
                      }
                  }
-                 // Show errors in all dynamic sections
+                 // Show errors in dynamic sections IF the elements exist on the page
                  displayLoadError(principlesListElement, "principles");
                  if(principlesNoteElement) principlesNoteElement.textContent = ''; // Clear note
                  displayLoadError(meaningExplanationList, "meaning");

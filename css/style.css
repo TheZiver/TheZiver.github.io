@@ -1,20 +1,24 @@
-/* --- START OF style.css CONTENT (with modifications for Verified/Certified Lists) --- */
+/* --- START OF style.css CONTENT (Final Version) --- */
 
 /* --- Base Styles --- */
+html {
+    overflow-y: scroll; /* Force vertical scrollbar for consistent width */
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #121212;
     color: #e0e0e0;
     margin: 0;
-    padding: 20px 0;
-    overflow-x: hidden;
+    padding: 0 0 20px 0; /* Remove top padding, keep bottom */
+    overflow-x: hidden; /* Keep this to prevent horizontal body scroll */
     line-height: 1.7;
 }
 
 .container {
     width: 90%;
     max-width: 850px;
-    margin: 40px auto;
+    margin: 20px auto 40px auto; /* Adjust top margin due to nav bar */
     padding: 20px;
     background-color: #1e1e1e;
     border-radius: 5px;
@@ -27,6 +31,7 @@ body {
     .container {
         width: 80%;
         padding: 40px;
+        margin-top: 30px; /* Adjust top margin */
     }
 }
 
@@ -291,7 +296,7 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .generic-data-theme p, .generic-data-theme li, .generic-data-theme h3, .generic-data-theme ol { color: #d0d0d0; }
 .generic-data-theme a { color: #4dd0e1; }
 .generic-data-theme a:hover { color: #00e5ff; }
-.generic-data-theme h3 { color: #bbbbbb !important; }
+.generic-data-theme h3 { color: #bbbbbb !important; } /* Keep gradient override */
 #fish-worlds-list, #fish-avatars-list { list-style: none; padding-left: 0; }
 #fish-worlds-list li, #fish-avatars-list li {
      border-bottom: 1px solid #333337;
@@ -537,17 +542,22 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     text-align: center; font-size: 1.1em; color: var(--cal-text-color);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
-/* Specific margin for the last timer before the H2 */
-/* Apply to closing container OR happening now container if it's visible instead */
-#closing-countdown-container,
-#happening-now-container[style*="display: block"] ~ #closing-countdown-container, /* If happening now is visible, apply margin to closing */
-#happening-now-container:not([style*="display: none"]) { /* If happening now is visible and closing is hidden (shouldn't happen with current JS) */
-     margin-bottom: 30px; /* More space before the "MORE ABOUT DAILY VRCHAT" heading */
+/* Specific margin for the last timer before the H2 (Only relevant on daily.html) */
+#daily-event-heading { /* Target the heading itself */
+    margin-top: 30px; /* Add space above the heading */
 }
-/* Ensure default margin if happening now is hidden and closing is shown */
- #happening-now-container[style*="display: none"] ~ #closing-countdown-container {
-     margin-bottom: 10px; /* Default bottom margin */
- }
+/* Apply margin-bottom to the element *before* #daily-event-heading */
+#closing-countdown-container {
+     margin-bottom: 30px;
+}
+/* OR Apply to happening now if it's displayed */
+#happening-now-container:not([style*="display: none"]) {
+    margin-bottom: 30px;
+}
+/* If happening now is shown, remove extra margin from closing timer */
+#happening-now-container:not([style*="display: none"]) ~ #closing-countdown-container {
+    margin-bottom: 10px; /* Reset to default */
+}
 
 
 /* Larger screens */
@@ -555,6 +565,9 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
      #countdown-container, #closing-countdown-container, #happening-now-container {
          padding: 15px 20px;
          font-size: 1.2em;
+    }
+    #daily-event-heading {
+        margin-top: 50px; /* Increase space on larger screens */
     }
 }
 
@@ -585,5 +598,79 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 /* ========================================= */
 /* == END CALENDAR STYLES ================== */
 /* ========================================= */
+
+
+/* === Navigation Bar Styles === */
+.main-nav {
+    background-color: #1e1e1e; /* Match container background */
+    padding: 10px 0;
+    margin-bottom: 0; /* Remove bottom margin, container will provide space */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    border-bottom: 1px solid #333337; /* Subtle separator */
+    position: sticky; /* Make nav sticky */
+    top: 0;           /* Stick to the top */
+    z-index: 100;     /* Ensure it's above other content */
+    width: 100%;      /* Ensure it spans full width */
+}
+
+.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.main-nav li {
+    display: inline-block;
+    margin: 0 10px; /* Spacing between nav items */
+}
+
+.main-nav a {
+    color: #cccccc; /* Dimmer color for inactive links */
+    text-decoration: none;
+    font-size: 1.1em;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.main-nav a:hover {
+    background-color: #333337;
+    color: #e0e0e0; /* Brighter on hover */
+}
+
+.main-nav a.active {
+    background-color: #4dd0e1; /* Highlight active page */
+    color: #121212; /* Dark text on active background */
+    font-weight: bold;
+}
+
+/* Responsive Nav */
+@media (max-width: 767px) { /* Adjust breakpoint if needed */
+    .main-nav ul {
+        white-space: nowrap; /* Prevent wrapping */
+        overflow-x: auto;   /* Allow horizontal scrolling */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+         /* padding: 5px 0; */ /* Keep this removed */
+    }
+    .main-nav li {
+        display: inline-block; /* Ensure they stay inline */
+        margin: 0 5px;
+    }
+    .main-nav a {
+        font-size: 1em;
+        padding: 6px 10px;
+    }
+}
+
+/* Hide scrollbar visually but allow scrolling */
+.main-nav ul::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
+.main-nav ul {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+/* === End Navigation Bar Styles === */
 
 /* --- END OF style.css --- */
