@@ -1,4 +1,4 @@
-/* --- START OF style.css --- */
+/* --- START OF style.css CONTENT (with modifications for Verified/Certified Lists) --- */
 
 /* --- Base Styles --- */
 body {
@@ -139,16 +139,38 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 20px 0; }
 .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 5px; }
 
-/* Theme Styles */
-.fish-verified-theme p, .fish-verified-theme li, .fish-verified-theme h3, .fish-verified-theme ol { color: #FFFFFF; }
+/* --- Theme Styles --- */
+
+/* Fish Verified Theme */
+.fish-verified-theme p,
+.fish-verified-theme li, /* Applies to default list items inside */
+.fish-verified-theme h3,
+.fish-verified-theme ol { color: #FFFFFF; } /* Base text color */
 .fish-verified-theme a { color: #A7D8FF; }
 .fish-verified-theme a:hover { color: #D0EFFF; }
 .fish-verified-theme h3 { color: #F0F0F0 !important; } /* Use !important cautiously */
 .fish-verified-theme ol li::marker { color: #FFFFFF; }
 
-/* Styles for Verified & Certified Community List Items */
+
+/* Fish Certified Theme */
+.fish-certified-theme { /* Basic styling, can be expanded */
+    /* filter: brightness(0.9); */ /* Example: Slightly darker */
+}
+.fish-certified-theme p,
+.fish-certified-theme li, /* Applies to default list items inside */
+.fish-certified-theme h3,
+.fish-certified-theme ol { color: #cccccc; } /* Example: Dimmer text */
+.fish-certified-theme a { color: #8bc34a; } /* Example: Different link color */
+.fish-certified-theme a:hover { color: #aed581; }
+.fish-certified-theme h3 { color: #e0e0e0 !important; }
+
+
+/* --- Styles for Verified & Certified Community List Items --- */
 #fish-verified-list,
-#fish-certified-list { list-style: none; padding-left: 0; /* Remove default bullet */ }
+#fish-certified-list {
+    list-style: none;
+    padding-left: 0; /* Remove default bullet */
+}
 
 #fish-verified-list li,
 #fish-certified-list li {
@@ -164,74 +186,106 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
      margin-bottom: 0;
      padding-bottom: 0;
 }
-.community-logo { /* Applied only to verified via JS */
-    width: 50px;            /* Slightly larger Logo size */
+
+/* Logo - Applied only to verified via JS */
+.community-logo {
+    width: 50x;            /* Slightly larger Logo size */
     height: 50px;           /* Slightly larger Logo size */
     object-fit: contain;    /* Ensure logo fits without distortion */
     margin-right: 20px;     /* More Space between logo and text */
     flex-shrink: 0;         /* Prevent logo from shrinking */
     border-radius: 4px;     /* Slightly rounded corners for logos */
 }
+
+/* Text Container Div (for both lists) */
 #fish-verified-list li > div,
-#fish-certified-list li > div { /* Target the div containing the text */
+#fish-certified-list li > div {
      flex-grow: 1; /* Allow text to take remaining space */
-     line-height: 1.5; /* Adjust line height for readability */
+     line-height: 1.4; /* Adjust line height within the text block */
 }
- #fish-verified-list li > div b,
- #fish-certified-list li > div b { /* Make the name stand out more */
-     font-size: 1.1em;
-     display: block; /* Put name on its own line */
-     margin-bottom: 5px;
- }
- #fish-verified-list li > div span,
- #fish-certified-list li > div span { /* Style for description/owner line */
-     display: block;
-     margin-bottom: 8px;
-     font-size: 0.95em;
-     color: #bdbdbd; /* Slightly dimmer color for description - default */
- }
- #fish-verified-list li > div a,
- #fish-certified-list li > div a { /* Link styling */
-     display: inline-block; /* Keep links inline but allow margin */
-     margin-right: 15px;
-     margin-top: 5px;
-     font-size: 0.9em;
- }
- /* Theme specific adjustments for certified list items */
- .fish-certified-theme #fish-certified-list li > div span {
-      color: #aaa; /* Dimmer description for certified */
- }
- .fish-certified-theme #fish-certified-list li > div a {
-     color: #8bc34a; /* Certified link color */
- }
- .fish-certified-theme #fish-certified-list li > div a:hover {
-     color: #aed581; /* Certified link hover color */
- }
 
-/* Placeholder Style for Certified Theme */
-.fish-certified-theme { /* Basic styling, can be expanded */
-    /* filter: brightness(0.9); */ /* Example: Slightly darker */
+/* Community Name (Line 1 - for both lists) */
+#fish-verified-list li > div b,
+#fish-certified-list li > div b {
+    display: block; /* Keep it on its own line */
+    font-size: 1.1em; /* Keep original size or adjust */
+    font-weight: bold; /* Ensure it remains bold */
+    margin-bottom: 4px; /* Space below the name */
 }
-.fish-certified-theme p, .fish-certified-theme li, .fish-certified-theme h3, .fish-certified-theme ol { color: #cccccc; } /* Example: Dimmer text */
-.fish-certified-theme a { color: #8bc34a; } /* Example: Different link color */
-.fish-certified-theme a:hover { color: #aed581; }
-.fish-certified-theme h3 { color: #e0e0e0 !important; }
+
+/* Description (Line 2 - for both lists) */
+/* Target the *first* span generated by JS (assumed to be description) */
+#fish-verified-list li > div span:nth-of-type(1),
+#fish-certified-list li > div span:nth-of-type(1) {
+    display: block; /* Keep it on its own line */
+    font-size: 0.95em; /* Original size or adjust */
+    /* Color is handled by theme-specific rules below */
+    margin-bottom: 4px; /* Space below the description */
+}
+
+/* Owner Info (Line 3 - for both lists) */
+/* Target the *second* span generated by JS (assumed to be owner info) */
+#fish-verified-list li > div span:nth-of-type(2),
+#fish-certified-list li > div span:nth-of-type(2) {
+    display: block; /* Keep it on its own line */
+    font-size: 0.95em; /* Match description size or adjust */
+    /* Color is handled by theme-specific rules below */
+    margin-bottom: 8px; /* Space below the owner line, before links */
+}
+
+/* Specifically target the "Owner:" label's <b> tag INSIDE the second span (for both lists) */
+#fish-verified-list li > div span:nth-of-type(2) b,
+#fish-certified-list li > div span:nth-of-type(2) b {
+    font-weight: normal; /* <<< This makes "Owner:" NOT bold */
+}
+
+/* Links (Below Owner Info - for both lists) */
+#fish-verified-list li > div a,
+#fish-certified-list li > div a {
+    display: inline-block; /* Keep links inline */
+    margin-right: 15px;    /* Space between links */
+    margin-top: 0px;       /* Adjust top margin if needed */
+    font-size: 0.9em;      /* Original size or adjust */
+    /* Color and hover are handled by theme-specific rules */
+}
+
+/* --- Theme specific text/link colors for list items --- */
+
+/* Verified List Item Text/Links (inherits from .fish-verified-theme) */
+.fish-verified-theme #fish-verified-list li > div span {
+    color: #bdbdbd; /* Default description/owner color from original CSS */
+}
+/* Link color/hover already set by .fish-verified-theme a */
+
+/* Certified List Item Text/Links */
+.fish-certified-theme #fish-certified-list li > div span {
+     color: #aaa; /* Dimmer description/owner for certified */
+}
+.fish-certified-theme #fish-certified-list li > div a {
+    color: #8bc34a; /* Certified link color (overrides base .fish-certified-theme a) */
+}
+.fish-certified-theme #fish-certified-list li > div a:hover {
+    color: #aed581; /* Certified link hover color */
+}
 
 
+/* Luxury Trash Theme */
 .luxury-trash-theme p, .luxury-trash-theme li, .luxury-trash-theme h3 { color: #FFD700; }
 .luxury-trash-theme a { color: #FFEC8B; }
 .luxury-trash-theme a:hover { color: #FFFACD; }
 .luxury-trash-theme h3 { color: #FBC02D !important; } /* Use !important cautiously */
 .luxury-trash-theme p i { color: #FFEA00; } /* Style for italic text in luxury trash */
 /* Ensure list items in luxury trash have correct color */
-.luxury-trash-theme ul li { color: #FFD700; }
+.luxury-trash-theme ul li { color: #FFD700; } /* Applies to default <li> inside */
 
 
+/* Rose Fish Theme */
 .rose-fish-theme p, .rose-fish-theme li, .rose-fish-theme h3, .rose-fish-theme ol { color: #FF6B6B; }
 .rose-fish-theme a { color: #FF8F8F; }
 .rose-fish-theme a:hover { color: #FFBDBD; }
 .rose-fish-theme h3 { color: #E57373 !important; } /* Use !important cautiously */
 .rose-fish-theme ol li::marker { color: #FF6B6B; }
+
 
 /* Generic section styling for Avatars/Worlds lists */
 .generic-data-theme p, .generic-data-theme li, .generic-data-theme h3, .generic-data-theme ol { color: #d0d0d0; }
@@ -249,6 +303,8 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     border-bottom: none; margin-bottom: 0; padding-bottom: 0;
 }
  #fish-worlds-list li b, #fish-avatars-list li b { font-size: 1.05em; }
+
+
  /* Style for error messages in lists */
 .error-message i {
     color: #ff6b6b; /* Red color for emphasis */
