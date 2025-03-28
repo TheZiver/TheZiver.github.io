@@ -1,3 +1,5 @@
+/* --- START OF style.css --- */
+
 /* --- Base Styles --- */
 body {
     font-family: 'Roboto', sans-serif;
@@ -75,11 +77,13 @@ p, ul, ol {
 }
 @media (min-width: 600px) { p, ul, ol { font-size: 1.15em; line-height: 1.8; margin-bottom: 25px; } }
 
+/* General Lists */
 ul, ol { padding-left: 30px; }
 @media (min-width: 600px) { ul, ol { padding-left: 35px; } }
 
-li { margin-bottom: 10px; }
- @media (min-width: 600px) { li { margin-bottom: 12px; } }
+/* General List Items */
+li { margin-bottom: 15px; /* Increased spacing slightly */ }
+ @media (min-width: 600px) { li { margin-bottom: 18px; } }
 
 a { color: #4dd0e1; text-decoration: underline; transition: color 0.2s ease; }
 a:hover { color: #00e5ff; }
@@ -105,12 +109,32 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .fish-symbol:nth-child(5n+4) { animation-delay: 0.6s; }
 .fish-symbol:nth-child(5n+5) { animation-delay: 0.8s; }
 
-.community-image, .meaning-image {
-    max-width: 100%; height: auto; display: block; margin: 20px auto;
-    border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+/* Image Scaling Base */
+.community-image, .meaning-image, .verified-image {
+    max-width: 100%; /* Never wider than container */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Remove extra space below image */
+    margin: 20px auto; /* Center block images */
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-.meaning-image { max-width: 90%; margin-top: 30px; margin-bottom: 30px; }
- @media (min-width: 768px) { .meaning-image { max-width: 600px; } }
+/* Specific Max Widths (Upper limit) */
+.meaning-image {
+    max-width: 600px; /* Allow larger on wide screens, but still responsive */
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+ @media (max-width: 767px) { .meaning-image { max-width: 90%; } } /* Slightly smaller than full width on medium screens */
+
+.verified-image { /* Style for Verified, Certified, Rose, Luxury logos */
+     max-width: 420px; /* Max size on large screens */
+}
+ @media (max-width: 599px) { .verified-image { max-width: 300px; } } /* Smaller max on small screens */
+
+.community-image { /* Style for Daily VRChat logo */
+     max-width: 300px;
+}
+
 
 .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 20px 0; }
 .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 5px; }
@@ -122,7 +146,69 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .fish-verified-theme h3 { color: #F0F0F0 !important; } /* Use !important cautiously */
 .fish-verified-theme ol li::marker { color: #FFFFFF; }
 
-/* Placeholder Style for Certified */
+/* Styles for Verified & Certified Community List Items */
+#fish-verified-list,
+#fish-certified-list { list-style: none; padding-left: 0; /* Remove default bullet */ }
+
+#fish-verified-list li,
+#fish-certified-list li {
+    display: flex;          /* Enable flexbox */
+    align-items: center;    /* Vertically align items */
+    margin-bottom: 25px;    /* Increased Space between items */
+    border-bottom: 1px solid #333337; /* Add a subtle separator */
+    padding-bottom: 15px;   /* Space above the separator */
+}
+#fish-verified-list li:last-child,
+#fish-certified-list li:last-child {
+     border-bottom: none; /* Remove border from last item */
+     margin-bottom: 0;
+     padding-bottom: 0;
+}
+.community-logo { /* Applied only to verified via JS */
+    width: 50px;            /* Slightly larger Logo size */
+    height: 50px;           /* Slightly larger Logo size */
+    object-fit: contain;    /* Ensure logo fits without distortion */
+    margin-right: 20px;     /* More Space between logo and text */
+    flex-shrink: 0;         /* Prevent logo from shrinking */
+    border-radius: 4px;     /* Slightly rounded corners for logos */
+}
+#fish-verified-list li > div,
+#fish-certified-list li > div { /* Target the div containing the text */
+     flex-grow: 1; /* Allow text to take remaining space */
+     line-height: 1.5; /* Adjust line height for readability */
+}
+ #fish-verified-list li > div b,
+ #fish-certified-list li > div b { /* Make the name stand out more */
+     font-size: 1.1em;
+     display: block; /* Put name on its own line */
+     margin-bottom: 5px;
+ }
+ #fish-verified-list li > div span,
+ #fish-certified-list li > div span { /* Style for description/owner line */
+     display: block;
+     margin-bottom: 8px;
+     font-size: 0.95em;
+     color: #bdbdbd; /* Slightly dimmer color for description - default */
+ }
+ #fish-verified-list li > div a,
+ #fish-certified-list li > div a { /* Link styling */
+     display: inline-block; /* Keep links inline but allow margin */
+     margin-right: 15px;
+     margin-top: 5px;
+     font-size: 0.9em;
+ }
+ /* Theme specific adjustments for certified list items */
+ .fish-certified-theme #fish-certified-list li > div span {
+      color: #aaa; /* Dimmer description for certified */
+ }
+ .fish-certified-theme #fish-certified-list li > div a {
+     color: #8bc34a; /* Certified link color */
+ }
+ .fish-certified-theme #fish-certified-list li > div a:hover {
+     color: #aed581; /* Certified link hover color */
+ }
+
+/* Placeholder Style for Certified Theme */
 .fish-certified-theme { /* Basic styling, can be expanded */
     /* filter: brightness(0.9); */ /* Example: Slightly darker */
 }
@@ -131,17 +217,43 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .fish-certified-theme a:hover { color: #aed581; }
 .fish-certified-theme h3 { color: #e0e0e0 !important; }
 
+
 .luxury-trash-theme p, .luxury-trash-theme li, .luxury-trash-theme h3 { color: #FFD700; }
 .luxury-trash-theme a { color: #FFEC8B; }
 .luxury-trash-theme a:hover { color: #FFFACD; }
 .luxury-trash-theme h3 { color: #FBC02D !important; } /* Use !important cautiously */
 .luxury-trash-theme p i { color: #FFEA00; } /* Style for italic text in luxury trash */
+/* Ensure list items in luxury trash have correct color */
+.luxury-trash-theme ul li { color: #FFD700; }
+
 
 .rose-fish-theme p, .rose-fish-theme li, .rose-fish-theme h3, .rose-fish-theme ol { color: #FF6B6B; }
 .rose-fish-theme a { color: #FF8F8F; }
 .rose-fish-theme a:hover { color: #FFBDBD; }
 .rose-fish-theme h3 { color: #E57373 !important; } /* Use !important cautiously */
 .rose-fish-theme ol li::marker { color: #FF6B6B; }
+
+/* Generic section styling for Avatars/Worlds lists */
+.generic-data-theme p, .generic-data-theme li, .generic-data-theme h3, .generic-data-theme ol { color: #d0d0d0; }
+.generic-data-theme a { color: #4dd0e1; }
+.generic-data-theme a:hover { color: #00e5ff; }
+.generic-data-theme h3 { color: #bbbbbb !important; }
+#fish-worlds-list, #fish-avatars-list { list-style: none; padding-left: 0; }
+#fish-worlds-list li, #fish-avatars-list li {
+     border-bottom: 1px solid #333337;
+     padding-bottom: 10px;
+     margin-bottom: 10px;
+     line-height: 1.5;
+}
+#fish-worlds-list li:last-child, #fish-avatars-list li:last-child {
+    border-bottom: none; margin-bottom: 0; padding-bottom: 0;
+}
+ #fish-worlds-list li b, #fish-avatars-list li b { font-size: 1.05em; }
+ /* Style for error messages in lists */
+.error-message i {
+    color: #ff6b6b; /* Red color for emphasis */
+    font-style: normal; /* Override default italic for <i> if needed */
+}
 
 
 /* === CALENDAR STYLES ===================== */
@@ -417,3 +529,5 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 /* ========================================= */
 /* == END CALENDAR STYLES ================== */
 /* ========================================= */
+
+/* --- END OF style.css --- */
