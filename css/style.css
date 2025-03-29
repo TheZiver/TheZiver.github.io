@@ -326,4 +326,132 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .main-nav ul { -ms-overflow-style: none; scrollbar-width: none; }
 /* === End Navigation Bar Styles === */
 
+
+/* === MOBILE CALENDAR IMPROVEMENTS (Add this to the end of style.css) === */
+@media (max-width: 480px) { /* Target small phone screens */
+
+    /* Reduce overall calendar padding on smallest screens */
+    .calendar-container {
+        padding: 10px; /* Less side padding */
+        margin-top: 20px;
+    }
+    .calendar-header {
+        margin: -10px -10px 8px -10px; /* Adjust negative margins to match new padding */
+        padding: 8px 10px; /* Slightly less padding */
+    }
+    .calendar-header h3#cal-month-year {
+        font-size: 1.2em; /* Slightly smaller month/year */
+    }
+    .cal-nav-btn, .cal-today-btn {
+        padding: 5px 10px; /* Slightly smaller buttons */
+        font-size: 0.9em;
+    }
+
+    /* Adjust start day controls layout slightly */
+     #start-day-controls {
+        margin-left: -10px; /* Match new padding */
+        margin-right: -10px;
+        padding: 5px 10px 8px 10px;
+        gap: 5px; /* Slightly smaller gap between buttons */
+     }
+    .start-day-label {
+        font-size: 0.85em;
+    }
+    .cal-start-day-btn {
+        font-size: 0.8em;
+        padding: 3px 8px;
+    }
+
+    /* Adjust Weekdays */
+    .calendar-weekdays {
+        margin-left: -10px; /* Match new padding */
+        margin-right: -10px;
+        padding-left: 10px; /* Add back padding inside */
+        padding-right: 10px;
+        gap: 3px; /* Reduce gap between weekday headers */
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+    }
+    .weekday-header {
+        font-size: 0.75em; /* Smaller weekday names (MON, TUE...) */
+        padding: 2px 0;
+        font-weight: normal; /* Less bold to save space */
+    }
+
+    /* Adjust Grid Body */
+    .calendar-body {
+        gap: 3px; /* Reduce gap between day cells */
+    }
+
+    /* === CORE DAY CELL ADJUSTMENTS === */
+    .calendar-day {
+        min-height: 95px;   /* INCREASED height to allow text wrapping */
+        padding: 4px 2px;     /* Reduced internal padding */
+        font-size: 0.8em;   /* Smaller base font size */
+        line-height: 1.2;   /* Adjust line height for smaller text */
+        /* Ensure flex properties help stacking */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; /* Align content to top */
+        align-items: center;
+        gap: 1px; /* Reduce space between elements inside */
+    }
+
+     /* Ensure link/div wrappers inside cells use the new padding */
+     .calendar-day a,
+     .calendar-day.special-day a,
+     .calendar-day.special-day div:not([href]) {
+         padding: 4px 2px; /* Match parent padding */
+         justify-content: flex-start; /* Align content to top */
+         gap: 1px; /* Match parent gap */
+     }
+
+    /* Day Number */
+    .calendar-day .day-number {
+        font-size: 1em; /* Relative to parent's smaller font */
+        margin-bottom: 1px; /* Less space below */
+    }
+
+    /* Ordinal Event Number (e.g., 1264th) */
+    .calendar-day .daily-event-num {
+        font-size: 0.75em; /* Make significantly SMALLER */
+        margin-top: 0px;
+        margin-bottom: 1px;
+        line-height: 1;    /* Tighten line height */
+        opacity: 0.8;      /* Make slightly less prominent */
+    }
+
+    /* Event Location/Name (e.g., LUXURY TRASH) */
+    .calendar-day .event-location {
+        font-size: 0.8em; /* Smaller location name */
+        line-height: 1.15; /* Tighter line height */
+        margin-top: 0px;
+        max-width: 95%; /* Prevent text touching cell edges */
+        word-break: break-word; /* Ensure long words break */
+    }
+
+    /* Special day styling adjustments (if needed) */
+    .calendar-day.special-day {
+       /* Add specific overrides for special days on mobile if the above isn't enough */
+       /* e.g., slightly different font size if needed */
+    }
+    .calendar-day.today {
+        border-width: 1px; /* Slightly thinner border for today on mobile */
+    }
+
+    /* Optional: Hide Ordinal Number if still too cramped */
+    /* Uncomment the following lines if you prefer to hide the '1264th' part completely */
+    /*
+    .calendar-day .daily-event-num {
+        display: none;
+    }
+    .calendar-day {
+        min-height: 80px; // Can potentially reduce height slightly if ordinal is hidden
+    }
+    */
+}
+
+/* === END MOBILE CALENDAR IMPROVEMENTS === */
+
+
 /* --- END OF FINAL style.css --- */
