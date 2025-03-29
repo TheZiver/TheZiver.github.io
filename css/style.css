@@ -308,26 +308,75 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 #happening-now-link:hover { color: #ff4fa4; }
 /* Responsive Label/Timer Layout */
 @media (max-width: 480px) { .countdown-label, #closing-countdown-label, #happening-now-message { display: block; margin-bottom: 3px; } #countdown-timer, #closing-countdown-timer, #happening-now-link { display: block; margin-left: 0; min-width: auto; margin-top: 5px;} #happening-now-link { margin-top: 8px; } }
-@media (min-width: 480px) { .countdown-label, #closing-countdown-label, #happening-now-message { display: inline; margin-bottom: 0; } #countdown-timer, #closing-countdown-timer, #happening-now-link { display: inline-block; margin-left: 8px; min-width: 150px; } #happening-now-link { margin-top: 0; } }
+@media (min-width: 481px) { /* Changed from 480px to 481px to avoid conflict */
+    .countdown-label, #closing-countdown-label, #happening-now-message { display: inline; margin-bottom: 0; }
+    #countdown-timer, #closing-countdown-timer, #happening-now-link { display: inline-block; margin-left: 8px; min-width: 150px; }
+    #happening-now-link { margin-top: 0; }
+}
 
 /* === END CALENDAR STYLES ================== */
 
 /* === Navigation Bar Styles === */
-.main-nav { background-color: #1e1e1e; padding: 10px 0; margin-bottom: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border-bottom: 1px solid #333337; position: sticky; top: 0; z-index: 100; width: 100%; }
-.main-nav ul { list-style: none; padding: 0; margin: 0; text-align: center; }
-.main-nav li { display: inline-block; margin: 0 10px; }
-.main-nav a { color: #cccccc; text-decoration: none; font-size: 1.1em; padding: 8px 15px; border-radius: 4px; transition: background-color 0.2s ease, color 0.2s ease; }
-.main-nav a:hover { background-color: #333337; color: #e0e0e0; }
-.main-nav a.active { background-color: #4dd0e1; color: #121212; font-weight: bold; }
-/* Responsive Nav */
-@media (max-width: 767px) { .main-nav ul { white-space: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; } .main-nav li { display: inline-block; margin: 0 5px; } .main-nav a { font-size: 1em; padding: 6px 10px; } }
-/* Hide scrollbar visually */
-.main-nav ul::-webkit-scrollbar { display: none; }
-.main-nav ul { -ms-overflow-style: none; scrollbar-width: none; }
+.main-nav {
+    background-color: #1e1e1e;
+    padding: 10px 0;
+    margin-bottom: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    border-bottom: 1px solid #333337;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+}
+.main-nav ul {
+    list-style: none;
+    padding: 0; /* Reset padding */
+    margin: 0;
+    text-align: center;
+}
+.main-nav li {
+    display: inline-block;
+    margin: 0 10px; /* Default horizontal margin */
+}
+.main-nav a {
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 1.1em;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    display: inline-block; /* Ensure padding is respected */
+}
+.main-nav a:hover {
+    background-color: #333337;
+    color: #e0e0e0;
+}
+.main-nav a.active {
+    background-color: #4dd0e1;
+    color: #121212;
+    font-weight: bold;
+}
+
+/* Responsive Nav - Wrap items on smaller screens */
+@media (max-width: 767px) {
+    .main-nav ul {
+        /* Allow wrapping */
+        white-space: normal; /* Changed from nowrap */
+        padding: 5px 0; /* Add some vertical padding when wrapped */
+    }
+    .main-nav li {
+        margin: 3px 5px; /* Reduced horizontal margin, added vertical margin */
+    }
+    .main-nav a {
+        font-size: 1em;
+        padding: 6px 10px; /* Slightly smaller padding */
+    }
+    /* Removed scroll-related rules for .main-nav ul */
+}
 /* === End Navigation Bar Styles === */
 
 
-/* === MOBILE CALENDAR IMPROVEMENTS (Add this to the end of style.css) === */
+/* === MOBILE CALENDAR IMPROVEMENTS === */
 @media (max-width: 480px) { /* Target small phone screens */
 
     /* Reduce overall calendar padding on smallest screens */
@@ -450,7 +499,6 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     }
     */
 }
-
 /* === END MOBILE CALENDAR IMPROVEMENTS === */
 
 

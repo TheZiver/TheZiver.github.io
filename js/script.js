@@ -1,6 +1,65 @@
 // --- START OF FINAL script.js ---
 document.addEventListener('DOMContentLoaded', function() {
 
+    // --- Helper Functions (Defined at top level scope) ---
+
+    // Basic HTML escaping helper
+    const escapeHtml = (unsafe) => {
+        if (!unsafe || typeof unsafe !== 'string') return unsafe;
+        return unsafe
+             .replace(/&/g, "&")
+             .replace(/</g, "<")
+             .replace(/>/g, ">")
+             .replace(/'/g, "'");
+    };
+
+    function getOrdinalSuffix(num) {
+        if (num === null || typeof num === 'undefined') return "";
+        const n = Number(num);
+        if (isNaN(n) || n < 0) return "";
+       const j = n % 10, k = n % 100;
+       if (j == 1 && k != 11) return "st";
+       if (j == 2 && k != 12) return "nd";
+       if (j == 3 && k != 13) return "rd";
+       return "th";
+   }
+
+   function calculateDailyVrchatDay(date) {
+        const normalizedDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+        if (normalizedDate < targetDate) return null;
+        const dayDifference = Math.floor((normalizedDate - targetDate) / oneDay);
+        return (dayDifference >= 0) ? dayDifference : null;
+   }
+
+   function getDateFromDailyVrchatDay(dayNumber) {
+       if (typeof dayNumber !== 'number' || !Number.isInteger(dayNumber) || dayNumber < 0) return null;
+       try {
+           const targetTimestamp = targetDate.getTime();
+           const resultTimestamp = targetTimestamp + (dayNumber * oneDay);
+           return new Date(resultTimestamp);
+       } catch (e) {
+           console.error(`Error calculating date for day ${dayNumber}:`, e);
+           return null;
+       }
+   }
+
+   // Helper function to get image path or null
+   function getImagePath(key) {
+    const filename = IMAGE_MAP[key];
+    return filename ? `images/${filename}` : null;
+    }
+
+    // Helper function to generate a consistent key from a community name
+    function generateCommunityImageKey(name) {
+        if (!name) return null;
+        let key = name.toLowerCase()
+                      .replace(/＜＞＜/g, 'fish')
+                      .replace(/[^a-z0-9\s_]/g, '')
+                      .trim()
+                      .replace(/\s+/g, '_');
+        return `community_${key}`;
+    }
+
     // --- Central Image Mapping ---
     const IMAGE_MAP = {
         // Thematic / Section Images
@@ -24,23 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add keys for certified communities if they have logos
         // Example: community_test_fish_cert_1: null,
     };
-
-    // Helper function to get image path or null
-    function getImagePath(key) {
-        const filename = IMAGE_MAP[key];
-        return filename ? `images/${filename}` : null;
-    }
-
-    // Helper function to generate a consistent key from a community name
-    function generateCommunityImageKey(name) {
-        if (!name) return null;
-        let key = name.toLowerCase()
-                      .replace(/＜＞＜/g, 'fish')
-                      .replace(/[^a-z0-9\s_]/g, '')
-                      .trim()
-                      .replace(/\s+/g, '_');
-        return `community_${key}`;
-    }
 
 
     // --- Calendar Elements ---
@@ -78,12 +120,11 @@ document.addEventListener('DOMContentLoaded', function() {
      const imgAboutMeaning = document.querySelector('.meaning-image');
      const imgCommunitiesVerified = document.querySelector('.fish-verified-theme .verified-image');
      const imgCommunitiesCertified = document.querySelector('.fish-certified-theme .verified-image');
-     const imgDailyVRChat = document.querySelector('.community-image');
+     const imgDailyVRChat = document.querySelector('.community-image'); // Note: This uses a generic class, ensure it's the correct one on daily.html
      const imgRoseFish = document.querySelector('.rose-fish-theme .verified-image');
      const imgStoreLuxuryTrash = document.querySelector('.luxury-trash-theme .verified-image');
 
     // --- URL for Data ---
-    // Ensure this points to the raw version of your JSON file
     const GIST_DATA_URL = "https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw";
 
     // --- Constants and State ---
@@ -121,37 +162,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.timerElementsChecked = false;
     window.timerElementsMissing = false;
 
-    // --- Helper Functions ---
-
-    function getOrdinalSuffix(num) {
-         if (num === null || typeof num === 'undefined') return "";
-         const n = Number(num);
-         if (isNaN(n) || n < 0) return "";
-        const j = n % 10, k = n % 100;
-        if (j == 1 && k != 11) return "st";
-        if (j == 2 && k != 12) return "nd";
-        if (j == 3 && k != 13) return "rd";
-        return "th";
-    }
-
-    function calculateDailyVrchatDay(date) {
-         const normalizedDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-         if (normalizedDate < targetDate) return null;
-         const dayDifference = Math.floor((normalizedDate - targetDate) / oneDay);
-         return (dayDifference >= 0) ? dayDifference : null;
-    }
-
-    function getDateFromDailyVrchatDay(dayNumber) {
-        if (typeof dayNumber !== 'number' || !Number.isInteger(dayNumber) || dayNumber < 0) return null;
-        try {
-            const targetTimestamp = targetDate.getTime();
-            const resultTimestamp = targetTimestamp + (dayNumber * oneDay);
-            return new Date(resultTimestamp);
-        } catch (e) {
-            console.error(`Error calculating date for day ${dayNumber}:`, e);
-            return null;
-        }
-    }
 
     // --- Set Thematic Images ---
     function setThematicImages() {
@@ -162,6 +172,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     element.src = imagePath;
                 } else {
                     console.warn(`Image key "${imageKey}" not found in IMAGE_MAP or has null value. Image not set.`);
+                }
+            } else {
+                if (imageKey && IMAGE_MAP.hasOwnProperty(imageKey)) {
+                    console.warn(`Image element for key "${imageKey}" not found on this page.`);
                 }
             }
         };
@@ -178,8 +192,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderCalendar(month, year) {
         if (!calendarGrid || !monthYearDisplay || !weekdaysContainer) {
-             console.error("Calendar base elements missing!");
-             if(calendarGrid) calendarGrid.innerHTML = "<p class='error-message' style='grid-column: 1 / -1; text-align: center;'><i>Error loading calendar grid.</i></p>";
+             console.error("Calendar base elements missing! Calendar cannot render.");
+             if(calendarGrid) calendarGrid.innerHTML = "<p class='error-message' style='grid-column: 1 / -1; text-align: center;'><i>Error loading calendar grid elements.</i></p>";
              return;
         }
 
@@ -197,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
             weekdaysContainer.appendChild(weekdayCell);
         });
 
-        calendarGrid.innerHTML = '';
+        calendarGrid.innerHTML = ''; // Clear previous grid content
         const firstDayOfMonth = new Date(Date.UTC(year, month, 1));
         const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
         const lastDayOfPrevMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
@@ -372,10 +386,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 !closingCountdownContainer || !closingCountdownTimerDisplay || !closingCountdownDayLabel ||
                 !happeningNowContainer || !happeningNowMessage || !happeningNowLink)
             {
-                console.warn("One or more timer display elements are missing! (Expected on non-daily pages)");
+                console.warn("One or more timer display elements are missing from this page (Expected on non-daily pages). Timers disabled.");
                  window.timerElementsMissing = true;
             }
-             window.timerElementsChecked = true;
+             window.timerElementsChecked = true; // Only check once
         }
         if (window.timerElementsMissing) return; // Don't run if elements missing
 
@@ -458,17 +472,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function displayErrorState(message) {
          console.error(message);
-         if (countdownContainer && countdownDayLabel && countdownTimerDisplay) {
-             countdownContainer.style.display = 'block';
-             countdownDayLabel.textContent = "Err";
-             countdownTimerDisplay.textContent = "Error";
+         // Only try to update elements if they exist (i.e., not missing)
+         if (!window.timerElementsMissing) {
+             if (countdownContainer && countdownDayLabel && countdownTimerDisplay) {
+                 countdownContainer.style.display = 'block';
+                 countdownDayLabel.textContent = "Err";
+                 countdownTimerDisplay.textContent = "Error";
+             }
+             if (closingCountdownContainer && closingCountdownDayLabel && closingCountdownTimerDisplay) {
+                 closingCountdownContainer.style.display = 'block';
+                 closingCountdownDayLabel.textContent = "Err";
+                 closingCountdownTimerDisplay.textContent = "Error";
+             }
+             if (happeningNowContainer) happeningNowContainer.style.display = 'none';
          }
-         if (closingCountdownContainer && closingCountdownDayLabel && closingCountdownTimerDisplay) {
-             closingCountdownContainer.style.display = 'block';
-             closingCountdownDayLabel.textContent = "Err";
-             closingCountdownTimerDisplay.textContent = "Error";
-         }
-         if (happeningNowContainer) happeningNowContainer.style.display = 'none';
     }
 
     // --- Calendar Navigation ---
@@ -495,12 +512,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Start Day Setting ---
     function updateStartDaySelection(newStartDay) {
-        if (startDayOfWeekSetting === newStartDay) return;
-        startDayOfWeekSetting = newStartDay;
-        localStorage.setItem('calendarStartDay', newStartDay.toString());
-        if (startSunButton) startSunButton.classList.toggle('active', newStartDay === 0);
-        if (startMonButton) startMonButton.classList.toggle('active', newStartDay === 1);
-        if (calendarGrid) renderCalendar(currentMonth, currentYear); // Re-render calendar
+        if (startDayOfWeekSetting === newStartDay) return; // No change needed
+        // Only proceed if the buttons exist (i.e., on the daily page)
+        if (startSunButton && startMonButton) {
+            startDayOfWeekSetting = newStartDay;
+            localStorage.setItem('calendarStartDay', newStartDay.toString());
+            startSunButton.classList.toggle('active', newStartDay === 0);
+            startMonButton.classList.toggle('active', newStartDay === 1);
+            if (calendarGrid) renderCalendar(currentMonth, currentYear); // Re-render calendar
+        }
     }
 
     // --- Content Loading Functions ---
@@ -512,18 +532,20 @@ document.addEventListener('DOMContentLoaded', function() {
                  principlesListElement.innerHTML = ''; // Clear loading/previous
                  jsonData.community_principles.principles.forEach(principle => {
                      const li = document.createElement('li');
-                     li.innerHTML = `<b>${principle.title || 'Principle'}</b>: ${principle.description || 'No description.'}`;
+                     // Use innerHTML to allow bold tag
+                     li.innerHTML = `<b>${escapeHtml(principle.title) || 'Principle'}</b>: ${escapeHtml(principle.description) || 'No description.'}`;
                      principlesListElement.appendChild(li);
                  });
              } else if (principlesListElement) {
+                 // Only show error if element exists but data is bad/missing
                  principlesListElement.innerHTML = '<li class="error-message"><i>Could not load principles data.</i></li>';
              }
 
              // Principles Note
              if (principlesNoteElement && jsonData?.community_principles?.additional_note) {
-                 principlesNoteElement.textContent = jsonData.community_principles.additional_note;
+                 principlesNoteElement.textContent = jsonData.community_principles.additional_note; // Assuming note doesn't contain HTML
              } else if (principlesNoteElement) {
-                 principlesNoteElement.textContent = ''; // Clear loading/previous or if missing
+                 principlesNoteElement.textContent = '<i>Additional note not available.</i>'; // Clear loading or show placeholder
              }
 
              // Meaning Explanation
@@ -532,7 +554,8 @@ document.addEventListener('DOMContentLoaded', function() {
                  jsonData.meaning_of_fish.explanation.forEach(item => {
                      const li = document.createElement('li');
                      const symbolText = (item.symbol === '<' || item.symbol === '＜') ? '<' : (item.symbol === '>' || item.symbol === '＞') ? '>' : (item.symbol || '?');
-                     li.innerHTML = `<b style="font-size: 1.5em; display: inline-block; width: 20px;">${symbolText}</b> - ${item.meaning || 'No explanation.'}`;
+                     // Use innerHTML for bold tag and escape meaning
+                     li.innerHTML = `<b style="font-size: 1.5em; display: inline-block; width: 20px;">${escapeHtml(symbolText)}</b> - ${escapeHtml(item.meaning) || 'No explanation.'}`;
                      meaningExplanationList.appendChild(li);
                  });
              } else if (meaningExplanationList) {
@@ -541,8 +564,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
              // Meaning Summary
              if (meaningSummaryElement && jsonData?.meaning_of_fish?.summary) {
-                 // Replace symbol with accessible span
-                 const summaryHTML = jsonData.meaning_of_fish.summary.replace(/＜＞＜/g, '<span aria-hidden="true">＜＞＜</span>');
+                 // Escape summary then replace symbol with accessible span using innerHTML
+                 const escapedSummary = escapeHtml(jsonData.meaning_of_fish.summary);
+                 const summaryHTML = escapedSummary.replace(/＜＞＜/g, '<span aria-hidden="true">＜＞＜</span>'); // Replace after escaping
                  meaningSummaryElement.innerHTML = `<b>Summary:</b> ${summaryHTML}`;
              } else if (meaningSummaryElement) {
                  meaningSummaryElement.innerHTML = '<i>Summary data not available.</i>';
@@ -558,8 +582,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadFishGroups(jsonData) {
         if (!verifiedListElement && !certifiedListElement) {
-            // console.log("Community list elements not found on this page."); // Less verbose logging
-            return;
+            // console.debug("Community list elements not found on this page.");
+            return; // Exit if neither list element is present
         }
 
         try {
@@ -583,25 +607,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 const listItem = document.createElement('li');
                 const textDiv = document.createElement('div');
 
-                // Build text content
+                // Build text content using innerHTML for tags
                 let textContentHTML = '';
-                const communityName = community.name.replace(/</g, '<').replace(/>/g, '>').replace(/＜＞＜/g, '<span aria-hidden="true">＜＞＜</span>');
-                textContentHTML += `<b>${communityName}</b>`;
+                // Escape name THEN replace fish symbol
+                const escapedName = escapeHtml(community.name);
+                const communityNameHTML = escapedName.replace(/＜＞＜/g, '<span aria-hidden="true">＜＞＜</span>');
+                textContentHTML += `<b>${communityNameHTML}</b>`;
+
                 if (community.description) {
-                    textContentHTML += `<span>${community.description}</span>`;
+                    textContentHTML += `<span>${escapeHtml(community.description)}</span>`;
                 }
                 if (community.owner_displayname) {
-                    textContentHTML += `<span><b>Owner:</b> ${community.owner_displayname}</span>`;
+                    textContentHTML += `<span><b>Owner:</b> ${escapeHtml(community.owner_displayname)}</span>`;
                 }
 
-                // Add links
+                // Add links (ensure URLs are properly handled/validated if needed)
                 const vrchatLink = community.links?.vrchat_group;
                 const discordLink = community.links?.discord_server;
                 if (vrchatLink && typeof vrchatLink === 'string' && vrchatLink.trim() !== '') {
-                    textContentHTML += `<a href="${vrchatLink.trim()}" target="_blank" rel="noopener noreferrer">VRChat Group</a>`;
+                    // Simple validation
+                     if (vrchatLink.startsWith('http') || vrchatLink.startsWith('vrchat://')) {
+                         textContentHTML += `<a href="${escapeHtml(vrchatLink.trim())}" target="_blank" rel="noopener noreferrer">VRChat Group</a>`;
+                     } else {
+                         console.warn(`Skipping potentially invalid VRChat link for ${community.name}: ${vrchatLink}`);
+                     }
                 }
                 if (discordLink && typeof discordLink === 'string' && discordLink.trim() !== '') {
-                    textContentHTML += `<a href="${discordLink.trim()}" target="_blank" rel="noopener noreferrer">Discord Server</a>`;
+                    if (discordLink.startsWith('http') || discordLink.startsWith('discord.gg/')) {
+                        textContentHTML += `<a href="${escapeHtml(discordLink.trim())}" target="_blank" rel="noopener noreferrer">Discord Server</a>`;
+                    } else {
+                       console.warn(`Skipping potentially invalid Discord link for ${community.name}: ${discordLink}`);
+                    }
                 }
                 textDiv.innerHTML = textContentHTML;
 
@@ -610,10 +646,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const imagePath = imageKey ? getImagePath(imageKey) : null;
                 if (imagePath) {
                      const img = document.createElement('img');
-                     img.src = imagePath;
-                     img.alt = `${community.name} Logo`;
+                     img.src = imagePath; // Path should be safe
+                     img.alt = `${community.name} Logo`; // Alt text from original name
                      img.classList.add('community-logo');
-                     img.loading = 'lazy';
+                     img.loading = 'lazy'; // Defer loading off-screen images
                      listItem.appendChild(img); // Logo first
                 }
 
@@ -627,11 +663,13 @@ document.addEventListener('DOMContentLoaded', function() {
                      certifiedListElement.appendChild(listItem);
                      certifiedCount++;
                 } else {
-                    console.warn(`Community "${community.name}" has unrecognized status or target list missing: ${community.status}`);
+                    if (community.status && community.status !== 'FISH_VERIFIED' && community.status !== 'FISH_CERTIFIED') {
+                        console.warn(`Community "${community.name}" has unrecognized status: ${community.status}`);
+                    } // Removed redundant checks for missing elements
                 }
             });
 
-            // Display message if no communities found
+            // Display message if no communities found in a specific list
             if (verifiedListElement && verifiedCount === 0) {
                 verifiedListElement.innerHTML = '<li><i>No verified communities listed currently.</i></li>';
             }
@@ -641,7 +679,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error('Failed to process fish communities:', error);
-            const errorMessage = `<li class="error-message"><i>Error loading communities. Details: ${error.message}.</i></li>`;
+            const errorMessage = `<li class="error-message"><i>Error loading communities. Details: ${escapeHtml(error.message)}.</i></li>`;
             if (verifiedListElement) verifiedListElement.innerHTML = errorMessage;
             if (certifiedListElement) certifiedListElement.innerHTML = errorMessage;
         }
@@ -649,14 +687,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
      function loadFishAssets(assetTypeKey, listElement, jsonData) {
          if (!listElement) {
-             // console.log(`Asset list element for '${assetTypeKey}' not found on this page.`); // Less verbose
-             return;
+             // console.debug(`Asset list element for '${assetTypeKey}' not found on this page.`);
+             return; // Exit if list element isn't present
          }
 
          try {
              const assetData = jsonData?.[assetTypeKey];
              if (!jsonData || !Array.isArray(assetData)) {
-                 throw new Error(`JSON data invalid/missing for '${assetTypeKey}'.`);
+                 throw new Error(`JSON data invalid or missing array for '${assetTypeKey}'.`);
              }
              listElement.innerHTML = ''; // Clear loading/previous
              let assetCount = 0;
@@ -668,7 +706,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  }
 
                  const listItem = document.createElement('li');
-                 let content = '', link = null, id = null, name = null, author = null;
+                 let contentHTML = '', link = null, id = null, name = null, author = null;
                  let idKey = '', linkKey = '', nameKey = '', authorKey = 'author';
                  let typeName = '', baseURL = '';
 
@@ -690,31 +728,36 @@ document.addEventListener('DOMContentLoaded', function() {
                  name = asset[nameKey];
                  author = asset[authorKey];
 
-                 // Build list item content
-                 content = `<b>${name || id || `Unnamed ${typeName}`}</b>`; // Show name, fallback to ID, fallback to generic
+                 // Build list item content using innerHTML & escaping
+                 const displayName = escapeHtml(name) || escapeHtml(id) || `Unnamed ${typeName}`;
+                 contentHTML = `<b>${displayName}</b>`;
+
                  if (author) {
-                     content += ` by ${author}`;
+                     contentHTML += ` by ${escapeHtml(author)}`;
                  } else if (name || id) { // Only show "Unknown Author" if there's a name/id
-                     content += ` by <i>Unknown Author</i>`;
+                     contentHTML += ` by <i>Unknown Author</i>`;
                  }
                  if (id && id !== name) { // Show ID if it exists and isn't the same as the name
-                     content += `<br><i>ID: ${id}</i>`;
+                     contentHTML += `<br><i>ID: ${escapeHtml(id)}</i>`;
                  }
 
                  // Add link - prioritize explicit link, fallback to generated link from ID
-                 if (link && typeof link === 'string' && link.trim() !== '') {
-                     content += `<br><a href="${link.trim()}" target="_blank" rel="noopener noreferrer">View on VRChat</a>`;
+                 let addedLink = false;
+                 if (link && typeof link === 'string' && link.trim() !== '' && (link.startsWith('http') || link.startsWith('vrchat'))) {
+                     contentHTML += `<br><a href="${escapeHtml(link.trim())}" target="_blank" rel="noopener noreferrer">View on VRChat</a>`;
+                     addedLink = true;
                  } else if (id && baseURL) {
-                     content += `<br><a href="${baseURL}${id}" target="_blank" rel="noopener noreferrer">View on VRChat (via ID)</a>`;
+                     contentHTML += `<br><a href="${baseURL}${escapeHtml(id)}" target="_blank" rel="noopener noreferrer">View on VRChat (via ID)</a>`;
+                     addedLink = true;
                  }
 
                  // Add item to list only if it has some identifiable info
-                 if (name || id || link) {
-                     listItem.innerHTML = content;
+                 if (name || id || addedLink) {
+                     listItem.innerHTML = contentHTML;
                      listElement.appendChild(listItem);
                      assetCount++;
                  } else {
-                     console.warn(`Skipping empty asset entry in ${assetTypeKey}:`, asset);
+                     console.warn(`Skipping potentially empty asset entry in ${assetTypeKey}:`, asset);
                  }
              });
 
@@ -727,8 +770,8 @@ document.addEventListener('DOMContentLoaded', function() {
          } catch (error) {
              console.error(`Failed to process ${assetTypeKey}:`, error);
              const assetPlural = assetTypeKey.includes('world') ? 'worlds' : 'avatars';
-             if (listElement) {
-                 listElement.innerHTML = `<li class="error-message"><i>Error loading community ${assetPlural}. Details: ${error.message}.</i></li>`;
+             if (listElement) { // Check again just in case
+                 listElement.innerHTML = `<li class="error-message"><i>Error loading community ${assetPlural}. Details: ${escapeHtml(error.message)}.</i></li>`;
              }
          }
      }
@@ -742,6 +785,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Initial Setup & Data Fetch ---
     function initializePage() {
+        console.log("Initializing page..."); // Log start
+
         // 1. Set static thematic images immediately
         setThematicImages();
 
@@ -751,23 +796,31 @@ document.addEventListener('DOMContentLoaded', function() {
             startMonButton.classList.toggle('active', startDayOfWeekSetting === 1);
             calendarGrid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center; padding: 20px;'><i>Loading calendar days...</i></div>";
             monthYearDisplay.textContent = "Loading...";
+            console.log("Calendar elements found and initialized.");
         } else {
-             console.warn("Calendar elements missing! Calendar will not render (Expected on non-daily pages).");
+             console.debug("Calendar elements missing. Calendar will not render (Expected on non-daily pages).");
         }
 
         // 3. Start timers (they check internally if elements exist)
-        updateEventTimers();
-        if (!window.timerElementsMissing) { setInterval(updateEventTimers, 1000); }
+        updateEventTimers(); // Initial call
+        if (!window.timerElementsMissing) {
+            setInterval(updateEventTimers, 1000); // Start interval only if elements exist
+            console.log("Timer interval started.");
+        }
 
         // 4. Fetch JSON data
-        fetch(GIST_DATA_URL)
+        console.log("Fetching community data from:", GIST_DATA_URL);
+        fetch(GIST_DATA_URL, { cache: "no-cache" }) // Add cache control
             .then(response => {
+                console.log("Fetch response status:", response.status);
                 if (!response.ok) { // Check for HTTP errors
-                    return response.text().then(text => { throw new Error(`HTTP error! Status: ${response.status}. Response: ${text.substring(0,150)}`); });
+                    return response.text().then(text => { throw new Error(`HTTP error! Status: ${response.status}. Response: ${text.substring(0,150)}...`); });
                 }
                 return response.json(); // Parse JSON
             })
             .then(data => { // --- Process fetched data ---
+                console.log("Successfully fetched and parsed JSON data.");
+
                 // a. Process YYYY-MM-DD Special Days
                 specialDaysMap.clear();
                 if (data && Array.isArray(data.special_calendar_days)) {
@@ -776,48 +829,60 @@ document.addEventListener('DOMContentLoaded', function() {
                             specialDaysMap.set(day.date, day);
                         } else { console.warn("Skipping invalid date-based special day:", day); }
                     });
-                    console.log(`Loaded ${specialDaysMap.size} date-based special days.`);
-                } else { console.log("No 'special_calendar_days' array found or invalid."); }
+                    console.log(`Processed ${specialDaysMap.size} date-based special days.`);
+                } else { console.log("No 'special_calendar_days' array found or it was invalid in JSON."); }
 
                 // b. Process Daily VRChat Day Number Specials
                 dailySpecialDaysMap.clear();
                 if (data?.daily_vrchat && Array.isArray(data.daily_vrchat.special_days)) {
                     data.daily_vrchat.special_days.forEach(item => {
-                        if (item && typeof item.day === 'number' && Number.isInteger(item.day) && item.day >= 0 && typeof item.name === 'string') {
+                        // Validate required fields more strictly
+                        if (item && typeof item.day === 'number' && Number.isInteger(item.day) && item.day >= 0 && typeof item.name === 'string' && item.name.trim() !== '') {
                             dailySpecialDaysMap.set(item.day, { // Store standardized object
                                 name: item.name,
-                                description: item.description,
-                                link: item.link, // Use 'link', not 'instance_link'
-                                css_class: item.css_class
+                                description: item.description, // Optional
+                                link: item.link,           // Optional
+                                css_class: item.css_class      // Optional
                             });
-                        } else { console.warn("Skipping invalid daily-number-based special day entry:", item); }
+                        } else { console.warn("Skipping invalid or incomplete daily-number-based special day entry:", item); }
                     });
-                    console.log(`Loaded ${dailySpecialDaysMap.size} daily-number-based special days.`);
-                } else { console.log("No 'daily_vrchat.special_days' array found or invalid."); }
+                    console.log(`Processed ${dailySpecialDaysMap.size} daily-number-based special days.`);
+                } else { console.log("No 'daily_vrchat.special_days' array found or it was invalid in JSON."); }
 
                 // c. Render Calendar (now with special day data available)
-                if (calendarGrid) {
+                if (calendarGrid) { // Check again, as data fetch is async
+                    console.log("Rendering calendar with fetched data...");
                     renderCalendar(currentMonth, currentYear);
                 }
 
-                // d. Load other page content
-                loadMeaningAndPrinciples(data);
-                loadFishGroups(data);
-                loadFishAssets('community_worlds', worldsListElement, data);
-                loadFishAssets('community_avatars', avatarsListElement, data);
+                // d. Load other page content (check if elements exist before loading)
+                console.log("Loading other page content...");
+                if (principlesListElement || principlesNoteElement || meaningExplanationList || meaningSummaryElement) {
+                     loadMeaningAndPrinciples(data);
+                }
+                if (verifiedListElement || certifiedListElement) {
+                    loadFishGroups(data);
+                }
+                if (worldsListElement) {
+                    loadFishAssets('community_worlds', worldsListElement, data);
+                }
+                 if (avatarsListElement) {
+                    loadFishAssets('community_avatars', avatarsListElement, data);
+                }
+                console.log("Page content loading complete.");
             })
             .catch(error => { // --- Handle Fetch/Processing Errors ---
                 console.error("Fatal Error: Could not fetch or process community data.", error);
                  const displayLoadError = (listEl, type) => { // Helper for list errors
-                     if (listEl) {
-                          listEl.innerHTML = `<li class="error-message"><i>Critical Error: Could not load ${type} data. (${error.message})</i></li>`;
+                     if (listEl) { // Only update if the element exists
+                          listEl.innerHTML = `<li class="error-message"><i>Critical Error: Could not load ${type} data. (${escapeHtml(error.message)})</i></li>`;
                      }
                  };
-                 // Show error in calendar grid
-                 if(calendarGrid) calendarGrid.innerHTML = `<div class='error-message' style='grid-column: 1 / -1; text-align: center; padding: 20px;'><i>Error loading calendar data: ${error.message}</i></div>`;
+                 // Show error in calendar grid if it exists
+                 if(calendarGrid) calendarGrid.innerHTML = `<div class='error-message' style='grid-column: 1 / -1; text-align: center; padding: 20px;'><i>Error loading calendar data: ${escapeHtml(error.message)}</i></div>`;
                  if(monthYearDisplay) monthYearDisplay.textContent = "Error";
 
-                 // Display errors for other sections
+                 // Display errors for other sections if their elements exist
                  displayLoadError(principlesListElement, "principles");
                  if(principlesNoteElement) principlesNoteElement.textContent = '';
                  displayLoadError(meaningExplanationList, "meaning");
@@ -826,7 +891,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  displayLoadError(certifiedListElement, "certified communities");
                  displayLoadError(worldsListElement, "community worlds");
                  displayLoadError(avatarsListElement, "community avatars");
-                 // Also display timer error state
+                 // Also display timer error state if timers should be present
                  displayErrorState(`Data fetch/process failed: ${error.message}`);
             });
     }
