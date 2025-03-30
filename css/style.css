@@ -118,9 +118,6 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
  @media (max-width: 599px) { .verified-image { max-width: 300px; } }
 .community-image { max-width: 300px; }
 
-.video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 20px 0; }
-.video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 5px; }
-
 /* --- Theme Styles --- */
 
 /* Fish Verified Theme */
@@ -183,7 +180,7 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .rose-fish-theme h3 { color: #E57373 !important; }
 .rose-fish-theme ol li::marker { color: #FF6B6B; }
 
-/* Generic Section Styling (Avatars/Worlds) */
+/* Generic Section Styling (Original Avatars/Worlds Lists - kept for potential future use) */
 .generic-data-theme p, .generic-data-theme li, .generic-data-theme h3, .generic-data-theme ol { color: #d0d0d0; }
 .generic-data-theme a { color: #4dd0e1; }
 .generic-data-theme a:hover { color: #00e5ff; }
@@ -195,6 +192,44 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 
 /* Style for error messages in lists */
 .error-message i { color: #ff6b6b; font-style: normal; }
+
+
+/* === GENERAL IFRAME STYLES (FOR GOOGLE SHEETS etc.) === */
+/* Width controlled by CSS (or HTML attribute), Height controlled by HTML attribute */
+iframe {
+   width: 100%;             /* Ensure iframe tries to take full container width */
+   max-width: 100%;          /* Prevent overflow */
+   /* height: 80vh; */      /* REMOVED/COMMENTED OUT - Height is now set in HTML */
+   border: 1px solid #444;   /* Optional border, slightly darker */
+   margin-top: 1.5em;        /* Adjust spacing */
+   margin-bottom: 1.5em;     /* Adjust spacing */
+   display: block;           /* Ensure block-level behavior */
+   box-sizing: border-box;   /* Include padding/border in width/height */
+   /* NOTE: The width="100%" attribute in HTML reinforces this */
+}
+
+/* === YOUTUBE VIDEO IFRAME STYLES (INDEX.HTML) === */
+/* Uses aspect ratio for video content */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    margin: 20px 0;
+}
+/* These rules are MORE SPECIFIC than the general 'iframe' rule above */
+/* So the YouTube iframe will retain its aspect ratio behavior */
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* Fill the .video-container */
+    border-radius: 5px;
+    border: none; /* Override general iframe border for YouTube */
+    margin: 0;    /* Override general iframe margin */
+}
 
 
 /* === CALENDAR STYLES ===================== */
