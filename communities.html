@@ -13,7 +13,6 @@
     <ul>
         <li><a href="index.html">HOME</a></li>
         <li><a href="daily.html">DAILY VRCHAT</a></li>
-        <li><a href="about.html">ABOUT</a></li>
         <li><a href="communities.html" class="active">COMMUNITIES</a></li>
         <li><a href="rosefish.html">ROSE FISH</a></li>
         <li><a href="store.html">STORE</a></li>
@@ -25,24 +24,9 @@
 
     <section class="fish-verified-theme" aria-labelledby="verified-heading">
         <h2 id="verified-heading">FISH VERIFIED<span aria-hidden="true">＜＞＜</span></h2>
+        <!-- Image can remain static or be set by JS -->
         <img src="images/fish_verified.png" alt="Fish Verified Logo" class="verified-image" loading="lazy">
-        <p>The FISH VERIFIED verifies communities for the FISH <span aria-hidden="true">＜＞＜</span> COMMUNITY. If a community is fish verified the owner of the verified community will be inside this vrchat group (<a href="https://vrc.group/FISHVE.7823" target="_blank" rel="noopener noreferrer">FISHVE.7823</a>) and will also have the FISH-VERIFIED role on the <span aria-hidden="true">＜＞＜</span> discord server.</p>
-        <h3>Criteria for Verification</h3>
-        <ol>
-            <li>Your community should contribute significantly to the <span aria-hidden="true">＜＞＜</span> community.</li>
-            <li>The community must be managed by a capable person.</li>
-            <li>The community must be safe for work (SFW)</li>
-            <li>The community should have a clear idea behind it and be active.</li>
-        </ol>
-        <p>If you believe your community could be fish verified, contact TheZiver on <span aria-hidden="true">＜＞＜</span> discord server at <a href="http://theziver.com" target="_blank" rel="noopener noreferrer">theziver.com</a></p>
-        <h3>Benefits of Verification</h3>
-        <ul>
-            <li>Full support from the <span aria-hidden="true">＜＞＜</span> community</li>
-            <li>Dedicated text channel on the <span aria-hidden="true">＜＞＜</span> discord server</li>
-            <li>Asset for displaying group member count in your vrchat world</li>
-            <li>Daily vrchat starter pack access, chance to build your own daily vrchat world</li>
-            <li>Owner of fish-verified community receives NOCLIP in all DAILY VRCHAT worlds</li>
-        </ul>
+        <div id="verified-info"><p><i>Loading verification info...</i></p></div>
         <h3>LIST OF FISH VERIFIED COMMUNITIES</h3>
         <ul id="fish-verified-list">
             <li id="verified-loading-message"><i>Loading verified communities...</i></li>
@@ -53,8 +37,9 @@
 
     <section class="fish-certified-theme" aria-labelledby="certified-heading">
         <h2 id="certified-heading">FISH CERTIFIED COMMUNITIES <span aria-hidden="true">＜＞＜</span></h2>
+         <!-- Image can remain static or be set by JS -->
         <img src="images/fish_certified.png" alt="Fish Certified Logo" class="verified-image" style="filter: grayscale(80%);" loading="lazy">
-        <p><i>Details about FISH CERTIFIED coming soon. Certified communities are part of the ecosystem but may have different focuses or origins compared to Verified ones.</i></p>
+        <div id="certified-info"><p><i>Loading certification info...</i></p></div>
         <h3>LIST OF FISH CERTIFIED COMMUNITIES</h3>
         <ul id="fish-certified-list">
             <li id="certified-loading-message"><i>Loading certified communities...</i></li>
@@ -62,7 +47,6 @@
     </section>
 
     <div class="fish-animation" aria-hidden="true">
-        <!-- Fish symbols... -->
         <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
         <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
         <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
