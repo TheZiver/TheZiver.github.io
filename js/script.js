@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Global Data Store ---
-    window.communityData = null;
+    // window.communityData = null; // Removed, data will be passed directly
 
     // --- Constants and State (Calendar/Timers) ---
     const today = new Date();
@@ -78,8 +78,9 @@ document.addEventListener('DOMContentLoaded', function() {
     window.timerElementsChecked = false;
     window.timerElementsMissing = false;
 
-    // --- URL for Data ---
-    const DATA_URL = "https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw";
+    // --- URLs for Data ---
+    const PRIMARY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw"; // For general site data
+    const COMMUNITY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw"; // Specifically for community lists/info
 
     // --- Element Selectors (Placeholders) ---
     let introElement, /* meaningElement removed */ principlesListElement, principlesNoteElement,
@@ -116,8 +117,10 @@ document.addEventListener('DOMContentLoaded', function() {
         happeningNowLink = document.getElementById('happening-now-link');
         verifiedInfoElement = document.getElementById('verified-info');
         certifiedInfoElement = document.getElementById('certified-info');
+        knownInfoElement = document.getElementById('known-info'); // Added selector for known info
         verifiedListElement = document.getElementById('fish-verified-list');
         certifiedListElement = document.getElementById('fish-certified-list');
+        knownListElement = document.getElementById('fish-known-list');
         rosefishInfoElement = document.getElementById('rosefish-info');
         rosefishVoteInfoElement = document.getElementById('rosefish-vote-info');
         rosefishGuidelinesElement = document.getElementById('rosefish-guidelines');
@@ -200,73 +203,155 @@ document.addEventListener('DOMContentLoaded', function() {
             certifiedInfoElement.innerHTML = `<p>${escapeHtml(data.fish_communities.certified_info).replace(/\n/g, '<br>')}</p>`;
         } else if (certifiedInfoElement) {
             certifiedInfoElement.innerHTML = '<p><i>Certification info not available.</i></p>';
-        }
-    }
+       }
 
-    function loadFishGroups(data) {
-        if (!verifiedListElement && !certifiedListElement) return;
+       // Add handling for known_info
+       if (knownInfoElement && data?.fish_communities?.known_info) {
+           knownInfoElement.innerHTML = `<p>${escapeHtml(data.fish_communities.known_info).replace(/\n/g, '<br>')}</p>`;
+       } else if (knownInfoElement) {
+            knownInfoElement.innerHTML = '<p><i>Known community info not available.</i></p>';
+       }
+   }
 
-        const communities = data?.fish_communities?.communities;
+   function loadFishGroups(data) {
+        if (!verifiedListElement && !certifiedListElement && !knownListElement) return;
+
+        // Use the correct path from the JSON: data.community_groups
+        const communities = data?.community_groups;
+
         if (!Array.isArray(communities)) {
-             if(verifiedListElement) verifiedListElement.innerHTML = '<li class="error-message"><i>Could not load communities data.</i></li>';
-             if(certifiedListElement) certifiedListElement.innerHTML = '<li class="error-message"><i>Could not load communities data.</i></li>';
+             // Keep error message generic, or specify path mismatch
+             console.error("Community groups data is not an array or is missing at data.community_groups. Structure received:", data);
+             if(verifiedListElement) verifiedListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
+             if(certifiedListElement) certifiedListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
+             if(knownListElement) knownListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
              return;
         }
 
+        // Clear all lists
         if(verifiedListElement) verifiedListElement.innerHTML = '';
         if(certifiedListElement) certifiedListElement.innerHTML = '';
+        if(knownListElement) knownListElement.innerHTML = '';
 
         let verifiedCount = 0;
         let certifiedCount = 0;
+        let knownCount = 0;
 
         communities.forEach(community => {
-            if (!community || typeof community.name !== 'string') return;
+            // Check the actual property name: 'group_name'
+            if (!community || typeof community.group_name !== 'string') {
+                 console.warn("Skipping community item due to missing or invalid group_name:", community);
+                 return;
+            }
 
             const listItem = document.createElement('li');
             const textDiv = document.createElement('div');
             let textContentHTML = '';
-            const escapedName = escapeHtml(community.name);
-            const communityNameHTML = escapedName.replace(/＜＞＜/g, '<span aria-hidden="true">＜＞＜</span>');
-            textContentHTML += `<b>${communityNameHTML}</b>`;
-            if (community.description) textContentHTML += `<span>${escapeHtml(community.description)}</span>`;
-            if (community.owner_displayname) textContentHTML += `<span><b>Owner:</b> ${escapeHtml(community.owner_displayname)}</span>`;
+            const escapedName = escapeHtml(community.group_name); // Use actual 'group_name'
+            // Removed the span wrapper for ＜＞＜, rely only on escapeHtml
+            textContentHTML += `<b>${escapedName}</b>`;
+            // Add owner if available in JSON (it is: 'owner')
+            if (community.owner) textContentHTML += `<span><b>Owner:</b> ${escapeHtml(community.owner)}</span>`;
+            // Description is not in the JSON, so we don't add it.
 
-            const vrchatLink = community.links?.vrchat_group;
-            const discordLink = community.links?.discord_server;
+            // Use the actual link property: 'group_link'
+            const vrchatLink = community.group_link;
+            // Discord link is not in the JSON.
             if (vrchatLink && (vrchatLink.startsWith('http') || vrchatLink.startsWith('vrchat://'))) {
                 textContentHTML += `<a href="${escapeHtml(vrchatLink.trim())}" target="_blank" rel="noopener noreferrer">VRChat Group</a>`;
             }
-            if (discordLink && (discordLink.startsWith('http') || discordLink.startsWith('discord.gg/'))) {
-                textContentHTML += `<a href="${escapeHtml(discordLink.trim())}" target="_blank" rel="noopener noreferrer">Discord Server</a>`;
-            }
             textDiv.innerHTML = textContentHTML;
 
-            const imageKey = generateCommunityImageKey(community.name);
-            const imagePath = imageKey ? getImagePath(imageKey) : null;
-            if (imagePath) {
+            // Add external group links only for verified/certified
+            if ((community.status === 'FISH_VERIFIED' || community.status === 'FISH_CERTIFIED') && Array.isArray(community.group_links) && community.group_links.length > 0) {
+                const linksContainer = document.createElement('div');
+                linksContainer.classList.add('community-extra-links'); // Add a class for potential styling
+                community.group_links.forEach(link => {
+                    if (typeof link === 'string' && link.trim() !== '') {
+                        const a = document.createElement('a');
+                        a.href = escapeHtml(link.trim());
+                        a.target = '_blank';
+                        a.rel = 'noopener noreferrer';
+                        // Determine link text
+                        let linkText = 'Link';
+                        try {
+                            const url = new URL(link);
+                            linkText = url.hostname.replace(/^www\./, ''); // Default to hostname
+                            if (url.hostname.includes('discord.gg')) linkText = 'Discord';
+                            else if (url.hostname.includes('twitter.com')) linkText = 'Twitter';
+                            else if (url.hostname.includes('patreon.com')) linkText = 'Patreon';
+                            else if (url.hostname.includes('ko-fi.com')) linkText = 'Ko-fi';
+                            else if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) linkText = 'YouTube';
+                            else if (url.hostname.includes('booth.pm')) linkText = 'Booth';
+                            else if (url.hostname.includes('github.io') || url.pathname.length > 1) linkText = 'Website'; // Guess website for github.io or paths
+                        } catch (e) {
+                            linkText = 'External Link'; // Fallback if URL parsing fails
+                            console.warn(`Could not parse URL: ${link}`, e); // Log the error
+                        }
+                        a.textContent = escapeHtml(linkText);
+                        linksContainer.appendChild(a);
+                        // Separator removed - CSS handles spacing now
+                    }
+                });
+                 // No need to remove trailing separator text node anymore
+                if (linksContainer.hasChildNodes() && linksContainer.lastChild.nodeType === Node.TEXT_NODE) { // Check if last node is a text node (the separator)
+                    linksContainer.removeChild(linksContainer.lastChild); // Remove the last ' | ' text node
+                }
+                textDiv.appendChild(linksContainer); // Append the links below the main text
+            }
+
+            // Prioritize icon_url from JSON data
+            if (community.icon_url) {
                  const img = document.createElement('img');
-                 img.src = imagePath;
-                 img.alt = `${community.name} Logo`;
+                 // Directly use the icon_url. Ensure it's a valid URL structure if needed, but browsers are generally lenient.
+                 img.src = escapeHtml(community.icon_url); // Use icon_url from JSON
+                 img.alt = `${community.group_name} Logo`; // Use actual 'group_name'
                  img.classList.add('community-logo');
                  img.loading = 'lazy';
+                 // Add error handling in case the URL is broken
+                 img.onerror = () => { img.style.display = 'none'; console.warn(`Failed to load image: ${img.src}`); };
                  listItem.appendChild(img);
+            } else {
+                 // Optional: Fallback to local image mapping if icon_url is missing
+                 const imageKey = generateCommunityImageKey(community.group_name);
+                 const imagePath = imageKey ? getImagePath(imageKey) : null;
+                 if (imagePath) {
+                      const img = document.createElement('img');
+                      img.src = imagePath;
+                      img.alt = `${community.group_name} Logo`;
+                      img.classList.add('community-logo');
+                      img.loading = 'lazy';
+                      listItem.appendChild(img);
+                 } else {
+                      console.warn(`No icon_url or local image mapping found for ${community.group_name}`);
+                 }
             }
             listItem.appendChild(textDiv);
 
+            // Check status and append to the correct list (status property name is correct)
             if (community.status === 'FISH_VERIFIED' && verifiedListElement) {
                  verifiedListElement.appendChild(listItem);
                  verifiedCount++;
             } else if (community.status === 'FISH_CERTIFIED' && certifiedListElement) {
                  certifiedListElement.appendChild(listItem);
                  certifiedCount++;
+            } else if (community.status === 'FISH_KNOWN' && knownListElement) {
+                 knownListElement.appendChild(listItem);
+                 knownCount++;
             }
+            // Note: The community with status "FISH" will be ignored by these conditions.
+            // Add an 'else' block here if you want to handle unknown statuses.
         });
 
+        // Add messages if lists are empty
         if (verifiedListElement && verifiedCount === 0) {
             verifiedListElement.innerHTML = '<li><i>No verified communities listed currently.</i></li>';
         }
         if (certifiedListElement && certifiedCount === 0) {
             certifiedListElement.innerHTML = '<li><i>No certified communities listed currently.</i></li>';
+        }
+        if (knownListElement && knownCount === 0) {
+            knownListElement.innerHTML = '<li><i>No known communities listed currently.</i></li>';
         }
     }
 
@@ -381,14 +466,14 @@ document.addEventListener('DOMContentLoaded', function() {
              return;
         }
 
-        if (!window.communityData) {
-             console.error("Cannot render calendar: Community data not loaded yet.");
-              calendarGrid.innerHTML = "<p class='error-message' style='grid-column: 1 / -1; text-align: center;'><i>Error: Calendar data unavailable.</i></p>";
-             return;
-        }
-        if (dailySpecialDaysMap.size === 0) {
-             console.warn("Reprocessing special days map before rendering.");
-             processSpecialDays(window.communityData);
+       // Removed check for window.communityData as processSpecialDays handles data dependency now.
+       // if (!window.communityData) { ... }
+
+       // Check if the map is populated, processSpecialDays should have run before this.
+       if (dailySpecialDaysMap.size === 0) {
+            console.warn("Special days map is empty when trying to render calendar. Data might be missing or processing failed.");
+            // Optionally, display an error or attempt reprocessing if feasible, but avoid reprocessing with non-existent global data.
+            // processSpecialDays(window.communityData); // DO NOT REPROCESS WITH GLOBAL DATA
         }
 
         monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
@@ -659,94 +744,124 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (monthYearDisplay) monthYearDisplay.textContent = "Loading...";
 
-        // Fetch the single JSON data file
-        console.log("Fetching community data from:", DATA_URL);
-        fetch(DATA_URL, { cache: "no-cache" })
+        // --- Fetch Primary Data ---
+        console.log("Fetching primary data from:", PRIMARY_DATA_URL);
+        fetch(PRIMARY_DATA_URL, { cache: "no-cache" })
             .then(response => {
                 if (!response.ok) {
                     return response.text().then(text => {
-                         throw new Error(`HTTP error! Status: ${response.status}. Response: ${text.substring(0, 150)}...`);
+                         throw new Error(`Primary data HTTP error! Status: ${response.status}. Response: ${text.substring(0, 150)}...`);
                     });
                 }
-                 // Check content type before parsing
                  const contentType = response.headers.get("content-type");
                  if (contentType && contentType.indexOf("application/json") !== -1) {
                      return response.json();
                  } else {
-                     // If not JSON, read as text and try to parse manually
-                     // This handles cases where Gist might serve plain text for JSON files
                      return response.text().then(text => {
-                         console.warn("Response content type was not JSON, attempting manual parse.");
-                         try {
-                             return JSON.parse(text);
-                         } catch (parseError) {
-                              console.error("Failed to parse response text as JSON:", parseError);
-                              throw new Error(`Response was not valid JSON. Content started with: ${text.substring(0, 100)}...`);
+                         console.warn("Primary data response content type was not JSON, attempting manual parse.");
+                         try { return JSON.parse(text); } catch (parseError) {
+                              console.error("Failed to parse primary response text as JSON:", parseError);
+                              throw new Error(`Primary response was not valid JSON. Content started with: ${text.substring(0, 100)}...`);
                          }
                      });
                  }
             })
-            .then(data => {
-                console.log("Successfully fetched and parsed JSON data.");
-                window.communityData = data; // Store data globally
+            .then(primaryData => {
+                console.log("Successfully fetched and parsed primary JSON data.");
 
-                // Process data needed for calendar first
-                processSpecialDays(data);
+                // Process calendar data first using primary data
+                processSpecialDays(primaryData);
 
-                // --- Populate Content Based on Page ---
-                loadIntro(data);
-                loadMeaningAndPrinciples(data);
-                loadDailyInfo(data);
-                loadCommunityInfo(data);
-                loadFishGroups(data);
-                loadRoseFishInfo(data);
-                loadRoseFishMembers(data);
-                loadStoreInfo(data);
+                // --- Populate General Content (using primaryData) ---
+                loadIntro(primaryData);
+                loadMeaningAndPrinciples(primaryData); // Handles principles list and note
+                loadCommunityInfo(primaryData); // MOVED: Load community descriptions (verified/certified/known info) using primaryData
+                loadDailyInfo(primaryData);
+                loadRoseFishInfo(primaryData);
+                loadRoseFishMembers(primaryData);
+                loadStoreInfo(primaryData);
 
                 // Render calendar only if its elements exist on this page
                 if (calendarGrid && monthYearDisplay && weekdaysContainer) {
                     console.log("Rendering calendar...");
-                    renderCalendar(currentMonth, currentYear); // Use global refs now
+                    renderCalendar(currentMonth, currentYear); // Uses processed dailySpecialDaysMap
                 } else {
                     console.log("Calendar elements not found on this page, skipping render.");
                 }
 
-                // Initialize timers
+                // Initialize timers (relies on calendar data being processed)
                 updateEventTimers();
                 if (!window.timerElementsMissing) {
-                   setInterval(updateEventTimers, 1000);
+                   setInterval(updateEventTimers, 1000); // Use 1000ms for smoother timer updates
                    console.log("Timer interval started.");
                 }
 
-                console.log("Page content loading complete.");
+                console.log("Primary content loading complete. Fetching community data...");
+                // --- Fetch Community Data ---
+                return fetch(COMMUNITY_DATA_URL, { cache: "no-cache" });
+            })
+            .then(response => {
+                 if (!response.ok) {
+                    return response.text().then(text => {
+                         throw new Error(`Community data HTTP error! Status: ${response.status}. Response: ${text.substring(0, 150)}...`);
+                    });
+                }
+                 const contentType = response.headers.get("content-type");
+                 if (contentType && contentType.indexOf("application/json") !== -1) {
+                     return response.json();
+                 } else {
+                     return response.text().then(text => {
+                         console.warn("Community data response content type was not JSON, attempting manual parse.");
+                         try { return JSON.parse(text); } catch (parseError) {
+                              console.error("Failed to parse community response text as JSON:", parseError);
+                              throw new Error(`Community response was not valid JSON. Content started with: ${text.substring(0, 100)}...`);
+                         }
+                     });
+                 }
+            })
+            .then(communityData => {
+                 console.log("Successfully fetched and parsed community JSON data.");
+
+                 // --- Populate Community Content (using communityData) ---
+                 // loadCommunityInfo(communityData); // MOVED: This now uses primaryData
+                 loadFishGroups(communityData);    // Loads verified/certified/known lists using communityData
+
+                 console.log("All page content loading complete.");
             })
             .catch(error => {
-                console.error("Fatal Error: Could not fetch or process community data.", error);
+                console.error("Fatal Error during initialization:", error);
                 const errorMsg = `<i class="error-message">Error loading data: ${escapeHtml(error.message)}</i>`;
                 const errorLi = `<li class="error-message"><i>Error loading data: ${escapeHtml(error.message)}</i></li>`;
+                let isPrimaryError = error.message.includes("Primary data");
+                let isCommunityError = error.message.includes("Community data");
 
-                // Update placeholders with error messages if the element exists
-                if(introElement) introElement.innerHTML = errorMsg;
-                // if(meaningElement) meaningElement.innerHTML = errorMsg; // Removed
-                if(principlesListElement) principlesListElement.innerHTML = errorLi;
-                if(principlesNoteElement) principlesNoteElement.textContent = '';
-                if(dailyInfoElement) dailyInfoElement.innerHTML = errorMsg;
-                if(dailyDescElement) dailyDescElement.innerHTML = errorMsg;
-                if(dailyRulesElement) dailyRulesElement.innerHTML = errorMsg;
-                if(dailyWarnElement) dailyWarnElement.innerHTML = errorMsg;
-                if(calendarGrid) calendarGrid.innerHTML = `<div class='error-message' style='grid-column: 1 / -1; text-align: center; padding: 20px;'>${errorMsg}</div>`;
-                if(monthYearDisplay) monthYearDisplay.textContent = "Error";
-                if(verifiedInfoElement) verifiedInfoElement.innerHTML = errorMsg;
-                if(certifiedInfoElement) certifiedInfoElement.innerHTML = errorMsg;
-                if(verifiedListElement) verifiedListElement.innerHTML = errorLi;
-                if(certifiedListElement) certifiedListElement.innerHTML = errorLi;
-                if(rosefishInfoElement) rosefishInfoElement.innerHTML = errorMsg;
-                if(rosefishVoteInfoElement) rosefishVoteInfoElement.innerHTML = errorMsg;
-                if(rosefishGuidelinesElement) rosefishGuidelinesElement.innerHTML = errorMsg;
-                if(rosefishMembersListElement) rosefishMembersListElement.innerHTML = errorLi;
-                if(luxuryMottoElement) luxuryMottoElement.innerHTML = errorMsg;
-                if(luxuryProductsListElement) luxuryProductsListElement.innerHTML = errorLi;
-                displayTimerErrorState(`Data fetch failed: ${error.message}`);
+                // Update placeholders with error messages based on which fetch failed (or both if general error)
+                if (isPrimaryError || !isCommunityError) { // Show primary errors if primary failed OR if it's a general error
+                    if(introElement) introElement.innerHTML = errorMsg;
+                    if(principlesListElement) principlesListElement.innerHTML = errorLi;
+                    if(principlesNoteElement) principlesNoteElement.textContent = '';
+                    if(dailyInfoElement) dailyInfoElement.innerHTML = errorMsg;
+                    if(dailyDescElement) dailyDescElement.innerHTML = errorMsg;
+                    if(dailyRulesElement) dailyRulesElement.innerHTML = errorMsg;
+                    if(dailyWarnElement) dailyWarnElement.innerHTML = errorMsg;
+                    if(calendarGrid) calendarGrid.innerHTML = `<div class='error-message' style='grid-column: 1 / -1; text-align: center; padding: 20px;'>${errorMsg}</div>`;
+                    if(monthYearDisplay) monthYearDisplay.textContent = "Error";
+                    if(rosefishInfoElement) rosefishInfoElement.innerHTML = errorMsg;
+                    if(rosefishVoteInfoElement) rosefishVoteInfoElement.innerHTML = errorMsg;
+                    if(rosefishGuidelinesElement) rosefishGuidelinesElement.innerHTML = errorMsg;
+                    if(rosefishMembersListElement) rosefishMembersListElement.innerHTML = errorLi;
+                    if(luxuryMottoElement) luxuryMottoElement.innerHTML = errorMsg;
+                    if(luxuryProductsListElement) luxuryProductsListElement.innerHTML = errorLi;
+                    displayTimerErrorState(`Primary data fetch failed: ${error.message}`);
+                }
+                 if (isCommunityError || !isPrimaryError) { // Show community errors if community failed OR if it's a general error
+                    if(verifiedInfoElement) verifiedInfoElement.innerHTML = errorMsg;
+                    if(certifiedInfoElement) certifiedInfoElement.innerHTML = errorMsg;
+                    // Add known info error handling if needed: if (knownInfoElement) knownInfoElement.innerHTML = errorMsg;
+                    if(verifiedListElement) verifiedListElement.innerHTML = errorLi;
+                    if(certifiedListElement) certifiedListElement.innerHTML = errorLi;
+                    if(knownListElement) knownListElement.innerHTML = errorLi; // Add known list error
+                 }
             });
     }
 
