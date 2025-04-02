@@ -1,6 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- Helper Functions ---
+    function generateFishAnimation() {
+        const fishContainer = document.querySelector('.fish-animation');
+        if (!fishContainer) return;
+        
+        for (let i = 0; i < 12; i++) {
+            const span = document.createElement('span');
+            span.className = 'fish-symbol';
+            span.innerHTML = i % 2 === 0 ? '&lt;' : '&gt;';
+            fishContainer.appendChild(span);
+        }
+    }
+
     const escapeHtml = (unsafe) => {
         if (!unsafe || typeof unsafe !== 'string') return unsafe === 0 ? '0' : (unsafe || '');
         return unsafe
@@ -57,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Global Data Store ---
-    // window.communityData = null; // Removed, data will be passed directly
 
     // --- Constants and State (Calendar/Timers) ---
     const today = new Date();
@@ -81,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- URLs for Data ---
     const PRIMARY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw"; // For general site data
     const COMMUNITY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw"; // Specifically for community lists/info
+    const ROSE_FISH_MEMBERS_URL = "https://gist.githubusercontent.com/TheZiver/9b85c8b8b6c1b4caa17dda8d37dc18ac/raw"; // For Rose Fish members list
 
     // --- Element Selectors (Placeholders) ---
     let introElement, /* meaningElement removed */ principlesListElement, principlesNoteElement,
@@ -96,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to get references to all elements after DOM is ready
     function getAllElements() {
         introElement = document.getElementById('community-intro');
-        // meaningElement = document.getElementById('meaning-explanation'); // *** REMOVED ***
+        // meaningElement removed
         principlesListElement = document.getElementById('principles-list');
         principlesNoteElement = document.getElementById('principles-additional-note');
         calendarGrid = document.getElementById('calendar-grid');
@@ -144,10 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadMeaningAndPrinciples(data) {
-        // *** Meaning section removed ***
-        // if (meaningElement && data?.info?.meaning_of_fish) { ... }
-
-        // Principles List (Keep this part)
+        // Principles List
         if (principlesListElement && data?.info?.community_principles?.principles) {
             principlesListElement.innerHTML = '';
             data.info.community_principles.principles.forEach(principle => {
@@ -410,8 +419,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  fishStatusListElement.appendChild(listItem.cloneNode(true));
                  fishStatusCount++;
             }
-            // Note: The community with status "FISH" will be ignored by these conditions.
-            // Add an 'else' block here if you want to handle unknown statuses.
+            // Note: Communities with status "FISH" are handled separately
         });
 
         // Add messages if lists are empty
@@ -452,30 +460,61 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function loadRoseFishMembers(data) {
-        // This function remains the same, it will load into #rosefish-members-list wherever it is in the HTML
+    function loadRoseFishMembers() {
         if (!rosefishMembersListElement) return;
 
-        const members = data?.rose_fish?.rose_fish_members;
-        if (!Array.isArray(members)) {
-            rosefishMembersListElement.innerHTML = '<li class="error-message"><i>Could not load members list.</i></li>';
-            return;
+        fetch(ROSE_FISH_MEMBERS_URL)
+            .then(handleResponse)
+            .then(textData => {
+                rosefishMembersListElement.innerHTML = '';
+                const lines = textData.trim().split('\n');
+                
+                for (let i = 0; i < lines.length - 1; i += 2) {
+                    const [name, info] = parseMemberLines(lines[i], lines[i+1]);
+                    if (name && info) {
+                        rosefishMembersListElement.appendChild(createMemberListItem(name, info));
+                    }
+                }
+            })
+            .catch(handleMemberError);
+    }
+
+    function handleResponse(response) {
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text();
+    }
+
+    function parseMemberLines(nameLine, infoLine) {
+        const tagRegex = /<size=\d+>\s*(.*?)\s*<\/size>/;
+        const nameMatch = nameLine.trim().match(tagRegex);
+        const infoMatch = infoLine.trim().match(tagRegex);
+        
+        if (!nameMatch || !infoMatch) {
+            console.warn(`Could not parse lines: "${nameLine}" or "${infoLine}"`);
+            return [null, null];
         }
+        return [nameMatch[1], infoMatch[1]];
+    }
 
-        rosefishMembersListElement.innerHTML = '';
+    function createMemberListItem(name, info) {
+        const li = document.createElement('li');
+        const nameHeading = document.createElement('h4');
+        nameHeading.textContent = name;
 
-        if (members.length === 0) {
-            rosefishMembersListElement.innerHTML = '<li><i>No members listed currently.</i></li>';
-            return;
+        const infoParagraph = document.createElement('p');
+        infoParagraph.textContent = info;
+
+        li.appendChild(nameHeading);
+        li.appendChild(document.createElement('br'));
+        li.appendChild(infoParagraph);
+        return li;
+    }
+
+    function handleMemberError(error) {
+        console.error('Error loading members:', error);
+        if (rosefishMembersListElement) {
+            rosefishMembersListElement.innerHTML = '<li>Error loading members. Please try again later.</li>';
         }
-
-        members.forEach(member => {
-            if (member && member.name) {
-                const li = document.createElement('li');
-                li.innerHTML = `<b>${escapeHtml(member.name)}:</b> ${escapeHtml(member.contributions || 'No contributions listed.')}`;
-                rosefishMembersListElement.appendChild(li);
-            }
-        });
     }
 
     function loadStoreInfo(data) {
@@ -801,6 +840,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Get references to all elements needed by the script *first*
         getAllElements();
+        generateFishAnimation();
 
         // Set up calendar start day buttons if they exist
         const savedStartDay = localStorage.getItem('calendarStartDay');
