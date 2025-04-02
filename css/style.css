@@ -164,55 +164,90 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 /* Note: ol marker color not set for certified, defaults */
 
 /* --- Styles for Verified, Certified & Known Community List Items --- */
-#fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list { list-style: none; padding-left: 0; } /* Added #fish-known-list, #fish-status-list */
-#fish-verified-list li, #fish-certified-list li, #fish-known-list li, #fish-status-list li { /* Added #fish-known-list li, #fish-status-list li */
-    display: flex; align-items: center; margin-bottom: 25px;
-    border-bottom: 1px solid #333337; padding-bottom: 15px;
+/* --- Styles for Community List Grids --- */
+#fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
+    list-style: none;
+    padding-left: 0;
+    display: grid;
+    /* Fixed 3-column grid */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px; /* Spacing between tiles */
+    margin-top: 20px; /* Add some space above the grid */
 }
-#fish-verified-list li:last-child, #fish-certified-list li:last-child, #fish-known-list li:last-child, #fish-status-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; } /* Added #fish-known-list, #fish-status-list li:last-child */
+
+/* --- Styles for Individual Community Tiles (List Items) --- */
+#fish-verified-list li, #fish-certified-list li, #fish-known-list li, #fish-status-list li {
+    background-color: #2a2a30; /* Tile background */
+    border: 1px solid #333337; /* Tile border */
+    border-radius: 6px;
+    padding: 15px;
+    display: flex; /* Use flex for content layout INSIDE the tile */
+    flex-direction: column; /* Stack image and text vertically */
+    align-items: center; /* Center content horizontally */
+    text-align: center; /* Center text */
+    /* Remove properties related to vertical list layout */
+    /* margin-bottom: 25px; */
+    /* border-bottom: 1px solid #333337; */
+    /* padding-bottom: 15px; */
+}
+
+/* Remove the :last-child rule that removed bottom border */
+/* #fish-verified-list li:last-child, ... { border-bottom: none; ... } */
 
 /* Community Logo in Lists */
 .community-logo {
-    width: 50px; height: 50px; object-fit: contain; margin-right: 20px;
-    flex-shrink: 0; border-radius: 4px;
+    width: 60px; /* Slightly larger logo */
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 15px; /* Space below logo */
+    margin-right: 0; /* Remove right margin */
+    flex-shrink: 0;
+    border-radius: 4px;
 }
 /* Text Container Div in Lists */
-#fish-verified-list li > div, #fish-certified-list li > div, #fish-known-list li > div, #fish-status-list li > div { flex-grow: 1; line-height: 1.4; margin-bottom: 0; /* Override default div margin */} /* Added #fish-known-list, #fish-status-list */
+/* Text Container Div within Tiles */
+#fish-verified-list li > div, #fish-certified-list li > div, #fish-known-list li > div, #fish-status-list li > div {
+    flex-grow: 1; /* Allow text div to take space */
+    line-height: 1.4;
+    margin-bottom: 0; /* Override default div margin */
+    width: 100%; /* Ensure text div takes full width */
+}
 /* Community Name (Line 1) */
-#fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b { display: block; font-size: 1.1em; font-weight: bold; margin-bottom: 4px; } /* Added #fish-known-list, #fish-status-list */
+/* Community Name (Line 1) */
+#fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b { display: block; font-size: 1.1em; font-weight: bold; margin-bottom: 6px; } /* Increased bottom margin */
 /* Description (Line 2) - Note: Known list JSON doesn't have description, but selector added for consistency */
-#fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) { display: block; font-size: 0.95em; margin-bottom: 4px; } /* Added #fish-known-list, #fish-status-list */
+/* Owner Info (was nth-of-type(1) after name bold) */
+#fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) { display: block; font-size: 0.95em; margin-bottom: 8px; } /* Increased bottom margin */
 /* Owner Info (Line 3) */
-#fish-verified-list li > div span:nth-of-type(2), #fish-certified-list li > div span:nth-of-type(2), #fish-known-list li > div span:nth-of-type(2), #fish-status-list li > div span:nth-of-type(2) { display: block; font-size: 0.95em; margin-bottom: 8px; } /* Added #fish-known-list, #fish-status-list */
-/* Make "Owner:" label NOT bold */
-#fish-verified-list li > div span:nth-of-type(2) b, #fish-certified-list li > div span:nth-of-type(2) b, #fish-known-list li > div span:nth-of-type(2) b, #fish-status-list li > div span:nth-of-type(2) b { font-weight: normal; } /* Added #fish-known-list, #fish-status-list */
+/* Make "Owner:" label NOT bold (Selector remains nth-of-type(1) because it's the first span after the bold name) */
+#fish-verified-list li > div span:nth-of-type(1) b, #fish-certified-list li > div span:nth-of-type(1) b, #fish-known-list li > div span:nth-of-type(1) b, #fish-status-list li > div span:nth-of-type(1) b { font-weight: normal; }
+/* Links (VRChat Group link AND Extra Links) */
 /* Links (VRChat Group link AND Extra Links) */
 #fish-verified-list li > div > a, /* Target direct child 'a' (VRChat Group) */
 #fish-certified-list li > div > a,
 #fish-known-list li > div > a,
-#fish-status-list li > div > a, /* Added #fish-status-list */
+#fish-status-list li > div > a,
 #fish-verified-list li > div .community-extra-links a, /* Target 'a' inside the container */
 #fish-certified-list li > div .community-extra-links a,
-#fish-status-list li > div .community-extra-links a { /* Added #fish-status-list */
-    display: inline-block;      /* Allow side-by-side */
-    margin-right: 8px;          /* Reduced space between links */
-    margin-bottom: 4px;         /* Space if links wrap */
-    margin-top: 0px;            /* Reset top margin */
-    font-size: 0.9em;           /* Consistent font size */
-    vertical-align: middle;     /* Align vertically */
-    line-height: 1.4;           /* Adjust line height */
+#fish-status-list li > div .community-extra-links a {
+    display: block; /* Make links block level to stack */
+    margin: 4px auto; /* Center links and add vertical space */
+    font-size: 0.9em;
+    line-height: 1.4;
+    /* Remove properties related to inline layout */
+    /* margin-right: 8px; */
+    /* vertical-align: middle; */
 }
 
 /* Container for the extra links */
 .community-extra-links {
-    display: block; /* Keep this block to appear below Owner/VRChat Group */
-    margin-top: 6px; /* Space above the extra links block */
+    display: block; /* Keep this block */
+    margin-top: 8px; /* Increased space above the extra links block */
+    margin-bottom: 8px; /* Add space below links before member count */
 }
 
-/* Remove margin from the very last link in the extra links container */
-.community-extra-links a:last-child {
-    margin-right: 0;
-}
+/* Remove the :last-child rule for margin-right as links are now block */
+/* .community-extra-links a:last-child { margin-right: 0; } */
 
 /* --- Community List Item Text & Link Colors --- */
 
@@ -236,6 +271,7 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     color: #90CAF9; /* Lighter Blue on hover */
 }
 
+/* Member Count Styling */
 /* Member Count Styling */
 .community-member-count {
     display: block; /* Ensure it's on its own line */

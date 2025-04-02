@@ -267,8 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             textDiv.innerHTML = textContentHTML;
 
-            // Add external group links only for verified/certified
-            if ((community.status === 'FISH_VERIFIED' || community.status === 'FISH_CERTIFIED') && Array.isArray(community.group_links) && community.group_links.length > 0) {
+            // Add external group links for verified, certified, and FISH status groups
+            if ((community.status === 'FISH_VERIFIED' || community.status === 'FISH_CERTIFIED' || community.status === 'FISH') && Array.isArray(community.group_links) && community.group_links.length > 0) {
                 const linksContainer = document.createElement('div');
                 linksContainer.classList.add('community-extra-links'); // Add a class for potential styling
                 community.group_links.forEach(link => {
