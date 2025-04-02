@@ -62,7 +62,7 @@ h1, h2 {
     100% { background-position: 0% 50%; }
 }
 
-h1 { font-size: 2.4em; letter-spacing: -0.02em; margin-bottom: 30px; }
+h1 { font-size: 2.4em; letter-spacing: -0.02em; margin-bottom: 30px; text-align: center; /* Center the main H1 */ }
  @media (min-width: 600px) { h1 { font-size: 2.8em; margin-bottom: 35px; } }
 
 h2 { font-size: 1.8em; margin-top: 40px; margin-bottom: 20px; }
@@ -70,6 +70,27 @@ h2 { font-size: 1.8em; margin-top: 40px; margin-bottom: 20px; }
 
 h3 { font-size: 1.3em; margin-top: 30px; margin-bottom: 15px; color: #bbbbbb; }
 @media (min-width: 600px) { h3 { font-size: 1.4em; margin-top: 35px; } }
+
+/* Discord Invite Section Styling (index.html) */
+.discord-invite-section {
+    text-align: center;
+    margin-top: 25px; /* Space above */
+    margin-bottom: 30px; /* Space below before group list */
+    font-size: 1.2em; /* Slightly larger */
+    font-weight: bold;
+    line-height: 1.5; /* Adjust line spacing */
+    color: #e0e0e0; /* Match general text color */
+}
+.discord-invite-section a {
+    font-weight: normal; /* Link doesn't need to be bold */
+    font-size: 0.9em; /* Slightly smaller link text */
+    display: inline-block; /* Keep link inline-block */
+    margin-top: 5px; /* Space between text and link */
+    color: #4dd0e1; /* Standard link color */
+}
+.discord-invite-section a:hover {
+    color: #00e5ff; /* Standard link hover color */
+}
 
 p, ul, ol, div { /* Added div to cover dynamically loaded text containers */
     font-size: 1.05em;
@@ -112,20 +133,45 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 @media (min-width: 600px) { hr { margin: 50px 0; } }
 
 .fish-animation {
-    white-space: nowrap; font-size: 3em; color: #4dd0e1; display: block;
-    animation: fishSwim 15s linear infinite; width: 100%; overflow: hidden;
-    box-sizing: border-box; margin-bottom: 30px; text-align: left; padding-left: 100%;
+    white-space: nowrap;
+    font-size: 3em;
+    /* Color removed here, applied to symbol */
+    display: block;
+    /* Reverted to single animation definition on the container */
+    animation: fishSwim 15s linear infinite; /* Consistent duration, linear timing */
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+    text-align: left;
+    padding-left: 100%;
 }
 @media (min-width: 600px) {
     .fish-animation { font-size: 4em; display: inline-block; width: auto; margin-bottom: 40px; padding-left: 100%; }
 }
-@keyframes fishSwim { 0% { transform: translateX(0); } 100% { transform: translateX(-200%); } }
-.fish-symbol { display: inline-block; color: #4dd0e1; }
-.fish-symbol:nth-child(5n+1) { animation-delay: 0s; }
-.fish-symbol:nth-child(5n+2) { animation-delay: 0.2s; }
-.fish-symbol:nth-child(5n+3) { animation-delay: 0.4s; }
-.fish-symbol:nth-child(5n+4) { animation-delay: 0.6s; }
-.fish-symbol:nth-child(5n+5) { animation-delay: 0.8s; }
+/* Updated animation: Linear horizontal movement only */
+@keyframes fishSwim {
+    0% { transform: translateX(0); }
+    /* 50% keyframe removed for linear movement */
+    100% { transform: translate(-200%, 0); } /* Complete horizontal move, return to baseline */
+}
+/* Keyframes for color cycling */
+@keyframes colorCycle {
+    0%   { color: #ff00fe; } /* Magenta */
+    50%  { color: #00fdff; } /* Cyan */
+    100% { color: #ff00fe; } /* Magenta */
+}
+
+/* Updated symbol style with color animation */
+.fish-symbol {
+    display: inline-block;
+    /* Removed gradient properties */
+    color: #ff00fe; /* Set initial color (will be animated) */
+    /* Apply color cycle animation */
+    animation: colorCycle 4s linear infinite;
+}
+/* Removed nth-child duration variations */
+/* Removed nth-child animation delays */
 
 /* Image Scaling Base */
 .community-image, .meaning-image, .verified-image {
