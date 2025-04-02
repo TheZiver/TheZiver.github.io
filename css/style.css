@@ -425,10 +425,10 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 
 /* Rose Fish Page Specific Styles (Black Background, White Text) */
 body.theme-rosefish {
-    background-color: #000000; /* Black background for the whole page */
+    background-color: #000000 !important; /* Black background for the whole page */
 }
 body.theme-rosefish .container {
-    background-color: #000000; /* Black background for the container */
+    background-color: #000000 !important; /* Black background for the container */
     /* Override general container text color */
     color: #FFFFFF; /* Default text color to white */
 }
@@ -461,17 +461,33 @@ body.theme-rosefish .container a:hover {
 /* Style for Rose Fish members list */
 #rosefish-members-list { list-style: none; padding-left: 0; }
 #rosefish-members-list li {
-    color: #FFFFFF; /* Make member list text white */
+    /* color: #FFFFFF; Removed this general color rule */
     border-bottom: 1px solid #555; /* Darker border for black background */
     padding-bottom: 10px;
     margin-bottom: 10px;
     line-height: 1.5;
 }
 #rosefish-members-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-#rosefish-members-list li b {
-    font-size: 1.05em;
-    color: #E57373; /* Keep member names red like H3 */
+
+/* Specific styles for h4 (name) and p (info) within the list */
+#rosefish-members-list li h4 {
+    display: block; /* Ensure name is on its own line */
+    color: red !important; /* Force red color */
+    font-size: 1.05em; /* Keep existing size */
+    margin: 0 0 5px 0; /* Reset default h4 margins and add bottom margin */
+    font-weight: bold; /* Ensure name is bold */
 }
+#rosefish-members-list li p {
+    display: block; /* Ensure info is on its own line */
+    color: red !important; /* Force red color */
+    margin: 0; /* Reset default paragraph margins */
+}
+
+/* Remove the old rule targeting 'b' tag as we now use h4 */
+/* #rosefish-members-list li b {
+    font-size: 1.05em;
+    color: #E57373;
+} */
 /* Style the summary div added in rosefish.html */
 .rosefish-summary {
     color: #FFFFFF; /* White text */
