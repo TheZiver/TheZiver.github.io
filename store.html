@@ -6,6 +6,33 @@
     <title>FISH ＜＞＜ COMMUNITY - Luxury Trash Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .booth-embed-container {
+            position: relative;
+            padding-bottom: 120%;
+            height: 0;
+            overflow: hidden;
+        }
+        .booth-embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .product-card {
+            background: #1a1a1a;
+            border: 2px solid #d4af37;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+    </style>
 </head>
 <body class="theme-store">
 
@@ -16,33 +43,160 @@
         <li><a href="communities.html">COMMUNITIES</a></li>
         <li><a href="rosefish.html">ROSE FISH</a></li>
         <li><a href="store.html" class="active">STORE</a></li>
-    </ul>
+    </div>
 </nav>
 
 <div class="container">
-    <section class="luxury-trash-theme" aria-labelledby="luxury-heading">
-        <h1 id="luxury-heading">LUXURY TRASH</h1>
-         <!-- Image can remain static or be set by JS -->
-        <img src="images/luxury_trash.png" alt="Luxury Trash Golden Fish Logo" class="verified-image" loading="lazy">
+    <section class="store-header">
+        <h1>LUXURY TRASH</h1>
+        <img src="images/luxury_trash.png" alt="Luxury Trash Logo" loading="lazy">
         <p id="luxury-motto"><i>"Loading motto..."</i></p>
-        <ul id="luxury-products-list">
-             <li><i>Loading products...</i></li>
-        </ul>
     </section>
 
-    <div class="fish-animation" aria-hidden="true">
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
-        <span class="fish-symbol"><</span><span class="fish-symbol">></span><span class="fish-symbol"><</span>
+    <div class="product-grid">
+        <!-- AVATAR: Crow Detective -->
+        <div class="product-card">
+            <div class="booth-embed-container">
+                <iframe src="https://booth.pm/en/items/4131078/embed"
+                        class="booth-embed"
+                        scrolling="no"
+                        frameborder="0"
+                        allowfullscreen></iframe>
+            </div>
+            <div class="product-actions">
+                <a href="https://theziver.booth.pm/items/4131078"
+                   target="_blank"
+                   class="buy-button">View on Booth</a>
+            </div>
+        </div>
+
+        <!-- AVATAR: Worm Boy -->
+        <div class="product-card">
+            <div class="booth-embed-container">
+                <iframe src="https://booth.pm/en/items/5106312/embed"
+                        class="booth-embed"
+                        scrolling="no"
+                        frameborder="0"
+                        allowfullscreen></iframe>
+            </div>
+            <div class="product-actions">
+                <a href="https://theziver.booth.pm/items/5106312"
+                   target="_blank"
+                   class="buy-button">View on Booth</a>
+            </div>
+        </div>
+
+        <!-- AVATAR: Baguette Man -->
+        <div class="product-card">
+            <div class="booth-embed-container">
+                <iframe src="https://booth.pm/en/items/5399404/embed"
+                        class="booth-embed"
+                        scrolling="no"
+                        frameborder="0"
+                        allowfullscreen></iframe>
+            </div>
+            <div class="product-actions">
+                <a href="https://theziver.booth.pm/items/5399404"
+                   target="_blank"
+                   class="buy-button">View on Booth</a>
+            </div>
+        </div>
+
+        <!-- AVATAR: Mystery -->
+        <div class="product-card">
+            <div class="booth-embed-container">
+                <iframe src="https://booth.pm/en/items/4993637/embed"
+                        class="booth-embed"
+                        scrolling="no"
+                        frameborder="0"
+                        allowfullscreen></iframe>
+            </div>
+            <div class="product-actions">
+                <a href="https://theziver.booth.pm/items/4993637"
+                   target="_blank"
+                   class="buy-button">View on Booth</a>
+            </div>
+        </div>
+
+        <!-- AVATAR: SPY -->
+        <div class="product-card">
+            <div class="booth-embed-container">
+                <iframe src="https://booth.pm/en/items/5980910/embed"
+                        class="booth-embed"
+                        scrolling="no"
+                        frameborder="0"
+                        allowfullscreen></iframe>
+            </div>
+            <div class="product-actions">
+                <a href="https://theziver.booth.pm/items/5980910"
+                   target="_blank"
+                   class="buy-button">View on Booth</a>
+            </div>
+        </div>
+
+        <!-- AVATAR: FISH -->
+        <div class="product-card">
+            <div class="booth-embed-container">
+                <iframe src="https://booth.pm/en/items/4234569/embed"
+                        class="booth-embed"
+                        scrolling="no"
+                        frameborder="0"
+                        allowfullscreen></iframe>
+            </div>
+            <div class="product-actions">
+                <a href="https://theziver.booth.pm/items/4234569"
+                   target="_blank"
+                   class="buy-button">View on Booth</a>
+            </div>
+        </div>
+
+        <!-- AVATAR: Future -->
+        <div class="product-card">
+            <div class="booth-embed-container">
+                <iframe src="https://booth.pm/en/items/3780803/embed"
+                        class="booth-embed"
+                        scrolling="no"
+                        frameborder="0"
+                        allowfullscreen></iframe>
+            </div>
+            <div class="product-actions">
+                <a href="https://theziver.booth.pm/items/3780803"
+                   target="_blank"
+                   class="buy-button">View on Booth</a>
+            </div>
+        </div>
+
+        <!-- AVATAR: ROSE FISH -->
+        <div class="product-card">
+            <div class="booth-embed-container">
+                <iframe src="https://booth.pm/en/items/4678138/embed"
+                        class="booth-embed"
+                        scrolling="no"
+                        frameborder="0"
+                        allowfullscreen></iframe>
+            </div>
+            <div class="product-actions">
+                <a href="https://theziver.booth.pm/items/4678138"
+                   target="_blank"
+                   class="buy-button">View on Booth</a>
+            </div>
+        </div>
+
+        <!-- AVATAR: Regret -->
+        <div class="product-card">
+            <div class="booth-embed-container">
+                <iframe src="https://booth.pm/en/items/6610771/embed"
+                        class="booth-embed"
+                        scrolling="no"
+                        frameborder="0"
+                        allowfullscreen></iframe>
+            </div>
+            <div class="product-actions">
+                <a href="https://theziver.booth.pm/items/6610771"
+                   target="_blank"
+                   class="buy-button">View on Booth</a>
+            </div>
+        </div>
     </div>
 </div>
 

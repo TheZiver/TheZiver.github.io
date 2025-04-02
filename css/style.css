@@ -135,10 +135,8 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .fish-animation {
     white-space: nowrap;
     font-size: 3em;
-    /* Color removed here, applied to symbol */
     display: block;
-    /* Reverted to single animation definition on the container */
-    animation: fishSwim 15s linear infinite; /* Consistent duration, linear timing */
+    animation: fishSwim 15s linear infinite;
     width: 100%;
     overflow: hidden;
     box-sizing: border-box;
@@ -149,11 +147,25 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 @media (min-width: 600px) {
     .fish-animation { font-size: 4em; display: inline-block; width: auto; margin-bottom: 40px; padding-left: 100%; }
 }
-/* Updated animation: Linear horizontal movement only */
 @keyframes fishSwim {
     0% { transform: translateX(0); }
-    /* 50% keyframe removed for linear movement */
-    100% { transform: translate(-200%, 0); } /* Complete horizontal move, return to baseline */
+    50% { transform: translate(-100%, 0); }
+    100% { transform: translate(0, 0); }
+}
+.fish-animation {
+    animation: fishSwim 30s linear infinite; /* Slower animation */
+}
+
+.fish-group {
+    display: inline-block;
+    margin: 0 15px;
+    font-size: 24px;
+    animation: swim 20s linear infinite;
+}
+
+@keyframes swim {
+    0% { transform: translateX(100vw); }
+    100% { transform: translateX(-100%); }
 }
 /* Keyframes for color cycling */
 @keyframes colorCycle {
@@ -163,12 +175,19 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 }
 
 /* Updated symbol style with color animation */
-.fish-symbol {
+.fish-group {
     display: inline-block;
-    /* Removed gradient properties */
-    color: #ff00fe; /* Set initial color (will be animated) */
-    /* Apply color cycle animation */
+    margin: 0 20px;
+    color: #ff00fe;
+    font-size: 1em;
     animation: colorCycle 4s linear infinite;
+}
+
+.fish-animation {
+    font-size: 3em;
+}
+@media (min-width: 600px) {
+    .fish-animation { font-size: 4em; }
 }
 /* Removed nth-child duration variations */
 /* Removed nth-child animation delays */
@@ -880,29 +899,132 @@ body.theme-rosefish h1, body.theme-rosefish h2, body.theme-rosefish h3 { /* Over
 }
 body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
 
-/* --- Theme: Store (Luxury/Gold) --- */
-body.theme-store {
-    background-color: #111111; /* Near black */
-    color: #EAEAEA; /* Light grey text */
+/* --- Store Page Styles --- */
+.product-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #0a0a0a;
 }
-body.theme-store .container {
-    background-color: #222222; /* Dark grey */
-    color: #EAEAEA;
-    border: 1px solid #DAA520; /* Goldenrod border */
-    box-shadow: 0 0 15px rgba(218, 165, 32, 0.4);
+
+.product-grid-header {
+    text-align: center;
+    margin-bottom: 3rem;
 }
-body.theme-store a { color: #FFD700; } /* Gold links */
-body.theme-store a:hover { color: #FFFACD; } /* Lemon chiffon */
-body.theme-store hr { border-top-color: #DAA520; }
-body.theme-store h1, body.theme-store h2 { /* Override default gradient */
-    background: linear-gradient(120deg, #FFD700, #F0E68C); /* Gold to Khaki */
-    background-clip: text; -webkit-background-clip: text;
-    color: transparent; -webkit-text-fill-color: transparent;
-    animation: none; /* Disable default flow animation */
+
+.product-grid-header h1 {
+    color: #d4af37;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
-body.theme-store #luxury-products-list li { color: #EAEAEA; }
-body.theme-store #luxury-products-list li b { color: #FFD700; } /* Gold item name */
-body.theme-store #luxury-motto i { color: #FFD700; } /* Gold motto */
+
+.product-grid-header img {
+    max-width: 200px;
+    margin: 0 auto 1rem;
+}
+
+.product-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    list-style: none;
+    padding: 0;
+}
+
+.product-card {
+    background: #111;
+    border: 2px solid #d4af37;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+}
+
+.product-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    border-bottom: 2px solid #d4af37;
+}
+
+/* Product image container for both images and embeds */
+.product-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    border-bottom: 2px solid #d4af37;
+}
+
+/* Regular product images */
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+/* Booth.pm embed styling */
+.booth-embed {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.product-card:hover .product-image,
+.product-card:hover .booth-embed {
+    transform: scale(1.05);
+}
+
+/* Product link styling */
+.product-link {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+.product-link:hover {
+    color: #FFFACD;
+    text-decoration: underline;
+}
+
+.product-info {
+    padding: 1.2rem;
+}
+
+.product-name {
+    color: #f8f8f8;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.product-price {
+    color: #d4af37;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.loading-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    color: #d4af37;
+    font-style: italic;
+}
 
 /* --- General Theme Overrides --- */
 /* Ensure nav bar looks consistent across themes */
@@ -919,5 +1041,99 @@ body.theme-store #luxury-motto i { color: #FFD700; } /* Gold motto */
 }
 .fish-symbol { animation: colorCycle 4s linear infinite; } /* Ensure animation is applied */
 
+
+/* --- Store Page Styles --- */
+.store-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.store-header h1 {
+    color: #d4af37;
+    font-size: 2.8em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.store-header img {
+    max-width: 200px;
+    margin: 0 auto 1rem;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.product-card {
+    background: #1a1a1a;
+    border: 2px solid #d4af37;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+}
+
+.booth-embed-container {
+    position: relative;
+    padding-bottom: 120%; /* Tall aspect ratio for Booth previews */
+    height: 0;
+    overflow: hidden;
+}
+
+.booth-embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.product-actions {
+    padding: 1rem;
+    text-align: center;
+}
+
+.buy-button {
+    display: inline-block;
+    background: #d4af37;
+    color: #121212;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 1.1em;
+}
+
+.buy-button:hover {
+    background: #ffd700;
+    transform: scale(1.05);
+}
+
+/* --- Theme: Store (Luxury/Gold) --- */
+body.theme-store {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.theme-store .container {
+    background-color: #1a1a1a;
+}
+
+.theme-store h1, .theme-store h2 {
+    background: linear-gradient(120deg, #d4af37, #ffd700, #d4af37);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: gradientFlow 8s ease infinite;
+}
 
 /* --- END OF FINAL style.css --- */

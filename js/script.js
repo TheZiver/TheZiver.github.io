@@ -5,11 +5,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const fishContainer = document.querySelector('.fish-animation');
         if (!fishContainer) return;
         
-        for (let i = 0; i < 12; i++) {
-            const span = document.createElement('span');
-            span.className = 'fish-symbol';
-            span.innerHTML = i % 2 === 0 ? '&lt;' : '&gt;';
-            fishContainer.appendChild(span);
+        // Clear existing animation
+        fishContainer.innerHTML = '';
+        
+        // Create just enough fish groups to fill the screen
+        const fishCount = Math.ceil(window.innerWidth / 200);
+        
+        for (let i = 0; i < fishCount; i++) {
+            const fishGroup = document.createElement('span');
+            fishGroup.className = 'fish-group';
+            fishGroup.innerHTML = '＜＞＜';
+            fishContainer.appendChild(fishGroup);
         }
     }
 
@@ -518,37 +524,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadStoreInfo(data) {
-        if (luxuryMottoElement && data?.store?.luxury_trash) {
-             let motto = data.store.luxury_trash;
-             if (motto.startsWith('"') && motto.endsWith('"')) {
-                 motto = motto.substring(1, motto.length - 1);
-             }
-             luxuryMottoElement.innerHTML = `<i>"${escapeHtml(motto)}"</i>`;
-        } else if (luxuryMottoElement) {
-             luxuryMottoElement.innerHTML = '<i>Motto not available.</i>';
-        }
-
-        if (!luxuryProductsListElement) return;
-        const products = data?.store?.products;
-        if (!Array.isArray(products)) {
-            luxuryProductsListElement.innerHTML = '<li class="error-message"><i>Could not load products list.</i></li>';
+        if (!data?.store) {
+            if (luxuryMottoElement) luxuryMottoElement.innerHTML = '<i>Store data not available</i>';
             return;
         }
 
-        luxuryProductsListElement.innerHTML = '';
-
-        if (products.length === 0) {
-            luxuryProductsListElement.innerHTML = '<li><i>No products listed currently.</i></li>';
-            return;
-        }
-
-        products.forEach(product => {
-            if (product && product.item && product.link && typeof product.price !== 'undefined') {
-                const li = document.createElement('li');
-                li.innerHTML = `<b>${escapeHtml(product.item)}</b> - ${escapeHtml(product.price)}<br><a href="${escapeHtml(product.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(product.link)}</a>`;
-                luxuryProductsListElement.appendChild(li);
+        // Load motto only
+        if (luxuryMottoElement) {
+            let motto = data.store.luxury_trash || '';
+            if (motto.startsWith('"') && motto.endsWith('"')) {
+                motto = motto.substring(1, motto.length - 1);
             }
-        });
+            luxuryMottoElement.innerHTML = motto ? `<i>"${escapeHtml(motto)}"</i>` : '<i>Motto not available.</i>';
+        }
     }
 
     // --- Calendar Rendering Functions ---
@@ -841,6 +829,21 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get references to all elements needed by the script *first*
         getAllElements();
         generateFishAnimation();
+        
+        // Load store data immediately since it's needed for the current page
+        if (luxuryMottoElement || luxuryProductsListElement) {
+            fetch(PRIMARY_DATA_URL)
+                .then(response => response.json())
+                .then(data => {
+                    loadStoreInfo(data);
+                })
+                .catch(error => {
+                    console.error('Error loading store data:', error);
+                    if (luxuryMottoElement) {
+                        luxuryMottoElement.innerHTML = '<i>Error loading store info</i>';
+                    }
+                });
+        }
 
         // Set up calendar start day buttons if they exist
         const savedStartDay = localStorage.getItem('calendarStartDay');
