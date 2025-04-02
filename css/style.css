@@ -164,12 +164,12 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 /* Note: ol marker color not set for certified, defaults */
 
 /* --- Styles for Verified, Certified & Known Community List Items --- */
-#fish-verified-list, #fish-certified-list, #fish-known-list { list-style: none; padding-left: 0; } /* Added #fish-known-list */
-#fish-verified-list li, #fish-certified-list li, #fish-known-list li { /* Added #fish-known-list li */
+#fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list { list-style: none; padding-left: 0; } /* Added #fish-known-list, #fish-status-list */
+#fish-verified-list li, #fish-certified-list li, #fish-known-list li, #fish-status-list li { /* Added #fish-known-list li, #fish-status-list li */
     display: flex; align-items: center; margin-bottom: 25px;
     border-bottom: 1px solid #333337; padding-bottom: 15px;
 }
-#fish-verified-list li:last-child, #fish-certified-list li:last-child, #fish-known-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; } /* Added #fish-known-list li:last-child */
+#fish-verified-list li:last-child, #fish-certified-list li:last-child, #fish-known-list li:last-child, #fish-status-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; } /* Added #fish-known-list, #fish-status-list li:last-child */
 
 /* Community Logo in Lists */
 .community-logo {
@@ -177,21 +177,23 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     flex-shrink: 0; border-radius: 4px;
 }
 /* Text Container Div in Lists */
-#fish-verified-list li > div, #fish-certified-list li > div, #fish-known-list li > div { flex-grow: 1; line-height: 1.4; margin-bottom: 0; /* Override default div margin */} /* Added #fish-known-list */
+#fish-verified-list li > div, #fish-certified-list li > div, #fish-known-list li > div, #fish-status-list li > div { flex-grow: 1; line-height: 1.4; margin-bottom: 0; /* Override default div margin */} /* Added #fish-known-list, #fish-status-list */
 /* Community Name (Line 1) */
-#fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b { display: block; font-size: 1.1em; font-weight: bold; margin-bottom: 4px; } /* Added #fish-known-list */
+#fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b { display: block; font-size: 1.1em; font-weight: bold; margin-bottom: 4px; } /* Added #fish-known-list, #fish-status-list */
 /* Description (Line 2) - Note: Known list JSON doesn't have description, but selector added for consistency */
-#fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1) { display: block; font-size: 0.95em; margin-bottom: 4px; } /* Added #fish-known-list */
+#fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) { display: block; font-size: 0.95em; margin-bottom: 4px; } /* Added #fish-known-list, #fish-status-list */
 /* Owner Info (Line 3) */
-#fish-verified-list li > div span:nth-of-type(2), #fish-certified-list li > div span:nth-of-type(2), #fish-known-list li > div span:nth-of-type(2) { display: block; font-size: 0.95em; margin-bottom: 8px; } /* Added #fish-known-list */
+#fish-verified-list li > div span:nth-of-type(2), #fish-certified-list li > div span:nth-of-type(2), #fish-known-list li > div span:nth-of-type(2), #fish-status-list li > div span:nth-of-type(2) { display: block; font-size: 0.95em; margin-bottom: 8px; } /* Added #fish-known-list, #fish-status-list */
 /* Make "Owner:" label NOT bold */
-#fish-verified-list li > div span:nth-of-type(2) b, #fish-certified-list li > div span:nth-of-type(2) b, #fish-known-list li > div span:nth-of-type(2) b { font-weight: normal; } /* Added #fish-known-list */
+#fish-verified-list li > div span:nth-of-type(2) b, #fish-certified-list li > div span:nth-of-type(2) b, #fish-known-list li > div span:nth-of-type(2) b, #fish-status-list li > div span:nth-of-type(2) b { font-weight: normal; } /* Added #fish-known-list, #fish-status-list */
 /* Links (VRChat Group link AND Extra Links) */
 #fish-verified-list li > div > a, /* Target direct child 'a' (VRChat Group) */
 #fish-certified-list li > div > a,
 #fish-known-list li > div > a,
+#fish-status-list li > div > a, /* Added #fish-status-list */
 #fish-verified-list li > div .community-extra-links a, /* Target 'a' inside the container */
-#fish-certified-list li > div .community-extra-links a {
+#fish-certified-list li > div .community-extra-links a,
+#fish-status-list li > div .community-extra-links a { /* Added #fish-status-list */
     display: inline-block;      /* Allow side-by-side */
     margin-right: 8px;          /* Reduced space between links */
     margin-bottom: 4px;         /* Space if links wrap */
@@ -217,19 +219,33 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 /* Base Text Color within List Items (Owner, etc.) */
 #fish-verified-list li > div span { color: #FFFFFF; } /* Whitest */
 #fish-certified-list li > div span { color: #E0E0E0; } /* Less White */
-#fish-known-list li > div span { color: #BDBDBD; } /* Least White */
+#fish-known-list li > div span, #fish-status-list li > div span { color: #BDBDBD; } /* Least White (Applied to Known and FISH status) */
 
 /* Standardized Link Color for ALL Community Lists */
 #fish-verified-list li a,
 #fish-certified-list li a,
-#fish-known-list li a {
+#fish-known-list li a,
+#fish-status-list li a { /* Added #fish-status-list */
     color: #64B5F6; /* Standard Blue */
     text-decoration: underline; /* Ensure underline */
 }
 #fish-verified-list li a:hover,
 #fish-certified-list li a:hover,
-#fish-known-list li a:hover {
+#fish-known-list li a:hover,
+#fish-status-list li a:hover { /* Added #fish-status-list */
     color: #90CAF9; /* Lighter Blue on hover */
+}
+
+/* Member Count Styling */
+.community-member-count {
+    display: block; /* Ensure it's on its own line */
+    font-size: 0.85em; /* Make it smaller */
+    color: #bdbdbd; /* Dimmer color, consistent across lists */
+    margin-top: 6px; /* Space above the member count */
+}
+/* Make "Members:" label NOT bold */
+.community-member-count b {
+    font-weight: normal;
 }
 
 /* Remove or comment out old theme-specific link colors if they existed */

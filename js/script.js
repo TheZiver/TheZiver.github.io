@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
         verifiedListElement = document.getElementById('fish-verified-list');
         certifiedListElement = document.getElementById('fish-certified-list');
         knownListElement = document.getElementById('fish-known-list');
+        fishStatusListElement = document.getElementById('fish-status-list'); // Added selector for FISH status list
         rosefishInfoElement = document.getElementById('rosefish-info');
         rosefishVoteInfoElement = document.getElementById('rosefish-vote-info');
         rosefishGuidelinesElement = document.getElementById('rosefish-guidelines');
@@ -214,7 +215,8 @@ document.addEventListener('DOMContentLoaded', function() {
    }
 
    function loadFishGroups(data) {
-        if (!verifiedListElement && !certifiedListElement && !knownListElement) return;
+        // Check if ANY of the relevant list elements exist on the page
+        if (!verifiedListElement && !certifiedListElement && !knownListElement && !fishStatusListElement) return;
 
         // Use the correct path from the JSON: data.community_groups
         const communities = data?.community_groups;
@@ -232,10 +234,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if(verifiedListElement) verifiedListElement.innerHTML = '';
         if(certifiedListElement) certifiedListElement.innerHTML = '';
         if(knownListElement) knownListElement.innerHTML = '';
+        if(fishStatusListElement) fishStatusListElement.innerHTML = ''; // Clear FISH status list
 
         let verifiedCount = 0;
         let certifiedCount = 0;
         let knownCount = 0;
+        let fishStatusCount = 0; // Counter for FISH status groups
 
         communities.forEach(community => {
             // Check the actual property name: 'group_name'
@@ -252,6 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
             textContentHTML += `<b>${escapedName}</b>`;
             // Add owner if available in JSON (it is: 'owner')
             if (community.owner) textContentHTML += `<span><b>Owner:</b> ${escapeHtml(community.owner)}</span>`;
+            // Member count will be added later, after links
             // Description is not in the JSON, so we don't add it.
 
             // Use the actual link property: 'group_link'
@@ -300,6 +305,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 textDiv.appendChild(linksContainer); // Append the links below the main text
             }
 
+            // Add member count below links if available
+            if (typeof community.member_count === 'number') {
+                const memberCountSpan = document.createElement('span');
+                memberCountSpan.classList.add('community-member-count'); // Class for styling
+                memberCountSpan.innerHTML = `<b>Members:</b> ${escapeHtml(community.member_count.toLocaleString())}`; // Format with commas
+                textDiv.appendChild(memberCountSpan); // Append after links container
+            }
+
             // Prioritize icon_url from JSON data
             if (community.icon_url) {
                  const img = document.createElement('img');
@@ -338,6 +351,10 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (community.status === 'FISH_KNOWN' && knownListElement) {
                  knownListElement.appendChild(listItem);
                  knownCount++;
+            } else if (community.status === 'FISH' && fishStatusListElement) { // Handle FISH status
+                 // Need to clone the listItem because it might be appended elsewhere if status changes
+                 fishStatusListElement.appendChild(listItem.cloneNode(true));
+                 fishStatusCount++;
             }
             // Note: The community with status "FISH" will be ignored by these conditions.
             // Add an 'else' block here if you want to handle unknown statuses.
@@ -352,6 +369,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (knownListElement && knownCount === 0) {
             knownListElement.innerHTML = '<li><i>No known communities listed currently.</i></li>';
+        }
+        if (fishStatusListElement && fishStatusCount === 0) { // Add message for empty FISH status list
+            fishStatusListElement.innerHTML = '<li><i>No FISH status communities listed currently.</i></li>';
         }
     }
 
