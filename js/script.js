@@ -255,54 +255,74 @@ document.addEventListener('DOMContentLoaded', function() {
             // Removed the span wrapper for ＜＞＜, rely only on escapeHtml
             textContentHTML += `<b>${escapedName}</b>`;
             // Add owner if available in JSON (it is: 'owner')
-            if (community.owner) textContentHTML += `<span><b>Owner:</b> ${escapeHtml(community.owner)}</span>`;
-            // Member count will be added later, after links
-            // Description is not in the JSON, so we don't add it.
+            if (community.owner) textContentHTML += `<span>${escapeHtml(community.owner)}</span>`; // Removed "Owner:" label
 
-            // Use the actual link property: 'group_link'
+            textDiv.innerHTML = textContentHTML; // Set initial text content (name, owner)
+
+            // Create a container for all icon links
+            const linksContainer = document.createElement('div');
+            linksContainer.classList.add('community-links-container'); // New class for styling the row
+
+            // Add VRChat Group Link as an icon
             const vrchatLink = community.group_link;
-            // Discord link is not in the JSON.
+            // VRChat Link with Font Awesome Sharp Solid Icon
             if (vrchatLink && (vrchatLink.startsWith('http') || vrchatLink.startsWith('vrchat://'))) {
-                textContentHTML += `<a href="${escapeHtml(vrchatLink.trim())}" target="_blank" rel="noopener noreferrer">VRChat Group</a>`;
+                const a = document.createElement('a');
+                a.href = escapeHtml(vrchatLink.trim());
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.classList.add('community-link-icon');
+                a.title = 'VRChat Group'; // Tooltip
+                a.innerHTML = '<i class="fas fa-vr-cardboard fa-fw"></i>'; // Font Awesome Solid VR Cardboard icon
+                linksContainer.appendChild(a);
             }
-            textDiv.innerHTML = textContentHTML;
 
-            // Add external group links ONLY for FISH_VERIFIED status groups
+            // External group links with Font Awesome Sharp Solid Icons (Keep verified only for now)
             if (community.status === 'FISH_VERIFIED' && Array.isArray(community.group_links) && community.group_links.length > 0) {
-                const linksContainer = document.createElement('div');
-                linksContainer.classList.add('community-extra-links'); // Add a class for potential styling
                 community.group_links.forEach(link => {
                     if (typeof link === 'string' && link.trim() !== '') {
                         const a = document.createElement('a');
                         a.href = escapeHtml(link.trim());
                         a.target = '_blank';
                         a.rel = 'noopener noreferrer';
-                        // Determine link text
-                        let linkText = 'Link';
+                        a.classList.add('community-link-icon');
+
+                        // Determine Font Awesome Sharp Solid icon class and title
+                        let iconClass = 'fas fa-link fa-fw'; // Default Link Icon (Solid)
+                        let iconTitle = 'External Link';
                         try {
                             const url = new URL(link);
-                            linkText = url.hostname.replace(/^www\./, ''); // Default to hostname
-                            if (url.hostname.includes('discord.gg')) linkText = 'Discord';
-                            else if (url.hostname.includes('twitter.com')) linkText = 'Twitter';
-                            else if (url.hostname.includes('patreon.com')) linkText = 'Patreon';
-                            else if (url.hostname.includes('ko-fi.com')) linkText = 'Ko-fi';
-                            else if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) linkText = 'YouTube';
-                            else if (url.hostname.includes('booth.pm')) linkText = 'Booth';
-                            else if (url.hostname.includes('github.io') || url.pathname.length > 1) linkText = 'Website'; // Guess website for github.io or paths
+                            const hostname = url.hostname.replace(/^www\./, '');
+                            iconTitle = hostname; // Default title to hostname
+
+                            // Map hostnames to Font Awesome classes (using fass for sharp solid, fab for brands)
+                            // NOTE: Brands (fab) do not have a sharp style, so we keep them as fab.
+                            if (hostname.includes('discord.gg')) { iconClass = 'fab fa-discord fa-fw'; iconTitle = 'Discord'; } // Keep brand
+                            else if (hostname.includes('twitter.com')) { iconClass = 'fab fa-x-twitter fa-fw'; iconTitle = 'Twitter/X'; } // Keep brand
+                            else if (hostname.includes('patreon.com')) { iconClass = 'fab fa-patreon fa-fw'; iconTitle = 'Patreon'; } // Keep brand
+                            else if (hostname.includes('ko-fi.com')) { iconClass = 'fas fa-mug-saucer fa-fw'; iconTitle = 'Ko-fi'; } // Solid
+                            else if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) { iconClass = 'fab fa-youtube fa-fw'; iconTitle = 'YouTube'; } // Keep brand
+                            else if (hostname.includes('booth.pm')) { iconClass = 'fas fa-store fa-fw'; iconTitle = 'Booth'; } // Solid
+                            else if (hostname.includes('github.com')) { iconClass = 'fab fa-github fa-fw'; iconTitle = 'GitHub'; } // Keep brand
+                            else if (hostname.includes('twitch.tv')) { iconClass = 'fab fa-twitch fa-fw'; iconTitle = 'Twitch'; } // Keep brand
+                            else if (hostname.includes('github.io') || url.pathname.length > 1) { iconClass = 'fas fa-globe fa-fw'; iconTitle = 'Website'; } // Solid Globe
+                            else { iconClass = 'fas fa-globe fa-fw'; iconTitle = hostname; } // Fallback Solid Globe
                         } catch (e) {
-                            linkText = 'External Link'; // Fallback if URL parsing fails
-                            console.warn(`Could not parse URL: ${link}`, e); // Log the error
+                             iconClass = 'fas fa-link fa-fw'; // Fallback Solid Link Icon
+                            console.warn(`Could not parse URL for icon: ${link}`, e);
                         }
-                        a.textContent = escapeHtml(linkText);
+                        // Use the correct class prefix (fass or fab)
+                        const prefix = iconClass.startsWith('fa-brands') || iconClass.startsWith('fab') ? 'fab' : 'fas'; // Use 'fas' for solid
+                        const iconName = iconClass.split(' ')[1]; // Get the icon name like fa-discord
+                        a.innerHTML = `<i class="${prefix} ${iconName} fa-fw"></i>`; // Reconstruct class
+                        a.title = escapeHtml(iconTitle); // Add tooltip
                         linksContainer.appendChild(a);
-                        // Separator removed - CSS handles spacing now
                     }
                 });
-                 // No need to remove trailing separator text node anymore
-                if (linksContainer.hasChildNodes() && linksContainer.lastChild.nodeType === Node.TEXT_NODE) { // Check if last node is a text node (the separator)
-                    linksContainer.removeChild(linksContainer.lastChild); // Remove the last ' | ' text node
-                }
-                textDiv.appendChild(linksContainer); // Append the links below the main text
+            }
+            // Append the whole links container if it has links
+            if (linksContainer.hasChildNodes()) {
+                 textDiv.appendChild(linksContainer);
             }
 
             // Add member count below links if available
@@ -313,33 +333,67 @@ document.addEventListener('DOMContentLoaded', function() {
                 textDiv.appendChild(memberCountSpan); // Append after links container
             }
 
-            // Prioritize icon_url from JSON data
+            // --- Community Logo Handling (with Link and Fallback) ---
+            const img = document.createElement('img');
+            img.alt = `${community.group_name} Logo`;
+            img.classList.add('community-logo');
+            img.loading = 'lazy';
+
+            let imageSource = null;
+            let addErrorFallback = false;
+
+            // 1. Try icon_url from JSON
             if (community.icon_url) {
-                 const img = document.createElement('img');
-                 // Directly use the icon_url. Ensure it's a valid URL structure if needed, but browsers are generally lenient.
-                 img.src = escapeHtml(community.icon_url); // Use icon_url from JSON
-                 img.alt = `${community.group_name} Logo`; // Use actual 'group_name'
-                 img.classList.add('community-logo');
-                 img.loading = 'lazy';
-                 // Add error handling in case the URL is broken
-                 img.onerror = () => { img.style.display = 'none'; console.warn(`Failed to load image: ${img.src}`); };
-                 listItem.appendChild(img);
+                imageSource = escapeHtml(community.icon_url);
+                addErrorFallback = true; // Use fallback if this URL fails
             } else {
-                 // Optional: Fallback to local image mapping if icon_url is missing
-                 const imageKey = generateCommunityImageKey(community.group_name);
-                 const imagePath = imageKey ? getImagePath(imageKey) : null;
-                 if (imagePath) {
-                      const img = document.createElement('img');
-                      img.src = imagePath;
-                      img.alt = `${community.group_name} Logo`;
-                      img.classList.add('community-logo');
-                      img.loading = 'lazy';
-                      listItem.appendChild(img);
-                 } else {
-                      console.warn(`No icon_url or local image mapping found for ${community.group_name}`);
-                 }
+                // 2. Try local image mapping
+                const imageKey = generateCommunityImageKey(community.group_name);
+                const mappedPath = imageKey ? getImagePath(imageKey) : null;
+                if (mappedPath) {
+                    imageSource = mappedPath;
+                } else {
+                    // 3. Use fish_known.png as the final fallback
+                    imageSource = 'images/fish_known.png';
+                    console.warn(`No icon_url or local mapping for ${community.group_name}, using fallback.`);
+                }
             }
-            listItem.appendChild(textDiv);
+
+            img.src = imageSource;
+
+            // Add error handler ONLY if we attempted to load icon_url
+            if (addErrorFallback) {
+                img.onerror = () => {
+                    console.warn(`Failed to load image from icon_url: ${img.src}. Using fallback.`);
+                    img.src = 'images/fish_known.png';
+                    // Remove the error handler to prevent infinite loops if fallback also fails
+                    img.onerror = null;
+                };
+            } else {
+                 // Add a simpler error handler for local/fallback images
+                 img.onerror = () => {
+                     console.error(`Failed to load local/fallback image: ${img.src}`);
+                     img.style.display = 'none'; // Hide if even fallback fails
+                 };
+            }
+
+            // Check if VRChat group link exists (using variable from line 269) to wrap the image
+            // const vrchatLink = community.group_link; // REMOVED REDECLARATION
+            if (vrchatLink && (vrchatLink.startsWith('http') || vrchatLink.startsWith('vrchat://'))) {
+                const linkWrapper = document.createElement('a');
+                linkWrapper.href = escapeHtml(vrchatLink.trim());
+                linkWrapper.target = '_blank';
+                linkWrapper.rel = 'noopener noreferrer';
+                linkWrapper.title = `VRChat Group: ${community.group_name}`; // Tooltip for the image link
+                linkWrapper.classList.add('community-logo-link'); // Add a class if specific styling is needed
+
+                linkWrapper.appendChild(img); // Place the image inside the link
+                listItem.appendChild(linkWrapper); // Append the link (with image)
+            } else {
+                listItem.appendChild(img); // Append the image directly if no link
+            }
+
+            listItem.appendChild(textDiv); // Append the text content div after the image/link
 
             // Check status and append to the correct list (status property name is correct)
             if (community.status === 'FISH_VERIFIED' && verifiedListElement) {

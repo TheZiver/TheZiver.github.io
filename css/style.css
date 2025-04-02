@@ -227,15 +227,11 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     background-color: #2a2a30; /* Tile background */
     border: 1px solid #333337; /* Tile border */
     border-radius: 6px;
-    padding: 15px;
+    padding: 10px; /* Reduced padding */
     display: flex; /* Use flex for content layout INSIDE the tile */
     flex-direction: column; /* Stack image and text vertically */
     align-items: center; /* Center content horizontally */
     text-align: center; /* Center text */
-    /* Remove properties related to vertical list layout */
-    /* margin-bottom: 25px; */
-    /* border-bottom: 1px solid #333337; */
-    /* padding-bottom: 15px; */
 }
 
 /* Remove the :last-child rule that removed bottom border */
@@ -243,10 +239,10 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 
 /* Community Logo in Lists */
 .community-logo {
-    width: 60px; /* Slightly larger logo */
-    height: 60px;
+    width: 100px; /* Increased logo size */
+    height: 100px;
     object-fit: contain;
-    margin-bottom: 15px; /* Space below logo */
+    margin-bottom: 8px; /* Reduced space below logo */
     margin-right: 0; /* Remove right margin */
     flex-shrink: 0;
     border-radius: 4px;
@@ -255,43 +251,46 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 /* Text Container Div within Tiles */
 #fish-verified-list li > div, #fish-certified-list li > div, #fish-known-list li > div, #fish-status-list li > div {
     flex-grow: 1; /* Allow text div to take space */
-    line-height: 1.4;
+    line-height: 1.3; /* Reduced line height */
     margin-bottom: 0; /* Override default div margin */
     width: 100%; /* Ensure text div takes full width */
 }
 /* Community Name (Line 1) */
 /* Community Name (Line 1) */
-#fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b { display: block; font-size: 1.1em; font-weight: bold; margin-bottom: 6px; } /* Increased bottom margin */
+#fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b { display: block; font-size: 1.05em; font-weight: bold; margin-bottom: 3px; } /* Reduced font size and margin */
 /* Description (Line 2) - Note: Known list JSON doesn't have description, but selector added for consistency */
 /* Owner Info (was nth-of-type(1) after name bold) */
-#fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) { display: block; font-size: 0.95em; margin-bottom: 8px; } /* Increased bottom margin */
+#fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) { /* display: block; */ font-size: 0.9em; margin-bottom: 5px; display: inline; /* Make it inline */ margin-right: 5px; /* Add space after Owner: */ white-space: nowrap; /* Prevent owner text wrapping */ } /* Removed display: block, made inline */
 /* Owner Info (Line 3) */
 /* Make "Owner:" label NOT bold (Selector remains nth-of-type(1) because it's the first span after the bold name) */
 #fish-verified-list li > div span:nth-of-type(1) b, #fish-certified-list li > div span:nth-of-type(1) b, #fish-known-list li > div span:nth-of-type(1) b, #fish-status-list li > div span:nth-of-type(1) b { font-weight: normal; }
 /* Links (VRChat Group link AND Extra Links) */
 /* Links (VRChat Group link AND Extra Links) */
-#fish-verified-list li > div > a, /* Target direct child 'a' (VRChat Group) */
+/* --- OLD BLOCK LINK STYLES (COMMENTED OUT) --- */
+/*
+#fish-verified-list li > div > a,
 #fish-certified-list li > div > a,
 #fish-known-list li > div > a,
 #fish-status-list li > div > a,
-#fish-verified-list li > div .community-extra-links a, /* Target 'a' inside the container */
+#fish-verified-list li > div .community-extra-links a,
 #fish-certified-list li > div .community-extra-links a,
 #fish-status-list li > div .community-extra-links a {
-    display: block; /* Make links block level to stack */
-    margin: 4px auto; /* Center links and add vertical space */
+    display: block;
+    margin: 4px auto;
     font-size: 0.9em;
     line-height: 1.4;
-    /* Remove properties related to inline layout */
-    /* margin-right: 8px; */
-    /* vertical-align: middle; */
 }
+*/
 
 /* Container for the extra links */
+/* --- OLD EXTRA LINKS CONTAINER (COMMENTED OUT) --- */
+/*
 .community-extra-links {
-    display: block; /* Keep this block */
-    margin-top: 8px; /* Increased space above the extra links block */
-    margin-bottom: 8px; /* Add space below links before member count */
+    display: block;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
+*/
 
 /* Remove the :last-child rule for margin-right as links are now block */
 /* .community-extra-links a:last-child { margin-right: 0; } */
@@ -336,6 +335,70 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 /* .fish-certified-theme #fish-certified-list li > div a:hover { color: #aed581; } */
 /* .fish-known-theme #fish-known-list li > div a { color: #ffb74d; } */
 /* .fish-known-theme #fish-known-list li > div a:hover { color: #ffcc80; } */
+/* --- NEW ICON LINK STYLES --- */
+/* Container for the icon links */
+.community-links-container {
+    display: flex; /* Use flexbox for easy row layout */
+    flex-wrap: wrap; /* Allow icons to wrap if needed */
+    justify-content: center; /* Center icons within the container */
+    gap: 5px; /* Spacing between icons */
+    margin-top: 5px; /* Reduced space above the icon row */
+    margin-bottom: 5px; /* Reduced space below the icon row */
+}
+
+/* Individual icon link styling */
+/* Styling for the link wrapping the icon */
+.community-link-icon {
+    display: inline-block; /* Keep links inline */
+    text-decoration: none; /* Remove underline from link */
+    color: #64B5F6; /* Use standard link color for the icon */
+    margin: 0 2px; /* Add small horizontal margin */
+    vertical-align: middle; /* Align icons nicely with text if needed */
+    /* Remove background, border, padding from the link itself */
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s ease; /* Transition color on hover */
+}
+
+/* Styling for the Font Awesome <i> tag */
+.community-link-icon i {
+    font-size: 1.2em; /* Slightly reduced icon size */
+    vertical-align: middle; /* Ensure icon aligns well */
+}
+
+.community-link-icon:hover {
+    color: #90CAF9; /* Lighter blue on hover */
+    /* Remove background/border hover styles */
+    background-color: transparent;
+    border: none;
+}
+/* Ensure specific brand colors if desired (optional) */
+.community-link-icon i.fa-discord { color: #5865F2; }
+.community-link-icon i.fa-x-twitter { color: #ffffff; } /* Or #000000 depending on context */
+.community-link-icon i.fa-patreon { color: #f96854; }
+.community-link-icon i.fa-youtube { color: #FF0000; }
+.community-link-icon i.fa-github { color: #ffffff; }
+.community-link-icon i.fa-twitch { color: #9146FF; }
+/* Add more brand colors as needed */
+
+.community-link-icon:hover i.fa-discord { color: #707bf5; }
+.community-link-icon:hover i.fa-x-twitter { color: #cccccc; }
+/* Add hover colors for other brands */
+
+/* Adjust spacing for owner/member count if needed */
+#fish-verified-list li > div span:nth-of-type(1), /* Owner */
+#fish-certified-list li > div span:nth-of-type(1),
+#fish-known-list li > div span:nth-of-type(1),
+#fish-status-list li > div span:nth-of-type(1) {
+    margin-bottom: 2px; /* Further reduce space below owner */
+}
+
+.community-member-count {
+    margin-top: 3px; /* Further reduce space above member count */
+    font-size: 0.8em; /* Slightly smaller member count */
+}
 
 
 /* Fish Known Theme - General styles (Keep general theme colors if needed elsewhere) */
@@ -360,21 +423,74 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 .luxury-trash-theme p i { color: #FFEA00; } /* Style for the italic motto */
 .luxury-trash-theme ul#luxury-products-list li { color: #FFD700; } /* Ensure product list items have the color */
 
-/* Rose Fish Theme */
+/* Rose Fish Page Specific Styles (Black Background, White Text) */
+body.theme-rosefish {
+    background-color: #000000; /* Black background for the whole page */
+}
+body.theme-rosefish .container {
+    background-color: #000000; /* Black background for the container */
+    /* Override general container text color */
+    color: #FFFFFF; /* Default text color to white */
+}
+/* Ensure paragraphs and list items inside the container are white */
+body.theme-rosefish .container p,
+body.theme-rosefish .container li:not(#rosefish-members-list li), /* Exclude member list items styled below */
+body.theme-rosefish .container div:not(.rose-fish-theme div):not(.fish-animation) /* Exclude themed divs and animation */
+{
+    color: #FFFFFF;
+}
+/* Keep links white unless overridden by theme */
+body.theme-rosefish .container a {
+    color: #f0f0f0; /* Light grey/white for default links */
+}
+body.theme-rosefish .container a:hover {
+    color: #ffffff;
+}
+
+/* Rose Fish Theme (Keep existing red styles for headers/links within this section) */
 .rose-fish-theme div, /* Target the loaded div */
 .rose-fish-theme p,
 .rose-fish-theme li,
 .rose-fish-theme h3,
-.rose-fish-theme ol { color: #FF6B6B; }
-.rose-fish-theme a { color: #FF8F8F; }
-.rose-fish-theme a:hover { color: #FFBDBD; }
+.rose-fish-theme ol { color: #FF6B6B; } /* Keep red */
+/* Override the general white link color set above for links *within* the rose-fish-theme section */
+.rose-fish-theme a { color: #FF8F8F !important; } /* Keep red, use !important if needed */
+.rose-fish-theme a:hover { color: #FFBDBD !important; } /* Keep light red */
 .rose-fish-theme h3 { color: #E57373 !important; }
 .rose-fish-theme ol li::marker { color: #FF6B6B; }
 /* Style for Rose Fish members list */
 #rosefish-members-list { list-style: none; padding-left: 0; }
-#rosefish-members-list li { border-bottom: 1px solid #4a2e2e; padding-bottom: 10px; margin-bottom: 10px; line-height: 1.5; }
+#rosefish-members-list li {
+    color: #FFFFFF; /* Make member list text white */
+    border-bottom: 1px solid #555; /* Darker border for black background */
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
 #rosefish-members-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-#rosefish-members-list li b { font-size: 1.05em; }
+#rosefish-members-list li b {
+    font-size: 1.05em;
+    color: #E57373; /* Keep member names red like H3 */
+}
+/* Style the summary div added in rosefish.html */
+.rosefish-summary {
+    color: #FFFFFF; /* White text */
+    margin-top: 20px;
+    text-align: center;
+    border-top: 1px solid #555; /* Separator */
+    padding-top: 15px;
+}
+.rosefish-summary p {
+    color: #FFFFFF; /* Ensure paragraphs inside are white */
+    margin-bottom: 5px;
+}
+.rosefish-summary a {
+    color: #FF8F8F !important; /* Keep link red */
+    text-decoration: underline;
+}
+.rosefish-summary a:hover {
+    color: #FFBDBD !important; /* Keep link light red */
+}
 
 
 /* Style for loading/error messages */
@@ -584,9 +700,12 @@ iframe {
     color: #e0e0e0;
 }
 .main-nav a.active {
-    background-color: #4dd0e1;
-    color: #121212;
-    font-weight: bold;
+    /* background-color: #4dd0e1; */ /* Removed background change */
+    /* color: #121212; */ /* Removed text color change */
+    /* font-weight: bold; */ /* Original bold removed, replaced below */
+    /* Optionally add a subtle indicator like an underline or bolder weight if needed */
+     font-weight: 900; /* Make active link slightly bolder */
+     /* text-decoration: underline; */ /* Alternative: underline */
 }
 
 /* Responsive Nav - Wrap items on smaller screens */
