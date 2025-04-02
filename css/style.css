@@ -62,8 +62,8 @@ h1, h2 {
     100% { background-position: 0% 50%; }
 }
 
-h1 { font-size: 2.4em; letter-spacing: -0.02em; margin-bottom: 30px; text-align: center; /* Center the main H1 */ }
- @media (min-width: 600px) { h1 { font-size: 2.8em; margin-bottom: 35px; } }
+h1 { font-size: 2.4em; letter-spacing: -0.02em; margin-bottom: 15px; text-align: center; /* Center the main H1, reduced bottom margin */ }
+ @media (min-width: 600px) { h1 { font-size: 2.8em; margin-bottom: 20px; /* Reduced bottom margin */ } }
 
 h2 { font-size: 1.8em; margin-top: 40px; margin-bottom: 20px; }
 @media (min-width: 600px) { h2 { font-size: 2em; margin-top: 50px; margin-bottom: 25px; } }
@@ -175,8 +175,8 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 
 /* Image Scaling Base */
 .community-image, .meaning-image, .verified-image {
-    max-width: 100%; height: auto; display: block; margin: 20px auto;
-    border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    max-width: 100%; height: auto; display: block; margin: 5px auto 20px auto; /* Reduced top margin */
+    border-radius: 5px; /* Removed box-shadow */
 }
 /* Specific Max Widths */
 .meaning-image { max-width: 600px; margin-top: 30px; margin-bottom: 30px; }
@@ -216,7 +216,8 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     padding-left: 0;
     display: grid;
     /* Fixed 3-column grid */
-    grid-template-columns: repeat(3, 1fr);
+    /* Responsive grid columns: fit items >= 250px wide */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px; /* Spacing between tiles */
     margin-top: 20px; /* Add some space above the grid */
 }
@@ -714,6 +715,74 @@ iframe {
 
 }
 /* === END MOBILE CALENDAR IMPROVEMENTS === */
+
+
+/* ============================================= */
+/* === PAGE-SPECIFIC THEMES ==================== */
+/* ============================================= */
+
+/* Removed Theme CSS for Index, Daily, Communities */
+
+/* --- Theme: Rose Fish (Rose/Red/Blood) --- */
+body.theme-rosefish {
+    background-color: #4B000F; /* Dark blood red */
+    color: #F0E6E6; /* Light warm grey text for readability */
+}
+body.theme-rosefish .container {
+    background-color: #8B0000; /* Dark red */
+    color: #F0E6E6; /* Match body text color */
+    border: 1px solid #DC143C; /* Crimson */
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+}
+body.theme-rosefish a { color: #FF69B4; } /* Hot pink links */
+body.theme-rosefish a:hover { color: #FFB6C1; } /* Light pink */
+body.theme-rosefish hr { border-top-color: #DC143C; }
+body.theme-rosefish h1, body.theme-rosefish h2, body.theme-rosefish h3 { /* Override default gradient */
+    background: linear-gradient(120deg, #DC143C, #FF1493); /* Crimson to Deep Pink */
+    background-clip: text; -webkit-background-clip: text;
+    color: transparent; -webkit-text-fill-color: transparent;
+    animation: none; /* Disable default flow animation */
+}
+body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
+
+/* --- Theme: Store (Luxury/Gold) --- */
+body.theme-store {
+    background-color: #111111; /* Near black */
+    color: #EAEAEA; /* Light grey text */
+}
+body.theme-store .container {
+    background-color: #222222; /* Dark grey */
+    color: #EAEAEA;
+    border: 1px solid #DAA520; /* Goldenrod border */
+    box-shadow: 0 0 15px rgba(218, 165, 32, 0.4);
+}
+body.theme-store a { color: #FFD700; } /* Gold links */
+body.theme-store a:hover { color: #FFFACD; } /* Lemon chiffon */
+body.theme-store hr { border-top-color: #DAA520; }
+body.theme-store h1, body.theme-store h2 { /* Override default gradient */
+    background: linear-gradient(120deg, #FFD700, #F0E68C); /* Gold to Khaki */
+    background-clip: text; -webkit-background-clip: text;
+    color: transparent; -webkit-text-fill-color: transparent;
+    animation: none; /* Disable default flow animation */
+}
+body.theme-store #luxury-products-list li { color: #EAEAEA; }
+body.theme-store #luxury-products-list li b { color: #FFD700; } /* Gold item name */
+body.theme-store #luxury-motto i { color: #FFD700; } /* Gold motto */
+
+/* --- General Theme Overrides --- */
+/* Ensure nav bar looks consistent across themes */
+.main-nav { background-color: #1e1e1e; border-bottom: 1px solid #333337; }
+.main-nav a { color: #cccccc; }
+.main-nav a:hover { background-color: #333337; color: #e0e0e0; }
+.main-nav a.active { background-color: #4dd0e1; color: #121212; }
+
+/* Ensure fish animation color is consistent */
+@keyframes colorCycle { /* Keep this definition */
+    0%   { color: #ff00fe; } /* Magenta */
+    50%  { color: #00fdff; } /* Cyan */
+    100% { color: #ff00fe; } /* Magenta */
+}
+.fish-symbol { animation: colorCycle 4s linear infinite; } /* Ensure animation is applied */
 
 
 /* --- END OF FINAL style.css --- */
