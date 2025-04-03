@@ -509,6 +509,18 @@ body.theme-rosefish .container a:hover {
     color: #ffffff;
 }
 
+/* Style the pre tag holding the raw member list */
+body.theme-rosefish #rosefish-members-list pre {
+    text-align: center; /* Center the text */
+    color: red;         /* Make the text red */
+    font-family: inherit; /* Use the body's font */
+    font-size: inherit;   /* Use the body's font size */
+    line-height: inherit; /* Use the body's line height */
+    margin: 0;          /* Remove default pre margins */
+    padding: 0;         /* Remove default pre padding */
+    white-space: pre-wrap; /* Ensure wrapping */
+}
+
 /* Rose Fish Theme (Keep existing red styles for headers/links within this section) */
 .rose-fish-theme div, /* Target the loaded div */
 .rose-fish-theme p,

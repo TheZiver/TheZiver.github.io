@@ -552,22 +552,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadRoseFishMembers() {
-        if (!rosefishMembersListElement) return;
+        if (!rosefishMembersListElement) return; // Ensure the element exists
 
         fetch(ROSE_FISH_MEMBERS_URL)
-            .then(handleResponse)
-            .then(textData => {
-                rosefishMembersListElement.innerHTML = '';
-                const lines = textData.trim().split('\n');
-                
-                for (let i = 0; i < lines.length - 1; i += 2) {
-                    const [name, info] = parseMemberLines(lines[i], lines[i+1]);
-                    if (name && info) {
-                        rosefishMembersListElement.appendChild(createMemberListItem(name, info));
-                    }
-                }
+            .then(handleResponse) // Use the common response handler
+            .then(text => {
+                // Directly insert the raw fetched text, wrapped in <pre> for formatting.
+                // Escape HTML to prevent potential XSS issues from the source data.
+                // Styling (text-align, color) will be handled by CSS.
+                rosefishMembersListElement.innerHTML = `<pre style="white-space: pre-wrap;">${escapeHtml(text)}</pre>`;
             })
-            .catch(handleMemberError);
+            .catch(error => {
+                 console.error('Error loading Rose Fish members:', error);
+                 if (rosefishMembersListElement) {
+                     // Display error within the list element itself
+                     rosefishMembersListElement.innerHTML = '<li class="error-message"><i>Could not load members list.</i></li>';
+                 }
+            });
     }
 
     function handleResponse(response) {
