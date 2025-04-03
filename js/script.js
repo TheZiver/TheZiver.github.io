@@ -8,15 +8,105 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear existing animation
         fishContainer.innerHTML = '';
         
-        // Create just enough fish groups to fill the screen
-        const fishCount = Math.ceil(window.innerWidth / 200);
+        // Create fish elements with different images
+        const fishImages = [
+            'images/fish_verified.png',
+            'images/fish_certified.png',
+            'images/fish_known.png'
+        ];
+        
+        // Create 5-8 fish depending on screen size
+        const fishCount = 5 + Math.floor(Math.random() * 4);
         
         for (let i = 0; i < fishCount; i++) {
-            const fishGroup = document.createElement('span');
-            fishGroup.className = 'fish-group';
-            fishGroup.innerHTML = '＜＞＜';
-            fishContainer.appendChild(fishGroup);
+            const fish = document.createElement('img');
+            fish.src = fishImages[i % fishImages.length];
+            fish.className = 'floating-fish';
+            fish.alt = 'Floating fish animation';
+            
+            // Random initial position
+            fish.style.left = `${Math.random() * 100}%`;
+            fish.style.top = `${Math.random() * 100}%`;
+            
+            // Random size between 50px and 150px
+            const size = 50 + Math.random() * 100;
+            fish.style.width = `${size}px`;
+            fish.style.height = 'auto';
+            
+            // Random speed and direction
+            fish.dataset.speedX = (0.2 + Math.random() * 0.8).toFixed(2);
+            fish.dataset.speedY = (0.2 + Math.random() * 0.8).toFixed(2);
+            fish.dataset.directionX = Math.random() > 0.5 ? 1 : -1;
+            fish.dataset.directionY = Math.random() > 0.5 ? 1 : -1;
+            
+            fishContainer.appendChild(fish);
         }
+        
+        // Start animation
+        animateFish();
+    }
+    
+    function animateFish() {
+        const fishElements = document.querySelectorAll('.floating-fish');
+        const container = document.querySelector('.container');
+        if (!fishElements.length || !container) return;
+        
+        const containerRect = container.getBoundingClientRect();
+        
+        fishElements.forEach(fish => {
+            // Get current position
+            let x = parseFloat(fish.style.left) || 0;
+            let y = parseFloat(fish.style.top) || 0;
+            
+            // Get movement parameters
+            const speedX = parseFloat(fish.dataset.speedX);
+            const speedY = parseFloat(fish.dataset.speedY);
+            let dirX = parseFloat(fish.dataset.directionX);
+            let dirY = parseFloat(fish.dataset.directionY);
+            
+            // Calculate new position
+            x += dirX * speedX;
+            y += dirY * speedY;
+            
+            // Boundary checks with container
+            const fishWidth = fish.offsetWidth;
+            const fishHeight = fish.offsetHeight;
+            
+            if (x < -fishWidth) {
+                x = containerRect.width;
+            } else if (x > containerRect.width) {
+                x = -fishWidth;
+            }
+            
+            if (y < -fishHeight) {
+                y = containerRect.height;
+                dirY *= -1;
+            } else if (y > containerRect.height) {
+                y = -fishHeight;
+                dirY *= -1;
+            }
+            
+            // Occasionally change direction randomly
+            if (Math.random() < 0.01) {
+                dirX *= -1;
+                fish.dataset.directionX = dirX;
+            }
+            if (Math.random() < 0.01) {
+                dirY *= -1;
+                fish.dataset.directionY = dirY;
+            }
+            
+            // Apply new position and direction
+            fish.style.left = `${x}px`;
+            fish.style.top = `${y}px`;
+            fish.dataset.directionX = dirX;
+            fish.dataset.directionY = dirY;
+            
+            // Flip image based on direction
+            fish.style.transform = `scaleX(${dirX > 0 ? 1 : -1})`;
+        });
+        
+        requestAnimationFrame(animateFish);
     }
 
     const escapeHtml = (unsafe) => {
@@ -278,22 +368,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const linksContainer = document.createElement('div');
             linksContainer.classList.add('community-links-container'); // New class for styling the row
 
-            // Add VRChat Group Link as an icon
+            // Add VRChat Group Link as an icon (skip for FISH_KNOWN)
             const vrchatLink = community.group_link;
-            // VRChat Link with Font Awesome Sharp Solid Icon
-            if (vrchatLink && (vrchatLink.startsWith('http') || vrchatLink.startsWith('vrchat://'))) {
+            if (community.status !== 'FISH_KNOWN' && vrchatLink && (vrchatLink.startsWith('http') || vrchatLink.startsWith('vrchat://'))) {
                 const a = document.createElement('a');
                 a.href = escapeHtml(vrchatLink.trim());
                 a.target = '_blank';
                 a.rel = 'noopener noreferrer';
                 a.classList.add('community-link-icon');
-                a.title = 'VRChat Group'; // Tooltip
-                a.innerHTML = '<i class="fas fa-vr-cardboard fa-fw"></i>'; // Font Awesome Solid VR Cardboard icon
+                a.title = 'VRChat Group';
+                a.innerHTML = '<i class="fas fa-vr-cardboard fa-fw"></i>';
                 linksContainer.appendChild(a);
             }
 
-            // External group links with Font Awesome Sharp Solid Icons (Keep verified only for now)
-            if (community.status === 'FISH_VERIFIED' && Array.isArray(community.group_links) && community.group_links.length > 0) {
+            // External group links (skip for FISH_KNOWN)
+            if (community.status !== 'FISH_KNOWN' && Array.isArray(community.group_links) && community.group_links.length > 0) {
                 community.group_links.forEach(link => {
                     if (typeof link === 'string' && link.trim() !== '') {
                         const a = document.createElement('a');
@@ -302,35 +391,32 @@ document.addEventListener('DOMContentLoaded', function() {
                         a.rel = 'noopener noreferrer';
                         a.classList.add('community-link-icon');
 
-                        // Determine Font Awesome Sharp Solid icon class and title
-                        let iconClass = 'fas fa-link fa-fw'; // Default Link Icon (Solid)
+                        // Determine icon class and title
+                        let iconClass = 'fas fa-link fa-fw';
                         let iconTitle = 'External Link';
                         try {
                             const url = new URL(link);
                             const hostname = url.hostname.replace(/^www\./, '');
-                            iconTitle = hostname; // Default title to hostname
+                            iconTitle = hostname;
 
-                            // Map hostnames to Font Awesome classes (using fass for sharp solid, fab for brands)
-                            // NOTE: Brands (fab) do not have a sharp style, so we keep them as fab.
-                            if (hostname.includes('discord.gg')) { iconClass = 'fab fa-discord fa-fw'; iconTitle = 'Discord'; } // Keep brand
-                            else if (hostname.includes('twitter.com')) { iconClass = 'fab fa-x-twitter fa-fw'; iconTitle = 'Twitter/X'; } // Keep brand
-                            else if (hostname.includes('patreon.com')) { iconClass = 'fab fa-patreon fa-fw'; iconTitle = 'Patreon'; } // Keep brand
-                            else if (hostname.includes('ko-fi.com')) { iconClass = 'fas fa-mug-saucer fa-fw'; iconTitle = 'Ko-fi'; } // Solid
-                            else if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) { iconClass = 'fab fa-youtube fa-fw'; iconTitle = 'YouTube'; } // Keep brand
-                            else if (hostname.includes('booth.pm')) { iconClass = 'fas fa-store fa-fw'; iconTitle = 'Booth'; } // Solid
-                            else if (hostname.includes('github.com')) { iconClass = 'fab fa-github fa-fw'; iconTitle = 'GitHub'; } // Keep brand
-                            else if (hostname.includes('twitch.tv')) { iconClass = 'fab fa-twitch fa-fw'; iconTitle = 'Twitch'; } // Keep brand
-                            else if (hostname.includes('github.io') || url.pathname.length > 1) { iconClass = 'fas fa-globe fa-fw'; iconTitle = 'Website'; } // Solid Globe
-                            else { iconClass = 'fas fa-globe fa-fw'; iconTitle = hostname; } // Fallback Solid Globe
+                            if (hostname.includes('discord.gg')) { iconClass = 'fab fa-discord fa-fw'; iconTitle = 'Discord'; }
+                            else if (hostname.includes('twitter.com')) { iconClass = 'fab fa-x-twitter fa-fw'; iconTitle = 'Twitter/X'; }
+                            else if (hostname.includes('patreon.com')) { iconClass = 'fab fa-patreon fa-fw'; iconTitle = 'Patreon'; }
+                            else if (hostname.includes('ko-fi.com')) { iconClass = 'fas fa-mug-saucer fa-fw'; iconTitle = 'Ko-fi'; }
+                            else if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) { iconClass = 'fab fa-youtube fa-fw'; iconTitle = 'YouTube'; }
+                            else if (hostname.includes('booth.pm')) { iconClass = 'fas fa-store fa-fw'; iconTitle = 'Booth'; }
+                            else if (hostname.includes('github.com')) { iconClass = 'fab fa-github fa-fw'; iconTitle = 'GitHub'; }
+                            else if (hostname.includes('twitch.tv')) { iconClass = 'fab fa-twitch fa-fw'; iconTitle = 'Twitch'; }
+                            else if (hostname.includes('github.io') || url.pathname.length > 1) { iconClass = 'fas fa-globe fa-fw'; iconTitle = 'Website'; }
+                            else { iconClass = 'fas fa-globe fa-fw'; iconTitle = hostname; }
                         } catch (e) {
-                             iconClass = 'fas fa-link fa-fw'; // Fallback Solid Link Icon
+                            iconClass = 'fas fa-link fa-fw';
                             console.warn(`Could not parse URL for icon: ${link}`, e);
                         }
-                        // Use the correct class prefix (fass or fab)
-                        const prefix = iconClass.startsWith('fa-brands') || iconClass.startsWith('fab') ? 'fab' : 'fas'; // Use 'fas' for solid
-                        const iconName = iconClass.split(' ')[1]; // Get the icon name like fa-discord
-                        a.innerHTML = `<i class="${prefix} ${iconName} fa-fw"></i>`; // Reconstruct class
-                        a.title = escapeHtml(iconTitle); // Add tooltip
+                        const prefix = iconClass.startsWith('fa-brands') || iconClass.startsWith('fab') ? 'fab' : 'fas';
+                        const iconName = iconClass.split(' ')[1];
+                        a.innerHTML = `<i class="${prefix} ${iconName} fa-fw"></i>`;
+                        a.title = escapeHtml(iconTitle);
                         linksContainer.appendChild(a);
                     }
                 });
@@ -392,18 +478,17 @@ document.addEventListener('DOMContentLoaded', function() {
                  };
             }
 
-            // Check if VRChat group link exists (using variable from line 269) to wrap the image
-            // const vrchatLink = community.group_link; // REMOVED REDECLARATION
+            // Add image link for all communities with VRChat group links
             if (vrchatLink && (vrchatLink.startsWith('http') || vrchatLink.startsWith('vrchat://'))) {
                 const linkWrapper = document.createElement('a');
                 linkWrapper.href = escapeHtml(vrchatLink.trim());
                 linkWrapper.target = '_blank';
                 linkWrapper.rel = 'noopener noreferrer';
-                linkWrapper.title = `VRChat Group: ${community.group_name}`; // Tooltip for the image link
-                linkWrapper.classList.add('community-logo-link'); // Add a class if specific styling is needed
+                linkWrapper.title = `VRChat Group: ${community.group_name}`;
+                linkWrapper.classList.add('community-logo-link');
 
-                linkWrapper.appendChild(img); // Place the image inside the link
-                listItem.appendChild(linkWrapper); // Append the link (with image)
+                linkWrapper.appendChild(img);
+                listItem.appendChild(linkWrapper);
             } else {
                 listItem.appendChild(img); // Append the image directly if no link
             }

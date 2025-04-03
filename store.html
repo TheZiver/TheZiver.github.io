@@ -7,30 +7,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .booth-embed-container {
-            position: relative;
-            padding-bottom: 120%;
-            height: 0;
-            overflow: hidden;
-        }
-        .booth-embed {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
         .product-card {
             background: #1a1a1a;
             border: 2px solid #d4af37;
             border-radius: 8px;
             overflow: hidden;
             transition: all 0.3s ease;
+            padding: 20px;
+            text-align: center;
         }
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+        .product-name {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #d4af37;
+        }
+        .product-price {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        a {
+            color: #d4af37;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -43,153 +47,64 @@
         <li><a href="communities.html">COMMUNITIES</a></li>
         <li><a href="rosefish.html">ROSE FISH</a></li>
         <li><a href="store.html" class="active">STORE</a></li>
-    </div>
+    </ul>
 </nav>
 
 <div class="container">
     <section class="store-header">
         <h1>LUXURY TRASH</h1>
-        <img src="images/luxury_trash.png" alt="Luxury trash image" class="verified-image" loading="lazy">
+        <a href="https://theziver.booth.pm/" target="_blank" rel="noopener noreferrer">
+            <img src="images/luxury_trash.png" alt="Luxury trash image" class="verified-image" loading="lazy">
+        </a>
         <p id="luxury-motto"><i>"Loading motto..."</i></p>
     </section>
 
-    <div class="product-grid">
-        <div class="product-card">
-            <div class="booth-embed-container">
-                <iframe src="https://booth.pm/en/items/4131078"
-                        class="booth-embed"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
-            </div>
-            <div class="product-actions">
-                <a href="https://theziver.booth.pm/items/4131078"
-                   target="_blank"
-                   class="buy-button">View on Booth</a>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="booth-embed-container">
-                <iframe src="https://booth.pm/en/items/5106312"
-                        class="booth-embed"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
-            </div>
-            <div class="product-actions">
-                <a href="https://theziver.booth.pm/items/5106312"
-                   target="_blank"
-                   class="buy-button">View on Booth</a>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="booth-embed-container">
-                <iframe src="https://booth.pm/en/items/5399404"
-                        class="booth-embed"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
-            </div>
-            <div class="product-actions">
-                <a href="https://theziver.booth.pm/items/5399404"
-                   target="_blank"
-                   class="buy-button">View on Booth</a>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="booth-embed-container">
-                <iframe src="https://booth.pm/en/items/4993637"
-                        class="booth-embed"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
-            </div>
-            <div class="product-actions">
-                <a href="https://theziver.booth.pm/items/4993637"
-                   target="_blank"
-                   class="buy-button">View on Booth</a>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="booth-embed-container">
-                <iframe src="https://booth.pm/en/items/5980910"
-                        class="booth-embed"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
-            </div>
-            <div class="product-actions">
-                <a href="https://theziver.booth.pm/items/5980910"
-                   target="_blank"
-                   class="buy-button">View on Booth</a>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="booth-embed-container">
-                <iframe src="https://booth.pm/en/items/4234569"
-                        class="booth-embed"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
-            </div>
-            <div class="product-actions">
-                <a href="https://theziver.booth.pm/items/4234569"
-                   target="_blank"
-                   class="buy-button">View on Booth</a>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="booth-embed-container">
-                <iframe src="https://booth.pm/en/items/3780803"
-                        class="booth-embed"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
-            </div>
-            <div class="product-actions">
-                <a href="https://theziver.booth.pm/items/3780803"
-                       target="_blank"
-                       class="buy-button">View on Booth</a>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="booth-embed-container">
-                <iframe src="https://booth.pm/en/items/4678138"
-                        class="booth-embed"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
-            </div>
-            <div class="product-actions">
-                <a href="https://theziver.booth.pm/items/4678138"
-                       target="_blank"
-                       class="buy-button">View on Booth</a>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="booth-embed-container">
-                <iframe src="https://booth.pm/en/items/6610771"
-                        class="booth-embed"
-                        scrolling="no"
-                        frameborder="0"
-                        allowfullscreen></iframe>
-            </div>
-            <div class="product-actions">
-                <a href="https://theziver.booth.pm/items/6610771"
-                       target="_blank"
-                       class="buy-button">View on Booth</a>
-            </div>
-        </div>
+    <div class="product-grid" id="products-container">
+        <!-- Products will be loaded here by JavaScript -->
+        <div class="loading-message">Loading products...</div>
     </div>
 </div>
+
+<script>
+    // Function to convert URLs in text to clickable links
+    function linkify(text) {
+        if (!text) return text;
+        
+        // URL matching regex
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        return text.replace(urlRegex, url => {
+            return `<a href="${url}" target="_blank">${url}</a>`;
+        });
+    }
+
+    // Fetch product data from GitHub gist
+    fetch('https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw')
+        .then(response => response.json())
+        .then(data => {
+            // Update luxury motto with linkified text
+            document.getElementById('luxury-motto').innerHTML = linkify(data.store.luxury_trash);
+
+            // Create product cards
+            const container = document.getElementById('products-container');
+            container.innerHTML = ''; // Clear loading message
+            
+            data.store.products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-name">${product.item}</div>
+                    <div class="product-price">${product.price}</div>
+                    <a href="${product.link}" target="_blank" class="buy-button">View Product</a>
+                `;
+                container.appendChild(card);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading product data:', error);
+            document.getElementById('products-container').innerHTML = 
+                '<div class="error-message">Failed to load products. Please try again later.</div>';
+        });
+</script>
 
 <script src="js/script.js"></script>
 </body>
