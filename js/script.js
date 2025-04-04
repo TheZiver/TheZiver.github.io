@@ -1,118 +1,14 @@
 /**
  * FISH COMMUNITY WEBSITE SCRIPTS
  * Main JavaScript file for the FISH community website
+ *
+ * === CUSTOMIZATION GUIDE ===
+ * - To modify website content: Edit the data files in the 'data' folder
+ * - To change theme colors: Edit the CSS variables in style.css
+ * - To add new pages: Create HTML files following the existing structure
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-
-    // --- Helper Functions ---
-    function generateFishAnimation() {
-        const fishContainer = document.querySelector('.fish-animation');
-        if (!fishContainer) return;
-
-        // Clear existing animation
-        fishContainer.innerHTML = '';
-
-        // Create fish elements with different images
-        const fishImages = [
-            'images/fish_verified.png',
-            'images/fish_certified.png',
-            'images/fish_known.png'
-        ];
-
-        // Create 5-8 fish depending on screen size
-        const fishCount = 5 + Math.floor(Math.random() * 4);
-
-        for (let i = 0; i < fishCount; i++) {
-            const fish = document.createElement('img');
-            fish.src = fishImages[i % fishImages.length];
-            fish.className = 'floating-fish';
-            fish.alt = 'Floating fish animation';
-
-            // Random initial position
-            fish.style.left = `${Math.random() * 100}%`;
-            fish.style.top = `${Math.random() * 100}%`;
-
-            // Random size between 50px and 150px
-            const size = 50 + Math.random() * 100;
-            fish.style.width = `${size}px`;
-            fish.style.height = 'auto';
-
-            // Random speed and direction
-            fish.dataset.speedX = (0.2 + Math.random() * 0.8).toFixed(2);
-            fish.dataset.speedY = (0.2 + Math.random() * 0.8).toFixed(2);
-            fish.dataset.directionX = Math.random() > 0.5 ? 1 : -1;
-            fish.dataset.directionY = Math.random() > 0.5 ? 1 : -1;
-
-            fishContainer.appendChild(fish);
-        }
-
-        // Start animation
-        animateFish();
-    }
-
-    function animateFish() {
-        const fishElements = document.querySelectorAll('.floating-fish');
-        const container = document.querySelector('.container');
-        if (!fishElements.length || !container) return;
-
-        const containerRect = container.getBoundingClientRect();
-
-        fishElements.forEach(fish => {
-            // Get current position
-            let x = parseFloat(fish.style.left) || 0;
-            let y = parseFloat(fish.style.top) || 0;
-
-            // Get movement parameters
-            const speedX = parseFloat(fish.dataset.speedX);
-            const speedY = parseFloat(fish.dataset.speedY);
-            let dirX = parseFloat(fish.dataset.directionX);
-            let dirY = parseFloat(fish.dataset.directionY);
-
-            // Calculate new position
-            x += dirX * speedX;
-            y += dirY * speedY;
-
-            // Boundary checks with container
-            const fishWidth = fish.offsetWidth;
-            const fishHeight = fish.offsetHeight;
-
-            if (x < -fishWidth) {
-                x = containerRect.width;
-            } else if (x > containerRect.width) {
-                x = -fishWidth;
-            }
-
-            if (y < -fishHeight) {
-                y = containerRect.height;
-                dirY *= -1;
-            } else if (y > containerRect.height) {
-                y = -fishHeight;
-                dirY *= -1;
-            }
-
-            // Occasionally change direction randomly
-            if (Math.random() < 0.01) {
-                dirX *= -1;
-                fish.dataset.directionX = dirX;
-            }
-            if (Math.random() < 0.01) {
-                dirY *= -1;
-                fish.dataset.directionY = dirY;
-            }
-
-            // Apply new position and direction
-            fish.style.left = `${x}px`;
-            fish.style.top = `${y}px`;
-            fish.dataset.directionX = dirX;
-            fish.dataset.directionY = dirY;
-
-            // Flip image based on direction
-            fish.style.transform = `scaleX(${dirX > 0 ? 1 : -1})`;
-        });
-
-        requestAnimationFrame(animateFish);
-    }
 
     const escapeHtml = (unsafe) => {
         if (!unsafe || typeof unsafe !== 'string') return unsafe === 0 ? '0' : (unsafe || '');
@@ -913,13 +809,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (calendarGrid) renderCalendar(currentMonth, currentYear);
     }
 
-    // --- Initialization ---
+    /**
+     * === WEBSITE INITIALIZATION ===
+     * Main function that runs when the page loads
+     * - Initializes all page elements
+     * - Loads data from external sources
+     * - Sets up event listeners
+     */
     function initializePage() {
         console.log("Initializing page...");
 
-        // Get references to all elements needed by the script *first*
+        // Get references to all elements needed by the script
         getAllElements();
-        generateFishAnimation();
 
         // Load store data immediately since it's needed for the current page
         if (luxuryMottoElement || luxuryProductsListElement) {
@@ -952,7 +853,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (monthYearDisplay) monthYearDisplay.textContent = "Loading...";
 
-        // --- Fetch Primary Data ---
+        /**
+         * === DATA LOADING SECTION ===
+         * The website loads content from external JSON files
+         * - PRIMARY_DATA_URL: Main content for all pages
+         * - COMMUNITY_DATA_URL: Community-specific information
+         *
+         * To customize content, edit these JSON files
+         */
         console.log("Fetching primary data from:", PRIMARY_DATA_URL);
         fetch(PRIMARY_DATA_URL, { cache: "no-cache" })
             .then(response => {

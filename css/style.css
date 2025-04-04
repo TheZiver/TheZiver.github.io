@@ -2,6 +2,23 @@
    FISH COMMUNITY WEBSITE STYLES
    ======================================================== */
 
+/**
+ * === CUSTOMIZATION GUIDE ===
+ * - Main colors are defined below as CSS variables
+ * - To change the site's appearance, modify these variables
+ * - Each theme has its own section further down in this file
+ * - Theme sections are clearly marked with comments
+ */
+
+:root {
+    --background-color: #121212;
+    --text-color: #e0e0e0;
+    --accent-color: #4dd0e1;
+    --link-color: #4dd0e1;
+    --container-bg: #1a1a1a;
+    --border-color: #333337;
+}
+
 /* --- Base Styles --- */
 html {
     overflow-y: scroll; /* Force vertical scrollbar for consistent width */
@@ -21,25 +38,30 @@ html {
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #121212;
-    color: #e0e0e0;
+    background-color: var(--background-color);
+    color: var(--text-color);
     margin: 0;
-    padding: 0 0 20px 0; /* Remove top padding, keep bottom */
-    overflow-x: hidden; /* Prevent horizontal body scroll */
+    padding: 0 0 20px 0;
+    overflow-x: hidden;
     line-height: 1.7;
 }
 
+/**
+ * Main container - holds all page content
+ * Customize width, padding, and appearance here
+ */
 .container {
     width: 90%;
     max-width: 850px;
-    margin: 20px auto 40px auto; /* Adjust top margin for nav bar */
+    margin: 20px auto 40px auto;
     padding: 20px;
-    background-color: #1e1e1e;
+    background-color: var(--container-bg);
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     text-align: left;
     overflow: hidden;
     position: relative;
+    border: 1px solid var(--border-color);
 }
 @media (min-width: 600px) {
     .container {
@@ -138,26 +160,68 @@ ul, ol { padding-left: 30px; }
 li { margin-bottom: 15px; }
  @media (min-width: 600px) { li { margin-bottom: 18px; } }
 
-a { color: #4dd0e1; text-decoration: underline; transition: all 0.2s ease; }
+/**
+ * Link styles - customize the appearance of all links
+ * Change colors in the :root section at the top of this file
+ */
+a {
+    color: var(--link-color);
+    text-decoration: underline;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+}
+
 a:hover {
-    color: #00f7ff;
+    color: var(--accent-color);
     text-shadow: 0 0 10px rgba(0, 247, 255, 0.7);
-    transform: translateY(-2px) scale(1.02);
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: translateY(-3px) scale(1.03);
+}
+
+a:active {
+    transform: translateY(1px) scale(0.98);
+    transition-duration: 0.1s;
 }
 
 /* --- Navigation Hover Effects --- */
+.main-nav a {
+    position: relative;
+    overflow: hidden;
+}
+
+.main-nav a:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: currentColor;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(-50%);
+}
+
 .main-nav a:hover {
     background-color: #333337;
     color: #e0e0e0;
     transform: translateY(-2px);
 }
 
+.main-nav a:hover:before {
+    width: 80%;
+    opacity: 1;
+}
+
 /* Pulse animation for active nav items */
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(77, 208, 225, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(77, 208, 225, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(77, 208, 225, 0); }
+}
+
+.main-nav a.active {
+    position: relative;
+    z-index: 1;
 }
 
 .main-nav a.active:hover {
@@ -169,62 +233,15 @@ a:hover {
 hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 @media (min-width: 600px) { hr { margin: 50px 0; } }
 
-/* --- Fish Animation Styles --- */
-.fish-animation {
-    white-space: nowrap;
-    font-size: 3em;
-    display: block;
-    animation: fishSwim 30s linear infinite;
-    width: 100%;
-    overflow: hidden;
-    box-sizing: border-box;
-    margin-bottom: 30px;
-    text-align: left;
-    padding-left: 100%;
-}
+/* Fish animation styles removed */
 
-@media (min-width: 600px) {
-    .fish-animation {
-        font-size: 4em;
-        display: inline-block;
-        width: auto;
-        margin-bottom: 40px;
-    }
-}
+/* Fish swimming animation removed */
 
-@keyframes fishSwim {
-    0% { transform: translateX(0); }
-    50% { transform: translate(-100%, 0); }
-    100% { transform: translate(0, 0); }
-}
+/* Fish group styles removed */
 
-/* Fish Group Styles */
-.fish-group {
-    display: inline-block;
-    margin: 0 20px;
-    color: #ff00fe;
-    font-size: 1em;
-    animation: colorCycle 4s linear infinite;
-}
+/* Swimming fish footer styles removed */
 
-/* Color cycling animation */
-@keyframes colorCycle {
-    0%   { color: #ff00fe; } /* Magenta */
-    50%  { color: #00fdff; } /* Cyan */
-    100% { color: #ff00fe; } /* Magenta */
-}
-
-/* Floating fish animation */
-.floating-fish {
-    position: absolute;
-    width: 60px;
-    height: auto;
-    opacity: 0.3;
-    z-index: -1;
-    transition: transform 0.3s ease-in-out;
-}
-/* Removed nth-child duration variations */
-/* Removed nth-child animation delays */
+/* All fish container and animation styles removed */
 
 /* --- Image Styles --- */
 .community-image, .meaning-image, .verified-image {
@@ -992,7 +1009,11 @@ iframe {
 /* === PAGE-SPECIFIC THEMES ==================== */
 /* ============================================= */
 
-/* Removed Theme CSS for Index, Daily, Communities */
+/**
+ * === PAGE-SPECIFIC THEMES ===
+ * Each theme section below controls the appearance of a specific page
+ * To customize a theme, modify the colors and styles in its section
+ */
 
 /* --- Theme: Rose Fish (Rose/Red/Blood) --- */
 body.theme-rosefish {
@@ -1126,7 +1147,11 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     font-style: italic;
 }
 
-/* --- Theme: Store (Luxury/Gold) --- */
+/**
+ * === THEME: STORE (LUXURY/GOLD) ===
+ * Customize the Store page appearance here
+ * This theme uses gold/yellow colors with a dark background
+ */
 body.theme-store {
     background-color: #121212;
     color: #e0e0e0;
