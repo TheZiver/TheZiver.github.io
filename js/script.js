@@ -9,6 +9,232 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Fish animation has been moved to swimming-fish.js
+
+    // Fish animation functions have been moved to swimming-fish.js
+
+        // Removed redundant swimming image creation logic (handled by swimming-fish.js)
+    // Removed erroneous closing brace here
+
+    /**
+     * Recreates fish from stored data in localStorage
+     * This allows fish to persist across page changes
+     */
+    function recreateFishFromStoredData(fishData, container) {
+        // Clear any existing images
+        container.innerHTML = '';
+
+        // Recreate each fish from the stored data
+        if (Array.isArray(fishData.fish)) {
+            fishData.fish.forEach(fish => {
+                // Create image element
+                const img = document.createElement('img');
+                img.className = `swimming-image ${fish.sizeClass}`;
+                img.alt = 'Swimming community logo';
+                img.src = fish.src;
+
+                // Set position and movement parameters
+                img.style.left = fish.left;
+                img.style.top = fish.top;
+                img.dataset.speedX = fish.speedX;
+                img.dataset.speedY = fish.speedY;
+                img.dataset.directionX = fish.directionX;
+                img.dataset.directionY = fish.directionY;
+                img.dataset.waveOffset = fish.waveOffset;
+
+                // Add error handler
+                img.onerror = () => {
+                    img.src = 'images/fish_known.png';
+                    img.onerror = null;
+                };
+
+                // Add to container
+                container.appendChild(img);
+            });
+        }
+
+        // Reset animation flag to ensure it starts fresh
+        window.fishAnimationRunning = false;
+
+        // Start animation
+        animateSwimmingImages();
+    }
+
+    /**
+     * Stores current fish data in localStorage
+     * This allows fish to persist across page changes
+     */
+    function storeFishData() {
+        // Get all fish elements
+        const fishElements = document.querySelectorAll('.swimming-image');
+        if (!fishElements.length) return;
+
+        // Create an array to store fish data
+        const fishData = {
+            timestamp: Date.now(),
+            fish: []
+        };
+
+        // Store data for each fish
+        fishElements.forEach(fish => {
+            fishData.fish.push({
+                src: fish.src,
+                left: fish.style.left,
+                top: fish.style.top,
+                speedX: fish.dataset.speedX,
+                speedY: fish.dataset.speedY,
+                directionX: fish.dataset.directionX,
+                directionY: fish.dataset.directionY,
+                waveOffset: fish.dataset.waveOffset,
+                sizeClass: fish.className.includes('size-small') ? 'size-small' :
+                           fish.className.includes('size-large') ? 'size-large' : 'size-medium'
+            });
+        });
+
+        // Store in localStorage
+        try {
+            localStorage.setItem('fishData', JSON.stringify(fishData));
+        } catch (e) {
+            console.warn('Error storing fish data:', e);
+        }
+    }
+
+    /**
+     * Animates the swimming community images
+     * Creates a fish-like swimming motion for all images in the background
+     */
+    function animateSwimmingImages() {
+        const images = document.querySelectorAll('.swimming-image');
+        if (!images.length) return;
+
+        // Set a flag to indicate animation is running
+        if (!window.fishAnimationRunning) {
+            window.fishAnimationRunning = true;
+            console.log('Fish animation started');
+        }
+
+        images.forEach(img => {
+            // Get current position
+            let x = parseFloat(img.style.left) || 0;
+            let y = parseFloat(img.style.top) || 0;
+
+            // Get movement parameters
+            const speedX = parseFloat(img.dataset.speedX);
+            const speedY = parseFloat(img.dataset.speedY);
+            let dirX = parseFloat(img.dataset.directionX);
+            let dirY = parseFloat(img.dataset.directionY);
+
+            // Add more natural swimming motion with multiple wave components
+            const time = Date.now() / 1000;
+
+            // Primary wave motion (side to side)
+            const waveOffset = parseFloat(img.dataset.waveOffset || Math.random() * 10);
+            const primaryWaveFreq = 0.5;
+            const primaryWaveAmp = 2;
+            const primaryWave = Math.sin((time + waveOffset) * primaryWaveFreq) * primaryWaveAmp;
+
+            // Secondary wave motion (smaller, faster oscillation)
+            const secondaryWaveFreq = 1.5;
+            const secondaryWaveAmp = 0.7;
+            const secondaryWave = Math.sin((time + waveOffset) * secondaryWaveFreq) * secondaryWaveAmp;
+
+            // Combine wave effects for more natural motion
+            const waveY = primaryWave + secondaryWave;
+
+            // Add slight horizontal wobble for more realistic swimming
+            const wobbleFreq = 0.8;
+            const wobbleAmp = 0.4;
+            const wobbleX = Math.sin((time + waveOffset + 2) * wobbleFreq) * wobbleAmp;
+
+            // Calculate new position with enhanced swimming motion
+            x += dirX * speedX + (dirX * wobbleX);
+            y += dirY * speedY + waveY;
+
+            // Improved boundary handling with smoother transitions
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const imgWidth = img.offsetWidth || 80;
+            const imgHeight = img.offsetHeight || 80;
+
+            // Horizontal boundary checks
+            if (x < -imgWidth) {
+                // When exiting left, reappear on right
+                x = screenWidth + 10; // Add a small offset for smoother entry
+                // Randomize vertical position slightly for more natural movement
+                y = y + (Math.random() * 40 - 20);
+            } else if (x > screenWidth + 10) {
+                // When exiting right, reappear on left
+                x = -imgWidth - 10; // Add a small offset for smoother entry
+                // Randomize vertical position slightly for more natural movement
+                y = y + (Math.random() * 40 - 20);
+            }
+
+            // Vertical boundary checks with bounce effect
+            if (y < 0) {
+                // Bounce off top boundary
+                y = 0;
+                dirY *= -1;
+                // Add slight variation to direction for more natural movement
+                dirX = dirX + (Math.random() * 0.2 - 0.1);
+            } else if (y > screenHeight - imgHeight) {
+                // Bounce off bottom boundary
+                y = screenHeight - imgHeight;
+                dirY *= -1;
+                // Add slight variation to direction for more natural movement
+                dirX = dirX + (Math.random() * 0.2 - 0.1);
+            }
+
+            // Occasionally change direction randomly
+            if (Math.random() < 0.005) {
+                dirX *= -1;
+                img.dataset.directionX = dirX;
+                // Add slight rotation when changing direction
+                img.style.transform = `rotate(${dirX > 0 ? -5 : 5}deg)`;
+            }
+            if (Math.random() < 0.005) {
+                dirY *= -1;
+                img.dataset.directionY = dirY;
+            }
+
+            // Apply new position and direction
+            img.style.left = `${x}px`;
+            img.style.top = `${y}px`;
+            img.dataset.directionX = dirX;
+            img.dataset.directionY = dirY;
+
+            // Store wave offset if not already set
+            if (!img.dataset.waveOffset) {
+                img.dataset.waveOffset = Math.random() * 10;
+            }
+
+            // Create a more natural swimming appearance with combined transforms
+            // Calculate rotation based on movement direction and wave
+            const rotationAmount = Math.atan2(waveY, dirX * 3) * 10; // Convert to degrees and scale
+
+            // Apply all transformations: flip based on direction, rotate based on movement
+            img.style.transform = `
+                scaleX(${dirX > 0 ? 1 : -1})
+                rotate(${rotationAmount}deg)
+                ${dirY > 0 ? 'translateY(1px)' : 'translateY(-1px)'}
+            `;
+        });
+
+        // Periodically update stored fish data (every 5 seconds)
+        const now = Date.now();
+        if (!window.lastFishDataUpdate || (now - window.lastFishDataUpdate > 5000)) {
+            storeFishData();
+            window.lastFishDataUpdate = now;
+        }
+
+        // Continue animation with a safety check
+        if (window.fishAnimationRunning) {
+            requestAnimationFrame(animateSwimmingImages);
+        } else {
+            // If somehow the animation flag got reset, restart it
+            window.fishAnimationRunning = true;
+            requestAnimationFrame(animateSwimmingImages);
+        }
+    }
 
     const escapeHtml = (unsafe) => {
         if (!unsafe || typeof unsafe !== 'string') return unsafe === 0 ? '0' : (unsafe || '');
@@ -221,11 +447,11 @@ document.addEventListener('DOMContentLoaded', function() {
    }
 
    function loadFishGroups(data) {
-        // Check if ANY of the relevant list elements exist on the page
-        if (!verifiedListElement && !certifiedListElement && !knownListElement && !fishStatusListElement) return;
-
         // Use the correct path from the JSON: data.community_groups
         const communities = data?.community_groups;
+
+        // Check if ANY of the relevant list elements exist on the page
+        if (!verifiedListElement && !certifiedListElement && !knownListElement && !fishStatusListElement) return;
 
         if (!Array.isArray(communities)) {
              // Keep error message generic, or specify path mismatch
@@ -862,19 +1088,26 @@ document.addEventListener('DOMContentLoaded', function() {
          * To customize content, edit these JSON files
          */
         console.log("Fetching primary data from:", PRIMARY_DATA_URL);
+        console.log("Step 1: Starting primary data fetch...");
         fetch(PRIMARY_DATA_URL, { cache: "no-cache" })
             .then(response => {
+                console.log("Step 2: Received primary data response. Status:", response.status);
                 if (!response.ok) {
                     return response.text().then(text => {
+                         console.error("Primary data fetch failed! Status:", response.status, "Response text:", text.substring(0, 150));
                          throw new Error(`Primary data HTTP error! Status: ${response.status}. Response: ${text.substring(0, 150)}...`);
                     });
                 }
                  const contentType = response.headers.get("content-type");
+                 console.log("Step 3: Primary data response content type:", contentType);
                  if (contentType && contentType.indexOf("application/json") !== -1) {
+                     console.log("Step 4a: Parsing primary data as JSON...");
                      return response.json();
                  } else {
+                     console.log("Step 4b: Primary data content type not JSON, attempting text parse...");
                      return response.text().then(text => {
-                         console.warn("Primary data response content type was not JSON, attempting manual parse.");
+                          // console.error("Primary data fetch failed! Status:", response.status, "Response text:", text.substring(0, 150)); // Already logged in the .then above
+                          console.warn("Primary data response content type was not JSON, attempting manual parse.");
                          try { return JSON.parse(text); } catch (parseError) {
                               console.error("Failed to parse primary response text as JSON:", parseError);
                               throw new Error(`Primary response was not valid JSON. Content started with: ${text.substring(0, 100)}...`);
@@ -883,7 +1116,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  }
             })
             .then(primaryData => {
-                console.log("Successfully fetched and parsed primary JSON data.");
+                console.log("Step 5: Successfully fetched and parsed primary JSON data.");
 
                 // Process calendar data first using primary data
                 processSpecialDays(primaryData);
@@ -913,19 +1146,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 console.log("Primary content loading complete. Fetching community data...");
+                console.log("Step 6: Starting community data fetch from:", COMMUNITY_DATA_URL);
                 // --- Fetch Community Data ---
                 return fetch(COMMUNITY_DATA_URL, { cache: "no-cache" });
             })
             .then(response => {
+                  console.log("Step 7: Received community data response. Status:", response.status);
                  if (!response.ok) {
                     return response.text().then(text => {
+                         console.error("Community data fetch failed! Status:", response.status, "Response text:", text.substring(0, 150));
                          throw new Error(`Community data HTTP error! Status: ${response.status}. Response: ${text.substring(0, 150)}...`);
                     });
                 }
                  const contentType = response.headers.get("content-type");
+                 console.log("Step 8: Community data response content type:", contentType);
                  if (contentType && contentType.indexOf("application/json") !== -1) {
+                     console.log("Step 9a: Parsing community data as JSON...");
                      return response.json();
                  } else {
+                     console.log("Step 9b: Community data content type not JSON, attempting text parse...");
                      return response.text().then(text => {
                          console.warn("Community data response content type was not JSON, attempting manual parse.");
                          try { return JSON.parse(text); } catch (parseError) {
@@ -936,16 +1175,17 @@ document.addEventListener('DOMContentLoaded', function() {
                  }
             })
             .then(communityData => {
-                 console.log("Successfully fetched and parsed community JSON data.");
+                  console.log("Step 10: Successfully fetched and parsed community JSON data.");
 
                  // --- Populate Community Content (using communityData) ---
                  // loadCommunityInfo(communityData); // MOVED: This now uses primaryData
                  loadFishGroups(communityData);    // Loads verified/certified/known lists using communityData
 
-                 console.log("All page content loading complete.");
+                 // console.log("All page content loading complete."); // Redundant with Step 11
+                 console.log("Step 11: All page content loading complete.");
             })
             .catch(error => {
-                console.error("Fatal Error during initialization:", error);
+                console.error("Step FINAL CATCH: Fatal Error during initialization:", error);
                 const errorMsg = `<i class="error-message">Error loading data: ${escapeHtml(error.message)}</i>`;
                 const errorLi = `<li class="error-message"><i>Error loading data: ${escapeHtml(error.message)}</i></li>`;
                 let isPrimaryError = error.message.includes("Primary data");

@@ -233,7 +233,48 @@ a:active {
 hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 @media (min-width: 600px) { hr { margin: 50px 0; } }
 
-/* Fish animation styles removed */
+/**
+ * Swimming Community Images Background
+ * This creates a background effect with community logos swimming like fish
+ */
+.swimming-images-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Allow clicks to pass through */
+    z-index: -1; /* Behind all content */
+    overflow: hidden;
+}
+
+.swimming-image {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    opacity: 0.4; /* Slightly more visible */
+    border-radius: 50%;
+    object-fit: cover;
+    transition: transform 0.2s ease-out;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+    will-change: transform; /* Performance optimization */
+    backface-visibility: hidden; /* Smoother animations */
+    -webkit-font-smoothing: subpixel-antialiased; /* Better rendering */
+}
+
+/* Different sizes for variety */
+.swimming-image.size-small { width: 40px; height: 40px; }
+.swimming-image.size-medium { width: 60px; height: 60px; }
+.swimming-image.size-large { width: 80px; height: 80px; }
+
+/* Theme-specific adjustments for swimming images */
+.theme-rosefish .swimming-image {
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.3));
+}
+
+.theme-store .swimming-image {
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3));
+}
 
 /* Fish swimming animation removed */
 
