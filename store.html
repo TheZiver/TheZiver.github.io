@@ -6,56 +6,7 @@
     <title>FISH ＜＞＜ COMMUNITY - Luxury Trash Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .product-card {
-            background: #1a1a1a;
-            border: 2px solid #d4af37;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            padding: 0; /* Remove padding to allow image to fill */
-            text-align: center;
-            display: flex; /* Use flexbox for better control */
-            flex-direction: column; /* Stack items vertically */
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
-        }
-        .product-name {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            color: #d4af37;
-        }
-        .product-price {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-        }
-        .product-image {
-            width: 100%; /* Make image fill card width */
-            height: auto; /* Maintain aspect ratio */
-            display: block; /* Remove extra space below image */
-            border-top-left-radius: 6px; /* Match card radius (slightly less than 8px due to border) */
-            border-top-right-radius: 6px;
-            margin-bottom: 15px; /* Space between image and text */
-        }
-        /* Add padding back to the text/button area */
-        .product-name, .product-price, .buy-button {
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-        .buy-button {
-            margin-bottom: 15px; /* Add bottom margin to button */
-            display: inline-block; /* Needed for margin */
-        }
-        a {
-            color: #d4af37;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <!-- Styles moved to style.css -->
 </head>
 <body class="theme-store">
 
@@ -88,7 +39,7 @@
     // Function to convert URLs in text to clickable links
     function linkify(text) {
         if (!text) return text;
-        
+
         // URL matching regex
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         return text.replace(urlRegex, url => {
@@ -125,7 +76,7 @@
             // Create product cards
             const container = document.getElementById('products-container');
             container.innerHTML = ''; // Clear loading message
-            
+
             data.store.products.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -148,7 +99,7 @@
         })
         .catch(error => {
             console.error('Error loading product data:', error);
-            document.getElementById('products-container').innerHTML = 
+            document.getElementById('products-container').innerHTML =
                 '<div class="error-message">Failed to load products. Please try again later.</div>';
         });
 </script>

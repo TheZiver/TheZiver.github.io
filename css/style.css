@@ -1,8 +1,22 @@
-/* --- START OF FINAL style.css --- */
+/* ========================================================
+   FISH COMMUNITY WEBSITE STYLES
+   ======================================================== */
 
 /* --- Base Styles --- */
 html {
     overflow-y: scroll; /* Force vertical scrollbar for consistent width */
+}
+
+/* Accessibility */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
 body {
@@ -132,15 +146,14 @@ a:hover {
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Enhanced button hover effects */
+/* --- Navigation Hover Effects --- */
 .main-nav a:hover {
-    background: linear-gradient(135deg, rgba(0,229,255,0.2) 0%, rgba(100,181,246,0.4) 100%);
-    text-shadow: 0 0 8px rgba(0, 229, 255, 0.8);
+    background-color: #333337;
+    color: #e0e0e0;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Pulse animation for important buttons */
+/* Pulse animation for active nav items */
 @keyframes pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
@@ -156,11 +169,12 @@ a:hover {
 hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 @media (min-width: 600px) { hr { margin: 50px 0; } }
 
+/* --- Fish Animation Styles --- */
 .fish-animation {
     white-space: nowrap;
     font-size: 3em;
     display: block;
-    animation: fishSwim 15s linear infinite;
+    animation: fishSwim 30s linear infinite;
     width: 100%;
     overflow: hidden;
     box-sizing: border-box;
@@ -168,37 +182,23 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     text-align: left;
     padding-left: 100%;
 }
+
 @media (min-width: 600px) {
-    .fish-animation { font-size: 4em; display: inline-block; width: auto; margin-bottom: 40px; padding-left: 100%; }
+    .fish-animation {
+        font-size: 4em;
+        display: inline-block;
+        width: auto;
+        margin-bottom: 40px;
+    }
 }
+
 @keyframes fishSwim {
     0% { transform: translateX(0); }
     50% { transform: translate(-100%, 0); }
     100% { transform: translate(0, 0); }
 }
-.fish-animation {
-    animation: fishSwim 30s linear infinite; /* Slower animation */
-}
 
-.fish-group {
-    display: inline-block;
-    margin: 0 15px;
-    font-size: 24px;
-    animation: swim 20s linear infinite;
-}
-
-@keyframes swim {
-    0% { transform: translateX(100vw); }
-    100% { transform: translateX(-100%); }
-}
-/* Keyframes for color cycling */
-@keyframes colorCycle {
-    0%   { color: #ff00fe; } /* Magenta */
-    50%  { color: #00fdff; } /* Cyan */
-    100% { color: #ff00fe; } /* Magenta */
-}
-
-/* Updated symbol style with color animation */
+/* Fish Group Styles */
 .fish-group {
     display: inline-block;
     margin: 0 20px;
@@ -207,34 +207,91 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     animation: colorCycle 4s linear infinite;
 }
 
-.fish-animation {
-    font-size: 3em;
+/* Color cycling animation */
+@keyframes colorCycle {
+    0%   { color: #ff00fe; } /* Magenta */
+    50%  { color: #00fdff; } /* Cyan */
+    100% { color: #ff00fe; } /* Magenta */
 }
-@media (min-width: 600px) {
-    .fish-animation { font-size: 4em; }
+
+/* Floating fish animation */
+.floating-fish {
+    position: absolute;
+    width: 60px;
+    height: auto;
+    opacity: 0.3;
+    z-index: -1;
+    transition: transform 0.3s ease-in-out;
 }
 /* Removed nth-child duration variations */
 /* Removed nth-child animation delays */
 
-/* Image Scaling Base */
+/* --- Image Styles --- */
 .community-image, .meaning-image, .verified-image {
-    max-width: 100%; height: auto; display: block; margin: 5px auto 20px auto; /* Reduced top margin */
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 5px auto 20px auto;
     border-radius: 5px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
 }
+
 .community-image:hover, .meaning-image:hover, .verified-image:hover {
     transform: scale(1.08) perspective(500px) rotateY(5deg);
     box-shadow: 0 5px 20px rgba(100, 181, 246, 0.7);
     filter: brightness(1.1);
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
+
 /* Specific Max Widths */
-.meaning-image { max-width: 600px; margin-top: 30px; margin-bottom: 30px; }
- @media (max-width: 767px) { .meaning-image { max-width: 90%; } }
-.verified-image { max-width: 420px; }
- @media (max-width: 599px) { .verified-image { max-width: 300px; } }
-.community-image { max-width: 300px; }
+.meaning-image {
+    max-width: 600px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 767px) {
+    .meaning-image {
+        max-width: 90%;
+    }
+}
+
+.verified-image {
+    max-width: 420px;
+}
+
+@media (max-width: 599px) {
+    .verified-image {
+        max-width: 300px;
+    }
+}
+
+.community-image {
+    max-width: 300px;
+}
+
+/* Utility Classes */
+.centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.grayscale {
+    filter: grayscale(80%);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.database-link {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
 
 /* --- Theme Styles --- */
 
@@ -630,6 +687,13 @@ iframe {
 
 
 /* === CALENDAR STYLES ===================== */
+/* Calendar Loading Message */
+.calendar-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 20px;
+}
+
 :root {
     --cal-bg-color: #1a1a1e; --cal-header-bg: #222226; --cal-border-color: #333337;
     --cal-text-color: #e0e0e0; --cal-dim-text-color: #777;
@@ -766,36 +830,33 @@ iframe {
     z-index: 100;
     width: 100%;
 }
+
 .main-nav ul {
     list-style: none;
     padding: 0;
     margin: 0;
     text-align: center;
 }
+
 .main-nav li {
     display: inline-block;
     margin: 0 10px;
 }
+
 .main-nav a {
     color: #cccccc;
     text-decoration: none;
     font-size: 1.1em;
     padding: 8px 15px;
     border-radius: 4px;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: all 0.2s ease;
     display: inline-block;
 }
-.main-nav a:hover {
-    background-color: #333337;
-    color: #e0e0e0;
-}
+
 .main-nav a.active {
-    /* background-color: #4dd0e1; */ /* Removed background change */
-    /* color: #121212; */ /* Removed text color change */
-    /* font-weight: bold; */ /* Original bold removed, replaced below */
-    /* Optionally add a subtle indicator like an underline or bolder weight if needed */
-     font-weight: 900; /* Make active link slightly bolder */
-     /* text-decoration: underline; */ /* Alternative: underline */
+    background-color: #4dd0e1;
+    color: #121212;
+    font-weight: bold;
 }
 
 /* Responsive Nav - Wrap items on smaller screens */
@@ -804,15 +865,16 @@ iframe {
         white-space: normal;
         padding: 5px 0;
     }
+
     .main-nav li {
         margin: 3px 5px;
     }
+
     .main-nav a {
         font-size: 1em;
         padding: 6px 10px;
     }
 }
-/* === End Navigation Bar Styles === */
 
 
 /* === MOBILE CALENDAR IMPROVEMENTS === */
@@ -934,24 +996,32 @@ iframe {
 
 /* --- Theme: Rose Fish (Rose/Red/Blood) --- */
 body.theme-rosefish {
-    background-color: #4B000F; /* Dark blood red */
-    color: #F0E6E6; /* Light warm grey text for readability */
+    background-color: #000000; /* Black background */
+    color: #FFFFFF; /* White text */
 }
+
 body.theme-rosefish .container {
-    background-color: #8B0000; /* Dark red */
-    color: #F0E6E6; /* Match body text color */
+    background-color: #000000; /* Black background */
+    color: #FFFFFF; /* White text */
     border: 1px solid #DC143C; /* Crimson */
     box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
 }
+
 body.theme-rosefish a { color: #FF69B4; } /* Hot pink links */
 body.theme-rosefish a:hover { color: #FFB6C1; } /* Light pink */
 body.theme-rosefish hr { border-top-color: #DC143C; }
-body.theme-rosefish h1, body.theme-rosefish h2, body.theme-rosefish h3 { /* Override default gradient */
+
+body.theme-rosefish h1,
+body.theme-rosefish h2,
+body.theme-rosefish h3 { /* Override default gradient */
     background: linear-gradient(120deg, #DC143C, #FF1493); /* Crimson to Deep Pink */
-    background-clip: text; -webkit-background-clip: text;
-    color: transparent; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
     animation: none; /* Disable default flow animation */
 }
+
 body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
 
 /* --- Store Page Styles --- */
@@ -960,144 +1030,12 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     margin: 0 auto;
     padding: 2rem;
     background: #0a0a0a;
-}
-
-.product-grid-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.product-grid-header h1 {
-    color: #d4af37;
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.product-grid-header img {
-    max-width: 200px;
-    margin: 0 auto 1rem;
-}
-
-.product-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2rem;
-    list-style: none;
-    padding: 0;
 }
 
-.product-card {
-    background: #111;
-    border: 2px solid #d4af37;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.product-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
-}
-
-.product-image-container {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-    border-bottom: 2px solid #d4af37;
-}
-
-/* Product image container for both images and embeds */
-.product-image-container {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-    border-bottom: 2px solid #d4af37;
-}
-
-/* Regular product images */
-.product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-/* Booth.pm embed styling */
-.booth-embed {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-.product-card:hover .product-image,
-.product-card:hover .booth-embed {
-    transform: scale(1.05);
-}
-
-/* Product link styling */
-.product-link {
-    color: #FFD700;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.2s ease;
-}
-
-.product-link:hover {
-    color: #FFFACD;
-    text-decoration: underline;
-}
-
-.product-info {
-    padding: 1.2rem;
-}
-
-.product-name {
-    color: #f8f8f8;
-    margin: 0 0 0.5rem 0;
-    font-size: 1.2rem;
-    font-weight: 500;
-}
-
-.product-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1rem;
-}
-
-.product-price {
-    color: #d4af37;
-    font-weight: bold;
-    font-size: 1.1rem;
-}
-
-.loading-message {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 2rem;
-    color: #d4af37;
-    font-style: italic;
-}
-
-/* --- General Theme Overrides --- */
-/* Ensure nav bar looks consistent across themes */
-.main-nav { background-color: #1e1e1e; border-bottom: 1px solid #333337; }
-.main-nav a { color: #cccccc; }
-.main-nav a:hover { background-color: #333337; color: #e0e0e0; }
-.main-nav a.active { background-color: #4dd0e1; color: #121212; }
-
-/* Ensure fish animation color is consistent */
-@keyframes colorCycle { /* Keep this definition */
-    0%   { color: #ff00fe; } /* Magenta */
-    50%  { color: #00fdff; } /* Cyan */
-    100% { color: #ff00fe; } /* Magenta */
-}
-.fish-symbol { animation: colorCycle 4s linear infinite; } /* Ensure animation is applied */
-
-
-/* --- Store Page Styles --- */
+/* Store Header */
 .store-header {
     text-align: center;
     margin-bottom: 3rem;
@@ -1115,18 +1053,17 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     margin: 0 auto 1rem;
 }
 
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-}
-
+/* Product Card */
 .product-card {
     background: #1a1a1a;
     border: 2px solid #d4af37;
     border-radius: 8px;
     overflow: hidden;
     transition: all 0.3s ease;
+    padding: 0; /* Remove padding to allow image to fill */
+    text-align: center;
+    display: flex; /* Use flexbox for better control */
+    flex-direction: column; /* Stack items vertically */
 }
 
 .product-card:hover {
@@ -1134,27 +1071,35 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
 }
 
-.booth-embed-container {
-    position: relative;
-    padding-bottom: 120%; /* Tall aspect ratio for Booth previews */
-    height: 0;
-    overflow: hidden;
+/* Product Images */
+.product-image {
+    width: 100%; /* Make image fill card width */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Remove extra space below image */
+    border-top-left-radius: 6px; /* Match card radius */
+    border-top-right-radius: 6px;
+    margin-bottom: 15px; /* Space between image and text */
 }
 
-.booth-embed {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
+/* Product Text */
+.product-name {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #d4af37;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
-.product-actions {
-    padding: 1rem;
-    text-align: center;
+.product-price {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: #d4af37;
+    font-weight: bold;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
+/* Buy Button */
 .buy-button {
     display: inline-block;
     background: #d4af37;
@@ -1164,20 +1109,21 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     font-weight: bold;
     text-decoration: none;
     transition: all 0.2s ease;
-    font-size: 1.1em;
-    box-shadow: 0 0 0 rgba(212, 175, 55, 0);
+    margin-bottom: 15px;
 }
 
 .buy-button:hover {
     background: #ffd700;
     transform: scale(1.05);
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
 }
 
-.buy-button:hover {
-    background: #ffd700;
-    transform: scale(1.05);
+/* Loading Message */
+.loading-message {
+    text-align: center;
+    padding: 2rem;
+    color: #d4af37;
+    font-style: italic;
 }
 
 /* --- Theme: Store (Luxury/Gold) --- */
@@ -1187,7 +1133,9 @@ body.theme-store {
 }
 
 .theme-store .container {
-    background-color: #1a1a1a;
+    background-color: #0a0a0a; /* Darker background to make gold pop */
+    border: 2px solid #d4af37; /* Thicker gold border */
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); /* Enhanced gold glow */
 }
 
 .theme-store h1, .theme-store h2 {
@@ -1199,32 +1147,16 @@ body.theme-store {
     animation: gradientFlow 8s ease infinite;
 }
 
-/* Floating fish animation */
-@keyframes floatFish {
-    0% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-    25% {
-        transform: translate(50px, 30px) rotate(5deg);
-    }
-    50% {
-        transform: translate(100px, -20px) rotate(-5deg);
-    }
-    75% {
-        transform: translate(50px, -30px) rotate(5deg);
-    }
-    100% {
-        transform: translate(0, 0) rotate(0deg);
-    }
+.theme-store hr {
+    border-top-color: #d4af37; /* Gold horizontal rule */
 }
 
-.floating-fish {
-    position: absolute;
-    width: 60px;
-    height: auto;
-    opacity: 0.3;
-    z-index: -1;
-    animation: floatFish 15s infinite ease-in-out;
+.theme-store a {
+    color: #ffd700; /* Gold links */
 }
 
-/* --- END OF FINAL style.css --- */
+.theme-store a:hover {
+    color: #ffec8b; /* Lighter gold on hover */
+}
+
+/* --- END OF STYLE.CSS --- */

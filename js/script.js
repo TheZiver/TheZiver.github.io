@@ -1,83 +1,88 @@
+/**
+ * FISH COMMUNITY WEBSITE SCRIPTS
+ * Main JavaScript file for the FISH community website
+ */
+
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- Helper Functions ---
     function generateFishAnimation() {
         const fishContainer = document.querySelector('.fish-animation');
         if (!fishContainer) return;
-        
+
         // Clear existing animation
         fishContainer.innerHTML = '';
-        
+
         // Create fish elements with different images
         const fishImages = [
             'images/fish_verified.png',
             'images/fish_certified.png',
             'images/fish_known.png'
         ];
-        
+
         // Create 5-8 fish depending on screen size
         const fishCount = 5 + Math.floor(Math.random() * 4);
-        
+
         for (let i = 0; i < fishCount; i++) {
             const fish = document.createElement('img');
             fish.src = fishImages[i % fishImages.length];
             fish.className = 'floating-fish';
             fish.alt = 'Floating fish animation';
-            
+
             // Random initial position
             fish.style.left = `${Math.random() * 100}%`;
             fish.style.top = `${Math.random() * 100}%`;
-            
+
             // Random size between 50px and 150px
             const size = 50 + Math.random() * 100;
             fish.style.width = `${size}px`;
             fish.style.height = 'auto';
-            
+
             // Random speed and direction
             fish.dataset.speedX = (0.2 + Math.random() * 0.8).toFixed(2);
             fish.dataset.speedY = (0.2 + Math.random() * 0.8).toFixed(2);
             fish.dataset.directionX = Math.random() > 0.5 ? 1 : -1;
             fish.dataset.directionY = Math.random() > 0.5 ? 1 : -1;
-            
+
             fishContainer.appendChild(fish);
         }
-        
+
         // Start animation
         animateFish();
     }
-    
+
     function animateFish() {
         const fishElements = document.querySelectorAll('.floating-fish');
         const container = document.querySelector('.container');
         if (!fishElements.length || !container) return;
-        
+
         const containerRect = container.getBoundingClientRect();
-        
+
         fishElements.forEach(fish => {
             // Get current position
             let x = parseFloat(fish.style.left) || 0;
             let y = parseFloat(fish.style.top) || 0;
-            
+
             // Get movement parameters
             const speedX = parseFloat(fish.dataset.speedX);
             const speedY = parseFloat(fish.dataset.speedY);
             let dirX = parseFloat(fish.dataset.directionX);
             let dirY = parseFloat(fish.dataset.directionY);
-            
+
             // Calculate new position
             x += dirX * speedX;
             y += dirY * speedY;
-            
+
             // Boundary checks with container
             const fishWidth = fish.offsetWidth;
             const fishHeight = fish.offsetHeight;
-            
+
             if (x < -fishWidth) {
                 x = containerRect.width;
             } else if (x > containerRect.width) {
                 x = -fishWidth;
             }
-            
+
             if (y < -fishHeight) {
                 y = containerRect.height;
                 dirY *= -1;
@@ -85,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 y = -fishHeight;
                 dirY *= -1;
             }
-            
+
             // Occasionally change direction randomly
             if (Math.random() < 0.01) {
                 dirX *= -1;
@@ -95,17 +100,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 dirY *= -1;
                 fish.dataset.directionY = dirY;
             }
-            
+
             // Apply new position and direction
             fish.style.left = `${x}px`;
             fish.style.top = `${y}px`;
             fish.dataset.directionX = dirX;
             fish.dataset.directionY = dirY;
-            
+
             // Flip image based on direction
             fish.style.transform = `scaleX(${dirX > 0 ? 1 : -1})`;
         });
-        
+
         requestAnimationFrame(animateFish);
     }
 
@@ -580,7 +585,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const tagRegex = /<size=\d+>\s*(.*?)\s*<\/size>/;
         const nameMatch = nameLine.trim().match(tagRegex);
         const infoMatch = infoLine.trim().match(tagRegex);
-        
+
         if (!nameMatch || !infoMatch) {
             console.warn(`Could not parse lines: "${nameLine}" or "${infoLine}"`);
             return [null, null];
@@ -915,7 +920,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get references to all elements needed by the script *first*
         getAllElements();
         generateFishAnimation();
-        
+
         // Load store data immediately since it's needed for the current page
         if (luxuryMottoElement || luxuryProductsListElement) {
             fetch(PRIMARY_DATA_URL)
