@@ -1,15 +1,22 @@
 /**
- * FISH COMMUNITY WEBSITE - SWIMMING FISH (v3)
- * Creates and animates swimming fish background elements using only icon_urls from GitHub.
+ * FISH COMMUNITY WEBSITE - SWIMMING FISH (v4)
+ * Creates and animates swimming fish background elements using icon_urls from GitHub.
+ * Features:
+ * - Loads fish icons from community data
+ * - Spawns fish at random positions on each page load
+ * - Natural swimming motion with wave effects
+ * - Responsive design with different fish sizes
  */
 
 document.addEventListener('DOMContentLoaded', function() {
     initSwimmingFish();
 });
 
+// --- Global Variables ---
 let animationFrameId = null;
 let fishElements = [];
 let lastUpdateTime = 0;
+window.fishAnimationRunning = false;
 
 // --- Constants ---
 const COMMUNITY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw";
@@ -19,7 +26,7 @@ const FALLBACK_IMAGE = 'images/fish_known.png'; // Fallback if fetch fails or im
  * Initialize the swimming fish system
  */
 function initSwimmingFish() {
-    console.log('Initializing swimming fish system (v3 - GitHub Icons Only)');
+    console.log('Initializing swimming fish system (v4)');
 
     let container = document.getElementById('swimming-images-background');
     if (!container) {
@@ -33,9 +40,12 @@ function initSwimmingFish() {
     // Add necessary CSS styles dynamically
     addSwimmingFishStyles();
 
-    // Fetch data and create fish
+    // Always create new fish with random positions on each page load
+    console.log('Creating new fish with random positions...');
     createFish(container);
 }
+
+// Storage functions removed - fish now spawn at random positions on each page load
 
 /**
  * Fetch community data from GitHub
@@ -97,9 +107,8 @@ async function createFish(container) {
         return Math.random() * max;
     }
 
-    // Use a Set to track used URLs to ensure variety if possible
-    const usedUrls = new Set();
-    let availableUrls = [...imageUrls]; // Copy array to modify
+    // Copy array to modify for selecting unique URLs
+    let availableUrls = [...imageUrls];
 
     for (let i = 0; i < imageCount; i++) {
         const img = document.createElement('img');
@@ -130,17 +139,28 @@ async function createFish(container) {
         const randomSizeClass = sizeClasses[Math.floor(getRandom(sizeClasses.length))];
         img.classList.add(randomSizeClass);
 
-        // Random initial position (in pixels)
-        const xPos = getRandom(window.innerWidth);
-        const yPos = getRandom(window.innerHeight);
+        // Evenly distribute fish across the screen in a grid pattern
+        // This prevents fish from starting too close to each other
+        const gridCols = Math.ceil(Math.sqrt(imageCount));
+        const gridRows = Math.ceil(imageCount / gridCols);
+        const cellWidth = window.innerWidth / gridCols;
+        const cellHeight = window.innerHeight / gridRows;
+
+        // Calculate position within the fish's assigned grid cell, plus some randomness
+        const gridCol = i % gridCols;
+        const gridRow = Math.floor(i / gridCols);
+        const xPos = (gridCol * cellWidth) + getRandom(cellWidth * 0.8);
+        const yPos = (gridRow * cellHeight) + getRandom(cellHeight * 0.8);
         img.style.left = `${xPos}px`;
         img.style.top = `${yPos}px`;
 
-        // Random movement parameters
-        img.dataset.speedX = (0.3 + getRandom(0.7)).toFixed(2);
-        img.dataset.speedY = (0.3 + getRandom(0.7)).toFixed(2);
+        // More consistent movement parameters with less variation
+        img.dataset.speedX = (0.3 + getRandom(0.4)).toFixed(2); // Reduced speed variation
+        img.dataset.speedY = (0.2 + getRandom(0.3)).toFixed(2); // Slower vertical movement
         img.dataset.directionX = getRandom(1) > 0.5 ? 1 : -1;
         img.dataset.directionY = getRandom(1) > 0.5 ? 1 : -1;
+        // Assign a fixed wave offset to ensure fish don't synchronize
+        img.dataset.waveOffset = (i * 1.5) + getRandom(5);
 
         container.appendChild(img);
         fishElements.push(img);
@@ -158,78 +178,139 @@ async function createFish(container) {
  * Start the animation loop
  */
 function startAnimation() {
-    console.log("Attempting to start animation (v3)...");
+    console.log("Attempting to start animation (v4)...");
     if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
         console.log("Cancelled existing animation frame.");
     }
     lastUpdateTime = Date.now();
-    animateAllFish(); // Start the loop
+    window.fishAnimationRunning = true;
+    animateSwimmingImages(); // Start the enhanced animation loop
 }
 
 /**
- * Animate all fish elements
+ * Animates the swimming community images
+ * Creates a fish-like swimming motion for all images in the background
  */
-function animateAllFish() {
-    const currentTime = Date.now();
-    const deltaTime = Math.min((currentTime - lastUpdateTime) / 1000, 0.1);
-    lastUpdateTime = currentTime;
+function animateSwimmingImages() {
+    const images = document.querySelectorAll('.swimming-image');
+    if (!images.length) return;
 
-    fishElements.forEach(fish => {
+    // Set a flag to indicate animation is running
+    if (!window.fishAnimationRunning) {
+        window.fishAnimationRunning = true;
+        console.log('Fish animation started');
+    }
+
+    images.forEach(img => {
         try {
-            animateFish(fish, deltaTime);
+            // Get current position
+            let x = parseFloat(img.style.left) || 0;
+            let y = parseFloat(img.style.top) || 0;
+
+            // Get movement parameters
+            const speedX = parseFloat(img.dataset.speedX || 0.5);
+            const speedY = parseFloat(img.dataset.speedY || 0.3);
+            let dirX = parseFloat(img.dataset.directionX || 1);
+            let dirY = parseFloat(img.dataset.directionY || 1);
+
+            // Add simplified swimming motion with reduced wave components
+            const time = Date.now() / 1000;
+
+            // Primary wave motion (side to side) - reduced amplitude
+            const waveOffset = parseFloat(img.dataset.waveOffset || Math.random() * 10);
+            const primaryWaveFreq = 0.3; // Slower frequency
+            const primaryWaveAmp = 1.0; // Reduced amplitude
+            const primaryWave = Math.sin((time + waveOffset) * primaryWaveFreq) * primaryWaveAmp;
+
+            // Simplified wave motion - removed secondary wave
+            const waveY = primaryWave;
+
+            // Minimal horizontal wobble
+            const wobbleFreq = 0.5;
+            const wobbleAmp = 0.2; // Reduced amplitude
+            const wobbleX = Math.sin((time + waveOffset + 2) * wobbleFreq) * wobbleAmp;
+
+            // Calculate new position with enhanced swimming motion
+            x += dirX * speedX + (dirX * wobbleX);
+            y += dirY * speedY + waveY;
+
+            // Improved boundary handling with smoother transitions
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const imgWidth = img.offsetWidth || 60;
+            const imgHeight = img.offsetHeight || 60;
+
+            // Horizontal boundary checks
+            if (x < -imgWidth) {
+                // When exiting left, reappear on right
+                x = screenWidth + 10; // Add a small offset for smoother entry
+                // Randomize vertical position slightly for more natural movement
+                y = y + (Math.random() * 40 - 20);
+            } else if (x > screenWidth + 10) {
+                // When exiting right, reappear on left
+                x = -imgWidth - 10; // Add a small offset for smoother entry
+                // Randomize vertical position slightly for more natural movement
+                y = y + (Math.random() * 40 - 20);
+            }
+
+            // Vertical boundary checks with simple bounce effect
+            if (y < 0) {
+                // Bounce off top boundary
+                y = 0;
+                dirY *= -1;
+            } else if (y > screenHeight - imgHeight) {
+                // Bounce off bottom boundary
+                y = screenHeight - imgHeight;
+                dirY *= -1;
+            }
+
+            // Very rarely change direction randomly (reduced from 0.005 to 0.001)
+            // This makes fish movement more predictable and less chaotic
+            if (Math.random() < 0.001) {
+                dirX *= -1;
+                img.dataset.directionX = dirX;
+            }
+            if (Math.random() < 0.001) {
+                dirY *= -1;
+                img.dataset.directionY = dirY;
+            }
+
+            // Apply new position and direction
+            img.style.left = `${x}px`;
+            img.style.top = `${y}px`;
+            img.dataset.directionX = dirX;
+            img.dataset.directionY = dirY;
+
+            // Store wave offset if not already set
+            if (!img.dataset.waveOffset) {
+                img.dataset.waveOffset = Math.random() * 10;
+            }
+
+            // Simplified transform with minimal rotation
+            // Just flip the fish based on direction with very slight tilt
+            const tiltAmount = Math.sin(time + waveOffset) * 3; // Minimal tilt
+
+            // Apply simplified transformations
+            img.style.transform = `
+                scaleX(${dirX > 0 ? 1 : -1})
+                rotate(${tiltAmount}deg)
+            `;
         } catch (error) {
-            console.error("Error animating fish:", fish, error);
+            console.error("Error animating fish:", img, error);
         }
     });
 
-    animationFrameId = requestAnimationFrame(animateAllFish);
-}
+    // Fish data is no longer stored between page loads
 
-/**
- * Animate a single fish element
- */
-function animateFish(fish, deltaTime) {
-    let x = parseFloat(fish.style.left) || 0;
-    let y = parseFloat(fish.style.top) || 0;
-
-    const speedX = parseFloat(fish.dataset.speedX || 0.5);
-    const speedY = parseFloat(fish.dataset.speedY || 0.3);
-    let dirX = parseFloat(fish.dataset.directionX || 1);
-    let dirY = parseFloat(fish.dataset.directionY || 1);
-
-    x += dirX * speedX * 60 * deltaTime;
-    y += dirY * speedY * 60 * deltaTime;
-
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    const imgWidth = fish.offsetWidth || 60;
-    const imgHeight = fish.offsetHeight || 60;
-
-    if (dirX > 0 && x > screenWidth) {
-        x = -imgWidth;
-    } else if (dirX < 0 && x < -imgWidth) {
-        x = screenWidth;
+    // Continue animation with a safety check
+    if (window.fishAnimationRunning) {
+        animationFrameId = requestAnimationFrame(animateSwimmingImages);
+    } else {
+        // If somehow the animation flag got reset, restart it
+        window.fishAnimationRunning = true;
+        animationFrameId = requestAnimationFrame(animateSwimmingImages);
     }
-
-    if (dirY > 0 && y > screenHeight) {
-        y = -imgHeight;
-    } else if (dirY < 0 && y < -imgHeight) {
-        y = screenHeight;
-    }
-
-    // Randomly change horizontal direction occasionally
-    if (Math.random() < 0.005) { // Adjust probability as needed
-        dirX *= -1;
-        console.log(`Fish ${fish.src} changing direction.`); // Log direction change
-    }
-
-    fish.style.left = `${x}px`;
-    fish.style.top = `${y}px`;
-    fish.style.transform = `scaleX(${dirX})`; // Apply flip based on direction
-
-    fish.dataset.directionX = dirX;
-    fish.dataset.directionY = dirY;
 }
 
 /**
@@ -256,19 +337,30 @@ function addSwimmingFishStyles() {
             position: absolute;
             width: 60px;
             height: 60px;
-            opacity: 0.3;
+            opacity: 0.4; /* Slightly more visible */
             border-radius: 50%;
-            object-fit: contain; /* Changed from cover to contain */
+            object-fit: contain;
             will-change: transform, left, top;
             transition: none;
-            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));
-            background-color: rgba(0,0,0,0.1); /* Optional: slight background for better visibility if image has transparency */
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+            background-color: rgba(0,0,0,0.1);
+            backface-visibility: hidden; /* Smoother animations */
+            -webkit-font-smoothing: subpixel-antialiased; /* Better rendering */
         }
 
         .swimming-image.size-small { width: 40px; height: 40px; }
         .swimming-image.size-medium { width: 60px; height: 60px; }
         .swimming-image.size-large { width: 80px; height: 80px; }
+
+        /* Theme-specific adjustments for swimming images */
+        .theme-rosefish .swimming-image {
+            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.3));
+        }
+
+        .theme-store .swimming-image {
+            filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3));
+        }
     `;
     document.head.appendChild(styleElement);
-    console.log("Added swimming fish styles (v3).");
+    console.log("Added swimming fish styles (v4).");
 }
