@@ -13,8 +13,10 @@
             border-radius: 8px;
             overflow: hidden;
             transition: all 0.3s ease;
-            padding: 20px;
+            padding: 0; /* Remove padding to allow image to fill */
             text-align: center;
+            display: flex; /* Use flexbox for better control */
+            flex-direction: column; /* Stack items vertically */
         }
         .product-card:hover {
             transform: translateY(-5px);
@@ -28,6 +30,23 @@
         .product-price {
             font-size: 1.1rem;
             margin-bottom: 15px;
+        }
+        .product-image {
+            width: 100%; /* Make image fill card width */
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Remove extra space below image */
+            border-top-left-radius: 6px; /* Match card radius (slightly less than 8px due to border) */
+            border-top-right-radius: 6px;
+            margin-bottom: 15px; /* Space between image and text */
+        }
+        /* Add padding back to the text/button area */
+        .product-name, .product-price, .buy-button {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        .buy-button {
+            margin-bottom: 15px; /* Add bottom margin to button */
+            display: inline-block; /* Needed for margin */
         }
         a {
             color: #d4af37;
@@ -84,6 +103,25 @@
             // Update luxury motto with linkified text
             document.getElementById('luxury-motto').innerHTML = linkify(data.store.luxury_trash);
 
+            // Product image mapping (using names provided by user)
+            const productImagesInput = {
+                "luxury egg": "https://booth.pximg.net/2ce5aeeb-4a8b-435a-9fe0-ca63ec23e42a/i/3780803/c2620d1e-2185-4743-a4b8-5912e1829573_base_resized.jpg",
+                "luxury fish": "https://booth.pximg.net/2ce5aeeb-4a8b-435a-9fe0-ca63ec23e42a/i/4131078/bbad7d33-5eb6-407d-92e6-0c9e86b2a8bb_base_resized.jpg",
+                "luxury star": "https://booth.pximg.net/2ce5aeeb-4a8b-435a-9fe0-ca63ec23e42a/i/4234569/86f7e890-53f8-468d-8ab3-5e1f90ffc854_base_resized.jpg",
+                "luxury pre-cracked egg": "https://booth.pximg.net/2ce5aeeb-4a8b-435a-9fe0-ca63ec23e42a/i/4678138/2fc88ea8-59a4-417b-be7c-b7969335bfda_base_resized.jpg",
+                "luxury pipe": "https://booth.pximg.net/2ce5aeeb-4a8b-435a-9fe0-ca63ec23e42a/i/4993637/7f3ae503-9bdd-499c-828b-b68e9f0e66cc_base_resized.jpg",
+                "fish hairclip": "https://booth.pximg.net/2ce5aeeb-4a8b-435a-9fe0-ca63ec23e42a/i/5106312/a92dce99-7184-44b4-b8f9-47f745a1887b_base_resized.jpg",
+                "FISHING FLAG (AVATAR PREFAB)": "https://booth.pximg.net/2ce5aeeb-4a8b-435a-9fe0-ca63ec23e42a/i/5399404/d03ab3b1-833f-47db-970c-5a3383e14359_base_resized.jpg",
+                "LUXURY CUBE": "https://booth.pximg.net/2ce5aeeb-4a8b-435a-9fe0-ca63ec23e42a/i/5980910/36fe9ec4-0bed-452c-9d11-ac3c0afaf97c_base_resized.jpg",
+                "LUXURY TURRET (WORLD PREFAB)": "https://booth.pximg.net/2ce5aeeb-4a8b-435a-9fe0-ca63ec23e42a/i/6610771/a16db946-2700-423a-b342-8bed13994aed_base_resized.jpg"
+            };
+
+            // Create a lowercase key version for case-insensitive lookup
+            const productImagesLower = {};
+            for (const key in productImagesInput) {
+                productImagesLower[key.toLowerCase()] = productImagesInput[key];
+            }
+
             // Create product cards
             const container = document.getElementById('products-container');
             container.innerHTML = ''; // Clear loading message
@@ -91,7 +129,16 @@
             data.store.products.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
+                // Case-insensitive lookup
+                const imageUrl = productImagesLower[product.item.toLowerCase()];
+
+                // Conditionally add image tag
+                const imageHtml = imageUrl
+                    ? `<img src="${imageUrl}" alt="${product.item}" class="product-image" loading="lazy">`
+                    : ''; // No image if not found
+
                 card.innerHTML = `
+                    ${imageHtml}
                     <div class="product-name">${product.item}</div>
                     <div class="product-price">${product.price}</div>
                     <a href="${product.link}" target="_blank" class="buy-button">View Product</a>
