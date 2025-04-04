@@ -95,36 +95,33 @@ async function createFish(container) {
         imageUrls.push(FALLBACK_IMAGE);
     }
 
-    // Determine how many fish to create
-    const screenWidth = window.innerWidth;
-    const maxImages = screenWidth < 768 ? 10 : 20; // Number of fish to display
-    const imageCount = Math.min(maxImages, imageUrls.length);
+    // Always use all available fish images
+    const imageCount = imageUrls.length;
 
-    console.log(`Creating ${imageCount} fish...`);
+    console.log(`Creating ${imageCount} fish (using all available images)...`);
 
     // Simple random function
     function getRandom(max) {
         return Math.random() * max;
     }
 
-    // Copy array to modify for selecting unique URLs
-    let availableUrls = [...imageUrls];
+    // We'll use all images, ensuring each one appears at least once
 
     for (let i = 0; i < imageCount; i++) {
         const img = document.createElement('img');
         img.className = 'swimming-image';
         img.alt = 'Swimming community logo';
 
-        // Select an image, prioritizing unused ones
+        // For the first set of fish, use each image exactly once
+        // This ensures all community icons are displayed
         let selectedUrl;
-        if (availableUrls.length > 0) {
-            const randomIndex = Math.floor(getRandom(availableUrls.length));
-            selectedUrl = availableUrls[randomIndex];
-            availableUrls.splice(randomIndex, 1); // Remove from available
+        if (i < imageUrls.length) {
+            // Use each image once in sequence
+            selectedUrl = imageUrls[i];
         } else {
-            // If we run out of unique URLs (because imageCount > unique URLs), reuse randomly
+            // If we need more fish than unique images, select randomly from all images
             selectedUrl = imageUrls[Math.floor(getRandom(imageUrls.length))];
-            console.log("Reusing image URL as count exceeds unique URLs.");
+            console.log("Using additional fish with randomly selected images.");
         }
         img.src = selectedUrl;
 
@@ -140,17 +137,24 @@ async function createFish(container) {
         img.classList.add(randomSizeClass);
 
         // Evenly distribute fish across the screen in a grid pattern
-        // This prevents fish from starting too close to each other
-        const gridCols = Math.ceil(Math.sqrt(imageCount));
+        // With more fish, we need a more efficient grid layout
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        // Calculate optimal grid dimensions based on aspect ratio
+        const screenRatio = screenWidth / screenHeight;
+        const gridCols = Math.ceil(Math.sqrt(imageCount * screenRatio));
         const gridRows = Math.ceil(imageCount / gridCols);
-        const cellWidth = window.innerWidth / gridCols;
-        const cellHeight = window.innerHeight / gridRows;
+
+        // Calculate cell dimensions
+        const cellWidth = screenWidth / gridCols;
+        const cellHeight = screenHeight / gridRows;
 
         // Calculate position within the fish's assigned grid cell, plus some randomness
         const gridCol = i % gridCols;
         const gridRow = Math.floor(i / gridCols);
-        const xPos = (gridCol * cellWidth) + getRandom(cellWidth * 0.8);
-        const yPos = (gridRow * cellHeight) + getRandom(cellHeight * 0.8);
+        const xPos = (gridCol * cellWidth) + getRandom(cellWidth * 0.7);
+        const yPos = (gridRow * cellHeight) + getRandom(cellHeight * 0.7);
         img.style.left = `${xPos}px`;
         img.style.top = `${yPos}px`;
 
