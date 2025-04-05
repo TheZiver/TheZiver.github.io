@@ -110,8 +110,27 @@ async function fetchCommunityData() {
         console.log("Successfully fetched community data.");
 
         // Cache the data and update the timestamp
-        cachedCommunityData = data.community_groups || [];
+        // Check if the data has the new structure with community_groups property
+        console.log('Raw data structure:', Object.keys(data));
+
+        if (data.community_groups && Array.isArray(data.community_groups)) {
+            console.log('Using new JSON structure with community_groups property');
+            console.log('Number of groups found:', data.community_groups.length);
+            cachedCommunityData = data.community_groups;
+        } else {
+            // Fallback for old structure
+            console.log('Using old JSON structure');
+            cachedCommunityData = data || [];
+        }
         lastCacheTime = now;
+
+        // Log the first community to debug
+        if (cachedCommunityData.length > 0) {
+            console.log('First community:', JSON.stringify(cachedCommunityData[0], null, 2));
+            console.log('First community tags:', cachedCommunityData[0].tags);
+        } else {
+            console.warn('No communities found in the data!');
+        }
 
         // Also store in sessionStorage for persistence across page loads in the same session
         try {
@@ -156,25 +175,32 @@ async function preloadImages() {
     // Extract all image URLs
     if (communityGroups && communityGroups.length > 0) {
         communityGroups.forEach(group => {
+            // Skip groups with SYSTEM tag
+            if (group.tags && Array.isArray(group.tags) && group.tags.includes('SYSTEM')) {
+                console.log(`Skipping SYSTEM-tagged group for preload: ${group.group_name || 'Unknown Group'}`);
+                return;
+            }
+
             // Check if the group itself has an icon_url
             if (group.icon_url && typeof group.icon_url === 'string' && group.icon_url.trim() !== '') {
+                // Get status from tags array
+                const status = getStatusFromTags(group.tags);
+
+                // Skip if status is SYSTEM
+                if (status === 'SYSTEM') {
+                    console.log(`Skipping group with SYSTEM status for preload: ${group.group_name || 'Unknown Group'}`);
+                    return;
+                }
+
                 imagesToPreload.push({
                     url: group.icon_url,
-                    name: group.name || 'Unknown Group'
+                    name: group.group_name || 'Unknown Group',
+                    status: status
                 });
             }
 
-            // Check for communities within the group
-            if (group.communities && Array.isArray(group.communities)) {
-                group.communities.forEach(community => {
-                    if (community.icon_url && typeof community.icon_url === 'string' && community.icon_url.trim() !== '') {
-                        imagesToPreload.push({
-                            url: community.icon_url,
-                            name: community.name || 'Unknown Community'
-                        });
-                    }
-                });
-            }
+            // In the new structure, we don't have nested communities anymore
+            // All groups are at the top level in community_groups
         });
     }
 
@@ -215,6 +241,46 @@ async function preloadImages() {
 }
 
 /**
+ * Helper function to get status from tags array
+ * @param {Array} tags - Array of tags
+ * @returns {string} - Status string (FISH_VERIFIED, FISH, etc.)
+ */
+function getStatusFromTags(tags) {
+    // Add debug logging
+    console.log('Processing tags:', tags);
+
+    // Default status if no tags are present
+    if (!tags || !Array.isArray(tags) || tags.length === 0) {
+        console.log('No tags found, using default FISH_KNOWN');
+        return 'FISH_KNOWN';
+    }
+
+    // Look for specific status tags in priority order
+    if (tags.includes('FISH_VERIFIED')) {
+        console.log('Found FISH_VERIFIED tag');
+        return 'FISH_VERIFIED';
+    } else if (tags.includes('FISH_CERTIFIED')) {
+        console.log('Found FISH_CERTIFIED tag');
+        return 'FISH_CERTIFIED';
+    } else if (tags.includes('FISH')) {
+        console.log('Found FISH tag');
+        return 'FISH';
+    } else if (tags.includes('FISH_KNOWN')) {
+        console.log('Found FISH_KNOWN tag');
+        return 'FISH_KNOWN';
+    } else if (tags.includes('SYSTEM')) {
+        console.log('Found SYSTEM tag, skipping');
+        return 'SYSTEM'; // Mark as SYSTEM to be filtered out later
+    }
+
+    // If we get here, log the tags we couldn't match
+    console.log('No matching status tags found in:', tags);
+
+    // Default fallback
+    return 'FISH_KNOWN';
+}
+
+/**
  * Create fish elements by fetching data and using icon_urls
  */
 async function createFish(container) {
@@ -229,36 +295,65 @@ async function createFish(container) {
     // Debug the community data structure
     console.log('Community data structure:', JSON.stringify(communityGroups).substring(0, 200) + '...');
 
+    // Log the first few communities to check their structure
+    if (communityGroups && communityGroups.length > 0) {
+        console.log('First community group structure:', JSON.stringify(communityGroups[0], null, 2));
+        if (communityGroups[0].tags) {
+            console.log('First community tags:', communityGroups[0].tags);
+            console.log('Tags type:', typeof communityGroups[0].tags);
+            console.log('Is array:', Array.isArray(communityGroups[0].tags));
+        } else {
+            console.warn('No tags found in the first community!');
+        }
+
+        // Check how many communities have tags
+        const withTags = communityGroups.filter(group => group.tags && Array.isArray(group.tags) && group.tags.length > 0);
+        console.log(`Found ${withTags.length} out of ${communityGroups.length} communities with tags`);
+
+        // Check for verified communities
+        const verifiedCommunities = communityGroups.filter(group =>
+            group.tags &&
+            Array.isArray(group.tags) &&
+            group.tags.includes('FISH_VERIFIED')
+        );
+        console.log(`Found ${verifiedCommunities.length} verified communities`);
+    } else {
+        console.warn('No community groups found!');
+    }
+
     // Create an array to store image URLs with their status
     let imageUrlsWithStatus = [];
 
     if (communityGroups && communityGroups.length > 0) {
         // Extract all icon_urls from all communities in all groups
         communityGroups.forEach(group => {
-            // Check if the group itself has an icon_url
-            if (group.icon_url && typeof group.icon_url === 'string' && group.icon_url.trim() !== '') {
-                // Assume group icons are FISH status
-                imageUrlsWithStatus.push({
-                    url: group.icon_url,
-                    status: group.status || 'FISH',
-                    name: group.name || 'Group'
-                });
-                console.log(`Added group icon: ${group.icon_url} with status: ${group.status || 'FISH'}`);
+            // Skip groups with SYSTEM tag
+            if (group.tags && Array.isArray(group.tags) && group.tags.includes('SYSTEM')) {
+                console.log(`Skipping SYSTEM-tagged group: ${group.group_name || 'Unknown Group'}`);
+                return;
             }
 
-            // Check for communities within the group
-            if (group.communities && Array.isArray(group.communities)) {
-                group.communities.forEach(community => {
-                    if (community.icon_url && typeof community.icon_url === 'string' && community.icon_url.trim() !== '') {
-                        imageUrlsWithStatus.push({
-                            url: community.icon_url,
-                            status: community.status || 'FISH_KNOWN',
-                            name: community.name || community.group_name || 'Community'
-                        });
-                        console.log(`Added community icon: ${community.icon_url} with status: ${community.status || 'FISH_KNOWN'}`);
-                    }
+            // Check if the group itself has an icon_url
+            if (group.icon_url && typeof group.icon_url === 'string' && group.icon_url.trim() !== '') {
+                // Get status from tags array
+                const status = getStatusFromTags(group.tags);
+
+                // Skip if status is SYSTEM
+                if (status === 'SYSTEM') {
+                    console.log(`Skipping group with SYSTEM status: ${group.group_name || 'Unknown Group'}`);
+                    return;
+                }
+
+                imageUrlsWithStatus.push({
+                    url: group.icon_url,
+                    status: status,
+                    name: group.group_name || 'Group'
                 });
+                console.log(`Added group icon: ${group.icon_url} with status: ${status}`);
             }
+
+            // In the new structure, we don't have nested communities anymore
+            // All groups are at the top level in community_groups
         });
 
         // Extract just the URLs for backward compatibility

@@ -92,6 +92,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const COMMUNITY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw"; // Specifically for community lists/info
     const ROSE_FISH_MEMBERS_URL = "https://gist.githubusercontent.com/TheZiver/9b85c8b8b6c1b4caa17dda8d37dc18ac/raw"; // For Rose Fish members list
 
+    // Log the URLs for debugging
+    console.log("PRIMARY_DATA_URL:", PRIMARY_DATA_URL);
+    console.log("COMMUNITY_DATA_URL:", COMMUNITY_DATA_URL);
+    console.log("ROSE_FISH_MEMBERS_URL:", ROSE_FISH_MEMBERS_URL);
+
     // --- Element Selectors (Placeholders) ---
     let introElement, /* meaningElement removed */ principlesListElement, principlesNoteElement,
         calendarGrid, monthYearDisplay, weekdaysContainer, dailyInfoElement, dailyDescElement,
@@ -222,22 +227,36 @@ document.addEventListener('DOMContentLoaded', function() {
    }
 
    function loadFishGroups(data) {
+        console.log("loadFishGroups called with data:", data);
+
         // Use the correct path from the JSON: data.community_groups
         const communities = data?.community_groups;
+        console.log("communities extracted from data:", communities);
 
         // Check if ANY of the relevant list elements exist on the page
-        if (!verifiedListElement && !certifiedListElement && !knownListElement && !fishStatusListElement) return;
+        console.log("List elements exist? verifiedListElement:", !!verifiedListElement,
+                   "certifiedListElement:", !!certifiedListElement,
+                   "knownListElement:", !!knownListElement,
+                   "fishStatusListElement:", !!fishStatusListElement);
+
+        if (!verifiedListElement && !certifiedListElement && !knownListElement && !fishStatusListElement) {
+            console.log("No list elements found on page, returning early");
+            return;
+        }
 
         if (!Array.isArray(communities)) {
              // Keep error message generic, or specify path mismatch
              console.error("Community groups data is not an array or is missing at data.community_groups. Structure received:", data);
+             console.log("Data keys:", Object.keys(data || {}));
+
              if(verifiedListElement) verifiedListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
              if(certifiedListElement) certifiedListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
              if(knownListElement) knownListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
+             if(fishStatusListElement) fishStatusListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
              return;
         }
 
-        // Clear all lists
+        // Clear any existing content
         if(verifiedListElement) verifiedListElement.innerHTML = '';
         if(certifiedListElement) certifiedListElement.innerHTML = '';
         if(knownListElement) knownListElement.innerHTML = '';
@@ -253,6 +272,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!community || typeof community.group_name !== 'string') {
                  console.warn("Skipping community item due to missing or invalid group_name:", community);
                  return;
+            }
+
+            // Skip communities with SYSTEM tag
+            if (community.tags && Array.isArray(community.tags) && community.tags.includes('SYSTEM')) {
+                console.log(`Skipping SYSTEM-tagged community: ${community.group_name}`);
+                return;
             }
 
             const listItem = document.createElement('li');
@@ -397,22 +422,63 @@ document.addEventListener('DOMContentLoaded', function() {
 
             listItem.appendChild(textDiv); // Append the text content div after the image/link
 
-            // Check status and append to the correct list (status property name is correct)
-            if (community.status === 'FISH_VERIFIED' && verifiedListElement) {
-                 verifiedListElement.appendChild(listItem);
-                 verifiedCount++;
-            } else if (community.status === 'FISH_CERTIFIED' && certifiedListElement) {
-                 certifiedListElement.appendChild(listItem);
-                 certifiedCount++;
-            } else if (community.status === 'FISH_KNOWN' && knownListElement) {
-                 knownListElement.appendChild(listItem);
-                 knownCount++;
-            } else if (community.status === 'FISH' && fishStatusListElement) { // Handle FISH status
-                 // Need to clone the listItem because it might be appended elsewhere if status changes
-                 fishStatusListElement.appendChild(listItem.cloneNode(true));
-                 fishStatusCount++;
+            // Check tags array and append to the correct list
+            if (community.tags && Array.isArray(community.tags)) {
+                console.log(`Processing community ${community.group_name} with tags:`, community.tags);
+
+                // Check for specific tags in priority order
+                if (community.tags.includes('FISH_VERIFIED') && verifiedListElement) {
+                    console.log(`Adding ${community.group_name} to verified list`);
+                    verifiedListElement.appendChild(listItem);
+                    verifiedCount++;
+                } else if (community.tags.includes('FISH_CERTIFIED') && certifiedListElement) {
+                    console.log(`Adding ${community.group_name} to certified list`);
+                    certifiedListElement.appendChild(listItem);
+                    certifiedCount++;
+                } else if (community.tags.includes('FISH_KNOWN') && knownListElement) {
+                    console.log(`Adding ${community.group_name} to known list`);
+                    knownListElement.appendChild(listItem);
+                    knownCount++;
+                } else if (community.tags.includes('FISH') && fishStatusListElement) { // Handle FISH status
+                    console.log(`Adding ${community.group_name} to FISH status list`);
+                    // Need to clone the listItem because it might be appended elsewhere if status changes
+                    fishStatusListElement.appendChild(listItem.cloneNode(true));
+                    fishStatusCount++;
+                } else {
+                    console.log(`Community ${community.group_name} has tags but none match our categories:`, community.tags);
+                }
+                // Removed SYSTEM tag handling - these groups are now skipped
+            } else if (community.status) {
+                // Fallback for old status property for backward compatibility
+                console.log(`Processing community ${community.group_name} with status: ${community.status}`);
+
+                if (community.status === 'FISH_VERIFIED' && verifiedListElement) {
+                    console.log(`Adding ${community.group_name} to verified list (status)`);
+                    verifiedListElement.appendChild(listItem);
+                    verifiedCount++;
+                } else if (community.status === 'FISH_CERTIFIED' && certifiedListElement) {
+                    console.log(`Adding ${community.group_name} to certified list (status)`);
+                    certifiedListElement.appendChild(listItem);
+                    certifiedCount++;
+                } else if (community.status === 'FISH_KNOWN' && knownListElement) {
+                    console.log(`Adding ${community.group_name} to known list (status)`);
+                    knownListElement.appendChild(listItem);
+                    knownCount++;
+                } else if (community.status === 'FISH' && fishStatusListElement) {
+                    console.log(`Adding ${community.group_name} to FISH status list (status)`);
+                    fishStatusListElement.appendChild(listItem.cloneNode(true));
+                    fishStatusCount++;
+                } else {
+                    console.log(`Community ${community.group_name} has unrecognized status: ${community.status}`);
+                }
+            } else {
+                console.log(`Community ${community.group_name} has neither tags nor status, adding to known list by default`);
+                if (knownListElement) {
+                    knownListElement.appendChild(listItem);
+                    knownCount++;
+                }
             }
-            // Note: Communities with status "FISH" are handled separately
+            // Note: Communities with FISH tag are handled separately
         });
 
         // Add messages if lists are empty
@@ -864,9 +930,13 @@ document.addEventListener('DOMContentLoaded', function() {
          */
         console.log("Fetching primary data from:", PRIMARY_DATA_URL);
         console.log("Step 1: Starting primary data fetch...");
-        fetch(PRIMARY_DATA_URL, { cache: "no-cache" })
+        fetch(PRIMARY_DATA_URL, {
+            cache: "no-cache"
+        })
             .then(response => {
                 console.log("Step 2: Received primary data response. Status:", response.status);
+                console.log("Response headers:", [...response.headers.entries()]);
+
                 if (!response.ok) {
                     return response.text().then(text => {
                          console.error("Primary data fetch failed! Status:", response.status, "Response text:", text.substring(0, 150));
@@ -923,10 +993,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log("Primary content loading complete. Fetching community data...");
                 console.log("Step 6: Starting community data fetch from:", COMMUNITY_DATA_URL);
                 // --- Fetch Community Data ---
-                return fetch(COMMUNITY_DATA_URL, { cache: "no-cache" });
+                return fetch(COMMUNITY_DATA_URL, {
+                    cache: "no-cache"
+                });
             })
             .then(response => {
                   console.log("Step 7: Received community data response. Status:", response.status);
+                  console.log("Community response headers:", [...response.headers.entries()]);
+
                  if (!response.ok) {
                     return response.text().then(text => {
                          console.error("Community data fetch failed! Status:", response.status, "Response text:", text.substring(0, 150));
@@ -951,6 +1025,17 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(communityData => {
                   console.log("Step 10: Successfully fetched and parsed community JSON data.");
+                  console.log("Community data structure:", Object.keys(communityData));
+
+                  if (communityData.community_groups) {
+                      console.log("Number of community groups:", communityData.community_groups.length);
+                      if (communityData.community_groups.length > 0) {
+                          console.log("First community group:", JSON.stringify(communityData.community_groups[0]).substring(0, 200) + '...');
+                          console.log("First community group tags:", communityData.community_groups[0].tags);
+                      }
+                  } else {
+                      console.warn("No community_groups property found in the data!");
+                  }
 
                  // --- Populate Community Content (using communityData) ---
                  // loadCommunityInfo(communityData); // MOVED: This now uses primaryData
@@ -992,6 +1077,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     if(verifiedListElement) verifiedListElement.innerHTML = errorLi;
                     if(certifiedListElement) certifiedListElement.innerHTML = errorLi;
                     if(knownListElement) knownListElement.innerHTML = errorLi; // Add known list error
+
+                    // Try to load community data from a local fallback file
+                    console.log("Attempting to load community data from local fallback...");
+                    fetch('data/communities.json')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("Successfully loaded community data from local fallback.");
+                            loadFishGroups(data);
+                        })
+                        .catch(fallbackError => {
+                            console.error("Error loading community data from local fallback:", fallbackError);
+                        });
                  }
             });
     }
