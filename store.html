@@ -87,8 +87,16 @@
             container.innerHTML = ''; // Clear loading message
 
             data.store.products.forEach(product => {
+                // Create a wrapper link for the entire card
+                const cardLink = document.createElement('a');
+                cardLink.href = product.link;
+                cardLink.target = '_blank';
+                cardLink.rel = 'noopener noreferrer';
+                cardLink.className = 'product-card-link';
+
                 const card = document.createElement('div');
                 card.className = 'product-card';
+
                 // Case-insensitive lookup
                 const imageUrl = productImagesLower[product.item.toLowerCase()];
 
@@ -101,9 +109,12 @@
                     ${imageHtml}
                     <div class="product-name">${product.item}</div>
                     <div class="product-price">${product.price}</div>
-                    <a href="${product.link}" target="_blank" class="buy-button">View Product</a>
                 `;
-                container.appendChild(card);
+
+                // Append the card to the link wrapper
+                cardLink.appendChild(card);
+                // Append the link wrapper to the container
+                container.appendChild(cardLink);
             });
         })
         .catch(error => {

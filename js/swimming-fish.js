@@ -275,7 +275,7 @@ async function createFish(container) {
     for (let i = 0; i < imageCount; i++) {
         const img = document.createElement('img');
         img.className = 'swimming-image';
-        img.alt = 'Swimming community logo';
+        img.alt = '＜＞＜';
 
         // For the first set of fish, use each image exactly once
         // This ensures all community icons are displayed

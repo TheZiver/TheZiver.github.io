@@ -1090,11 +1090,18 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
 .product-grid {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1.5rem;
     background: #0a0a0a;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Reduced from 280px to 220px */
+    gap: 1.5rem; /* Reduced from 2rem to 1.5rem */
+}
+
+/* Ensure 4 products per row on larger screens */
+@media (min-width: 1000px) {
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 /* Store Header */
@@ -1126,6 +1133,7 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     text-align: center;
     display: flex; /* Use flexbox for better control */
     flex-direction: column; /* Stack items vertically */
+    font-size: 0.95em; /* Slightly smaller text */
 }
 
 .product-card:hover {
@@ -1144,40 +1152,69 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
 }
 
 /* Product Text */
+.product-title-link {
+    text-decoration: none;
+    display: block;
+    transition: all 0.2s ease;
+    margin-bottom: 8px;
+    padding: 0 12px;
+}
+
+.product-title-link:hover {
+    transform: scale(1.05);
+}
+
 .product-name {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+    font-size: 1.1rem; /* Reduced from 1.2rem */
     color: #d4af37;
-    padding-left: 15px;
-    padding-right: 15px;
+    position: relative;
+    display: inline-block;
+}
+
+/* Add underline effect on hover */
+.product-name::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #ffd700;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease;
+}
+
+.product-title-link:hover .product-name::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
 }
 
 .product-price {
-    font-size: 1.1rem;
-    margin-bottom: 15px;
+    font-size: 1rem; /* Reduced from 1.1rem */
+    margin-bottom: 15px; /* Increased from 12px to add space at bottom */
     color: #d4af37;
     font-weight: bold;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 12px; /* Reduced from 15px */
+    padding-right: 12px; /* Reduced from 15px */
 }
 
-/* Buy Button */
-.buy-button {
-    display: inline-block;
-    background: #d4af37;
-    color: #121212;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    font-weight: bold;
+/* Product Card Link */
+.product-card-link {
     text-decoration: none;
-    transition: all 0.2s ease;
-    margin-bottom: 15px;
+    color: inherit;
+    display: block;
 }
 
-.buy-button:hover {
-    background: #ffd700;
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+/* Product Card Hover Effect */
+.product-card {
+    cursor: pointer;
+    height: 100%; /* Ensure the card fills the entire link wrapper */
+}
+
+.product-card:hover .product-image {
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
 }
 
 /* Loading Message */
