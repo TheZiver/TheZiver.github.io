@@ -18,6 +18,14 @@ let fishElements = [];
 let lastUpdateTime = 0;
 window.fishAnimationRunning = false;
 
+// Cache for community data to avoid repeated downloads
+let cachedCommunityData = null;
+let lastCacheTime = 0;
+
+// Cache for preloaded images
+let preloadedImages = {};
+let preloadComplete = false;
+
 // --- Constants ---
 const COMMUNITY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw";
 const FALLBACK_IMAGE = 'images/fish_known.png'; // Fallback if fetch fails or images error
@@ -27,6 +35,28 @@ const FALLBACK_IMAGE = 'images/fish_known.png'; // Fallback if fetch fails or im
  */
 function initSwimmingFish() {
     console.log('Initializing swimming fish system (v4)');
+
+    // Try to load cached community data from sessionStorage
+    try {
+        const storedData = sessionStorage.getItem('communityData');
+        const timestamp = sessionStorage.getItem('communityDataTimestamp');
+
+        if (storedData && timestamp) {
+            cachedCommunityData = JSON.parse(storedData);
+            lastCacheTime = parseInt(timestamp, 10);
+            console.log('Loaded community data from sessionStorage');
+
+            // Check if we have preloaded images in sessionStorage
+            const preloadedData = sessionStorage.getItem('preloadedImages');
+            if (preloadedData) {
+                preloadedImages = JSON.parse(preloadedData);
+                preloadComplete = true;
+                console.log('Loaded preloaded image data from sessionStorage');
+            }
+        }
+    } catch (e) {
+        console.warn('Error loading from sessionStorage:', e);
+    }
 
     let container = document.getElementById('swimming-images-background');
     if (!container) {
@@ -43,27 +73,145 @@ function initSwimmingFish() {
     // Always create new fish with random positions on each page load
     console.log('Creating new fish with random positions...');
     createFish(container);
+
+    // Preload images in the background if not already done
+    if (!preloadComplete) {
+        preloadImages();
+    }
 }
 
 // Storage functions removed - fish now spawn at random positions on each page load
 
 /**
- * Fetch community data from GitHub
+ * Fetch community data from GitHub with caching
  */
 async function fetchCommunityData() {
+    // Check if we have cached data that's less than 30 minutes old
+    const now = Date.now();
+    const cacheAge = now - lastCacheTime;
+    const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+    if (cachedCommunityData && cacheAge < CACHE_DURATION) {
+        console.log("Using cached community data...");
+        return cachedCommunityData;
+    }
+
     console.log("Fetching community data for fish icons...");
     try {
-        const response = await fetch(COMMUNITY_DATA_URL, { cache: "no-cache" });
+        // Use browser's cache for 30 minutes
+        const response = await fetch(COMMUNITY_DATA_URL, {
+            cache: "force-cache"
+        });
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
         console.log("Successfully fetched community data.");
-        return data.community_groups || []; // Return the array of communities
+
+        // Cache the data and update the timestamp
+        cachedCommunityData = data.community_groups || [];
+        lastCacheTime = now;
+
+        // Also store in sessionStorage for persistence across page loads in the same session
+        try {
+            sessionStorage.setItem('communityData', JSON.stringify(cachedCommunityData));
+            sessionStorage.setItem('communityDataTimestamp', now.toString());
+        } catch (e) {
+            console.warn('Could not store community data in sessionStorage:', e);
+        }
+
+        return cachedCommunityData;
     } catch (error) {
         console.error('Error fetching community data:', error);
-        return []; // Return empty array on error
+
+        // Try to get data from sessionStorage if fetch fails
+        try {
+            const storedData = sessionStorage.getItem('communityData');
+            const timestamp = sessionStorage.getItem('communityDataTimestamp');
+
+            if (storedData && timestamp) {
+                console.log('Using community data from sessionStorage after fetch failure');
+                cachedCommunityData = JSON.parse(storedData);
+                lastCacheTime = parseInt(timestamp, 10);
+                return cachedCommunityData;
+            }
+        } catch (e) {
+            console.warn('Error retrieving from sessionStorage:', e);
+        }
+
+        return []; // Return empty array if all else fails
     }
+}
+
+/**
+ * Preload all community images to improve performance
+ */
+async function preloadImages() {
+    console.log('Preloading community images...');
+
+    const communityGroups = await fetchCommunityData();
+    let imagesToPreload = [];
+
+    // Extract all image URLs
+    if (communityGroups && communityGroups.length > 0) {
+        communityGroups.forEach(group => {
+            // Check if the group itself has an icon_url
+            if (group.icon_url && typeof group.icon_url === 'string' && group.icon_url.trim() !== '') {
+                imagesToPreload.push({
+                    url: group.icon_url,
+                    name: group.name || 'Unknown Group'
+                });
+            }
+
+            // Check for communities within the group
+            if (group.communities && Array.isArray(group.communities)) {
+                group.communities.forEach(community => {
+                    if (community.icon_url && typeof community.icon_url === 'string' && community.icon_url.trim() !== '') {
+                        imagesToPreload.push({
+                            url: community.icon_url,
+                            name: community.name || 'Unknown Community'
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    // Preload each image
+    const preloadPromises = imagesToPreload.map(item => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                preloadedImages[item.url] = {
+                    loaded: true,
+                    name: item.name
+                };
+                resolve();
+            };
+            img.onerror = () => {
+                preloadedImages[item.url] = {
+                    loaded: false,
+                    name: item.name
+                };
+                resolve();
+            };
+            img.src = item.url;
+        });
+    });
+
+    // Wait for all images to preload
+    await Promise.all(preloadPromises);
+
+    // Store preloaded image data in sessionStorage
+    try {
+        sessionStorage.setItem('preloadedImages', JSON.stringify(preloadedImages));
+    } catch (e) {
+        console.warn('Could not store preloaded image data in sessionStorage:', e);
+    }
+
+    preloadComplete = true;
+    console.log(`Preloaded ${Object.keys(preloadedImages).length} images`);
 }
 
 /**
@@ -75,14 +223,31 @@ async function createFish(container) {
     container.innerHTML = ''; // Clear existing fish
     fishElements = []; // Reset the array
 
-    const communities = await fetchCommunityData();
+    const communityGroups = await fetchCommunityData();
     let imageUrls = [];
 
-    if (communities.length > 0) {
-        // Extract only icon_urls that are valid strings
-        imageUrls = communities
-            .map(community => community.icon_url)
-            .filter(url => typeof url === 'string' && url.trim() !== '');
+    // Debug the community data structure
+    console.log('Community data structure:', JSON.stringify(communityGroups).substring(0, 200) + '...');
+
+    if (communityGroups && communityGroups.length > 0) {
+        // Extract all icon_urls from all communities in all groups
+        communityGroups.forEach(group => {
+            // Check if the group itself has an icon_url
+            if (group.icon_url && typeof group.icon_url === 'string' && group.icon_url.trim() !== '') {
+                imageUrls.push(group.icon_url);
+                console.log(`Added group icon: ${group.icon_url}`);
+            }
+
+            // Check for communities within the group
+            if (group.communities && Array.isArray(group.communities)) {
+                group.communities.forEach(community => {
+                    if (community.icon_url && typeof community.icon_url === 'string' && community.icon_url.trim() !== '') {
+                        imageUrls.push(community.icon_url);
+                        console.log(`Added community icon: ${community.icon_url}`);
+                    }
+                });
+            }
+        });
 
         console.log(`Found ${imageUrls.length} unique icon_urls.`);
     } else {
