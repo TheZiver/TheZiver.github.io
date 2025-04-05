@@ -229,25 +229,40 @@ async function createFish(container) {
     // Debug the community data structure
     console.log('Community data structure:', JSON.stringify(communityGroups).substring(0, 200) + '...');
 
+    // Create an array to store image URLs with their status
+    let imageUrlsWithStatus = [];
+
     if (communityGroups && communityGroups.length > 0) {
         // Extract all icon_urls from all communities in all groups
         communityGroups.forEach(group => {
             // Check if the group itself has an icon_url
             if (group.icon_url && typeof group.icon_url === 'string' && group.icon_url.trim() !== '') {
-                imageUrls.push(group.icon_url);
-                console.log(`Added group icon: ${group.icon_url}`);
+                // Assume group icons are FISH status
+                imageUrlsWithStatus.push({
+                    url: group.icon_url,
+                    status: group.status || 'FISH',
+                    name: group.name || 'Group'
+                });
+                console.log(`Added group icon: ${group.icon_url} with status: ${group.status || 'FISH'}`);
             }
 
             // Check for communities within the group
             if (group.communities && Array.isArray(group.communities)) {
                 group.communities.forEach(community => {
                     if (community.icon_url && typeof community.icon_url === 'string' && community.icon_url.trim() !== '') {
-                        imageUrls.push(community.icon_url);
-                        console.log(`Added community icon: ${community.icon_url}`);
+                        imageUrlsWithStatus.push({
+                            url: community.icon_url,
+                            status: community.status || 'FISH_KNOWN',
+                            name: community.name || community.group_name || 'Community'
+                        });
+                        console.log(`Added community icon: ${community.icon_url} with status: ${community.status || 'FISH_KNOWN'}`);
                     }
                 });
             }
         });
+
+        // Extract just the URLs for backward compatibility
+        imageUrls = imageUrlsWithStatus.map(item => item.url);
 
         console.log(`Found ${imageUrls.length} unique icon_urls.`);
     } else {
@@ -279,15 +294,21 @@ async function createFish(container) {
 
         // For the first set of fish, use each image exactly once
         // This ensures all community icons are displayed
-        let selectedUrl;
-        if (i < imageUrls.length) {
+        let selectedItem;
+        if (i < imageUrlsWithStatus.length) {
             // Use each image once in sequence
-            selectedUrl = imageUrls[i];
+            selectedItem = imageUrlsWithStatus[i];
+            // Add status as a data attribute and class for styling
+            img.dataset.status = selectedItem.status || 'FISH_KNOWN';
+            img.classList.add('status-' + (selectedItem.status || 'FISH_KNOWN').toLowerCase());
         } else {
             // If we need more fish than unique images, select randomly from all images
-            selectedUrl = imageUrls[Math.floor(getRandom(imageUrls.length))];
+            selectedItem = imageUrlsWithStatus[Math.floor(getRandom(imageUrlsWithStatus.length))];
+            img.dataset.status = selectedItem.status || 'FISH_KNOWN';
+            img.classList.add('status-' + (selectedItem.status || 'FISH_KNOWN').toLowerCase());
             console.log("Using additional fish with randomly selected images.");
         }
+        const selectedUrl = selectedItem.url;
         img.src = selectedUrl;
 
         img.onerror = () => {
@@ -511,10 +532,28 @@ function addSwimmingFishStyles() {
             object-fit: contain;
             will-change: transform, left, top;
             transition: none;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.1)); /* Default: minimal glow */
             background-color: rgba(0,0,0,0.1);
             backface-visibility: hidden; /* Smoother animations */
             -webkit-font-smoothing: subpixel-antialiased; /* Better rendering */
+        }
+
+        /* Different glows based on verification status */
+        .swimming-image.status-fish_verified {
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8)); /* Bright white glow for verified */
+            opacity: 0.5; /* Slightly more visible */
+        }
+
+        /* Same glow for FISH_CERTIFIED and FISH status as requested */
+        .swimming-image.status-fish_certified,
+        .swimming-image.status-fish {
+            filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5)); /* Medium white glow for certified and FISH */
+            opacity: 0.45; /* Medium visibility */
+        }
+
+        .swimming-image.status-fish_known {
+            filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2)); /* Minimal glow for known */
+            opacity: 0.4; /* Standard visibility */
         }
 
         .swimming-image.size-small { width: 40px; height: 40px; }
@@ -525,9 +564,31 @@ function addSwimmingFishStyles() {
         .theme-rosefish .swimming-image {
             filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.3));
         }
+        .theme-rosefish .swimming-image.status-fish_verified {
+            filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
+        }
+        /* Same glow for FISH_CERTIFIED and FISH status in rosefish theme */
+        .theme-rosefish .swimming-image.status-fish_certified,
+        .theme-rosefish .swimming-image.status-fish {
+            filter: drop-shadow(0 0 6px rgba(255, 0, 0, 0.5));
+        }
+        .theme-rosefish .swimming-image.status-fish_known {
+            filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.2));
+        }
 
         .theme-store .swimming-image {
             filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3));
+        }
+        .theme-store .swimming-image.status-fish_verified {
+            filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.8));
+        }
+        /* Same glow for FISH_CERTIFIED and FISH status in store theme */
+        .theme-store .swimming-image.status-fish_certified,
+        .theme-store .swimming-image.status-fish {
+            filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.5));
+        }
+        .theme-store .swimming-image.status-fish_known {
+            filter: drop-shadow(0 0 3px rgba(212, 175, 55, 0.2));
         }
     `;
     document.head.appendChild(styleElement);
