@@ -63,10 +63,23 @@
     color: #e0e0e0;
 }
 
-/* Show dropdown on hover of either the dropdown or the dropdown content */
-.dropdown:hover .dropdown-content,
-.dropdown-content:hover {
+/* Show dropdown on hover (desktop only) */
+@media (min-width: 768px) {
+    .dropdown:hover .dropdown-content,
+    .dropdown-content:hover {
+        display: block;
+    }
+}
+
+/* Show dropdown when active class is present (for mobile) */
+.dropdown-content.show {
     display: block;
+}
+
+/* Style for active dropdown */
+.dropdown.active > a {
+    background-color: #333337;
+    color: #e0e0e0;
 }
 
 /* Swimming Fish Gallery Styles */
