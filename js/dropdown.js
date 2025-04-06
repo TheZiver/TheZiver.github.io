@@ -23,27 +23,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get all dropdown toggle links
     const dropdownToggles = document.querySelectorAll('.dropdown > a');
 
-    // Track last click time for double-click detection
-    let lastClickTime = 0;
-    const doubleClickThreshold = 300; // milliseconds
+    // We no longer need double-click detection since we're using a direct approach
 
     // Add click event listener to each dropdown toggle
     dropdownToggles.forEach(toggle => {
         toggle.addEventListener('click', function(event) {
             // Check if we're on mobile (using a simple width check)
             if (window.innerWidth <= 767) {
-                // Get current time for double-click detection
-                const currentTime = new Date().getTime();
-                const isDoubleClick = (currentTime - lastClickTime) < doubleClickThreshold;
-                lastClickTime = currentTime;
+                // Check if this is the Communities link
+                const isCommunityLink = this.textContent.trim().includes('Communities');
 
-                // If it's a double-click, allow navigation to the communities page
-                if (isDoubleClick) {
-                    console.log('Double-click detected, allowing navigation');
+                // If it's the Communities link, allow navigation to the communities page
+                if (isCommunityLink && this.getAttribute('href') === 'communities.html') {
+                    console.log('Communities link clicked, allowing navigation');
                     return; // Allow default navigation
                 }
 
-                // For single clicks, prevent navigation and toggle dropdown
+                // For other dropdown links, prevent navigation and toggle dropdown
                 event.preventDefault();
 
                 // Toggle the 'active' class on the parent dropdown

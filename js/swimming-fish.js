@@ -91,23 +91,36 @@ async function fetchCommunityData() {
     const cacheAge = now - lastCacheTime;
     const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
 
-    if (cachedCommunityData && cacheAge < CACHE_DURATION) {
+    if (cachedCommunityData && cachedCommunityData.length > 0 && cacheAge < CACHE_DURATION) {
         console.log("Using cached community data...");
         return cachedCommunityData;
     }
 
     console.log("Fetching community data for fish icons...");
     try {
-        // Use browser's cache for 30 minutes
-        const response = await fetch(COMMUNITY_DATA_URL, {
-            cache: "force-cache"
+        // Use XMLHttpRequest instead of fetch for better compatibility
+        const data = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', COMMUNITY_DATA_URL, true);
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        console.log("Successfully fetched community data.");
+                        resolve(data);
+                    } catch (e) {
+                        console.error("Error parsing community data JSON:", e);
+                        reject(e);
+                    }
+                } else {
+                    reject(new Error(`HTTP error! status: ${xhr.status}`));
+                }
+            };
+            xhr.onerror = function() {
+                reject(new Error("Network error during community data fetch"));
+            };
+            xhr.send();
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Successfully fetched community data.");
 
         // Cache the data and update the timestamp
         // Check if the data has the new structure with community_groups property
@@ -246,35 +259,23 @@ async function preloadImages() {
  * @returns {string} - Status string (FISH_VERIFIED, FISH, etc.)
  */
 function getStatusFromTags(tags) {
-    // Add debug logging
-    console.log('Processing tags:', tags);
-
     // Default status if no tags are present
     if (!tags || !Array.isArray(tags) || tags.length === 0) {
-        console.log('No tags found, using default FISH_KNOWN');
         return 'FISH_KNOWN';
     }
 
     // Look for specific status tags in priority order
     if (tags.includes('FISH_VERIFIED')) {
-        console.log('Found FISH_VERIFIED tag');
         return 'FISH_VERIFIED';
     } else if (tags.includes('FISH_CERTIFIED')) {
-        console.log('Found FISH_CERTIFIED tag');
         return 'FISH_CERTIFIED';
     } else if (tags.includes('FISH')) {
-        console.log('Found FISH tag');
         return 'FISH';
     } else if (tags.includes('FISH_KNOWN')) {
-        console.log('Found FISH_KNOWN tag');
         return 'FISH_KNOWN';
     } else if (tags.includes('SYSTEM')) {
-        console.log('Found SYSTEM tag, skipping');
         return 'SYSTEM'; // Mark as SYSTEM to be filtered out later
     }
-
-    // If we get here, log the tags we couldn't match
-    console.log('No matching status tags found in:', tags);
 
     // Default fallback
     return 'FISH_KNOWN';
@@ -292,33 +293,9 @@ async function createFish(container) {
     const communityGroups = await fetchCommunityData();
     let imageUrls = [];
 
-    // Debug the community data structure
-    console.log('Community data structure:', JSON.stringify(communityGroups).substring(0, 200) + '...');
-
-    // Log the first few communities to check their structure
-    if (communityGroups && communityGroups.length > 0) {
-        console.log('First community group structure:', JSON.stringify(communityGroups[0], null, 2));
-        if (communityGroups[0].tags) {
-            console.log('First community tags:', communityGroups[0].tags);
-            console.log('Tags type:', typeof communityGroups[0].tags);
-            console.log('Is array:', Array.isArray(communityGroups[0].tags));
-        } else {
-            console.warn('No tags found in the first community!');
-        }
-
-        // Check how many communities have tags
-        const withTags = communityGroups.filter(group => group.tags && Array.isArray(group.tags) && group.tags.length > 0);
-        console.log(`Found ${withTags.length} out of ${communityGroups.length} communities with tags`);
-
-        // Check for verified communities
-        const verifiedCommunities = communityGroups.filter(group =>
-            group.tags &&
-            Array.isArray(group.tags) &&
-            group.tags.includes('FISH_VERIFIED')
-        );
-        console.log(`Found ${verifiedCommunities.length} verified communities`);
-    } else {
+    if (!communityGroups || communityGroups.length === 0) {
         console.warn('No community groups found!');
+        return;
     }
 
     // Create an array to store image URLs with their status
@@ -622,7 +599,7 @@ function addSwimmingFishStyles() {
             position: absolute;
             width: 60px;
             height: 60px;
-            opacity: 0.4; /* Slightly more visible */
+            opacity: 0.4; /* Default opacity for most pages */
             border-radius: 50%;
             object-fit: contain;
             will-change: transform, left, top;
@@ -649,6 +626,11 @@ function addSwimmingFishStyles() {
         .swimming-image.status-fish_known {
             filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2)); /* Minimal glow for known */
             opacity: 0.4; /* Standard visibility */
+        }
+
+        /* Higher opacity for all fish on AQUARIUM page while maintaining glow effects */
+        body.theme-aquarium .swimming-image {
+            opacity: 1.0; /* Full opacity for better visibility */
         }
 
         .swimming-image.size-small { width: 40px; height: 40px; }
