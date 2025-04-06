@@ -295,9 +295,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const linksContainer = document.createElement('div');
             linksContainer.classList.add('community-links-container'); // New class for styling the row
 
-            // Add VRChat Group Link as an icon (skip for FISH_KNOWN)
+            // Add VRChat Group Link as an icon (only for FISH_VERIFIED and FISH_CERTIFIED)
             const vrchatLink = community.group_link;
-            if (community.status !== 'FISH_KNOWN' && vrchatLink && (vrchatLink.startsWith('http') || vrchatLink.startsWith('vrchat://'))) {
+            const isKnownGroup = community.tags && Array.isArray(community.tags) && community.tags.includes('FISH_KNOWN');
+            const isVerifiedOrCertified = community.tags && Array.isArray(community.tags) &&
+                (community.tags.includes('FISH_VERIFIED') || community.tags.includes('FISH_CERTIFIED'));
+
+            // Only add VRChat icon link for FISH_VERIFIED and FISH_CERTIFIED groups
+            // FISH_KNOWN groups will only have the image clickable, not this icon
+            if (isVerifiedOrCertified && vrchatLink && (vrchatLink.startsWith('http') || vrchatLink.startsWith('vrchat://'))) {
                 const a = document.createElement('a');
                 a.href = escapeHtml(vrchatLink.trim());
                 a.target = '_blank';
@@ -308,8 +314,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 linksContainer.appendChild(a);
             }
 
-            // External group links (skip for FISH_KNOWN)
-            if (community.status !== 'FISH_KNOWN' && Array.isArray(community.group_links) && community.group_links.length > 0) {
+            // External group links (only for FISH_VERIFIED and FISH_CERTIFIED)
+            // FISH_KNOWN groups will only have the image clickable, not these external links
+            if (isVerifiedOrCertified && Array.isArray(community.group_links) && community.group_links.length > 0) {
                 community.group_links.forEach(link => {
                     if (typeof link === 'string' && link.trim() !== '') {
                         const a = document.createElement('a');
@@ -406,6 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Add image link for all communities with VRChat group links
+            // FISH_KNOWN groups only get this link, no other links
             if (vrchatLink && (vrchatLink.startsWith('http') || vrchatLink.startsWith('vrchat://'))) {
                 const linkWrapper = document.createElement('a');
                 linkWrapper.href = escapeHtml(vrchatLink.trim());
