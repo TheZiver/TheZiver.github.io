@@ -1104,10 +1104,35 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     }
 }
 
-/* Store Header */
+/* Store/Support Header */
 .store-header {
     text-align: center;
     margin-bottom: 3rem;
+}
+
+/* Support page specific styles */
+.support-text {
+    font-size: 1.2em;
+    margin-bottom: 2rem;
+    color: #e0e0e0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.support-option {
+    margin-bottom: 3rem;
+}
+
+.patreon-card {
+    max-width: 300px;
+    margin: 0 auto;
+    border-color: #F96854; /* Patreon color */
+}
+
+.patreon-link {
+    text-decoration: none;
+    display: block;
 }
 
 .store-header h1 {
