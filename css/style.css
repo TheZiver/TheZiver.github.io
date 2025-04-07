@@ -1120,8 +1120,51 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     margin-right: auto;
 }
 
+.support-options-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
 .support-option {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
+}
+
+.support-option.kofi-container {
+    flex-basis: 100%;
+    max-width: 800px;
+}
+
+.support-option h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.support-option.kofi-container h3 {
+    color: #29abe0; /* Ko-fi blue color */
+}
+
+.support-option:not(.kofi-container) h3 {
+    color: #F96854; /* Patreon color */
+}
+
+/* Dark wrapper for Ko-fi iframe */
+.kofi-wrapper {
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid #29abe0;
+    padding: 0;
+}
+
+/* Override Ko-fi iframe background */
+.kofi-wrapper iframe {
+    background-color: #1a1a1a !important;
+    filter: brightness(0.85);
 }
 
 .patreon-card {
@@ -1135,11 +1178,24 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     display: block;
 }
 
-.store-header h1 {
+/* Responsive adjustments for support options */
+@media (max-width: 768px) {
+    .support-options-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .support-option.kofi-container iframe {
+        height: 550px; /* Smaller height on mobile */
+    }
+}
+
+.store-header h1, .store-header h2 {
     color: #d4af37;
     font-size: 2.8em;
     margin-bottom: 1rem;
     text-transform: uppercase;
+    text-align: center;
 }
 
 .store-header img {
