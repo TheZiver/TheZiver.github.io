@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resize Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        h1, h2 {
+            color: #4dd0e1;
+        }
+        pre {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        button {
+            background-color: #4dd0e1;
+            color: #121212;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #26c6da;
+        }
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .image-box {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            width: 45%;
+        }
+        .image-box img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        .image-info {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        #log {
+            height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #1a1a1a;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Resize Test</h1>
+    <p>This tool tests if images from VRChat API are being properly resized to 128×128 pixels.</p>
+
+    <button id="test-image">Test with VRChat Image</button>
+    <button id="clear-cache">Clear Cache</button>
+    <button id="back">Back to Tools</button>
+
+    <div class="image-container">
+        <div class="image-box">
+            <h3>Original Image</h3>
+            <img id="original-image" src="" alt="Original image">
+            <div class="image-info" id="original-info">No image loaded</div>
+        </div>
+        <div class="image-box">
+            <h3>Cached Image</h3>
+            <img id="cached-image" src="" alt="Cached image">
+            <div class="image-info" id="cached-info">No image loaded</div>
+        </div>
+    </div>
+
+    <h2>Log</h2>
+    <div id="log"></div>
+
+    <script>
+        // Use a proxy approach to avoid CORS issues
+        function getProxiedUrl(url) {
+            // Use a CORS proxy to bypass restrictions
+            return `https://corsproxy.io/?${encodeURIComponent(url)}`;
+        }
+
+        // Sample image URLs that should work with the proxy
+        const TEST_IMAGES = [
+            "https://i.imgur.com/XqYGMFZ.png", // Sample fish image 1
+            "https://i.imgur.com/JvS5tn7.png", // Sample fish image 2
+            "https://i.imgur.com/TZ9TQZd.png"  // Sample fish image 3
+        ];
+
+        document.getElementById('test-image').addEventListener('click', testImage);
+        document.getElementById('clear-cache').addEventListener('click', clearCache);
+        document.getElementById('back').addEventListener('click', () => {
+            window.location.href = 'cache-checker.html';
+        });
+
+        function log(message) {
+            const logElement = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logElement.appendChild(entry);
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function clearCache() {
+            try {
+                localStorage.removeItem('testImageCache');
+                log('Test image cache cleared');
+
+                // Clear displayed images
+                document.getElementById('original-image').src = '';
+                document.getElementById('original-info').textContent = 'No image loaded';
+                document.getElementById('cached-image').src = '';
+                document.getElementById('cached-info').textContent = 'No image loaded';
+            } catch (e) {
+                log(`Error clearing cache: ${e.message}`);
+            }
+        }
+
+        function testImage() {
+            // Choose a random test image
+            const originalUrl = TEST_IMAGES[Math.floor(Math.random() * TEST_IMAGES.length)];
+            // Use the direct URL since these are from imgur which allows CORS
+            const imageUrl = originalUrl;
+
+            log(`Testing image: ${imageUrl}`);
+
+            // Check if we already have this image cached
+            let cachedDataUrl = null;
+            try {
+                const cache = localStorage.getItem('testImageCache');
+                if (cache) {
+                    const parsedCache = JSON.parse(cache);
+                    cachedDataUrl = parsedCache[imageUrl];
+
+                    if (cachedDataUrl) {
+                        log('Image found in cache');
+                    } else {
+                        log('Image not found in cache');
+                    }
+                } else {
+                    log('No cache exists yet');
+                }
+            } catch (e) {
+                log(`Error checking cache: ${e.message}`);
+            }
+
+            // Load the original image
+            const originalImg = new Image();
+            originalImg.crossOrigin = 'anonymous';
+
+            originalImg.onload = function() {
+                log(`Original image loaded: ${originalImg.width}×${originalImg.height}`);
+
+                // Display original image
+                document.getElementById('original-image').src = imageUrl;
+                document.getElementById('original-info').textContent = `Size: ${originalImg.width}×${originalImg.height}`;
+
+                // If we have a cached version, display it
+                if (cachedDataUrl) {
+                    displayCachedImage(cachedDataUrl);
+                } else {
+                    // Otherwise, create a cached version
+                    createCachedImage(originalImg, imageUrl);
+                }
+            };
+
+            originalImg.onerror = function() {
+                log('Error loading original image');
+                document.getElementById('original-info').textContent = 'Error loading image';
+            };
+
+            originalImg.src = imageUrl;
+        }
+
+        function displayCachedImage(dataUrl) {
+            const cachedImg = new Image();
+
+            cachedImg.onload = function() {
+                log(`Cached image loaded: ${cachedImg.width}×${cachedImg.height}`);
+                document.getElementById('cached-image').src = dataUrl;
+                document.getElementById('cached-info').textContent = `Size: ${cachedImg.width}×${cachedImg.height}`;
+            };
+
+            cachedImg.onerror = function() {
+                log('Error loading cached image');
+                document.getElementById('cached-info').textContent = 'Error loading cached image';
+            };
+
+            cachedImg.src = dataUrl;
+        }
+
+        function createCachedImage(originalImg, imageUrl) {
+            log('Creating cached version...');
+
+            try {
+                // Create a canvas with 128×128 dimensions
+                const canvas = document.createElement('canvas');
+                canvas.width = 128;
+                canvas.height = 128;
+                const ctx = canvas.getContext('2d');
+
+                // Enable high-quality image smoothing
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+
+                // Draw the image onto the canvas, resizing it to 128×128
+                ctx.drawImage(originalImg, 0, 0, 128, 128);
+
+                // Get the data URL
+                const dataUrl = canvas.toDataURL('image/png', 0.9);
+
+                // Save to cache
+                let cache = {};
+                try {
+                    const existingCache = localStorage.getItem('testImageCache');
+                    if (existingCache) {
+                        cache = JSON.parse(existingCache);
+                    }
+                } catch (e) {
+                    log(`Error reading cache: ${e.message}`);
+                }
+
+                cache[imageUrl] = dataUrl;
+
+                try {
+                    localStorage.setItem('testImageCache', JSON.stringify(cache));
+                    log('Saved to cache');
+                } catch (e) {
+                    log(`Error saving to cache: ${e.message}`);
+                }
+
+                // Display the cached image
+                displayCachedImage(dataUrl);
+
+            } catch (e) {
+                log(`Error creating cached image: ${e.message}`);
+            }
+        }
+    </script>
+</body>
+</html>

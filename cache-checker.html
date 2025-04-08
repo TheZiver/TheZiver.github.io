@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish Cache Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        h1, h2 {
+            color: #4dd0e1;
+        }
+        pre {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        button {
+            background-color: #4dd0e1;
+            color: #121212;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #26c6da;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4dd0e1;
+        }
+        #image-samples {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .image-sample {
+            background-color: #1a1a1a;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .image-sample img {
+            max-width: 100%;
+            border-radius: 50%;
+        }
+        .image-sample .details {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fish Cache Checker</h1>
+
+    <div class="stats">
+        <div class="stat-box">
+            <div>Total Images in Cache</div>
+            <div class="stat-value" id="total-images">-</div>
+        </div>
+        <div class="stat-box">
+            <div>Images with Data URLs</div>
+            <div class="stat-value" id="images-with-data-url">-</div>
+        </div>
+        <div class="stat-box">
+            <div>Cache Size</div>
+            <div class="stat-value" id="cache-size">-</div>
+        </div>
+        <div class="stat-box">
+            <div>Cache Age</div>
+            <div class="stat-value" id="cache-age">-</div>
+        </div>
+    </div>
+
+    <button id="visit-site">Visit Support Page</button>
+    <button id="check-cache">Check Cache Status</button>
+    <button id="clear-cache">Clear Cache</button>
+
+    <h2>Cache Details</h2>
+    <pre id="cache-details">Click "Check Cache Status" to see details</pre>
+
+    <h2>Image Samples (from Cache)</h2>
+    <div id="image-samples"></div>
+
+    <script>
+        document.getElementById('visit-site').addEventListener('click', visitSite);
+        document.getElementById('check-cache').addEventListener('click', checkCache);
+        document.getElementById('clear-cache').addEventListener('click', clearCache);
+
+        function visitSite() {
+            window.open('support.html', '_blank');
+        }
+
+        function checkCache() {
+            try {
+                const cachedImageData = localStorage.getItem('fishCommunityImages');
+                const cachedTimestamp = localStorage.getItem('fishCommunityImagesTimestamp');
+
+                if (!cachedImageData || !cachedTimestamp) {
+                    document.getElementById('cache-details').textContent = 'No cache found. Visit the website first to create cache.';
+                    return;
+                }
+
+                const timestamp = parseInt(cachedTimestamp, 10);
+                const now = Date.now();
+                const ageInDays = Math.floor((now - timestamp) / (24 * 60 * 60 * 1000));
+                const ageInHours = Math.floor((now - timestamp) / (60 * 60 * 1000)) % 24;
+                const ageInMinutes = Math.floor((now - timestamp) / (60 * 1000)) % 60;
+
+                const parsedData = JSON.parse(cachedImageData);
+                const imageCount = Object.keys(parsedData).length;
+                const imagesWithDataUrl = Object.values(parsedData).filter(img => img.dataUrl).length;
+                const cacheSize = new Blob([cachedImageData]).size / 1024;
+
+                // Update stats
+                document.getElementById('total-images').textContent = imageCount;
+                document.getElementById('images-with-data-url').textContent = imagesWithDataUrl;
+                document.getElementById('cache-size').textContent = `${cacheSize.toFixed(2)} KB`;
+                document.getElementById('cache-age').textContent = `${ageInDays}d ${ageInHours}h ${ageInMinutes}m`;
+
+                // Show details
+                let details = `Cache created: ${new Date(timestamp).toLocaleString()}\n`;
+                details += `Age: ${ageInDays} days, ${ageInHours} hours, ${ageInMinutes} minutes\n`;
+                details += `Total images: ${imageCount}\n`;
+                details += `Images with data URLs: ${imagesWithDataUrl}\n`;
+                details += `Cache size: ${cacheSize.toFixed(2)} KB\n\n`;
+
+                // Count status types
+                const statusCounts = {};
+                Object.values(parsedData).forEach(img => {
+                    statusCounts[img.status] = (statusCounts[img.status] || 0) + 1;
+                });
+
+                details += 'Status counts:\n';
+                Object.entries(statusCounts).forEach(([status, count]) => {
+                    details += `  ${status}: ${count}\n`;
+                });
+
+                document.getElementById('cache-details').textContent = details;
+
+                // Show image samples
+                const sampleContainer = document.getElementById('image-samples');
+                sampleContainer.innerHTML = '';
+
+                // Get up to 12 random images with data URLs
+                const imagesWithUrls = Object.entries(parsedData).filter(([_, img]) => img.dataUrl);
+                const sampleSize = Math.min(12, imagesWithUrls.length);
+                const samples = [];
+
+                // If we have fewer than 12 images, show all of them
+                if (imagesWithUrls.length <= 12) {
+                    samples.push(...imagesWithUrls);
+                } else {
+                    // Otherwise, select 12 random images
+                    const indices = new Set();
+                    while (indices.size < sampleSize) {
+                        indices.add(Math.floor(Math.random() * imagesWithUrls.length));
+                    }
+
+                    indices.forEach(index => {
+                        samples.push(imagesWithUrls[index]);
+                    });
+                }
+
+                // Create sample elements
+                samples.forEach(([url, img]) => {
+                    const sampleDiv = document.createElement('div');
+                    sampleDiv.className = 'image-sample';
+
+                    const imgElement = document.createElement('img');
+                    imgElement.src = img.dataUrl;
+                    imgElement.alt = img.name || 'Fish image';
+
+                    const details = document.createElement('div');
+                    details.className = 'details';
+                    details.textContent = `${img.status}`;
+
+                    sampleDiv.appendChild(imgElement);
+                    sampleDiv.appendChild(details);
+                    sampleContainer.appendChild(sampleDiv);
+                });
+
+            } catch (e) {
+                document.getElementById('cache-details').textContent = `Error checking cache: ${e.message}`;
+            }
+        }
+
+        function clearCache() {
+            try {
+                localStorage.removeItem('fishCommunityImages');
+                localStorage.removeItem('fishCommunityImagesTimestamp');
+                document.getElementById('cache-details').textContent = 'Cache cleared successfully.';
+
+                // Reset stats
+                document.getElementById('total-images').textContent = '-';
+                document.getElementById('images-with-data-url').textContent = '-';
+                document.getElementById('cache-size').textContent = '-';
+                document.getElementById('cache-age').textContent = '-';
+
+                // Clear samples
+                document.getElementById('image-samples').innerHTML = '';
+
+                alert('Cache cleared successfully. Visit the website to create a new cache.');
+            } catch (e) {
+                document.getElementById('cache-details').textContent = `Error clearing cache: ${e.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

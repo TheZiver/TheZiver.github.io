@@ -522,7 +522,9 @@ async function preloadImages() {
 
                         // Log if image was resized
                         if (needsResize) {
-                            console.log(`Resized large image from ${img.width}x${img.height} to ${targetWidth}x${targetHeight} for caching`);
+                            console.log(`%cRESIZED: ${img.width}x${img.height} → ${targetWidth}x${targetHeight}`, 'color: #4CAF50; font-weight: bold');
+                        } else {
+                            console.log(`%cNO RESIZE NEEDED: Already ${img.width}x${img.height}`, 'color: #2196F3');
                         }
 
                         // Use PNG format with high compression for all images
