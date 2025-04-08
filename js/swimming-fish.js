@@ -38,7 +38,18 @@ function initSwimmingFish() {
 
     // Check if we should disable fish on mobile (except on aquarium page)
     const isMobile = window.innerWidth <= 767;
-    const isAquariumPage = document.body.classList.contains('theme-aquarium');
+
+    // Check if this is the aquarium page using both class and URL path
+    const currentPath = window.location.pathname;
+    const isAquariumByPath = currentPath.includes('aquarium.html');
+    const isAquariumByClass = document.body.classList.contains('theme-aquarium');
+    const isAquariumPage = isAquariumByClass || isAquariumByPath;
+
+    // Debug log to help diagnose issues
+    console.log('Device info - Mobile: ' + isMobile + ', Aquarium page: ' + isAquariumPage);
+    console.log('Path check: ' + isAquariumByPath + ', Class check: ' + isAquariumByClass);
+    console.log('Current path: ' + currentPath);
+    console.log('Body classes: ' + document.body.className);
 
     // If on mobile and not on aquarium page, don't initialize fish
     if (isMobile && !isAquariumPage) {
