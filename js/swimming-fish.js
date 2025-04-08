@@ -503,25 +503,11 @@ async function preloadImages() {
                 // Small delay to ensure image is fully processed by the browser
                 setTimeout(() => {
                     try {
-                        // Check if image is too large and needs resizing
-                        const MAX_DIMENSION = 512; // Maximum width or height for cached images
-                        let targetWidth = img.width;
-                        let targetHeight = img.height;
-                        let needsResize = false;
-
-                        // Calculate if resizing is needed and new dimensions
-                        if (img.width > MAX_DIMENSION || img.height > MAX_DIMENSION) {
-                            needsResize = true;
-                            if (img.width > img.height) {
-                                // Landscape orientation
-                                targetWidth = MAX_DIMENSION;
-                                targetHeight = Math.floor(img.height * (MAX_DIMENSION / img.width));
-                            } else {
-                                // Portrait or square orientation
-                                targetHeight = MAX_DIMENSION;
-                                targetWidth = Math.floor(img.width * (MAX_DIMENSION / img.height));
-                            }
-                        }
+                        // Always resize all images to 128×128 pixels for maximum storage efficiency
+                        const TARGET_SIZE = 128; // Fixed size for all cached images
+                        let targetWidth = TARGET_SIZE;
+                        let targetHeight = TARGET_SIZE;
+                        let needsResize = (img.width !== TARGET_SIZE || img.height !== TARGET_SIZE);
 
                         // Convert the loaded image to a data URL using canvas with potential resizing
                         const canvas = document.createElement('canvas');
@@ -539,12 +525,10 @@ async function preloadImages() {
                             console.log(`Resized large image from ${img.width}x${img.height} to ${targetWidth}x${targetHeight} for caching`);
                         }
 
-                        // Get data URL (JPEG format with compression for photos, PNG for icons)
-                        // JPEG is much smaller than PNG for photographic content
-                        const isIcon = img.width < 128 && img.height < 128;
-                        const dataUrl = isIcon ?
-                            canvas.toDataURL('image/png', 0.9) :
-                            canvas.toDataURL('image/jpeg', 0.85);
+                        // Use PNG format with high compression for all images
+                        // Since all images are now small icons (128×128), PNG works well
+                        // and preserves transparency which is important for VRChat profile images
+                        const dataUrl = canvas.toDataURL('image/png', 0.9);
 
                         preloadedImages[item.url] = {
                             loaded: true,
@@ -1195,11 +1179,11 @@ function addSwimmingFishStyles() {
 
         .swimming-image {
             position: absolute;
-            width: 60px; /* Larger default size */
+            width: 60px; /* Display size - independent of cached image size (128x128) */
             height: 60px;
             opacity: 0.6; /* Higher opacity for better visibility */
             border-radius: 50%;
-            object-fit: contain;
+            object-fit: contain; /* This ensures the 128x128 cached images display properly */
             will-change: transform, left, top;
             transition: none;
             filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.1)); /* Default: minimal glow */
