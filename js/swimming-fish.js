@@ -1,11 +1,15 @@
 /**
- * FISH COMMUNITY WEBSITE - SWIMMING FISH (v4)
+ * FISH COMMUNITY WEBSITE - SWIMMING FISH (v15 - PRODUCTION READY)
  * Creates and animates swimming fish background elements using icon_urls from GitHub.
  * Features:
  * - Loads fish icons from community data
- * - Spawns fish at random positions on each page load
+ * - Spawns ALL fish in the center of the screen
  * - Natural swimming motion with wave effects
- * - Responsive design with different fish sizes
+ * - Size based on status: VERIFIED (largest), CERTIFIED (medium), others (smallest)
+ * - Enhanced caching system to prevent repeated API requests
+ * - Displays ALL fish without limiting the number
+ * - Logs image URLs only when loading from source (not cache)
+ * - Improved caching reliability with better error handling
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -18,24 +22,34 @@ let fishElements = [];
 let lastUpdateTime = 0;
 window.fishAnimationRunning = false;
 
-// Cache for community data to avoid repeated downloads
-let cachedCommunityData = null;
-let lastCacheTime = 0;
+// Global cache objects to persist across page changes
+if (!window.fishCommunityCache) {
+    window.fishCommunityCache = {
+        communityData: null,
+        lastCacheTime: 0,
+        preloadedImages: {},
+        preloadComplete: false,
+        imagesTimestamp: 0
+    };
+}
 
-// Cache for preloaded images
-let preloadedImages = {};
-let preloadComplete = false;
+// Local references to global cache
+let cachedCommunityData = window.fishCommunityCache.communityData;
+let lastCacheTime = window.fishCommunityCache.lastCacheTime;
+let preloadedImages = window.fishCommunityCache.preloadedImages;
+let preloadComplete = window.fishCommunityCache.preloadComplete;
+
+
 
 // --- Constants ---
 const COMMUNITY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw";
 const FALLBACK_IMAGE = 'images/fish_known.png'; // Fallback if fetch fails or images error
+const IMAGE_CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
 /**
  * Initialize the swimming fish system
  */
 function initSwimmingFish() {
-    console.log('Initializing swimming fish system (v4)');
-
     // Check if we should disable fish on mobile (except on aquarium page)
     const isMobile = window.innerWidth <= 767;
 
@@ -45,16 +59,8 @@ function initSwimmingFish() {
     const isAquariumByClass = document.body.classList.contains('theme-aquarium');
     const isAquariumPage = isAquariumByClass || isAquariumByPath;
 
-    // Debug log to help diagnose issues
-    console.log('Device info - Mobile: ' + isMobile + ', Aquarium page: ' + isAquariumPage);
-    console.log('Path check: ' + isAquariumByPath + ', Class check: ' + isAquariumByClass);
-    console.log('Current path: ' + currentPath);
-    console.log('Body classes: ' + document.body.className);
-
     // If on mobile and not on aquarium page, don't initialize fish
     if (isMobile && !isAquariumPage) {
-        console.log('Mobile device detected and not on aquarium page. Disabling swimming fish for better performance.');
-
         // Add a container with a message if it doesn't exist yet
         let container = document.getElementById('swimming-images-background');
         if (container) {
@@ -72,26 +78,75 @@ function initSwimmingFish() {
         return;
     }
 
-    // Try to load cached community data from sessionStorage
-    try {
-        const storedData = sessionStorage.getItem('communityData');
-        const timestamp = sessionStorage.getItem('communityDataTimestamp');
+    // Sync local variables with global cache
+    cachedCommunityData = window.fishCommunityCache.communityData;
+    lastCacheTime = window.fishCommunityCache.lastCacheTime;
+    preloadedImages = window.fishCommunityCache.preloadedImages;
+    preloadComplete = window.fishCommunityCache.preloadComplete;
 
-        if (storedData && timestamp) {
-            cachedCommunityData = JSON.parse(storedData);
-            lastCacheTime = parseInt(timestamp, 10);
-            console.log('Loaded community data from sessionStorage');
+    // If global cache is empty, try to load from storage
+    if (!window.fishCommunityCache.communityData) {
+        // Try to load cached community data from sessionStorage
+        try {
+            const storedData = sessionStorage.getItem('communityData');
+            const timestamp = sessionStorage.getItem('communityDataTimestamp');
 
-            // Check if we have preloaded images in sessionStorage
-            const preloadedData = sessionStorage.getItem('preloadedImages');
-            if (preloadedData) {
-                preloadedImages = JSON.parse(preloadedData);
-                preloadComplete = true;
-                console.log('Loaded preloaded image data from sessionStorage');
+            if (storedData && timestamp) {
+                window.fishCommunityCache.communityData = JSON.parse(storedData);
+                window.fishCommunityCache.lastCacheTime = parseInt(timestamp, 10);
+
+                // Update local references
+                cachedCommunityData = window.fishCommunityCache.communityData;
+                lastCacheTime = window.fishCommunityCache.lastCacheTime;
+
+                console.log('Loaded community data from sessionStorage');
             }
+        } catch (e) {
+            console.warn('Error loading community data from sessionStorage:', e);
         }
-    } catch (e) {
-        console.warn('Error loading from sessionStorage:', e);
+    } else {
+        console.log('Using community data from global cache');
+    }
+
+    // If global image cache is empty, try to load from storage
+    if (!window.fishCommunityCache.preloadComplete) {
+        // Try to load cached image data from localStorage (persistent across sessions)
+        try {
+            const cachedImageData = localStorage.getItem('fishCommunityImages');
+            const cachedTimestamp = localStorage.getItem('fishCommunityImagesTimestamp');
+
+            if (cachedImageData && cachedTimestamp) {
+                const timestamp = parseInt(cachedTimestamp, 10);
+                const now = Date.now();
+
+                // If cache is still valid (less than 7 days old)
+                if (now - timestamp < IMAGE_CACHE_DURATION) {
+                    const parsedData = JSON.parse(cachedImageData);
+                    const imageCount = Object.keys(parsedData).length;
+
+                    if (imageCount > 0) {
+                        console.log(`Loaded ${imageCount} images from localStorage cache (valid for 7 days)`);
+
+                        // Update global cache
+                        window.fishCommunityCache.preloadedImages = parsedData;
+                        window.fishCommunityCache.imagesTimestamp = timestamp;
+                        window.fishCommunityCache.preloadComplete = true;
+
+                        // Update local references
+                        preloadedImages = parsedData;
+                        preloadComplete = true;
+                    } else {
+                        console.log('Cached data exists but contains no images');
+                    }
+                } else {
+                    console.log('Cached image data expired, will fetch fresh data');
+                }
+            }
+        } catch (e) {
+            console.warn('Error loading image cache:', e);
+        }
+    } else {
+        console.log(`Using ${Object.keys(window.fishCommunityCache.preloadedImages).length} images from global cache`);
     }
 
     let container = document.getElementById('swimming-images-background');
@@ -124,15 +179,16 @@ function initSwimmingFish() {
 async function fetchCommunityData() {
     // Check if we have cached data that's less than 30 minutes old
     const now = Date.now();
-    const cacheAge = now - lastCacheTime;
+    const cacheAge = now - window.fishCommunityCache.lastCacheTime;
     const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
 
-    if (cachedCommunityData && cachedCommunityData.length > 0 && cacheAge < CACHE_DURATION) {
-        console.log("Using cached community data...");
-        return cachedCommunityData;
+    if (window.fishCommunityCache.communityData &&
+        window.fishCommunityCache.communityData.length > 0 &&
+        cacheAge < CACHE_DURATION) {
+        return window.fishCommunityCache.communityData;
     }
 
-    console.log("Fetching community data for fish icons...");
+
     try {
         // Use XMLHttpRequest instead of fetch for better compatibility
         const data = await new Promise((resolve, reject) => {
@@ -165,33 +221,30 @@ async function fetchCommunityData() {
         if (data.community_groups && Array.isArray(data.community_groups)) {
             console.log('Using new JSON structure with community_groups property');
             console.log('Number of groups found:', data.community_groups.length);
+            window.fishCommunityCache.communityData = data.community_groups;
             cachedCommunityData = data.community_groups;
         } else {
             // Fallback for old structure
             console.log('Using old JSON structure');
+            window.fishCommunityCache.communityData = data || [];
             cachedCommunityData = data || [];
         }
+        window.fishCommunityCache.lastCacheTime = now;
         lastCacheTime = now;
 
-        // Log the first community to debug
-        if (cachedCommunityData.length > 0) {
-            console.log('First community:', JSON.stringify(cachedCommunityData[0], null, 2));
-            console.log('First community tags:', cachedCommunityData[0].tags);
-        } else {
-            console.warn('No communities found in the data!');
-        }
+
 
         // Also store in sessionStorage for persistence across page loads in the same session
         try {
             sessionStorage.setItem('communityData', JSON.stringify(cachedCommunityData));
             sessionStorage.setItem('communityDataTimestamp', now.toString());
         } catch (e) {
-            console.warn('Could not store community data in sessionStorage:', e);
+            // Silently fail if sessionStorage is not available
         }
 
         return cachedCommunityData;
     } catch (error) {
-        console.error('Error fetching community data:', error);
+        // Error fetching community data
 
         // Try to get data from sessionStorage if fetch fails
         try {
@@ -199,13 +252,13 @@ async function fetchCommunityData() {
             const timestamp = sessionStorage.getItem('communityDataTimestamp');
 
             if (storedData && timestamp) {
-                console.log('Using community data from sessionStorage after fetch failure');
+
                 cachedCommunityData = JSON.parse(storedData);
                 lastCacheTime = parseInt(timestamp, 10);
                 return cachedCommunityData;
             }
         } catch (e) {
-            console.warn('Error retrieving from sessionStorage:', e);
+            // Silently fail if sessionStorage is not available
         }
 
         return []; // Return empty array if all else fails
@@ -214,9 +267,60 @@ async function fetchCommunityData() {
 
 /**
  * Preload all community images to improve performance
+ * with persistent caching to avoid VRChat API rate limiting
  */
 async function preloadImages() {
-    console.log('Preloading community images...');
+
+
+    // First check if we already have images in the global cache
+    if (window.fishCommunityCache.preloadComplete &&
+        Object.keys(window.fishCommunityCache.preloadedImages).length > 0) {
+
+        preloadedImages = window.fishCommunityCache.preloadedImages;
+        preloadComplete = true;
+        return;
+    }
+
+    // Then check localStorage for persistent cache
+    try {
+        const cachedImageData = localStorage.getItem('fishCommunityImages');
+        const cachedTimestamp = localStorage.getItem('fishCommunityImagesTimestamp');
+
+        if (cachedImageData && cachedTimestamp) {
+            const timestamp = parseInt(cachedTimestamp, 10);
+            const now = Date.now();
+
+            // If cache is still valid (less than 7 days old)
+            if (now - timestamp < IMAGE_CACHE_DURATION) {
+                try {
+                    const parsedData = JSON.parse(cachedImageData);
+                    const imageCount = Object.keys(parsedData).length;
+
+                    // Only use the cache if it actually contains images
+                    if (imageCount > 0) {
+                        // Mark all cached images as loaded
+                        Object.keys(parsedData).forEach(key => {
+                            if (parsedData[key]) {
+                                parsedData[key].loaded = true;
+                            }
+                        });
+
+                        window.fishCommunityCache.preloadedImages = parsedData;
+                        window.fishCommunityCache.imagesTimestamp = timestamp;
+                        window.fishCommunityCache.preloadComplete = true;
+
+                        preloadedImages = parsedData;
+                        preloadComplete = true;
+                        return;
+                    }
+                } catch (e) {
+                    // If there's an error parsing the cache, we'll just fetch fresh data
+                }
+            }
+        }
+    } catch (e) {
+        // Silently fail if localStorage is not available
+    }
 
     const communityGroups = await fetchCommunityData();
     let imagesToPreload = [];
@@ -226,7 +330,6 @@ async function preloadImages() {
         communityGroups.forEach(group => {
             // Skip groups with SYSTEM tag
             if (group.tags && Array.isArray(group.tags) && group.tags.includes('SYSTEM')) {
-                console.log(`Skipping SYSTEM-tagged group for preload: ${group.group_name || 'Unknown Group'}`);
                 return;
             }
 
@@ -237,7 +340,6 @@ async function preloadImages() {
 
                 // Skip if status is SYSTEM
                 if (status === 'SYSTEM') {
-                    console.log(`Skipping group with SYSTEM status for preload: ${group.group_name || 'Unknown Group'}`);
                     return;
                 }
 
@@ -247,47 +349,76 @@ async function preloadImages() {
                     status: status
                 });
             }
-
-            // In the new structure, we don't have nested communities anymore
-            // All groups are at the top level in community_groups
         });
     }
 
-    // Preload each image
+    console.log(`Preloading ${imagesToPreload.length} images...`);
+
+    // Initialize preloadedImages object
+    preloadedImages = {};
+
+    // Create a promise for each image to preload
     const preloadPromises = imagesToPreload.map(item => {
         return new Promise((resolve) => {
             const img = new Image();
+
+            // Set up load and error handlers
             img.onload = () => {
                 preloadedImages[item.url] = {
                     loaded: true,
-                    name: item.name
+                    status: item.status,
+                    name: item.name,
+                    timestamp: Date.now()
                 };
                 resolve();
             };
+
             img.onerror = () => {
                 preloadedImages[item.url] = {
                     loaded: false,
-                    name: item.name
+                    status: item.status,
+                    name: item.name,
+                    timestamp: Date.now()
                 };
                 resolve();
             };
+
+            // Start loading the image
             img.src = item.url;
         });
     });
 
-    // Wait for all images to preload
+    // Wait for all images to be processed (either loaded or failed)
     await Promise.all(preloadPromises);
 
-    // Store preloaded image data in sessionStorage
+    console.log(`Preloaded ${Object.keys(preloadedImages).length} images`);
+
+    // Update the global cache
+    window.fishCommunityCache.preloadedImages = preloadedImages;
+    window.fishCommunityCache.imagesTimestamp = Date.now();
+    window.fishCommunityCache.preloadComplete = true;
+
+    // Store the preloaded image data in localStorage for persistent caching
     try {
-        sessionStorage.setItem('preloadedImages', JSON.stringify(preloadedImages));
+        localStorage.setItem('fishCommunityImages', JSON.stringify(preloadedImages));
+        localStorage.setItem('fishCommunityImagesTimestamp', Date.now().toString());
+        console.log('Saved image cache to localStorage (valid for 7 days)');
     } catch (e) {
-        console.warn('Could not store preloaded image data in sessionStorage:', e);
+        console.warn('Error saving to localStorage:', e);
+
+        // Fallback to sessionStorage if localStorage fails
+        try {
+            sessionStorage.setItem('preloadedImages', JSON.stringify(preloadedImages));
+            console.log('Saved image cache to sessionStorage (fallback)');
+        } catch (e2) {
+            console.warn('Could not store preloaded image data in sessionStorage:', e2);
+        }
     }
 
     preloadComplete = true;
-    console.log(`Preloaded ${Object.keys(preloadedImages).length} images`);
 }
+
+
 
 /**
  * Helper function to get status from tags array
@@ -319,9 +450,10 @@ function getStatusFromTags(tags) {
 
 /**
  * Create fish elements by fetching data and using icon_urls
+ * Uses a batched loading approach to prevent rate limiting
  */
 async function createFish(container) {
-    console.log('Attempting to create fish from GitHub icon_urls...');
+
 
     container.innerHTML = ''; // Clear existing fish
     fishElements = []; // Reset the array
@@ -330,39 +462,39 @@ async function createFish(container) {
     let imageUrls = [];
 
     if (!communityGroups || communityGroups.length === 0) {
-        console.warn('No community groups found!');
         return;
     }
 
     // Create an array to store image URLs with their status
     let imageUrlsWithStatus = [];
 
+    // Configuration for batch loading
+    const BATCH_SIZE = 5; // Number of images to load in each batch
+    const BATCH_DELAY = 1000; // Milliseconds to wait between batches (1 second)
+
     if (communityGroups && communityGroups.length > 0) {
         // Extract all icon_urls from all communities in all groups
         communityGroups.forEach(group => {
-            // Skip groups with SYSTEM tag
-            if (group.tags && Array.isArray(group.tags) && group.tags.includes('SYSTEM')) {
-                console.log(`Skipping SYSTEM-tagged group: ${group.group_name || 'Unknown Group'}`);
-                return;
-            }
+            // Include all groups, even those with SYSTEM tag
+            // We want to display all 74 fish
 
             // Check if the group itself has an icon_url
             if (group.icon_url && typeof group.icon_url === 'string' && group.icon_url.trim() !== '') {
                 // Get status from tags array
                 const status = getStatusFromTags(group.tags);
 
-                // Skip if status is SYSTEM
-                if (status === 'SYSTEM') {
-                    console.log(`Skipping group with SYSTEM status: ${group.group_name || 'Unknown Group'}`);
-                    return;
-                }
+                // Include all statuses, even SYSTEM
+                // We want to display all 74 fish
+
+                // We'll check cache status when creating the fish
 
                 imageUrlsWithStatus.push({
                     url: group.icon_url,
                     status: status,
                     name: group.group_name || 'Group'
                 });
-                console.log(`Added group icon: ${group.icon_url} with status: ${status}`);
+
+
             }
 
             // In the new structure, we don't have nested communities anymore
@@ -372,103 +504,208 @@ async function createFish(container) {
         // Extract just the URLs for backward compatibility
         imageUrls = imageUrlsWithStatus.map(item => item.url);
 
-        console.log(`Found ${imageUrls.length} unique icon_urls.`);
-    } else {
-        console.warn("No community data fetched or community list empty.");
+
     }
 
     // If no valid icon_urls were found after fetching, use the single fallback
     if (imageUrls.length === 0) {
-        console.warn("No valid icon_urls found. Using single fallback image.");
         imageUrls.push(FALLBACK_IMAGE);
     }
 
     // Always use all available fish images
+    // Show each fish exactly once (no duplicates)
     const imageCount = imageUrls.length;
 
-    console.log(`Creating ${imageCount} fish (using all available images)...`);
+
 
     // Simple random function
     function getRandom(max) {
         return Math.random() * max;
     }
 
-    // We'll use all images, ensuring each one appears at least once
+    // Function to create a single fish
+    function createSingleFish(index, selectedItem) {
+        if (!selectedItem || !selectedItem.url) return null;
 
-    for (let i = 0; i < imageCount; i++) {
         const img = document.createElement('img');
         img.className = 'swimming-image';
         img.alt = '＜＞＜';
 
-        // For the first set of fish, use each image exactly once
-        // This ensures all community icons are displayed
-        let selectedItem;
-        if (i < imageUrlsWithStatus.length) {
-            // Use each image once in sequence
-            selectedItem = imageUrlsWithStatus[i];
-            // Add status as a data attribute and class for styling
-            img.dataset.status = selectedItem.status || 'FISH_KNOWN';
-            img.classList.add('status-' + (selectedItem.status || 'FISH_KNOWN').toLowerCase());
-        } else {
-            // If we need more fish than unique images, select randomly from all images
-            selectedItem = imageUrlsWithStatus[Math.floor(getRandom(imageUrlsWithStatus.length))];
-            img.dataset.status = selectedItem.status || 'FISH_KNOWN';
-            img.classList.add('status-' + (selectedItem.status || 'FISH_KNOWN').toLowerCase());
-            console.log("Using additional fish with randomly selected images.");
-        }
-        const selectedUrl = selectedItem.url;
-        img.src = selectedUrl;
+        // Add status as a data attribute and class for styling
+        img.dataset.status = selectedItem.status || 'FISH_KNOWN';
+        img.classList.add('status-' + (selectedItem.status || 'FISH_KNOWN').toLowerCase());
 
+        const selectedUrl = selectedItem.url;
+
+        // Always add error handler first (for both cached and non-cached images)
         img.onerror = () => {
             console.warn(`Failed to load image: ${img.src}. Using fallback.`);
             img.src = FALLBACK_IMAGE;
             img.onerror = null; // Prevent infinite loops
         };
 
-        // Random size
-        const sizeClasses = ['size-small', 'size-medium', 'size-large'];
-        const randomSizeClass = sizeClasses[Math.floor(getRandom(sizeClasses.length))];
-        img.classList.add(randomSizeClass);
+        // Check if we have this image in our preloaded cache
+        const isCached = preloadComplete && preloadedImages[selectedUrl] && preloadedImages[selectedUrl].loaded;
 
-        // Evenly distribute fish across the screen in a grid pattern
-        // With more fish, we need a more efficient grid layout
+        // Add data attribute to indicate cache status
+        img.dataset.cached = isCached ? 'true' : 'false';
+
+        // Set the image source
+        img.src = selectedUrl;
+
+        // If not cached, add this image to the preload cache for future use
+        if (!isCached) {
+            // Log the URL when loading from source (not cache)
+            console.log(`Loading image from URL: ${selectedUrl}`);
+            // Create a new Image object to preload this image for future use
+            const preloadImg = new Image();
+            preloadImg.onload = () => {
+                // Add to preloaded images cache
+                preloadedImages[selectedUrl] = {
+                    loaded: true,
+                    status: selectedItem.status || 'FISH_KNOWN',
+                    name: selectedItem.name || 'Unknown',
+                    timestamp: Date.now()
+                };
+
+                // Update global cache
+                window.fishCommunityCache.preloadedImages = preloadedImages;
+                window.fishCommunityCache.preloadComplete = true;
+
+                // Update localStorage cache (but don't block the UI)
+                setTimeout(() => {
+                    try {
+                        localStorage.setItem('fishCommunityImages', JSON.stringify(preloadedImages));
+                        localStorage.setItem('fishCommunityImagesTimestamp', Date.now().toString());
+                    } catch (e) {
+                        console.warn('Error saving to localStorage:', e);
+                    }
+                }, 100);
+            };
+            preloadImg.src = selectedUrl;
+        }
+
+        // Assign size based on fish status
+        // FISH_VERIFIED = largest, FISH_CERTIFIED = medium, others = smallest
+        let sizeClass;
+
+        // Check if the selectedItem has tags
+        if (selectedItem && selectedItem.tags && Array.isArray(selectedItem.tags)) {
+            if (selectedItem.tags.includes('FISH_VERIFIED')) {
+                sizeClass = 'size-large';  // Largest size for FISH_VERIFIED
+                img.classList.add('fish-verified'); // Add special class for styling
+            } else if (selectedItem.tags.includes('FISH_CERTIFIED')) {
+                sizeClass = 'size-medium'; // Medium size for FISH_CERTIFIED
+                img.classList.add('fish-certified'); // Add special class for styling
+            } else {
+                sizeClass = 'size-small';  // Smallest size for everything else
+            }
+        } else {
+            // Fallback for items without tags or using the old status field
+            if (selectedItem && selectedItem.status === 'FISH_VERIFIED') {
+                sizeClass = 'size-large';
+                img.classList.add('fish-verified');
+            } else if (selectedItem && selectedItem.status === 'FISH_CERTIFIED') {
+                sizeClass = 'size-medium';
+                img.classList.add('fish-certified');
+            } else {
+                sizeClass = 'size-small';
+            }
+        }
+
+        img.classList.add(sizeClass);
+
+        // CENTER SPAWN - All fish spawn in the center and move outward
         const screenWidth = window.innerWidth;
         const screenHeight = window.innerHeight;
 
-        // Calculate optimal grid dimensions based on aspect ratio
-        const screenRatio = screenWidth / screenHeight;
-        const gridCols = Math.ceil(Math.sqrt(imageCount * screenRatio));
-        const gridRows = Math.ceil(imageCount / gridCols);
+        // Get the center of the screen
+        const centerX = screenWidth / 2;
+        const centerY = screenHeight / 2;
 
-        // Calculate cell dimensions
-        const cellWidth = screenWidth / gridCols;
-        const cellHeight = screenHeight / gridRows;
+        // Create a small random offset from center (small cluster in the middle)
+        // This creates a tight cluster in the center that will spread out
+        const maxInitialOffset = 100; // pixels from center
+        const randomOffsetX = (Math.random() - 0.5) * maxInitialOffset;
+        const randomOffsetY = (Math.random() - 0.5) * maxInitialOffset;
 
-        // Calculate position within the fish's assigned grid cell, plus some randomness
-        const gridCol = i % gridCols;
-        const gridRow = Math.floor(i / gridCols);
-        const xPos = (gridCol * cellWidth) + getRandom(cellWidth * 0.7);
-        const yPos = (gridRow * cellHeight) + getRandom(cellHeight * 0.7);
+        // Calculate final position with the fish centered on that point
+        const fishWidth = 50; // approximate width
+        const fishHeight = 50; // approximate height
+        const xPos = centerX + randomOffsetX - (fishWidth / 2);
+        const yPos = centerY + randomOffsetY - (fishHeight / 2);
+
+        // Set position
         img.style.left = `${xPos}px`;
         img.style.top = `${yPos}px`;
 
-        // More consistent movement parameters with less variation
-        img.dataset.speedX = (0.3 + getRandom(0.4)).toFixed(2); // Reduced speed variation
-        img.dataset.speedY = (0.2 + getRandom(0.3)).toFixed(2); // Slower vertical movement
-        img.dataset.directionX = getRandom(1) > 0.5 ? 1 : -1;
-        img.dataset.directionY = getRandom(1) > 0.5 ? 1 : -1;
-        // Assign a fixed wave offset to ensure fish don't synchronize
-        img.dataset.waveOffset = (i * 1.5) + getRandom(5);
+        // Log spawn information in debug mode
+        if (window.location.search.includes('debug=true') && index === 0) {
+            console.log(`CENTER SPAWN: All ${imageCount} fish spawning near center (${centerX}, ${centerY})`);
+            console.log(`Max initial offset: ${maxInitialOffset}px`);
+        }
 
-        container.appendChild(img);
-        fishElements.push(img);
+        // Faster movement to spread out from center quickly
+        img.dataset.speedX = (0.5 + getRandom(0.5)).toFixed(2); // Faster horizontal movement
+        img.dataset.speedY = (0.4 + getRandom(0.4)).toFixed(2); // Faster vertical movement
+
+        // Direction away from center to spread out
+        // This makes fish move away from the center in all directions
+        img.dataset.directionX = randomOffsetX >= 0 ? 1 : -1;
+        img.dataset.directionY = randomOffsetY >= 0 ? 1 : -1;
+        // Assign a fixed wave offset to ensure fish don't synchronize
+        img.dataset.waveOffset = (index * 1.5) + getRandom(5);
+
+        return img;
     }
+
+    // Load fish in batches to avoid overwhelming the VRChat API
+    async function loadFishInBatches() {
+        // Count of non-cached images to track potential API load
+        let nonCachedCount = 0;
+
+        // Process images in batches
+        for (let i = 0; i < imageCount; i += BATCH_SIZE) {
+            const batchEnd = Math.min(i + BATCH_SIZE, imageCount);
+            // Create and add fish elements for this batch
+            for (let j = i; j < batchEnd; j++) {
+                // Use each image exactly once in sequence
+                // This ensures no duplicates
+                let selectedItem = imageUrlsWithStatus[j];
+
+
+
+                const img = createSingleFish(j, selectedItem);
+                if (img) {
+                    container.appendChild(img);
+                    fishElements.push(img);
+
+                    // Count non-cached images
+                    const isCached = img.dataset.cached === 'true';
+                    if (!isCached) {
+                        nonCachedCount++;
+                    }
+                }
+            }
+
+            // If we have non-cached images in this batch and there are more batches to load,
+            // add a delay before the next batch to avoid overwhelming the VRChat API
+            if (nonCachedCount > 0 && batchEnd < imageCount) {
+                // Add a delay before the next batch to avoid overwhelming the VRChat API
+                await new Promise(resolve => setTimeout(resolve, BATCH_DELAY));
+                nonCachedCount = 0; // Reset for next batch
+            }
+        }
+
+
+    }
+
+    // Start loading fish in batches
+    await loadFishInBatches();
 
     // Start animation if fish were created
     if (fishElements.length > 0) {
         startAnimation();
-    } else {
-        console.log("No fish elements created.");
     }
 }
 
@@ -476,10 +713,9 @@ async function createFish(container) {
  * Start the animation loop
  */
 function startAnimation() {
-    console.log("Attempting to start animation (v4)...");
+
     if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
-        console.log("Cancelled existing animation frame.");
     }
     lastUpdateTime = Date.now();
     window.fishAnimationRunning = true;
@@ -621,21 +857,21 @@ function addSwimmingFishStyles() {
     styleElement.id = 'swimming-fish-styles';
     styleElement.textContent = `
         .swimming-images-container {
-            position: fixed;
+            position: fixed; /* Fixed position to cover the entire viewport */
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             pointer-events: none;
             z-index: -1;
-            overflow: hidden;
+            overflow: visible; /* Allow fish to be visible outside the container */
         }
 
         .swimming-image {
             position: absolute;
-            width: 60px;
+            width: 60px; /* Larger default size */
             height: 60px;
-            opacity: 0.4; /* Default opacity for most pages */
+            opacity: 0.6; /* Higher opacity for better visibility */
             border-radius: 50%;
             object-fit: contain;
             will-change: transform, left, top;
@@ -669,9 +905,21 @@ function addSwimmingFishStyles() {
             opacity: 1.0; /* Full opacity for better visibility */
         }
 
-        .swimming-image.size-small { width: 40px; height: 40px; }
-        .swimming-image.size-medium { width: 60px; height: 60px; }
-        .swimming-image.size-large { width: 80px; height: 80px; }
+        /* Size variations - larger sizes with hierarchy based on status */
+        .swimming-image.size-small { width: 50px; height: 50px; }  /* Smallest but still reasonably large */
+        .swimming-image.size-medium { width: 65px; height: 65px; } /* Medium size for FISH_CERTIFIED */
+        .swimming-image.size-large { width: 80px; height: 80px; }  /* Largest size for FISH_VERIFIED */
+
+        /* Special styling for verified and certified fish */
+        .swimming-image.fish-verified {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); /* Brighter glow for verified */
+            z-index: 2; /* Higher z-index to appear above other fish */
+        }
+
+        .swimming-image.fish-certified {
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.6); /* Subtle glow for certified */
+            z-index: 1; /* Medium z-index */
+        }
 
         /* Theme-specific adjustments for swimming images */
         .theme-rosefish .swimming-image {
@@ -705,5 +953,4 @@ function addSwimmingFishStyles() {
         }
     `;
     document.head.appendChild(styleElement);
-    console.log("Added swimming fish styles (v4).");
 }
