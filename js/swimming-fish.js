@@ -39,6 +39,128 @@ let lastCacheTime = window.fishCommunityCache.lastCacheTime;
 let preloadedImages = window.fishCommunityCache.preloadedImages;
 let preloadComplete = window.fishCommunityCache.preloadComplete;
 
+/**
+ * Debug function to check cache status
+ * This helps diagnose caching issues
+ */
+function checkCacheStatus() {
+    console.group('Fish Image Cache Status');
+
+    // Check localStorage
+    try {
+        const cachedImageData = localStorage.getItem('fishCommunityImages');
+        const cachedTimestamp = localStorage.getItem('fishCommunityImagesTimestamp');
+
+        if (cachedImageData && cachedTimestamp) {
+            const timestamp = parseInt(cachedTimestamp, 10);
+            const now = Date.now();
+            const ageInDays = Math.floor((now - timestamp) / (24 * 60 * 60 * 1000));
+            const ageInHours = Math.floor((now - timestamp) / (60 * 60 * 1000));
+
+            try {
+                const parsedData = JSON.parse(cachedImageData);
+                const imageCount = Object.keys(parsedData).length;
+                const imagesWithDataUrl = Object.values(parsedData).filter(img => img.dataUrl).length;
+                const cacheSize = new Blob([cachedImageData]).size / 1024;
+
+                console.log(`LocalStorage: ${imageCount} images (${imagesWithDataUrl} with dataURL)`);
+                console.log(`Cache age: ${ageInDays} days, ${ageInHours % 24} hours`);
+                console.log(`Cache size: ${cacheSize.toFixed(2)} KB`);
+            } catch (e) {
+                console.warn('Error parsing localStorage cache:', e);
+            }
+        } else {
+            console.log('No localStorage cache found');
+        }
+    } catch (e) {
+        console.warn('Error accessing localStorage:', e);
+    }
+
+    // Check global cache
+    if (window.fishCommunityCache && window.fishCommunityCache.preloadedImages) {
+        const globalImages = Object.keys(window.fishCommunityCache.preloadedImages).length;
+        const globalWithDataUrl = Object.values(window.fishCommunityCache.preloadedImages)
+            .filter(img => img && img.dataUrl).length;
+
+        console.log(`Global cache: ${globalImages} images (${globalWithDataUrl} with dataURL)`);
+    } else {
+        console.log('No global cache initialized');
+    }
+
+    // Check current page fish
+    const fishOnPage = document.querySelectorAll('.swimming-image').length;
+    const cachedFish = document.querySelectorAll('.swimming-image[data-cached="true"]').length;
+
+    console.log(`Current page: ${fishOnPage} fish (${cachedFish} using cache)`);
+    console.groupEnd();
+}
+
+// Run cache check when page loads
+setTimeout(checkCacheStatus, 2000);
+
+/**
+ * Add a debug button to clear cache (only in development)
+ */
+function addCacheControlButton() {
+    // Only add in development environments
+    if (window.location.hostname !== 'localhost' &&
+        !window.location.hostname.includes('127.0.0.1') &&
+        !window.location.hostname.includes('.github.io')) {
+        return;
+    }
+
+    const button = document.createElement('button');
+    button.textContent = 'Clear Fish Cache';
+    button.style.position = 'fixed';
+    button.style.bottom = '10px';
+    button.style.right = '10px';
+    button.style.zIndex = '9999';
+    button.style.padding = '5px 10px';
+    button.style.backgroundColor = '#333';
+    button.style.color = '#fff';
+    button.style.border = '1px solid #555';
+    button.style.borderRadius = '4px';
+    button.style.cursor = 'pointer';
+    button.style.fontSize = '12px';
+    button.style.opacity = '0.7';
+
+    button.addEventListener('mouseover', () => {
+        button.style.opacity = '1';
+    });
+
+    button.addEventListener('mouseout', () => {
+        button.style.opacity = '0.7';
+    });
+
+    button.addEventListener('click', () => {
+        try {
+            // Clear localStorage cache
+            localStorage.removeItem('fishCommunityImages');
+            localStorage.removeItem('fishCommunityImagesTimestamp');
+
+            // Clear global cache
+            window.fishCommunityCache.preloadedImages = {};
+            window.fishCommunityCache.preloadComplete = false;
+            window.fishCommunityCache.imagesTimestamp = 0;
+
+            // Update local references
+            preloadedImages = {};
+            preloadComplete = false;
+
+            alert('Fish image cache cleared! Reloading page...');
+            window.location.reload();
+        } catch (e) {
+            console.error('Error clearing cache:', e);
+            alert('Error clearing cache: ' + e.message);
+        }
+    });
+
+    document.body.appendChild(button);
+}
+
+// Add cache control button after a short delay
+setTimeout(addCacheControlButton, 3000);
+
 
 
 // --- Constants ---
@@ -125,7 +247,9 @@ function initSwimmingFish() {
                     const imageCount = Object.keys(parsedData).length;
 
                     if (imageCount > 0) {
-                        console.log(`Loaded ${imageCount} images from localStorage cache (valid for 7 days)`);
+                        // Count images with data URLs
+                        const imagesWithDataUrl = Object.values(parsedData).filter(img => img.dataUrl).length;
+                        console.log(`Loaded ${imageCount} images from localStorage cache (${imagesWithDataUrl} with dataURL) - valid for 7 days`);
 
                         // Update global cache
                         window.fishCommunityCache.preloadedImages = parsedData;
@@ -139,14 +263,17 @@ function initSwimmingFish() {
                         console.log('Cached data exists but contains no images');
                     }
                 } else {
-                    console.log('Cached image data expired, will fetch fresh data');
+                    console.log(`Cached image data expired (${Math.floor((now - timestamp) / (24 * 60 * 60 * 1000))} days old), will fetch fresh data`);
                 }
             }
         } catch (e) {
             console.warn('Error loading image cache:', e);
         }
     } else {
-        console.log(`Using ${Object.keys(window.fishCommunityCache.preloadedImages).length} images from global cache`);
+        // Count images with data URLs in global cache
+        const totalImages = Object.keys(window.fishCommunityCache.preloadedImages).length;
+        const imagesWithDataUrl = Object.values(window.fishCommunityCache.preloadedImages).filter(img => img.dataUrl).length;
+        console.log(`Using ${totalImages} images from global cache (${imagesWithDataUrl} with dataURL)`);
     }
 
     let container = document.getElementById('swimming-images-background');
@@ -270,14 +397,17 @@ async function fetchCommunityData() {
  * with persistent caching to avoid VRChat API rate limiting
  */
 async function preloadImages() {
-
-
     // First check if we already have images in the global cache
     if (window.fishCommunityCache.preloadComplete &&
         Object.keys(window.fishCommunityCache.preloadedImages).length > 0) {
 
         preloadedImages = window.fishCommunityCache.preloadedImages;
         preloadComplete = true;
+
+        // Log cache statistics
+        const totalImages = Object.keys(preloadedImages).length;
+        const imagesWithDataUrl = Object.values(preloadedImages).filter(img => img.dataUrl).length;
+        console.log(`Using global cache: ${totalImages} images (${imagesWithDataUrl} with dataURL)`);
         return;
     }
 
@@ -362,14 +492,40 @@ async function preloadImages() {
         return new Promise((resolve) => {
             const img = new Image();
 
+            // Set up cross-origin attribute to allow canvas operations
+            img.crossOrigin = 'anonymous';
+
             // Set up load and error handlers
             img.onload = () => {
-                preloadedImages[item.url] = {
-                    loaded: true,
-                    status: item.status,
-                    name: item.name,
-                    timestamp: Date.now()
-                };
+                try {
+                    // Convert the loaded image to a data URL using canvas
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    // Get data URL (PNG format with compression)
+                    const dataUrl = canvas.toDataURL('image/png', 0.8);
+
+                    preloadedImages[item.url] = {
+                        loaded: true,
+                        status: item.status,
+                        name: item.name,
+                        timestamp: Date.now(),
+                        dataUrl: dataUrl
+                    };
+                    console.log(`Created data URL for: ${item.url}`);
+                } catch (canvasError) {
+                    console.warn('Error creating data URL from image:', canvasError);
+                    // Still cache the image info without the data URL
+                    preloadedImages[item.url] = {
+                        loaded: true,
+                        status: item.status,
+                        name: item.name,
+                        timestamp: Date.now()
+                    };
+                }
                 resolve();
             };
 
@@ -400,18 +556,38 @@ async function preloadImages() {
 
     // Store the preloaded image data in localStorage for persistent caching
     try {
+        // Count images with data URLs
+        const totalImages = Object.keys(preloadedImages).length;
+        const imagesWithDataUrl = Object.values(preloadedImages).filter(img => img.dataUrl).length;
+
         localStorage.setItem('fishCommunityImages', JSON.stringify(preloadedImages));
         localStorage.setItem('fishCommunityImagesTimestamp', Date.now().toString());
-        console.log('Saved image cache to localStorage (valid for 7 days)');
+        console.log(`Saved image cache to localStorage: ${totalImages} images (${imagesWithDataUrl} with dataURL) - valid for 7 days`);
     } catch (e) {
         console.warn('Error saving to localStorage:', e);
 
-        // Fallback to sessionStorage if localStorage fails
+        // Try to save a reduced version without dataURLs if localStorage quota is exceeded
         try {
-            sessionStorage.setItem('preloadedImages', JSON.stringify(preloadedImages));
-            console.log('Saved image cache to sessionStorage (fallback)');
+            // Create a copy without dataURLs to reduce size
+            const reducedCache = {};
+            Object.keys(preloadedImages).forEach(key => {
+                reducedCache[key] = { ...preloadedImages[key] };
+                delete reducedCache[key].dataUrl;
+            });
+
+            localStorage.setItem('fishCommunityImages', JSON.stringify(reducedCache));
+            localStorage.setItem('fishCommunityImagesTimestamp', Date.now().toString());
+            console.log('Saved reduced image cache (without dataURLs) to localStorage');
         } catch (e2) {
-            console.warn('Could not store preloaded image data in sessionStorage:', e2);
+            console.warn('Error saving reduced cache to localStorage:', e2);
+
+            // Fallback to sessionStorage if localStorage fails
+            try {
+                sessionStorage.setItem('preloadedImages', JSON.stringify(preloadedImages));
+                console.log('Saved image cache to sessionStorage (fallback)');
+            } catch (e3) {
+                console.warn('Could not store preloaded image data in sessionStorage:', e3);
+            }
         }
     }
 
@@ -550,39 +726,107 @@ async function createFish(container) {
         // Add data attribute to indicate cache status
         img.dataset.cached = isCached ? 'true' : 'false';
 
-        // Set the image source
-        img.src = selectedUrl;
+        // If cached, use a data URL or blob URL from cache instead of the original URL
+        if (isCached && preloadedImages[selectedUrl] && preloadedImages[selectedUrl].dataUrl) {
+            // Use the cached data URL
+            img.src = preloadedImages[selectedUrl].dataUrl;
+            console.log(`Using cached data URL for: ${selectedUrl}`);
+        } else {
+            // Set the image source to the original URL
+            img.src = selectedUrl;
 
-        // If not cached, add this image to the preload cache for future use
-        if (!isCached) {
-            // Log the URL when loading from source (not cache)
-            console.log(`Loading image from URL: ${selectedUrl}`);
-            // Create a new Image object to preload this image for future use
-            const preloadImg = new Image();
-            preloadImg.onload = () => {
-                // Add to preloaded images cache
-                preloadedImages[selectedUrl] = {
-                    loaded: true,
-                    status: selectedItem.status || 'FISH_KNOWN',
-                    name: selectedItem.name || 'Unknown',
-                    timestamp: Date.now()
+            // If not cached, add this image to the preload cache for future use
+            if (!isCached) {
+                // Log the URL when loading from source (not cache)
+                console.log(`Loading image from URL: ${selectedUrl}`);
+
+                // Create a new Image object to preload this image for future use
+                const preloadImg = new Image();
+
+                // Set up cross-origin attribute to allow canvas operations
+                preloadImg.crossOrigin = 'anonymous';
+
+                preloadImg.onload = () => {
+                    try {
+                        // Convert the loaded image to a data URL using canvas
+                        const canvas = document.createElement('canvas');
+                        canvas.width = preloadImg.width;
+                        canvas.height = preloadImg.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(preloadImg, 0, 0);
+
+                        // Get data URL (PNG format with compression)
+                        const dataUrl = canvas.toDataURL('image/png', 0.8);
+
+                        // Add to preloaded images cache with the data URL
+                        preloadedImages[selectedUrl] = {
+                            loaded: true,
+                            status: selectedItem.status || 'FISH_KNOWN',
+                            name: selectedItem.name || 'Unknown',
+                            timestamp: Date.now(),
+                            dataUrl: dataUrl
+                        };
+
+                        // Update global cache
+                        window.fishCommunityCache.preloadedImages = preloadedImages;
+                        window.fishCommunityCache.preloadComplete = true;
+
+                        // Update localStorage cache (but don't block the UI)
+                        setTimeout(() => {
+                            try {
+                                localStorage.setItem('fishCommunityImages', JSON.stringify(preloadedImages));
+                                localStorage.setItem('fishCommunityImagesTimestamp', Date.now().toString());
+                                console.log(`Cached image data URL for: ${selectedUrl}`);
+                            } catch (e) {
+                                console.warn('Error saving to localStorage:', e);
+
+                                // If localStorage fails due to quota, try to clear old entries
+                                try {
+                                    // Remove oldest 20% of entries
+                                    const keys = Object.keys(preloadedImages);
+                                    const sortedKeys = keys.sort((a, b) =>
+                                        preloadedImages[a].timestamp - preloadedImages[b].timestamp
+                                    );
+                                    const keysToRemove = sortedKeys.slice(0, Math.floor(keys.length * 0.2));
+
+                                    keysToRemove.forEach(key => {
+                                        delete preloadedImages[key];
+                                    });
+
+                                    // Try saving again with fewer items
+                                    localStorage.setItem('fishCommunityImages', JSON.stringify(preloadedImages));
+                                    localStorage.setItem('fishCommunityImagesTimestamp', Date.now().toString());
+                                    console.log(`Cleared ${keysToRemove.length} old cache entries and saved again`);
+                                } catch (e2) {
+                                    console.warn('Failed to save even after clearing old entries:', e2);
+                                }
+                            }
+                        }, 100);
+                    } catch (canvasError) {
+                        console.warn('Error creating data URL from image:', canvasError);
+                        // Still cache the image info without the data URL
+                        preloadedImages[selectedUrl] = {
+                            loaded: true,
+                            status: selectedItem.status || 'FISH_KNOWN',
+                            name: selectedItem.name || 'Unknown',
+                            timestamp: Date.now()
+                        };
+                    }
                 };
 
-                // Update global cache
-                window.fishCommunityCache.preloadedImages = preloadedImages;
-                window.fishCommunityCache.preloadComplete = true;
+                preloadImg.onerror = () => {
+                    console.warn(`Failed to preload image: ${selectedUrl}`);
+                    preloadedImages[selectedUrl] = {
+                        loaded: false,
+                        status: selectedItem.status || 'FISH_KNOWN',
+                        name: selectedItem.name || 'Unknown',
+                        timestamp: Date.now()
+                    };
+                };
 
-                // Update localStorage cache (but don't block the UI)
-                setTimeout(() => {
-                    try {
-                        localStorage.setItem('fishCommunityImages', JSON.stringify(preloadedImages));
-                        localStorage.setItem('fishCommunityImagesTimestamp', Date.now().toString());
-                    } catch (e) {
-                        console.warn('Error saving to localStorage:', e);
-                    }
-                }, 100);
-            };
-            preloadImg.src = selectedUrl;
+                // Start loading the image
+                preloadImg.src = selectedUrl;
+            }
         }
 
         // Assign size based on fish status
