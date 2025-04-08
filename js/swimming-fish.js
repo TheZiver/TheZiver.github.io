@@ -1,5 +1,5 @@
 /**
- * FISH COMMUNITY WEBSITE - SWIMMING FISH (v26 - PRODUCTION READY)
+ * FISH COMMUNITY WEBSITE - SWIMMING FISH (v28 - PRODUCTION READY)
  * Creates and animates swimming fish background elements using icon_urls from GitHub.
  * Features:
  * - Loads fish icons from community data
@@ -1026,12 +1026,14 @@ async function createFish(container) {
             if (preloadedImages[selectedUrl].dataUrl) {
                 // Use the cached data URL
                 img.src = preloadedImages[selectedUrl].dataUrl;
-                console.log(`Using cached data URL for: ${selectedUrl}`);
+                // Don't log every cached image to reduce console spam
+                // console.log(`Using cached data URL for: ${selectedUrl}`);
             } else {
                 // We have the image in cache but no dataUrl (likely due to CORS)
                 // Use the original URL but mark as cached since we know it works
                 img.src = selectedUrl;
-                console.log(`Using original URL (CORS-limited cache) for: ${selectedUrl}`);
+                // Don't log every cached image to reduce console spam
+                // console.log(`Using original URL (CORS-limited cache) for: ${selectedUrl}`);
             }
         } else {
             // Set the image source to the original URL
@@ -1039,8 +1041,12 @@ async function createFish(container) {
 
             // If not cached, add this image to the preload cache for future use
             if (!isCached) {
-                // Log the URL when loading from source (not cache)
-                console.log(`Loading image from URL: ${selectedUrl}`);
+                // Only log the first few uncached images to reduce console spam
+                if (index < 5) {
+                    console.log(`Loading image from URL (${index+1}/5 logged): ${selectedUrl}`);
+                } else if (index === 5) {
+                    console.log(`Additional uncached images being loaded (not logged individually)`);
+                }
 
                 // Create a new Image object to preload this image for future use
                 const preloadImg = new Image();
@@ -1263,6 +1269,13 @@ async function createFish(container) {
     if (fishElements.length > 0) {
         console.log('Starting fish animation');
         startAnimation();
+
+        // Start proxy caching in the background after a delay
+        // This will create data URLs for all images to improve caching
+        setTimeout(() => {
+            console.log('Starting background proxy caching...');
+            proxyPreloadImages(imageUrlsWithStatus);
+        }, 3000); // Wait 3 seconds before starting proxy caching
     } else {
         console.warn('No fish elements were created, animation not started');
     }
