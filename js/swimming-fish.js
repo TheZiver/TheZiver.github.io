@@ -164,7 +164,7 @@ setTimeout(addCacheControlButton, 3000);
 
 
 // --- Constants ---
-const COMMUNITY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw";
+const COMMUNITY_DATA_URL = "https://theziver.github.io/data/community_groups.json";
 const FALLBACK_IMAGE = 'images/fish_known.png'; // Fallback if fetch fails or images error
 const IMAGE_CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
@@ -393,6 +393,169 @@ async function fetchCommunityData() {
 }
 
 /**
+ * Use a CORS proxy to preload images that would otherwise be blocked by CORS
+ * This function runs in the background and updates the cache with data URLs
+ */
+async function proxyPreloadImages(imageItems) {
+    console.log('%cStarting background proxy caching...', 'color: #4CAF50; font-weight: bold');
+    console.log(`Will attempt to cache ${imageItems.length} images using CORS proxy`);
+
+    // Function to get a proxied URL to bypass CORS
+    function getProxiedUrl(url) {
+        return `https://corsproxy.io/?${encodeURIComponent(url)}`;
+    }
+
+    // Keep track of progress
+    let processedCount = 0;
+    let successCount = 0;
+
+    // Process images in small batches to avoid overwhelming the browser
+    const BATCH_SIZE = 3;
+
+    // First, try to fetch the community data to get the latest image URLs
+    try {
+        console.log('Fetching latest community data for proxy caching...');
+        const response = await fetch(COMMUNITY_DATA_URL);
+        const data = await response.json();
+
+        // Check if we have the new JSON structure with community_groups
+        if (data.community_groups) {
+            console.log(`Found ${data.community_groups.length} community groups in data`);
+
+            // Filter out groups with SYSTEM tag
+            const filteredGroups = data.community_groups.filter(group =>
+                !group.tags || !group.tags.includes('SYSTEM')
+            );
+
+            console.log(`Processing ${filteredGroups.length} groups (excluding SYSTEM groups)`);
+
+            // Create a new array of image items with the latest data
+            const updatedImageItems = filteredGroups.map(group => ({
+                url: group.icon_url,
+                status: group.tags && group.tags.includes('FISH_VERIFIED') ? 'FISH_VERIFIED' :
+                       group.tags && group.tags.includes('FISH_CERTIFIED') ? 'FISH_CERTIFIED' :
+                       group.tags && group.tags.includes('FISH') ? 'FISH' : 'FISH_KNOWN',
+                name: group.group_name || 'Unknown Group'
+            }));
+
+            // Use the updated image items instead
+            if (updatedImageItems.length > 0) {
+                console.log(`Using ${updatedImageItems.length} updated image items from fresh data`);
+                imageItems = updatedImageItems;
+            }
+        } else {
+            // Old JSON structure
+            console.log('Using old JSON structure from community data');
+            const updatedImageItems = data.map(group => ({
+                url: group.imageUrl,
+                status: group.status || 'FISH_KNOWN',
+                name: group.name || 'Unknown Group'
+            }));
+
+            if (updatedImageItems.length > 0) {
+                console.log(`Using ${updatedImageItems.length} updated image items from old data structure`);
+                imageItems = updatedImageItems;
+            }
+        }
+    } catch (e) {
+        console.warn(`Error fetching community data for proxy caching: ${e.message}`);
+        console.log('Continuing with existing image items...');
+    }
+
+    // Filter out items without URLs
+    imageItems = imageItems.filter(item => item.url);
+    console.log(`Will process ${imageItems.length} valid image URLs`);
+
+    for (let i = 0; i < imageItems.length; i += BATCH_SIZE) {
+        // Get a batch of images to process
+        const batch = imageItems.slice(i, i + BATCH_SIZE);
+
+        // Process each image in the batch
+        await Promise.all(batch.map(async (item) => {
+            try {
+                // Skip if we already have a data URL for this image
+                if (preloadedImages[item.url] && preloadedImages[item.url].dataUrl) {
+                    processedCount++;
+                    return;
+                }
+
+                // Create a proxied URL
+                const proxiedUrl = getProxiedUrl(item.url);
+
+                // Load the image
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+
+                // Wait for the image to load
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = () => reject(new Error('Image load failed'));
+                    img.src = proxiedUrl;
+                });
+
+                // Resize the image to 128×128
+                const canvas = document.createElement('canvas');
+                canvas.width = 128;
+                canvas.height = 128;
+                const ctx = canvas.getContext('2d');
+
+                // Use high-quality resizing
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, 0, 0, 128, 128);
+
+                // Get data URL
+                const dataUrl = canvas.toDataURL('image/png', 0.9);
+
+                // Update the cache
+                if (preloadedImages[item.url]) {
+                    preloadedImages[item.url].dataUrl = dataUrl;
+                    preloadedImages[item.url].timestamp = Date.now();
+                } else {
+                    preloadedImages[item.url] = {
+                        loaded: true,
+                        status: item.status,
+                        name: item.name,
+                        timestamp: Date.now(),
+                        dataUrl: dataUrl
+                    };
+                }
+
+                successCount++;
+                console.log(`Proxy cached: ${item.url.substring(0, 50)}...`);
+            } catch (e) {
+                console.warn(`Proxy caching failed for ${item.url}: ${e.message}`);
+            } finally {
+                processedCount++;
+            }
+        }));
+
+        // Save progress to localStorage every few batches
+        if (i % (BATCH_SIZE * 5) === 0 && i > 0) {
+            try {
+                localStorage.setItem('fishCommunityImages', JSON.stringify(preloadedImages));
+                localStorage.setItem('fishCommunityImagesTimestamp', Date.now().toString());
+                console.log(`%cSaved progress: ${successCount}/${processedCount} images cached`, 'color: #2196F3');
+            } catch (e) {
+                console.warn('Error saving progress to localStorage:', e);
+            }
+        }
+
+        // Small delay between batches to avoid freezing the UI
+        await new Promise(resolve => setTimeout(resolve, 300));
+    }
+
+    // Final save to localStorage
+    try {
+        localStorage.setItem('fishCommunityImages', JSON.stringify(preloadedImages));
+        localStorage.setItem('fishCommunityImagesTimestamp', Date.now().toString());
+        console.log(`%cProxy caching complete! ${successCount}/${processedCount} images cached`, 'color: #4CAF50; font-weight: bold');
+    } catch (e) {
+        console.warn('Error saving to localStorage:', e);
+    }
+}
+
+/**
  * Preload all community images to improve performance
  * with persistent caching to avoid VRChat API rate limiting
  */
@@ -434,6 +597,19 @@ async function preloadImages() {
                                 parsedData[key].loaded = true;
                             }
                         });
+
+                        // Check if we have any data URLs in the cache
+                        const imagesWithDataUrl = Object.values(parsedData).filter(img => img.dataUrl).length;
+                        console.log(`Found ${imagesWithDataUrl} images with data URLs in cache`);
+
+                        // If we have very few data URLs, we might need to use the proxy approach
+                        if (imagesWithDataUrl < 10 && imageUrlsWithStatus.length > 20) {
+                            console.log('%cFew data URLs found in cache. Will attempt proxy caching in the background.', 'color: #FF9800; font-weight: bold');
+                            // We'll still use the cache but trigger background proxy caching
+                            setTimeout(() => {
+                                proxyPreloadImages(imageUrlsWithStatus);
+                            }, 5000); // Wait 5 seconds before starting proxy caching
+                        }
 
                         window.fishCommunityCache.preloadedImages = parsedData;
                         window.fishCommunityCache.imagesTimestamp = timestamp;
@@ -498,6 +674,10 @@ async function preloadImages() {
             // Add a timeout to ensure the image is fully loaded before canvas operations
             // This helps with CORS and timing issues
 
+            // Set crossOrigin to anonymous to allow canvas operations
+            // This is needed for toDataURL() to work with external images
+            img.crossOrigin = 'anonymous';
+
             // Set up load and error handlers
             img.onload = () => {
                 // Small delay to ensure image is fully processed by the browser
@@ -541,16 +721,28 @@ async function preloadImages() {
                         };
                         console.log(`Created data URL for: ${item.url}`);
                 } catch (canvasError) {
-                    console.warn('Error creating data URL from image:', canvasError);
+                    // Check if this is a CORS-related error
+                    const isCorsError = canvasError.name === 'SecurityError' ||
+                                      canvasError.message.includes('tainted') ||
+                                      canvasError.message.includes('cross-origin');
+
+                    if (isCorsError) {
+                        console.warn(`%cCORS Error: Cannot create data URL for ${item.url}`, 'color: #FF9800');
+                        console.log('This is likely because the VRChat API does not allow cross-origin access.');
+                    } else {
+                        console.warn('Error creating data URL from image:', canvasError);
+                    }
+
                     // Still cache the image info without the data URL
                     preloadedImages[item.url] = {
                         loaded: true,
                         status: item.status,
                         name: item.name,
-                        timestamp: Date.now()
+                        timestamp: Date.now(),
+                        corsBlocked: isCorsError // Flag CORS-blocked images
                     };
-                    }
-                    resolve();
+                }
+                resolve();
                 }, 50); // 50ms delay
             };
 
@@ -590,6 +782,14 @@ async function preloadImages() {
 
     console.log(`Cache size: ~${cacheSize.toFixed(2)}MB (localStorage limit ~5MB)`);
 
+    // Check if we need to start background proxy caching
+    if (imagesWithDataUrl < totalImages * 0.5 && totalImages > 20) {
+        console.log('%cLess than 50% of images have data URLs. Will attempt proxy caching in the background.', 'color: #FF9800; font-weight: bold');
+        setTimeout(() => {
+            proxyPreloadImages(imageUrlsWithStatus);
+        }, 5000); // Wait 5 seconds before starting proxy caching
+    }
+
     // If cache is too large, remove dataUrls from oldest entries until it fits
     if (cacheSize > 4.5) { // Leave some buffer below 5MB
         console.warn(`Cache too large (${cacheSize.toFixed(2)}MB), removing oldest dataUrls`);
@@ -621,9 +821,26 @@ async function preloadImages() {
     }
 
     try {
+        // Add detailed debug logging
+        console.log('%c[CACHE DEBUG] Attempting to save cache with these stats:', 'color: #FF5722; font-weight: bold');
+        console.log(`- Total images: ${totalImages}`);
+        console.log(`- Images with dataUrl: ${imagesWithDataUrl}`);
+        console.log(`- Cache size: ${cacheSize.toFixed(2)}MB`);
+
+        // Check if we actually have any data URLs
+        if (imagesWithDataUrl === 0) {
+            console.warn('%c[CACHE WARNING] No data URLs found in cache! This may be due to CORS restrictions.', 'color: #FF9800; font-weight: bold');
+        }
+
         localStorage.setItem('fishCommunityImages', JSON.stringify(preloadedImages));
         localStorage.setItem('fishCommunityImagesTimestamp', Date.now().toString());
         console.log(`Saved image cache to localStorage: ${totalImages} images (${imagesWithDataUrl} with dataURL) - valid for 7 days`);
+
+        // Verify what was saved
+        const savedCache = localStorage.getItem('fishCommunityImages');
+        const parsedCache = JSON.parse(savedCache);
+        const savedWithDataUrl = Object.values(parsedCache).filter(img => img.dataUrl).length;
+        console.log(`%c[CACHE VERIFY] Retrieved from localStorage: ${Object.keys(parsedCache).length} images (${savedWithDataUrl} with dataURL)`, 'color: #4CAF50; font-weight: bold');
     } catch (e) {
         console.warn('Error saving to localStorage:', e);
 
