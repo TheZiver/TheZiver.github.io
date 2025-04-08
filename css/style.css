@@ -51,10 +51,10 @@ body {
  * Customize width, padding, and appearance here
  */
 .container {
-    width: 90%;
+    width: 95%; /* Wider on mobile */
     max-width: 850px;
-    margin: 20px auto 40px auto;
-    padding: 20px;
+    margin: 10px auto 20px auto; /* Less margin on mobile */
+    padding: 15px; /* Less padding on mobile */
     background-color: var(--container-bg);
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -62,12 +62,13 @@ body {
     overflow: hidden;
     position: relative;
     border: 1px solid var(--border-color);
+    box-sizing: border-box; /* Ensure padding is included in width */
 }
 @media (min-width: 600px) {
     .container {
         width: 80%;
         padding: 40px;
-        margin-top: 30px; /* Adjust top margin */
+        margin: 30px auto 40px auto; /* Restore margins on larger screens */
     }
 }
 
@@ -935,8 +936,31 @@ iframe {
 }
 
 
-/* === MOBILE CALENDAR IMPROVEMENTS === */
+/* === MOBILE IMPROVEMENTS === */
 @media (max-width: 480px) { /* Target small phone screens */
+    /* Improve container on smallest screens */
+    .container {
+        width: 98%; /* Almost full width */
+        padding: 10px; /* Minimal padding */
+        margin: 5px auto 15px auto; /* Minimal margins */
+    }
+
+    /* Reduce font sizes on mobile */
+    body {
+        font-size: 0.95em;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    h3 {
+        font-size: 1.3em;
+    }
 
     /* Reduce overall calendar padding on smallest screens */
     .calendar-container {

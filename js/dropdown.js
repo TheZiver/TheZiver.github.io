@@ -30,16 +30,13 @@ document.addEventListener('DOMContentLoaded', function() {
         toggle.addEventListener('click', function(event) {
             // Check if we're on mobile (using a simple width check)
             if (window.innerWidth <= 767) {
-                // Check if this is the Communities link
-                const isCommunityLink = this.textContent.trim().includes('Communities');
-
-                // If it's the Communities link, allow navigation to the communities page
-                if (isCommunityLink && this.getAttribute('href') === 'communities.html') {
+                // Always allow navigation to the communities page
+                if (this.getAttribute('href') === 'communities.html') {
                     console.log('Communities link clicked, allowing navigation');
                     return; // Allow default navigation
                 }
 
-                // For other dropdown links, prevent navigation and toggle dropdown
+                // For dropdown submenu links, prevent navigation and toggle dropdown
                 event.preventDefault();
 
                 // Toggle the 'active' class on the parent dropdown
