@@ -495,27 +495,65 @@ async function preloadImages() {
             // Set up cross-origin attribute to allow canvas operations
             img.crossOrigin = 'anonymous';
 
+            // Add a timeout to ensure the image is fully loaded before canvas operations
+            // This helps with CORS and timing issues
+
             // Set up load and error handlers
             img.onload = () => {
-                try {
-                    // Convert the loaded image to a data URL using canvas
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
+                // Small delay to ensure image is fully processed by the browser
+                setTimeout(() => {
+                    try {
+                        // Check if image is too large and needs resizing
+                        const MAX_DIMENSION = 512; // Maximum width or height for cached images
+                        let targetWidth = img.width;
+                        let targetHeight = img.height;
+                        let needsResize = false;
 
-                    // Get data URL (PNG format with compression)
-                    const dataUrl = canvas.toDataURL('image/png', 0.8);
+                        // Calculate if resizing is needed and new dimensions
+                        if (img.width > MAX_DIMENSION || img.height > MAX_DIMENSION) {
+                            needsResize = true;
+                            if (img.width > img.height) {
+                                // Landscape orientation
+                                targetWidth = MAX_DIMENSION;
+                                targetHeight = Math.floor(img.height * (MAX_DIMENSION / img.width));
+                            } else {
+                                // Portrait or square orientation
+                                targetHeight = MAX_DIMENSION;
+                                targetWidth = Math.floor(img.width * (MAX_DIMENSION / img.height));
+                            }
+                        }
 
-                    preloadedImages[item.url] = {
-                        loaded: true,
-                        status: item.status,
-                        name: item.name,
-                        timestamp: Date.now(),
-                        dataUrl: dataUrl
-                    };
-                    console.log(`Created data URL for: ${item.url}`);
+                        // Convert the loaded image to a data URL using canvas with potential resizing
+                        const canvas = document.createElement('canvas');
+                        canvas.width = targetWidth;
+                        canvas.height = targetHeight;
+                        const ctx = canvas.getContext('2d');
+
+                        // Draw the image with smoothing for better quality when downsizing
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+                        // Log if image was resized
+                        if (needsResize) {
+                            console.log(`Resized large image from ${img.width}x${img.height} to ${targetWidth}x${targetHeight} for caching`);
+                        }
+
+                        // Get data URL (JPEG format with compression for photos, PNG for icons)
+                        // JPEG is much smaller than PNG for photographic content
+                        const isIcon = img.width < 128 && img.height < 128;
+                        const dataUrl = isIcon ?
+                            canvas.toDataURL('image/png', 0.9) :
+                            canvas.toDataURL('image/jpeg', 0.85);
+
+                        preloadedImages[item.url] = {
+                            loaded: true,
+                            status: item.status,
+                            name: item.name,
+                            timestamp: Date.now(),
+                            dataUrl: dataUrl
+                        };
+                        console.log(`Created data URL for: ${item.url}`);
                 } catch (canvasError) {
                     console.warn('Error creating data URL from image:', canvasError);
                     // Still cache the image info without the data URL
@@ -525,8 +563,9 @@ async function preloadImages() {
                         name: item.name,
                         timestamp: Date.now()
                     };
-                }
-                resolve();
+                    }
+                    resolve();
+                }, 50); // 50ms delay
             };
 
             img.onerror = () => {
@@ -555,11 +594,47 @@ async function preloadImages() {
     window.fishCommunityCache.preloadComplete = true;
 
     // Store the preloaded image data in localStorage for persistent caching
-    try {
-        // Count images with data URLs
-        const totalImages = Object.keys(preloadedImages).length;
-        const imagesWithDataUrl = Object.values(preloadedImages).filter(img => img.dataUrl).length;
+    // Count images with data URLs
+    const totalImages = Object.keys(preloadedImages).length;
+    const imagesWithDataUrl = Object.values(preloadedImages).filter(img => img.dataUrl).length;
 
+    // Calculate approximate size of the cache
+    const cacheString = JSON.stringify(preloadedImages);
+    const cacheSize = new Blob([cacheString]).size / (1024 * 1024); // Size in MB
+
+    console.log(`Cache size: ~${cacheSize.toFixed(2)}MB (localStorage limit ~5MB)`);
+
+    // If cache is too large, remove dataUrls from oldest entries until it fits
+    if (cacheSize > 4.5) { // Leave some buffer below 5MB
+        console.warn(`Cache too large (${cacheSize.toFixed(2)}MB), removing oldest dataUrls`);
+
+        // Sort by timestamp (oldest first)
+        const entries = Object.entries(preloadedImages);
+        entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
+
+        // Remove dataUrls until cache is small enough
+        let currentSize = cacheSize;
+        let removedCount = 0;
+
+        for (const [_, data] of entries) {
+            if (currentSize <= 4 || removedCount >= entries.length / 2) break; // Stop if small enough or removed half
+
+            if (data.dataUrl) {
+                const beforeSize = JSON.stringify(preloadedImages).length;
+                delete data.dataUrl;
+                const afterSize = JSON.stringify(preloadedImages).length;
+
+                // Approximate size reduction
+                const reduction = (beforeSize - afterSize) / (1024 * 1024);
+                currentSize -= reduction;
+                removedCount++;
+            }
+        }
+
+        console.log(`Removed ${removedCount} dataUrls, new size: ~${currentSize.toFixed(2)}MB`);
+    }
+
+    try {
         localStorage.setItem('fishCommunityImages', JSON.stringify(preloadedImages));
         localStorage.setItem('fishCommunityImagesTimestamp', Date.now().toString());
         console.log(`Saved image cache to localStorage: ${totalImages} images (${imagesWithDataUrl} with dataURL) - valid for 7 days`);
@@ -727,10 +802,17 @@ async function createFish(container) {
         img.dataset.cached = isCached ? 'true' : 'false';
 
         // If cached, use a data URL or blob URL from cache instead of the original URL
-        if (isCached && preloadedImages[selectedUrl] && preloadedImages[selectedUrl].dataUrl) {
-            // Use the cached data URL
-            img.src = preloadedImages[selectedUrl].dataUrl;
-            console.log(`Using cached data URL for: ${selectedUrl}`);
+        if (isCached && preloadedImages[selectedUrl]) {
+            if (preloadedImages[selectedUrl].dataUrl) {
+                // Use the cached data URL
+                img.src = preloadedImages[selectedUrl].dataUrl;
+                console.log(`Using cached data URL for: ${selectedUrl}`);
+            } else {
+                // We have the image in cache but no dataUrl (likely due to CORS)
+                // Use the original URL but mark as cached since we know it works
+                img.src = selectedUrl;
+                console.log(`Using original URL (CORS-limited cache) for: ${selectedUrl}`);
+            }
         } else {
             // Set the image source to the original URL
             img.src = selectedUrl;
