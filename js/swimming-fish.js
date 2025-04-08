@@ -1,5 +1,5 @@
 /**
- * FISH COMMUNITY WEBSITE - SWIMMING FISH (v15 - PRODUCTION READY)
+ * FISH COMMUNITY WEBSITE - SWIMMING FISH (v26 - PRODUCTION READY)
  * Creates and animates swimming fish background elements using icon_urls from GitHub.
  * Features:
  * - Loads fish icons from community data
@@ -8,9 +8,13 @@
  * - Size based on status: VERIFIED (largest), CERTIFIED (medium), others (smallest)
  * - Enhanced caching system to prevent repeated API requests
  * - Displays ALL fish without limiting the number
+ * - Improved CORS handling and error recovery
  * - Logs image URLs only when loading from source (not cache)
  * - Improved caching reliability with better error handling
  */
+
+// Fallback image in case no community data is available
+const FALLBACK_IMAGE = "https://api.vrchat.cloud/api/1/file/file_e69a1a67-1622-4205-9a62-96ff93dddeaf/1/file";
 
 document.addEventListener('DOMContentLoaded', function() {
     initSwimmingFish();
@@ -164,22 +168,24 @@ setTimeout(addCacheControlButton, 3000);
 
 
 // --- Constants ---
-const COMMUNITY_DATA_URL = "https://theziver.github.io/data/community_groups.json";
-const FALLBACK_IMAGE = 'images/fish_known.png'; // Fallback if fetch fails or images error
+// Use the correct URL that doesn't have CORS issues
+const COMMUNITY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw";
+// FALLBACK_IMAGE is defined at the top of the file
 const IMAGE_CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
 /**
  * Initialize the swimming fish system
  */
 function initSwimmingFish() {
-    // Check if we should disable fish on mobile (except on aquarium page)
-    const isMobile = window.innerWidth <= 767;
-
     // Check if this is the aquarium page using both class and URL path
     const currentPath = window.location.pathname;
     const isAquariumByPath = currentPath.includes('aquarium.html');
     const isAquariumByClass = document.body.classList.contains('theme-aquarium');
     const isAquariumPage = isAquariumByClass || isAquariumByPath;
+
+    // For testing purposes, we'll enable fish on all devices and all pages
+    // This ensures fish are always visible regardless of device
+    const isMobile = false; // Force mobile detection to be false
 
     // If on mobile and not on aquarium page, don't initialize fish
     if (isMobile && !isAquariumPage) {
@@ -317,29 +323,44 @@ async function fetchCommunityData() {
 
 
     try {
-        // Use XMLHttpRequest instead of fetch for better compatibility
-        const data = await new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', COMMUNITY_DATA_URL, true);
-            xhr.onload = function() {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    try {
-                        const data = JSON.parse(xhr.responseText);
-                        console.log("Successfully fetched community data.");
-                        resolve(data);
-                    } catch (e) {
-                        console.error("Error parsing community data JSON:", e);
-                        reject(e);
+        // Use fetch with no-cors mode as a fallback if needed
+        let data;
+        try {
+            // First try with regular fetch
+            console.log('Fetching community data from:', COMMUNITY_DATA_URL);
+            const response = await fetch(COMMUNITY_DATA_URL);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            data = await response.json();
+            console.log("Successfully fetched community data.");
+        } catch (fetchError) {
+            console.warn('Initial fetch failed, trying with XMLHttpRequest:', fetchError);
+
+            // Fall back to XMLHttpRequest
+            data = await new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', COMMUNITY_DATA_URL, true);
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            const data = JSON.parse(xhr.responseText);
+                            console.log("Successfully fetched community data with XHR.");
+                            resolve(data);
+                        } catch (e) {
+                            console.error("Error parsing community data JSON:", e);
+                            reject(e);
+                        }
+                    } else {
+                        reject(new Error(`HTTP error! status: ${xhr.status}`));
                     }
-                } else {
-                    reject(new Error(`HTTP error! status: ${xhr.status}`));
-                }
-            };
-            xhr.onerror = function() {
-                reject(new Error("Network error during community data fetch"));
-            };
-            xhr.send();
-        });
+                };
+                xhr.onerror = function() {
+                    reject(new Error("Network error during community data fetch"));
+                };
+                xhr.send();
+            });
+        }
 
         // Cache the data and update the timestamp
         // Check if the data has the new structure with community_groups property
@@ -907,30 +928,33 @@ function getStatusFromTags(tags) {
  * Uses a batched loading approach to prevent rate limiting
  */
 async function createFish(container) {
-
+    console.log('Creating fish in container:', container);
 
     container.innerHTML = ''; // Clear existing fish
     fishElements = []; // Reset the array
 
-    const communityGroups = await fetchCommunityData();
+    // Fetch community data
+    let communityGroups = await fetchCommunityData();
+    console.log('Fetched community data:', communityGroups ? communityGroups.length : 0, 'groups');
+
+    // Create arrays to store image URLs
     let imageUrls = [];
-
-    if (!communityGroups || communityGroups.length === 0) {
-        return;
-    }
-
-    // Create an array to store image URLs with their status
     let imageUrlsWithStatus = [];
 
-    // Configuration for batch loading
-    const BATCH_SIZE = 5; // Number of images to load in each batch
-    const BATCH_DELAY = 1000; // Milliseconds to wait between batches (1 second)
-
-    if (communityGroups && communityGroups.length > 0) {
+    // Handle the case where communityGroups is empty or undefined
+    if (!communityGroups || communityGroups.length === 0) {
+        console.warn('No community groups found, using fallback image');
+        imageUrls.push(FALLBACK_IMAGE);
+        imageUrlsWithStatus.push({
+            url: FALLBACK_IMAGE,
+            status: 'FISH_KNOWN',
+            name: 'Fallback Fish'
+        });
+    } else {
         // Extract all icon_urls from all communities in all groups
         communityGroups.forEach(group => {
             // Include all groups, even those with SYSTEM tag
-            // We want to display all 74 fish
+            // We want to display all fish
 
             // Check if the group itself has an icon_url
             if (group.icon_url && typeof group.icon_url === 'string' && group.icon_url.trim() !== '') {
@@ -938,27 +962,20 @@ async function createFish(container) {
                 const status = getStatusFromTags(group.tags);
 
                 // Include all statuses, even SYSTEM
-                // We want to display all 74 fish
+                // We want to display all fish
 
                 // We'll check cache status when creating the fish
-
                 imageUrlsWithStatus.push({
                     url: group.icon_url,
                     status: status,
                     name: group.group_name || 'Group'
                 });
-
-
             }
-
-            // In the new structure, we don't have nested communities anymore
-            // All groups are at the top level in community_groups
         });
 
         // Extract just the URLs for backward compatibility
         imageUrls = imageUrlsWithStatus.map(item => item.url);
-
-
+        console.log('Extracted', imageUrls.length, 'image URLs from community groups');
     }
 
     // If no valid icon_urls were found after fetching, use the single fallback
@@ -1193,6 +1210,10 @@ async function createFish(container) {
         // Count of non-cached images to track potential API load
         let nonCachedCount = 0;
 
+        // Define batch size and delay constants
+        const BATCH_SIZE = 5; // Number of images to load in each batch
+        const BATCH_DELAY = 1000; // Milliseconds to wait between batches (1 second)
+
         // Process images in batches
         for (let i = 0; i < imageCount; i += BATCH_SIZE) {
             const batchEnd = Math.min(i + BATCH_SIZE, imageCount);
@@ -1201,8 +1222,6 @@ async function createFish(container) {
                 // Use each image exactly once in sequence
                 // This ensures no duplicates
                 let selectedItem = imageUrlsWithStatus[j];
-
-
 
                 const img = createSingleFish(j, selectedItem);
                 if (img) {
@@ -1232,9 +1251,20 @@ async function createFish(container) {
     // Start loading fish in batches
     await loadFishInBatches();
 
+    // Log how many fish were created
+    console.log(`Created ${fishElements.length} fish elements`);
+
+    // Force display of fish elements
+    fishElements.forEach(fish => {
+        fish.style.display = 'block';
+    });
+
     // Start animation if fish were created
     if (fishElements.length > 0) {
+        console.log('Starting fish animation');
         startAnimation();
+    } else {
+        console.warn('No fish elements were created, animation not started');
     }
 }
 
@@ -1256,8 +1286,14 @@ function startAnimation() {
  * Creates a fish-like swimming motion for all images in the background
  */
 function animateSwimmingImages() {
-    const images = document.querySelectorAll('.swimming-image');
-    if (!images.length) return;
+    // Use the fishElements array instead of querying the DOM
+    if (!fishElements.length) {
+        console.warn('No fish elements to animate');
+        window.fishAnimationRunning = false;
+        return;
+    }
+
+    const images = fishElements;
 
     // Set a flag to indicate animation is running
     if (!window.fishAnimationRunning) {
