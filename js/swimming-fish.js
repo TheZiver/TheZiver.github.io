@@ -1,5 +1,5 @@
 /**
- * FISH COMMUNITY WEBSITE - SWIMMING FISH (v28 - PRODUCTION READY)
+ * FISH COMMUNITY WEBSITE - SWIMMING FISH (v29 - PRODUCTION READY)
  * Creates and animates swimming fish background elements using icon_urls from GitHub.
  * Features:
  * - Loads fish icons from community data
@@ -422,8 +422,26 @@ async function proxyPreloadImages(imageItems) {
     console.log(`Will attempt to cache ${imageItems.length} images using CORS proxy`);
 
     // Function to get a proxied URL to bypass CORS
+    // Uses multiple proxy services for better reliability
     function getProxiedUrl(url) {
-        return `https://corsproxy.io/?${encodeURIComponent(url)}`;
+        // Get a random proxy from the list to distribute load
+        const proxies = [
+            // Main proxies
+            `https://corsproxy.io/?${encodeURIComponent(url)}`,
+            `https://cors-anywhere.herokuapp.com/${url}`,
+            `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+
+            // Fallback to direct URL as last resort
+            url
+        ];
+
+        // Use a deterministic but distributed approach based on the URL
+        // This ensures the same URL always uses the same proxy but different URLs use different proxies
+        const proxyIndex = Math.abs(url.split('').reduce((a, b) => {
+            return a + b.charCodeAt(0);
+        }, 0) % (proxies.length - 1)); // -1 to avoid using direct URL except as last resort
+
+        return proxies[proxyIndex];
     }
 
     // Keep track of progress
@@ -500,19 +518,74 @@ async function proxyPreloadImages(imageItems) {
                     return;
                 }
 
-                // Create a proxied URL
-                const proxiedUrl = getProxiedUrl(item.url);
+                // Try multiple proxies if needed
+                let img = null;
+                let loaded = false;
+                let lastError = null;
 
-                // Load the image
-                const img = new Image();
-                img.crossOrigin = 'anonymous';
+                // Try direct URL first with crossOrigin
+                try {
+                    img = new Image();
+                    img.crossOrigin = 'anonymous';
 
-                // Wait for the image to load
-                await new Promise((resolve, reject) => {
-                    img.onload = resolve;
-                    img.onerror = () => reject(new Error('Image load failed'));
-                    img.src = proxiedUrl;
-                });
+                    await new Promise((resolve, reject) => {
+                        const timeoutId = setTimeout(() => {
+                            reject(new Error('Image load timeout'));
+                        }, 5000); // 5 second timeout
+
+                        img.onload = () => {
+                            clearTimeout(timeoutId);
+                            resolve();
+                        };
+                        img.onerror = () => {
+                            clearTimeout(timeoutId);
+                            reject(new Error('Direct image load failed'));
+                        };
+                        img.src = item.url;
+                    });
+
+                    loaded = true;
+                    console.log(`%cDirect load succeeded for ${item.url.substring(0, 30)}...`, 'color: #4CAF50');
+                } catch (directError) {
+                    lastError = directError;
+                    console.log(`%cDirect load failed for ${item.url.substring(0, 30)}...`, 'color: #FF9800');
+
+                    // If direct load fails, try with proxy
+                    try {
+                        const proxiedUrl = getProxiedUrl(item.url);
+                        console.log(`%cTrying proxy: ${proxiedUrl.substring(0, 30)}...`, 'color: #2196F3');
+
+                        img = new Image();
+                        img.crossOrigin = 'anonymous';
+
+                        await new Promise((resolve, reject) => {
+                            const timeoutId = setTimeout(() => {
+                                reject(new Error('Proxied image load timeout'));
+                            }, 8000); // 8 second timeout for proxy
+
+                            img.onload = () => {
+                                clearTimeout(timeoutId);
+                                resolve();
+                            };
+                            img.onerror = () => {
+                                clearTimeout(timeoutId);
+                                reject(new Error('Proxied image load failed'));
+                            };
+                            img.src = proxiedUrl;
+                        });
+
+                        loaded = true;
+                        console.log(`%cProxy load succeeded for ${item.url.substring(0, 30)}...`, 'color: #4CAF50');
+                    } catch (proxyError) {
+                        lastError = proxyError;
+                        console.warn(`%cAll load attempts failed for ${item.url.substring(0, 30)}...`, 'color: #F44336');
+                    }
+                }
+
+                // If all loading attempts failed, throw the last error
+                if (!loaded) {
+                    throw lastError || new Error('Failed to load image through all methods');
+                }
 
                 // Resize the image to 128×128
                 const canvas = document.createElement('canvas');
