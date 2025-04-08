@@ -36,6 +36,31 @@ const FALLBACK_IMAGE = 'images/fish_known.png'; // Fallback if fetch fails or im
 function initSwimmingFish() {
     console.log('Initializing swimming fish system (v4)');
 
+    // Check if we should disable fish on mobile (except on aquarium page)
+    const isMobile = window.innerWidth <= 767;
+    const isAquariumPage = document.body.classList.contains('theme-aquarium');
+
+    // If on mobile and not on aquarium page, don't initialize fish
+    if (isMobile && !isAquariumPage) {
+        console.log('Mobile device detected and not on aquarium page. Disabling swimming fish for better performance.');
+
+        // Add a container with a message if it doesn't exist yet
+        let container = document.getElementById('swimming-images-background');
+        if (container) {
+            // Clear any existing content
+            container.innerHTML = '';
+
+            // Add a small indicator that fish are disabled for performance
+            const disabledMsg = document.createElement('div');
+            disabledMsg.className = 'fish-disabled-message';
+            disabledMsg.textContent = '＜＞＜';
+            disabledMsg.title = 'Swimming fish disabled on mobile for better performance. Visit the AQUARIUM page to see them!';
+            container.appendChild(disabledMsg);
+        }
+
+        return;
+    }
+
     // Try to load cached community data from sessionStorage
     try {
         const storedData = sessionStorage.getItem('communityData');
