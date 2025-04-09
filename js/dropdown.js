@@ -1,7 +1,7 @@
 /**
  * Dropdown menu functionality for mobile and desktop
- * - Adds a dropdown arrow indicator for mobile that toggles the dropdown
  * - Allows navigation to the communities page when clicking the main link
+ * - When on the communities page, clicking the tab toggles the dropdown menu
  * - Prevents navigation to the current page on both mobile and desktop
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -20,72 +20,44 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Create dropdown toggle indicators for mobile
-    function createMobileDropdownIndicators() {
-        const dropdowns = document.querySelectorAll('.dropdown');
+    // Function to toggle dropdown visibility
+    function toggleDropdown(dropdown) {
+        if (!dropdown) return;
 
-        dropdowns.forEach(dropdown => {
-            // Check if indicator already exists
-            if (dropdown.querySelector('.dropdown-toggle-indicator')) return;
+        // Toggle the active class
+        dropdown.classList.toggle('active');
 
-            // Create the indicator element
-            const indicator = document.createElement('span');
-            indicator.className = 'dropdown-toggle-indicator';
-            indicator.innerHTML = '▼';
-            indicator.setAttribute('aria-hidden', 'true');
+        // Find the dropdown content
+        const dropdownContent = dropdown.querySelector('.dropdown-content');
+        if (!dropdownContent) return;
 
-            // Insert after the main link
-            const mainLink = dropdown.querySelector('a');
-            if (mainLink) {
-                dropdown.insertBefore(indicator, mainLink.nextSibling);
-            }
-        });
+        // Toggle visibility
+        if (dropdownContent.classList.contains('show')) {
+            dropdownContent.classList.remove('show');
+        } else {
+            // Close any other open dropdowns first
+            document.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
+                openDropdown.classList.remove('show');
+            });
+
+            // Show this dropdown
+            dropdownContent.classList.add('show');
+        }
     }
 
-    // Call this function to create the indicators
-    createMobileDropdownIndicators();
-
-    // Add click event listeners to the dropdown toggle indicators
-    document.addEventListener('click', function(event) {
-        // Check if we clicked on a dropdown indicator
-        if (event.target.classList.contains('dropdown-toggle-indicator')) {
-            event.preventDefault();
-
-            // Get the parent dropdown
-            const dropdown = event.target.closest('.dropdown');
-            if (!dropdown) return;
-
-            // Toggle the active class
-            dropdown.classList.toggle('active');
-
-            // Find the dropdown content
-            const dropdownContent = dropdown.querySelector('.dropdown-content');
-            if (!dropdownContent) return;
-
-            // Toggle visibility
-            if (dropdownContent.classList.contains('show')) {
-                dropdownContent.classList.remove('show');
-            } else {
-                // Close any other open dropdowns first
-                document.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
-                    openDropdown.classList.remove('show');
-                });
-
-                // Show this dropdown
-                dropdownContent.classList.add('show');
-            }
-        }
-    });
-
-    // Get all dropdown toggle links (the main links, not the indicators)
+    // Get all dropdown toggle links
     const dropdownToggles = document.querySelectorAll('.dropdown > a');
 
     // Add click event listener to each dropdown toggle link
     dropdownToggles.forEach(toggle => {
         toggle.addEventListener('click', function(event) {
-            // Only prevent navigation if it's the current page
+            // If this is the active link (we're on that page), toggle the dropdown
             if (toggle.classList.contains('active')) {
                 event.preventDefault();
+
+                // Get the parent dropdown
+                const dropdown = toggle.closest('.dropdown');
+                toggleDropdown(dropdown);
             }
         });
     });

@@ -4,31 +4,7 @@
     display: inline-block;
 }
 
-/* Dropdown toggle indicator for mobile */
-.dropdown-toggle-indicator {
-    display: none; /* Hidden by default, shown only on mobile */
-    cursor: pointer;
-    margin-left: 5px;
-    font-size: 0.7em;
-    vertical-align: middle;
-    color: #cccccc;
-}
-
-/* Show the indicator only on mobile */
-@media (max-width: 767px) {
-    .dropdown-toggle-indicator {
-        display: inline-block;
-        position: absolute;
-        right: -15px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-    /* Add some padding to the dropdown link to make room for the indicator */
-    .dropdown > a {
-        padding-right: 20px;
-    }
-}
+/* No dropdown toggle indicator - clicking the active tab toggles the dropdown */
 
 /* Add a pseudo-element to bridge the gap between button and dropdown */
 .dropdown::after {
