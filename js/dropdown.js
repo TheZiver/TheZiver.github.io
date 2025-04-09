@@ -30,7 +30,16 @@ document.addEventListener('DOMContentLoaded', function() {
         toggle.addEventListener('click', function(event) {
             // Check if we're on mobile (using a simple width check)
             if (window.innerWidth <= 767) {
-                // For all dropdown toggles, prevent default navigation first
+                // Check if this is the Communities link
+                const isCommunityLink = this.textContent.trim().includes('Communities');
+
+                // If it's the Communities link, allow navigation to the communities page
+                if (isCommunityLink && this.getAttribute('href') === 'communities.html') {
+                    console.log('Communities link clicked, allowing navigation');
+                    return; // Allow default navigation
+                }
+
+                // For other dropdown links, prevent navigation and toggle dropdown
                 event.preventDefault();
 
                 // Toggle the 'active' class on the parent dropdown
@@ -42,11 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Toggle visibility with a simple class
                 if (dropdownContent.classList.contains('show')) {
                     dropdownContent.classList.remove('show');
-
-                    // If the dropdown is being closed and it's the Communities link, navigate to the page
-                    if (this.getAttribute('href') === 'communities.html') {
-                        window.location.href = 'communities.html';
-                    }
                 } else {
                     // Close any other open dropdowns first
                     document.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
@@ -56,40 +60,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Show this dropdown
                     dropdownContent.classList.add('show');
                 }
-
-                // Create a separate tap/click handler for the Communities link
-                if (this.getAttribute('href') === 'communities.html') {
-                    // Store the timestamp of this click
-                    const clickTime = new Date().getTime();
-
-                    // If there was a recent previous click (double-tap), navigate to communities page
-                    if (this.lastClickTime && (clickTime - this.lastClickTime < 500)) {
-                        window.location.href = 'communities.html';
-                    }
-
-                    // Update the last click time
-                    this.lastClickTime = clickTime;
-                }
             } else {
                 // On desktop, only prevent default if it's the current page
                 if (toggle.classList.contains('active')) {
                     event.preventDefault();
-                }
-            }
-        });
-    });
-
-    // Add click event listeners to dropdown menu items
-    document.querySelectorAll('.dropdown-content a').forEach(item => {
-        item.addEventListener('click', function(event) {
-            // Always allow navigation for dropdown items
-            // Close the parent dropdown
-            const parentDropdown = this.closest('.dropdown');
-            if (parentDropdown) {
-                parentDropdown.classList.remove('active');
-                const dropdownContent = parentDropdown.querySelector('.dropdown-content');
-                if (dropdownContent) {
-                    dropdownContent.classList.remove('show');
                 }
             }
         });
