@@ -1,5 +1,5 @@
 /**
- * FISH COMMUNITY WEBSITE - SWIMMING FISH (v30 - PRODUCTION READY)
+ * FISH COMMUNITY WEBSITE - SWIMMING FISH (v34 - PRODUCTION READY)
  * Creates and animates swimming fish background elements using icon_urls from GitHub.
  * Features:
  * - Loads fish icons from community data
@@ -14,7 +14,7 @@
  */
 
 // Fallback image in case no community data is available
-const FALLBACK_IMAGE = "https://api.vrchat.cloud/api/1/file/file_e69a1a67-1622-4205-9a62-96ff93dddeaf/1/file";
+const FALLBACK_IMAGE = "https://i.imgur.com/JYvBVlr.png";
 
 document.addEventListener('DOMContentLoaded', function() {
     initSwimmingFish();
@@ -426,15 +426,11 @@ async function proxyPreloadImages(imageItems) {
     function getProxiedUrl(url, attemptNumber = 0) {
         // Get a proxy from the list based on attempt number or URL hash
         const proxies = [
-            // Primary proxies (most reliable)
+            // Primary proxy (most reliable)
             `https://corsproxy.io/?${encodeURIComponent(url)}`,
-            `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
 
-            // Secondary proxies
-            `https://cors-anywhere.herokuapp.com/${url}`,
-            `https://cors-proxy.htmldriven.com/?url=${encodeURIComponent(url)}`,
-            `https://crossorigin.me/${url}`,
-            `https://thingproxy.freeboard.io/fetch/${url}`,
+            // Secondary proxy (requires special handling)
+            `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&raw=true`,
 
             // Fallback to direct URL as last resort
             url
@@ -576,7 +572,69 @@ async function proxyPreloadImages(imageItems) {
                             const proxiedUrl = getProxiedUrl(item.url, proxyAttempt);
                             console.log(`%cTrying proxy ${proxyAttempt+1}/3: ${proxiedUrl.substring(0, 30)}...`, 'color: #2196F3');
 
-                            img = await attemptImageLoad(proxiedUrl, true);
+                                        // Check if this is a VRChat API URL
+                            if (item.url.includes('api.vrchat.cloud/api/1/file')) {
+                                // For VRChat API URLs, try to use an alternative image source
+                                try {
+                                    // Try to use a direct imgur fallback for this specific group
+                                    // This is a temporary solution until we have proper image hosting
+                                    if (item.name && item.name.includes('ROSE')) {
+                                        // Rose fish has a special image
+                                        img = await attemptImageLoad('https://i.imgur.com/JYvBVlr.png', true);
+                                    } else if (item.name && item.name.includes('＜＞＜')) {
+                                        // Regular fish icon
+                                        img = await attemptImageLoad('https://i.imgur.com/e69a1a6.png', true);
+                                    } else {
+                                        // Generic fish icon
+                                        img = await attemptImageLoad(FALLBACK_IMAGE, true);
+                                    }
+                                    console.log(`%cUsing fallback image for ${item.name}`, 'color: #FFA500');
+                                } catch (fallbackError) {
+                                    // If fallback fails, try the proxy anyway
+                                    console.warn(`Fallback image failed, trying proxy: ${fallbackError.message}`);
+
+                                    // Special handling for allorigins.win which returns JSON
+                                    if (proxiedUrl.includes('api.allorigins.win/get')) {
+                                        // First load the JSON response
+                                        const response = await fetch(proxiedUrl);
+                                        const data = await response.json();
+
+                                        // Then load the image from the contents
+                                        if (data && data.contents) {
+                                            // Create a blob URL from the contents
+                                            const blob = new Blob([data.contents], {type: 'image/png'});
+                                            const blobUrl = URL.createObjectURL(blob);
+                                            img = await attemptImageLoad(blobUrl, true);
+                                        } else {
+                                            throw new Error('Invalid response from allorigins');
+                                        }
+                                    } else {
+                                        // Normal proxy handling
+                                        img = await attemptImageLoad(proxiedUrl, true);
+                                    }
+                                }
+                            } else {
+                                // Not a VRChat API URL, use normal proxy handling
+                                // Special handling for allorigins.win which returns JSON
+                                if (proxiedUrl.includes('api.allorigins.win/get')) {
+                                    // First load the JSON response
+                                    const response = await fetch(proxiedUrl);
+                                    const data = await response.json();
+
+                                    // Then load the image from the contents
+                                    if (data && data.contents) {
+                                        // Create a blob URL from the contents
+                                        const blob = new Blob([data.contents], {type: 'image/png'});
+                                        const blobUrl = URL.createObjectURL(blob);
+                                        img = await attemptImageLoad(blobUrl, true);
+                                    } else {
+                                        throw new Error('Invalid response from allorigins');
+                                    }
+                                } else {
+                                    // Normal proxy handling
+                                    img = await attemptImageLoad(proxiedUrl, true);
+                                }
+                            }
                             loaded = true;
                             console.log(`%cProxy ${proxyAttempt+1} load succeeded for ${item.url.substring(0, 30)}...`, 'color: #4CAF50');
                             break; // Exit the loop if successful

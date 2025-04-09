@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Proxy Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-container {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .failure {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .pending {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        img {
+            max-width: 128px;
+            max-height: 128px;
+            display: block;
+            margin-top: 10px;
+        }
+        .results {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>CORS Proxy Test</h1>
+    <p>This page tests various CORS proxies to see which ones work with VRChat API images.</p>
+    
+    <div>
+        <button id="test-all">Test All Proxies</button>
+        <button id="clear-results">Clear Results</button>
+    </div>
+    
+    <div id="test-containers"></div>
+    
+    <div class="results" id="results-summary"></div>
+    
+    <script>
+        // Sample VRChat API image URL to test
+        const testImageUrl = 'https://api.vrchat.cloud/api/1/file/file_b0588fdd-da36-4632-9958-29047b8b748b/1/file';
+        
+        // List of proxies to test
+        const proxies = [
+            {
+                name: 'Direct URL',
+                url: testImageUrl,
+                description: 'Direct loading with CORS headers'
+            },
+            {
+                name: 'corsproxy.io',
+                url: `https://corsproxy.io/?${encodeURIComponent(testImageUrl)}`,
+                description: 'Primary proxy service'
+            },
+            {
+                name: 'api.allorigins.win',
+                url: `https://api.allorigins.win/get?url=${encodeURIComponent(testImageUrl)}&raw=true`,
+                description: 'Returns JSON response that needs special handling',
+                special: 'allorigins'
+            },
+            {
+                name: 'api.codetabs.com',
+                url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(testImageUrl)}`,
+                description: 'Secondary proxy service'
+            },
+            {
+                name: 'proxy.cors.sh',
+                url: `https://proxy.cors.sh/${testImageUrl}`,
+                description: 'Secondary proxy service'
+            },
+            {
+                name: 'cors-anywhere.herokuapp.com',
+                url: `https://cors-anywhere.herokuapp.com/${testImageUrl}`,
+                description: 'Requires demo activation'
+            },
+            {
+                name: 'thingproxy.freeboard.io',
+                url: `https://thingproxy.freeboard.io/fetch/${testImageUrl}`,
+                description: 'Alternative proxy service'
+            },
+            {
+                name: 'crossorigin.me',
+                url: `https://crossorigin.me/${testImageUrl}`,
+                description: 'Alternative proxy service'
+            }
+        ];
+        
+        // Create test containers
+        const testContainersEl = document.getElementById('test-containers');
+        
+        proxies.forEach((proxy, index) => {
+            const container = document.createElement('div');
+            container.className = 'test-container pending';
+            container.id = `proxy-${index}`;
+            
+            container.innerHTML = `
+                <h3>${proxy.name}</h3>
+                <p>${proxy.description}</p>
+                <button class="test-button" data-index="${index}">Test</button>
+                <div class="status">Status: Pending</div>
+                <div class="image-container"></div>
+            `;
+            
+            testContainersEl.appendChild(container);
+        });
+        
+        // Add event listeners to test buttons
+        document.querySelectorAll('.test-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const index = parseInt(button.getAttribute('data-index'));
+                testProxy(index);
+            });
+        });
+        
+        // Test all button
+        document.getElementById('test-all').addEventListener('click', () => {
+            proxies.forEach((_, index) => {
+                setTimeout(() => {
+                    testProxy(index);
+                }, index * 1000); // Stagger tests by 1 second
+            });
+        });
+        
+        // Clear results button
+        document.getElementById('clear-results').addEventListener('click', () => {
+            proxies.forEach((_, index) => {
+                const container = document.getElementById(`proxy-${index}`);
+                container.className = 'test-container pending';
+                container.querySelector('.status').textContent = 'Status: Pending';
+                container.querySelector('.image-container').innerHTML = '';
+            });
+            document.getElementById('results-summary').textContent = '';
+        });
+        
+        // Function to test a proxy
+        async function testProxy(index) {
+            const proxy = proxies[index];
+            const container = document.getElementById(`proxy-${index}`);
+            const statusEl = container.querySelector('.status');
+            const imageContainer = container.querySelector('.image-container');
+            
+            container.className = 'test-container pending';
+            statusEl.textContent = 'Status: Testing...';
+            imageContainer.innerHTML = '';
+            
+            try {
+                let imageUrl;
+                
+                // Special handling for allorigins
+                if (proxy.special === 'allorigins') {
+                    try {
+                        const response = await fetch(proxy.url);
+                        const data = await response.json();
+                        
+                        if (data && data.contents) {
+                            // Create a blob URL from the contents
+                            const blob = new Blob([data.contents], {type: 'image/png'});
+                            imageUrl = URL.createObjectURL(blob);
+                        } else {
+                            throw new Error('Invalid response from allorigins');
+                        }
+                    } catch (e) {
+                        throw new Error(`allorigins error: ${e.message}`);
+                    }
+                } else {
+                    imageUrl = proxy.url;
+                }
+                
+                // Try to load the image
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                
+                await new Promise((resolve, reject) => {
+                    const timeoutId = setTimeout(() => {
+                        reject(new Error('Image load timeout'));
+                    }, 10000); // 10 second timeout
+                    
+                    img.onload = () => {
+                        clearTimeout(timeoutId);
+                        resolve();
+                    };
+                    
+                    img.onerror = () => {
+                        clearTimeout(timeoutId);
+                        reject(new Error('Image load failed'));
+                    };
+                    
+                    img.src = imageUrl;
+                });
+                
+                // If we get here, the image loaded successfully
+                container.className = 'test-container success';
+                statusEl.textContent = 'Status: SUCCESS';
+                imageContainer.appendChild(img);
+                
+                // Try to draw to canvas to test CORS
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 128;
+                    canvas.height = 128;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, 128, 128);
+                    
+                    // Try to get data URL
+                    const dataUrl = canvas.toDataURL('image/png');
+                    
+                    // Add canvas to container
+                    imageContainer.appendChild(canvas);
+                    
+                    // Add success message for canvas
+                    const canvasSuccess = document.createElement('div');
+                    canvasSuccess.textContent = 'Canvas operations: SUCCESS';
+                    canvasSuccess.style.color = 'green';
+                    imageContainer.appendChild(canvasSuccess);
+                } catch (e) {
+                    // Canvas operations failed
+                    const canvasError = document.createElement('div');
+                    canvasError.textContent = `Canvas operations: FAILED (${e.message})`;
+                    canvasError.style.color = 'red';
+                    imageContainer.appendChild(canvasError);
+                }
+                
+            } catch (error) {
+                container.className = 'test-container failure';
+                statusEl.textContent = `Status: FAILED (${error.message})`;
+            }
+            
+            // Update summary
+            updateSummary();
+        }
+        
+        // Update the summary of results
+        function updateSummary() {
+            const total = proxies.length;
+            const tested = document.querySelectorAll('.test-container:not(.pending)').length;
+            const successful = document.querySelectorAll('.test-container.success').length;
+            
+            const summaryEl = document.getElementById('results-summary');
+            summaryEl.textContent = `Tested: ${tested}/${total}, Working: ${successful}/${tested}`;
+            
+            // List working proxies
+            if (successful > 0) {
+                const workingList = document.createElement('div');
+                workingList.innerHTML = '<h3>Working Proxies:</h3>';
+                const ul = document.createElement('ul');
+                
+                document.querySelectorAll('.test-container.success').forEach(container => {
+                    const proxyName = container.querySelector('h3').textContent;
+                    const li = document.createElement('li');
+                    li.textContent = proxyName;
+                    ul.appendChild(li);
+                });
+                
+                workingList.appendChild(ul);
+                summaryEl.appendChild(workingList);
+            }
+        }
+    </script>
+</body>
+</html>
