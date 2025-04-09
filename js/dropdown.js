@@ -87,13 +87,16 @@ document.addEventListener('DOMContentLoaded', function() {
     dropdownToggles.forEach(toggle => {
         toggle.addEventListener('click', function(event) {
             // Check if this is the Communities link
-            if (toggle.textContent.trim() === 'COMMUNITIES') {
+            if (toggle.textContent.trim().includes('COMMUNITIES')) {
                 // Always prevent default for Communities link to allow dropdown toggle
                 event.preventDefault();
 
                 // Get the parent dropdown
                 const dropdown = toggle.closest('.dropdown');
                 toggleDropdown(dropdown);
+
+                // Log for debugging
+                console.log('Communities dropdown toggled');
             } else if (toggle.classList.contains('active')) {
                 // For other active links, just toggle the dropdown
                 event.preventDefault();
@@ -119,8 +122,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle touch events better on mobile
     document.addEventListener('touchstart', function(event) {
-        // Only process if not touching inside a dropdown
-        if (!event.target.closest('.dropdown')) {
+        // Check if we're touching a dropdown toggle
+        const dropdownToggle = event.target.closest('.dropdown > a');
+        if (dropdownToggle) {
+            // If it's the Communities link, handle it specially
+            if (dropdownToggle.textContent.trim().includes('COMMUNITIES')) {
+                event.preventDefault();
+                const dropdown = dropdownToggle.closest('.dropdown');
+                toggleDropdown(dropdown);
+                console.log('Communities dropdown toggled via touch');
+            }
+        }
+        // Only close dropdowns if not touching inside a dropdown
+        else if (!event.target.closest('.dropdown')) {
             document.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
                 openDropdown.classList.remove('show');
             });
@@ -128,5 +142,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 activeDropdown.classList.remove('active');
             });
         }
-    }, {passive: true});
+    }, {passive: false}); // Changed to non-passive to allow preventDefault
 });

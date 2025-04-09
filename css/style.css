@@ -1907,6 +1907,7 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
     .product-grid {
         gap: 20px;
         padding: 20px;
+        max-width: 600px;
     }
 
     .store-container {
@@ -1918,6 +1919,7 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
     .product-grid {
         gap: 15px;
         padding: 15px;
+        max-width: 450px;
     }
 
     .store-container {
@@ -1929,8 +1931,7 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
     .product-grid {
         gap: 20px;
         padding: 15px;
-        flex-direction: column;
-        align-items: center;
+        max-width: 300px;
     }
 
     .store-container {
@@ -2018,6 +2019,8 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
     padding: 0;
     box-sizing: border-box;
     z-index: 1;
+    min-width: 100%;
+    min-height: 100%;
 }
 
 .product-card:hover .product-image {
@@ -2058,7 +2061,7 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
 
 .product-name {
     font-size: 0.95rem;
-    color: #ffd700; /* Brighter golden text color */
+    color: #FFD700; /* Brighter golden text color with uppercase hex */
     position: absolute;
     bottom: 35px; /* Position above the price */
     left: 0;
@@ -2074,11 +2077,12 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
     padding: 10px 10px 5px 10px;
     margin: 0;
     height: auto;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.85);
     transition: background-color 0.3s ease;
     z-index: 2;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
     letter-spacing: 0.5px;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* Adjust product name size for smaller screens */
@@ -2108,10 +2112,10 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
 .product-price {
     font-size: 1rem;
     margin: 0;
-    color: #ffd700;
+    color: #FFD700;
     font-weight: bold;
     padding: 0 10px 10px 10px;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.85);
     letter-spacing: 0.5px;
     position: absolute;
     bottom: 0;
@@ -2119,6 +2123,7 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
     right: 0;
     z-index: 2;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    -webkit-font-smoothing: antialiased;
 }
 
 /* Adjust product price for smaller screens */
@@ -2149,37 +2154,32 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
     color: inherit;
     display: block;
     width: calc(33.333% - 20px);
-    max-width: 200px;
+    max-width: none;
     margin: 0;
     padding: 0;
     position: relative;
     overflow: hidden;
     border-radius: 12px;
     flex: 0 0 auto; /* Don't allow flex to grow or shrink */
-    height: 200px; /* Fixed height to match images */
+    aspect-ratio: 1/1; /* Square aspect ratio */
 }
 
 @media (max-width: 768px) {
     .product-card-link {
         width: calc(33.333% - 15px);
-        max-width: 180px;
-        height: 180px;
     }
 }
 
 @media (max-width: 600px) {
     .product-card-link {
         width: calc(50% - 15px);
-        max-width: 160px;
-        height: 160px;
     }
 }
 
 @media (max-width: 400px) {
     .product-card-link {
-        width: calc(100% - 10px);
-        max-width: 200px;
-        height: 200px;
+        width: calc(100% - 20px);
+        max-width: 280px;
         margin: 0 auto;
     }
 }

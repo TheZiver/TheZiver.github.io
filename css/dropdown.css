@@ -4,7 +4,19 @@
     display: inline-block;
 }
 
-/* No dropdown toggle indicator - clicking the active tab toggles the dropdown */
+/* Add dropdown toggle indicator */
+.dropdown > a::after {
+    content: '▼';
+    font-size: 0.7em;
+    margin-left: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    transition: transform 0.2s ease;
+}
+
+.dropdown.active > a::after {
+    transform: rotate(180deg);
+}
 
 /* Add a pseudo-element to bridge the gap between button and dropdown */
 .dropdown::after {
@@ -73,6 +85,21 @@
     }
 }
 
+/* Ensure dropdown is tappable on mobile */
+@media (max-width: 767px) {
+    .dropdown > a {
+        pointer-events: auto;
+    }
+
+    .dropdown-content {
+        width: 100%;
+        left: 0;
+        transform: none;
+        top: 100%;
+        position: absolute;
+    }
+}
+
 /* Show dropdown when active class is present (for mobile) */
 .dropdown-content.show {
     display: block;
@@ -81,6 +108,24 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
+}
+
+/* Mobile-specific dropdown styles */
+@media (max-width: 767px) {
+    .dropdown-content.show {
+        left: 0;
+        transform: none;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        border-top: none;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    }
+
+    .dropdown-content a {
+        padding: 15px; /* Larger tap target */
+        font-size: 1.1em; /* Larger text */
+    }
 }
 
 /* Style for active dropdown */
