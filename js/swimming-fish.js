@@ -1,5 +1,5 @@
 /**
- * FISH COMMUNITY WEBSITE - SWIMMING FISH (v34 - PRODUCTION READY)
+ * FISH COMMUNITY WEBSITE - SWIMMING FISH (v35 - PRODUCTION READY)
  * Creates and animates swimming fish background elements using icon_urls from GitHub.
  * Features:
  * - Loads fish icons from community data
@@ -583,6 +583,9 @@ async function proxyPreloadImages(imageItems) {
                                         img = await attemptImageLoad('https://i.imgur.com/JYvBVlr.png', true);
                                     } else if (item.name && item.name.includes('＜＞＜')) {
                                         // Regular fish icon
+                                        img = await attemptImageLoad('https://i.imgur.com/e69a1a6.png', true);
+                                    } else if (item.name && item.name.includes('FISH')) {
+                                        // Any other fish group
                                         img = await attemptImageLoad('https://i.imgur.com/e69a1a6.png', true);
                                     } else {
                                         // Generic fish icon
