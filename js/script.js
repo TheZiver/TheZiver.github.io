@@ -681,6 +681,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function createDayCell(dayNumber, isOtherMonth, cellDate = null, isToday = false) {
+        // Create wrapper to maintain aspect ratio
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('calendar-day-wrapper');
+
         const dayCell = document.createElement('div');
         dayCell.classList.add('calendar-day');
         const dayNumberSpan = document.createElement('span');
@@ -759,7 +763,10 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             dayCell.appendChild(dayNumberSpan);
         }
-        return dayCell;
+
+        // Add the day cell to the wrapper and return the wrapper
+        wrapper.appendChild(dayCell);
+        return wrapper;
     }
 
 

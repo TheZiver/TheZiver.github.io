@@ -25,6 +25,7 @@ The site provides detailed information and access points for various aspects of 
     *   Explore the meaning behind the community's name and symbol (＜＞＜).
     *   Understand the core principles guiding the community.
 
-*   **STORE**
-    *   Find links to the official Booth.pm store.
-    *   Browse themed digital assets, such as VRChat prefabs and models, available for purchase.
+*   **SUPPORT**
+    *   Support TheZiver for building and maintaining the FISH community.
+    *   Donate through Ko-fi or become a Patron on Patreon.
+    *   Browse themed digital assets from the Luxury Trash store, such as VRChat prefabs and models, available for purchase.

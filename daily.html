@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dropdown.css">
+    <link rel="stylesheet" href="css/back-to-top.css">
 </head>
 <body>
 
@@ -24,7 +25,7 @@
             </div>
         </li>
         <li><a href="rosefish.html">ROSE FISH</a></li>
-        <li><a href="store.html">STORE</a></li>
+        <li><a href="support.html">SUPPORT</a></li>
     </ul>
 </nav>
 
@@ -37,9 +38,11 @@
         <!-- START: VRChat Calendar -->
         <div class="calendar-container">
             <div class="calendar-header">
-                <button id="cal-prev-month" class="cal-nav-btn" title="Previous Month"><</button>
+                <div class="nav-buttons">
+                    <button id="cal-prev-month" class="cal-nav-btn" title="Previous Month"><</button>
+                    <button id="cal-next-month" class="cal-nav-btn" title="Next Month">></button>
+                </div>
                 <h3 id="cal-month-year">Month Year</h3>
-                <button id="cal-next-month" class="cal-nav-btn" title="Next Month">></button>
                 <button id="cal-goto-today" class="cal-today-btn" title="Go to Today">Today</button>
             </div>
             <div id="start-day-controls">
@@ -93,5 +96,7 @@
 <script src="js/script.js"></script>
 <script src="js/swimming-fish.js"></script>
 <script src="js/dropdown.js"></script>
+<script src="js/back-to-top.js"></script>
+<script src="js/lazy-loading.js"></script>
 </body>
 </html>

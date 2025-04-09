@@ -22,17 +22,17 @@
     display: none;
     position: absolute;
     background-color: #1e1e1e;
-    min-width: 200px;
+    width: 200px; /* Same width as nav buttons */
+    max-width: 90vw; /* Limit to 90% of viewport width */
     box-shadow: 0 8px 16px rgba(0,0,0,0.3);
     z-index: 101;
     border-radius: 4px;
     border: 1px solid #333337;
     margin-top: 0; /* No gap */
-    padding-top: 5px; /* Add padding inside instead */
+    padding: 5px; /* Add padding inside */
     left: 50%;
     transform: translateX(-50%);
     top: 100%; /* Position right at the bottom of the parent */
-
 }
 
 /* Add a pseudo-element at the top of the dropdown to bridge any remaining gap */
@@ -87,9 +87,9 @@
 /* Swimming Fish Gallery Styles */
 .fish-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 15px;
-    margin: 20px 0;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+    margin: 10px 0;
 }
 
 .fish-gallery-item {
@@ -97,9 +97,11 @@
 }
 
 .fish-gallery-item img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
+    max-width: 70px !important;
+    max-height: 70px !important;
+    width: 70px !important;
+    height: 70px !important;
+    object-fit: contain !important;
     border-radius: 50%;
     background-color: rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
@@ -112,16 +114,20 @@
 /* Responsive adjustments */
 @media (max-width: 767px) {
     .dropdown-content {
-        width: 180px;
+        width: 180px; /* Slightly smaller on mobile */
         min-width: 0;
+        max-width: 95vw; /* Limit to 95% of viewport width on mobile */
     }
 
     .fish-gallery {
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 5px;
     }
 
     .fish-gallery-item img {
-        width: 60px;
-        height: 60px;
+        max-width: 60px !important;
+        max-height: 60px !important;
+        width: 60px !important;
+        height: 60px !important;
     }
 }

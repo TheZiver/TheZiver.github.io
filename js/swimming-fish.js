@@ -1078,10 +1078,10 @@ function addSwimmingFishStyles() {
             }
         }
 
-        /* Fish sizes based on status - exact sizes as requested */
+        /* Fish sizes based on status - medium sizes */
         .swimming-image.size-small { width: 60px !important; height: 60px !important; } /* FISH_KNOWN size */
-        .swimming-image.size-medium { width: 90px !important; height: 90px !important; } /* FISH_CERTIFIED size */
-        .swimming-image.size-large { width: 120px !important; height: 120px !important; } /* FISH_VERIFIED size */
+        .swimming-image.size-medium { width: 80px !important; height: 80px !important; } /* FISH_CERTIFIED size */
+        .swimming-image.size-large { width: 100px !important; height: 100px !important; } /* FISH_VERIFIED size */
 
         /* Theme-specific adjustments for swimming images */
         .theme-rosefish .swimming-image {

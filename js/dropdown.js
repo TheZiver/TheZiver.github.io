@@ -73,4 +73,17 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    // Handle touch events better on mobile
+    document.addEventListener('touchstart', function(event) {
+        // Only process if not touching inside a dropdown
+        if (!event.target.closest('.dropdown')) {
+            document.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
+                openDropdown.classList.remove('show');
+            });
+            document.querySelectorAll('.dropdown.active').forEach(activeDropdown => {
+                activeDropdown.classList.remove('active');
+            });
+        }
+    }, {passive: true});
 });

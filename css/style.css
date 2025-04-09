@@ -51,15 +51,15 @@ body {
  * Customize width, padding, and appearance here
  */
 .container {
-    width: 95%; /* Increased from 90% to 95% for mobile */
-    max-width: 850px;
+    width: 90%; /* Reduced width for narrower layout */
+    max-width: 900px; /* Reduced max-width for narrower layout */
     margin: 20px auto 40px auto;
     padding: 15px; /* Reduced padding on mobile */
     background-color: var(--container-bg);
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     text-align: left;
-    overflow-x: hidden; /* Prevent horizontal overflow */
+    overflow-x: hidden; /* Hide horizontal overflow */
     overflow-y: auto; /* Allow vertical scrolling if needed */
     position: relative;
     border: 1px solid var(--border-color);
@@ -74,7 +74,7 @@ body {
 
 @media (min-width: 600px) {
     .container {
-        width: 80%;
+        width: 75%; /* Reduced width for narrower layout */
         padding: 40px;
         margin-top: 30px; /* Adjust top margin */
     }
@@ -82,7 +82,7 @@ body {
 
 h1, h2, h3 {
     font-weight: bold;
-    text-align: left;
+    text-align: center;
 }
 
 /* Gradient Animation for H1 and H2 */
@@ -99,7 +99,7 @@ h1, h2 {
     -webkit-text-fill-color: transparent;
     animation: gradientFlow 8s ease infinite;
     font-weight: bold;
-    text-align: left;
+    text-align: center;
 }
 @keyframes gradientFlow {
     0% { background-position: 0% 50%; }
@@ -109,6 +109,8 @@ h1, h2 {
 
 h1 { font-size: 2.4em; letter-spacing: -0.02em; margin-bottom: 15px; text-align: center; /* Center the main H1, reduced bottom margin */ }
  @media (min-width: 600px) { h1 { font-size: 2.8em; margin-bottom: 20px; /* Reduced bottom margin */ } }
+
+
 
 h2 { font-size: 1.8em; margin-top: 40px; margin-bottom: 20px; }
 @media (min-width: 600px) { h2 { font-size: 2em; margin-top: 50px; margin-bottom: 25px; } }
@@ -126,6 +128,7 @@ h3 { font-size: 1.3em; margin-top: 30px; margin-bottom: 15px; color: #bbbbbb; }
     line-height: 1.5; /* Adjust line spacing */
     color: #e0e0e0; /* Match general text color */
 }
+
 .discord-invite-section a {
     font-weight: normal; /* Link doesn't need to be bold */
     font-size: 0.9em; /* Slightly smaller link text */
@@ -259,8 +262,8 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 
 .swimming-image {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     opacity: 0.4; /* Slightly more visible */
     border-radius: 50%;
     object-fit: cover;
@@ -272,9 +275,9 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 }
 
 /* Different sizes for variety */
-.swimming-image.size-small { width: 40px; height: 40px; }
-.swimming-image.size-medium { width: 60px; height: 60px; }
-.swimming-image.size-large { width: 80px; height: 80px; }
+.swimming-image.size-small { width: 30px; height: 30px; }
+.swimming-image.size-medium { width: 50px; height: 50px; }
+.swimming-image.size-large { width: 70px; height: 70px; }
 
 /* Theme-specific adjustments for swimming images */
 .theme-rosefish .swimming-image {
@@ -313,77 +316,80 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 
 /* Specific Max Widths */
 .meaning-image {
-    max-width: 600px;
+    max-width: 480px !important;
+    width: 100% !important; /* Changed from auto to 100% */
+    height: auto !important;
     margin-top: 30px;
     margin-bottom: 30px;
+    object-fit: contain !important;
 }
 
 @media (max-width: 767px) {
     .meaning-image {
-        max-width: 90%;
+        max-width: 100% !important; /* Changed from 400px to 100% */
     }
 }
 
 .verified-image {
-    max-width: 420px;
+    max-width: 240px !important;
+    max-height: 240px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
 }
 
 @media (max-width: 599px) {
     .verified-image {
-        max-width: 300px;
+        max-width: 200px !important;
+        max-height: 200px !important;
     }
 }
 
 .community-image {
-    max-width: 300px;
+    max-width: 240px !important;
+    max-height: 240px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
 }
 
 /* Limit size of images from the image folder */
 [src^="images/"] {
     max-width: 100%;
     height: auto;
+    max-height: 150px; /* Further reduced max height for all images */
 }
 
-/* Specific size limits for fish status icons */
-img[src="images/fish_known.png"] {
-    max-width: 60px;
-    max-height: 60px;
+/* Medium size for all images in the images folder */
+img[src^="images/"] {
+    width: auto;
+    height: auto;
+    max-width: 80px;
+    max-height: 80px;
+    object-fit: contain;
 }
 
-img[src="images/fish_certified.png"] {
-    max-width: 90px;
-    max-height: 90px;
-}
-
-img[src="images/fish_verified.png"] {
-    max-width: 120px;
-    max-height: 120px;
-}
-
-/* Size limits for other specific images */
-img[src="images/FISH.png"] {
-    max-width: 300px;
-}
-
-img[src="images/meaning_of_fish.png"] {
-    max-width: 500px;
-}
-
-img[src="images/daily_vrchat.png"] {
-    max-width: 200px;
-}
-
-img[src="images/luxury_trash.png"] {
-    max-width: 200px;
-}
-
+/* Specific size for key images - consistent treatment */
+img[src="images/daily_vrchat.png"],
+img[src="images/FISH.png"],
+img[src="images/fish_certified.png"],
+img[src="images/fish_verified.png"],
+img[src="images/fish_known.png"],
+img[src="images/luxury_trash.png"],
 img[src="images/rose_fish_spin.gif"] {
-    max-width: 200px;
+    max-width: 240px !important;
+    max-height: 240px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
 }
 
-/* General size limit for any other images in the folder */
-.container img[src^="images/"]:not([class]) {
-    max-width: 200px;
+/* Special treatment for meaning_of_fish.png */
+img[src="images/meaning_of_fish.png"] {
+    max-width: 480px !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
 }
 
 /* Utility Classes */
@@ -438,31 +444,63 @@ img[src="images/rose_fish_spin.gif"] {
     list-style: none;
     padding-left: 0;
     display: grid;
-    /* Fixed 3-column grid */
-    /* Responsive grid columns: fit items >= 250px wide */
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px; /* Spacing between tiles */
+    /* Always use 2-column grid to match the image */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px; /* Increased spacing between tiles */
     margin-top: 20px; /* Add some space above the grid */
+    justify-content: center; /* Center the grid */
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px; /* Limit width to ensure centering */
+    width: 100%; /* Take full width of container */
 }
 
 /* --- Styles for Individual Community Tiles (List Items) --- */
 #fish-verified-list li, #fish-certified-list li, #fish-known-list li, #fish-status-list li {
-    background-color: #2a2a30; /* Tile background */
+    background-color: #222226; /* Darker tile background to match image */
     border: 1px solid #333337; /* Tile border */
     border-radius: 6px;
-    padding: 10px; /* Reduced padding */
+    padding: 15px 10px; /* Increased padding */
     display: flex; /* Use flex for content layout INSIDE the tile */
     flex-direction: column; /* Stack image and text vertically */
     align-items: center; /* Center content horizontally */
     text-align: center; /* Center text */
+    margin: 0 auto; /* Center the tile */
+    width: 100%; /* Full width of grid cell */
+    max-width: 100%; /* Allow tile to fill grid cell */
+    min-height: auto; /* Allow height to adjust based on content */
+    overflow: hidden; /* Prevent overflow */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 /* Control size of community list images */
 #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
-    max-width: 80px;
-    max-height: 80px;
-    width: auto;
-    height: auto;
+    max-width: 100% !important;
+    width: 120px !important;
+    height: 120px !important;
+    object-fit: contain !important;
+}
+
+/* Adjust image size for different screen sizes */
+@media (max-width: 800px) {
+    #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
+        width: 100px !important;
+        height: 100px !important;
+    }
+}
+
+@media (max-width: 600px) {
+    #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
+        width: 80px !important;
+        height: 80px !important;
+    }
+}
+
+@media (max-width: 400px) {
+    #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
+        width: 60px !important;
+        height: 60px !important;
+    }
 }
 
 /* Remove the :last-child rule that removed bottom border */
@@ -470,19 +508,21 @@ img[src="images/rose_fish_spin.gif"] {
 
 /* Community Logo in Lists */
 .community-logo {
-    width: 100px; /* Increased logo size */
-    height: 100px;
-    object-fit: contain;
+    max-width: 240px !important; /* Medium logo size */
+    max-height: 240px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
     margin-bottom: 8px; /* Reduced space below logo */
     margin-right: 0; /* Remove right margin */
     flex-shrink: 0;
     border-radius: 4px;
-    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0s;
+    opacity: 1;
 }
 
 .community-logo:hover {
     transform: rotate(360deg);
-    animation: spin 1s ease-in-out;
 }
 
 @keyframes spin {
@@ -495,14 +535,49 @@ img[src="images/rose_fish_spin.gif"] {
     flex-grow: 1; /* Allow text div to take space */
     line-height: 1.3; /* Reduced line height */
     margin-bottom: 0; /* Override default div margin */
-    width: 100%; /* Ensure text div takes full width */
+    text-align: center; /* Center the text */
+    width: 100%; /* Ensure full width */
 }
 /* Community Name (Line 1) */
 /* Community Name (Line 1) */
-#fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b { display: block; font-size: 1.05em; font-weight: bold; margin-bottom: 3px; } /* Reduced font size and margin */
+#fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b {
+    display: block;
+    font-size: 1.05em;
+    font-weight: bold;
+    margin-bottom: 3px;
+    text-align: center; /* Ensure text is centered */
+    width: 100%; /* Full width to ensure proper centering */
+} /* Reduced font size and margin */
+
 /* Description (Line 2) - Note: Known list JSON doesn't have description, but selector added for consistency */
 /* Owner Info (was nth-of-type(1) after name bold) */
-#fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) { /* display: block; */ font-size: 0.9em; margin-bottom: 5px; display: inline; /* Make it inline */ margin-right: 5px; /* Add space after Owner: */ white-space: nowrap; /* Prevent owner text wrapping */ } /* Removed display: block, made inline */
+#fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) {
+    display: block; /* Changed to block for better centering */
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    text-align: center; /* Center the owner name */
+    width: 100%; /* Full width to ensure proper centering */
+    white-space: nowrap; /* Prevent owner text wrapping */
+} /* Changed to block display for better centering */
+
+/* Adjust font size for different screen sizes */
+@media (max-width: 600px) {
+    #fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b {
+        font-size: 0.95em;
+    }
+    #fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) {
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 400px) {
+    #fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b {
+        font-size: 0.85em;
+    }
+    #fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) {
+        font-size: 0.7em;
+    }
+}
 /* Owner Info (Line 3) */
 /* Make "Owner:" label NOT bold (Selector remains nth-of-type(1) because it's the first span after the bold name) */
 #fish-verified-list li > div span:nth-of-type(1) b, #fish-certified-list li > div span:nth-of-type(1) b, #fish-known-list li > div span:nth-of-type(1) b, #fish-status-list li > div span:nth-of-type(1) b { font-weight: normal; }
@@ -788,14 +863,23 @@ iframe {
    box-sizing: border-box;
 }
 
+/* Specific styles for Rose Fish Google Sheets */
+.container iframe[src*="docs.google.com/spreadsheets"] {
+   min-height: 800px;
+   height: 800px !important;
+   max-width: 100%;
+   display: block;
+   margin: 0 auto;
+}
+
 /* === YOUTUBE VIDEO IFRAME STYLES (INDEX.HTML) === */
 .video-container {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
     height: 0;
     overflow: hidden;
-    max-width: 100%;
-    margin: 20px 0;
+    max-width: 80%; /* Reduced from 100% */
+    margin: 20px auto; /* Changed from 20px 0 to center */
 }
 .video-container iframe {
     position: absolute;
@@ -834,13 +918,54 @@ iframe {
 /* Override gradient text for calendar header H3 */
 .calendar-header h3#cal-month-year { margin: 0; font-size: 1.3em; font-weight: bold; text-align: center; flex-grow: 1; background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important; color: var(--cal-text-color) !important; -webkit-text-fill-color: initial !important; animation: none !important; }
 @media (min-width: 600px) { .calendar-header h3#cal-month-year { font-size: 1.5em; } }
+/* Navigation buttons wrapper */
+.calendar-header .nav-buttons {
+    display: flex;
+    gap: 5px;
+}
+
 .cal-nav-btn, .cal-today-btn { border: none; border-radius: 5px; padding: 6px 12px; font-size: 1em; font-weight: bold; cursor: pointer; transition: background-color 0.2s ease; line-height: 1; color: var(--cal-button-text); }
 .cal-nav-btn { background-color: var(--cal-button-bg); }
 .cal-nav-btn:hover { background-color: var(--cal-button-hover-bg); }
 .cal-today-btn { background-color: var(--cal-today-button-bg); margin-left: 10px; }
 .cal-today-btn:hover { background-color: var(--cal-today-button-hover-bg); }
-/* Responsive positioning for 'Today' button */
-@media (max-width: 480px) { .cal-today-btn { position: absolute; bottom: -45px; right: 5px; margin-left: 0; } .calendar-header { padding-bottom: 5px; } #start-day-controls { margin-bottom: 45px; } .calendar-weekdays { margin-top: 45px; } }
+/* Responsive positioning for small screens */
+@media (max-width: 480px) {
+    .cal-today-btn {
+        position: absolute;
+        bottom: -45px;
+        right: 5px;
+        margin-left: 0;
+        font-size: 0.85em;
+        padding: 4px 8px;
+    }
+    .calendar-header {
+        padding-bottom: 5px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    #start-day-controls {
+        margin-bottom: 45px;
+    }
+    .calendar-weekdays {
+        margin-top: 45px;
+    }
+    .calendar-header h3#cal-month-year {
+        font-size: 1.1em;
+        width: 100%;
+        margin-bottom: 5px;
+        text-align: center;
+        order: -1; /* Move title to the top */
+    }
+    .cal-nav-btn {
+        font-size: 0.85em;
+        padding: 4px 8px;
+    }
+    .calendar-header .nav-buttons {
+        justify-content: center;
+        margin-bottom: 5px;
+    }
+}
 /* Start Day Controls */
 #start-day-controls { text-align: center; margin-bottom: 10px; margin-top: 0px; display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; padding: 5px 15px 10px 15px; border-bottom: 1px solid var(--cal-border-color); margin-left: -15px; margin-right: -15px; }
 @media (min-width: 600px) { #start-day-controls { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; } }
@@ -856,10 +981,74 @@ iframe {
 /* Calendar Body Grid */
 .calendar-body { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
 /* Calendar Day Cell Styles */
-.calendar-day { background-color: var(--cal-header-bg); border: 1px solid var(--cal-border-color); border-radius: 4px; padding: 5px; min-height: 75px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; font-size: 0.85em; cursor: default; transition: background-color 0.2s ease; overflow: hidden; position: relative; text-align: center; }
-@media (min-width: 600px){ .calendar-day { min-height: 85px; font-size: 0.9em; padding: 8px 5px; } }
+.calendar-day {
+    background-color: var(--cal-header-bg);
+    border: 1px solid var(--cal-border-color);
+    border-radius: 4px;
+    padding: 1px 0px; /* Minimal padding to maximize content space */
+    width: 100%; /* Full width of grid cell */
+    height: 100%; /* Full height of wrapper */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.85em;
+    cursor: default;
+    transition: background-color 0.2s ease;
+    overflow: hidden; /* Hide overflow, no scrollbars */
+    position: relative;
+    text-align: center;
+    box-sizing: border-box; /* Include padding in height/width calculation */
+    min-height: 60px; /* Ensure minimum height for readability */
+}
+
+/* Calendar body grid with responsive gap */
+.calendar-body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: clamp(2px, 0.8vw, 4px); /* Slightly reduced gap to allow more space for content */
+    width: 100%;
+}
+
+/* Create a wrapper for each calendar day to maintain aspect ratio */
+.calendar-day-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* Creates a 1:1 aspect ratio */
+    min-height: 0; /* Ensure the wrapper doesn't get too tall */
+    max-height: none; /* Allow the wrapper to be as tall as needed */
+}
+
+/* Position the calendar day absolutely within the wrapper */
+.calendar-day-wrapper .calendar-day {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 600px){
+    .calendar-day {
+        font-size: 0.9em;
+        padding: 8px 5px;
+    }
+}
 /* Link inside calendar day (for REGULAR daily events) */
-.calendar-day a { color: inherit; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100%; width: 100%; padding: inherit; box-sizing: border-box; cursor: pointer; transition: background-color 0.2s ease; }
+.calendar-day a {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    width: 100%;
+    padding: 0; /* Remove padding to prevent overflow */
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
 .calendar-day a:hover { color: inherit; background-color: rgba(255, 255, 255, 0.05); } /* Subtle hover for clickable days */
 .calendar-day:not(:has(a)):hover { background-color: #303034; } /* Hover effect only for non-linked cells */
 
@@ -874,11 +1063,152 @@ iframe {
 .calendar-day.today .day-number { font-weight: bold; color: var(--cal-primary-color); }
 
 /* Day Number (Top) */
-.calendar-day .day-number { font-size: 1.1em; color: var(--cal-text-color); margin-top: 0px; margin-bottom: 2px; line-height: 1.1; display: block; }
+.calendar-day .day-number {
+    /* font-size is now controlled by the clamp below */
+    color: var(--cal-text-color);
+    margin-top: 0px;
+    margin-bottom: 0px; /* Reduced margin */
+    line-height: 1;
+    display: block;
+    word-break: normal; /* Only break at word boundaries */
+    word-wrap: break-word; /* Allow long words to break */
+    overflow-wrap: normal; /* Only wrap at word boundaries */
+    white-space: normal; /* Allow text to wrap */
+}
+
+/* Use CSS clamp for responsive font sizing based on viewport width */
+.calendar-day .day-number {
+    font-size: clamp(0.8em, 2vw, 0.95em); /* Increased minimum size for better readability */
+}
+
+.calendar-day .daily-event-num {
+    font-size: clamp(0.65em, 1.5vw, 0.7em); /* Increased minimum size for better readability */
+}
+
+.calendar-day .event-location {
+    font-size: clamp(0.65em, 1.4vw, 0.7em); /* Increased minimum size for better readability */
+    transform: scale(0.95);
+}
+
+/* Additional adjustments for different screen sizes */
+@media (max-width: 768px) {
+    .calendar-day {
+        font-size: 0.8em;
+        padding: 2px 1px;
+    }
+    .calendar-day .event-location {
+        transform: scale(0.95);
+    }
+}
+
+@media (max-width: 600px) {
+    .calendar-day {
+        font-size: 0.75em;
+        padding: 1px 1px;
+    }
+    .calendar-day .event-location {
+        transform: scale(0.9);
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-day {
+        font-size: 0.7em;
+        padding: 1px 0px;
+    }
+    .calendar-day .event-location {
+        transform: scale(0.85);
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 400px) {
+    .calendar-day {
+        padding: 0;
+    }
+    .calendar-day .event-location {
+        transform: scale(0.8);
+    }
+}
+
+/* Very small screens */
+@media (max-width: 350px) {
+    .calendar-day .event-location {
+        transform: scale(0.8);
+    }
+    .calendar-day .day-number {
+        font-size: clamp(0.7em, 1.8vw, 0.8em);
+    }
+    .calendar-day .daily-event-num {
+        font-size: clamp(0.65em, 1.3vw, 0.65em);
+    }
+    .calendar-day .event-location {
+        font-size: clamp(0.65em, 1.3vw, 0.65em);
+    }
+}
+
+/* Extremely small screens */
+@media (max-width: 300px) {
+    .calendar-day .event-location {
+        transform: scale(0.7);
+    }
+    .calendar-body {
+        gap: 1px;
+    }
+    .calendar-container {
+        min-width: 280px; /* Ensure calendar doesn't get too small */
+    }
+    /* Further reduce button and title sizes */
+    .cal-nav-btn, .cal-today-btn {
+        font-size: 0.75em;
+        padding: 3px 6px;
+    }
+    .calendar-header h3#cal-month-year {
+        font-size: 1em;
+    }
+    /* Stack navigation buttons if needed */
+    .calendar-header .nav-buttons {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+}
 /* Ordinal Event Number (Middle - for regular daily) */
-.calendar-day .daily-event-num { font-size: 0.8em; color: var(--cal-event-num-color); margin-top: 1px; margin-bottom: 1px; line-height: 1; font-weight: normal; opacity: 0.9; display: block; }
+.calendar-day .daily-event-num {
+    /* font-size is now controlled by the clamp above */
+    color: var(--cal-event-num-color);
+    margin-top: 0px;
+    margin-bottom: 0px;
+    line-height: 1;
+    font-weight: normal;
+    opacity: 0.9;
+    display: block;
+    word-break: normal; /* Only break at word boundaries */
+    word-wrap: break-word; /* Allow long words to break */
+    overflow-wrap: normal; /* Only wrap at word boundaries */
+    white-space: normal; /* Allow text to wrap */
+}
 /* Event Location / Special Name (Bottom) */
-.calendar-day .event-location { font-size: 0.9em; color: var(--cal-event-color); font-weight: bold; margin-top: 1px; margin-bottom: 0px; line-height: 1.2; /* Allow slightly more height for multi-line */ word-break: break-word; display: block; max-width: 100%; }
+.calendar-day .event-location {
+    /* font-size is now controlled by the clamp above */
+    color: var(--cal-event-color);
+    font-weight: bold;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    line-height: 0.95; /* Even further reduced line height */
+    word-break: break-word; /* Allow breaking at any point if necessary */
+    word-wrap: break-word; /* Allow long words to break */
+    display: block;
+    max-width: 100%;
+    overflow-wrap: break-word; /* Allow breaking at any point if necessary */
+    white-space: normal; /* Allow text to wrap */
+    /* transform is now controlled by media queries above */
+    letter-spacing: -0.03em; /* Further reduced letter spacing */
+    hyphens: auto; /* Allow hyphenation for better text fitting */
+    padding: 0 1px; /* Add tiny horizontal padding */
+}
+
+/* Font size adjustments moved to comprehensive media queries above */
 .calendar-day .event-location br { margin-bottom: 2px; /* Add a tiny bit of space after line break */ }
 
 /* --- SPECIAL CALENDAR DAY STYLES --- */
@@ -987,6 +1317,9 @@ iframe {
     .main-nav ul {
         white-space: normal;
         padding: 5px 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .main-nav li {
@@ -996,6 +1329,9 @@ iframe {
     .main-nav a {
         font-size: 1em;
         padding: 6px 10px;
+        width: auto;
+        min-width: 80px; /* Ensure buttons have minimum width */
+        text-align: center;
     }
 
     /* Improve mobile text readability */
@@ -1183,19 +1519,216 @@ body.theme-rosefish h3 { /* Override default gradient */
 
 body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
 
+/* --- Support Page Styles --- */
+.support-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: transparent;
+}
+
+.support-header h1 {
+    font-size: 2.8em;
+    margin-bottom: 0.5rem;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.2;
+}
+
+.support-header p {
+    font-size: 1.4em;
+    margin-bottom: 0.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.support-section {
+    margin-bottom: 1.5rem;
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.support-section h2 {
+    font-size: 2.2em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.patreon-container h2 {
+    margin-bottom: 0.25rem;
+}
+
+.patreon-heading {
+    color: #f96854 !important;
+    -webkit-text-fill-color: #f96854 !important;
+    background: none !important;
+    animation: none !important;
+}
+
+.kofi-heading {
+    color: #29abe0 !important;
+    -webkit-text-fill-color: #29abe0 !important;
+    background: none !important;
+    animation: none !important;
+    font-size: 2.2em;
+    text-transform: uppercase;
+}
+
+.community-members-heading {
+    color: #8a2be2 !important;
+    -webkit-text-fill-color: #8a2be2 !important;
+    background: none !important;
+    animation: none !important;
+}
+
+.community-members-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 1rem 0;
+    padding: 1.5rem 1rem;
+    background-color: transparent;
+    border-radius: 8px;
+    border: 3px solid #8a2be2;
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+    min-height: 200px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.community-members-container h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.patreon-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 1rem 0;
+    padding: 1.5rem 1rem;
+    background-color: transparent;
+    border-radius: 8px;
+    border: 3px solid #f96854;
+    box-shadow: 0 0 15px rgba(249, 104, 84, 0.3);
+    min-height: 200px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.patreon-container h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.kofi-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 1rem 0;
+    padding: 1.5rem 1rem;
+    background-color: transparent;
+    border-radius: 8px;
+    border: 3px solid #29abe0;
+    box-shadow: 0 0 15px rgba(41, 171, 224, 0.3);
+    min-height: 200px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.kofi-container h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.kofi-button-container {
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.patreon-image {
+    width: 220px;
+    height: auto;
+    margin-bottom: 0;
+    transition: all 0.3s ease;
+}
+
+.patreon-image:hover {
+    transform: translateY(-5px);
+    filter: brightness(1.1);
+    box-shadow: 0 8px 16px rgba(249, 104, 84, 0.3);
+}
+
+.patreon-container p {
+    font-size: 1.4em;
+    text-align: center;
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+
+
+.store-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 0;
+    padding: 1.5rem;
+    background-color: transparent;
+    border-radius: 8px;
+    border: 2px solid #d4af37;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.store-container h2 {
+    margin-top: 0;
+}
+
+.store-container .product-grid {
+    margin-top: 1rem;
+    background: transparent;
+    padding: 0;
+}
+
+.store-container img {
+    max-width: 150px;
+    margin-bottom: 1.5rem;
+}
+
+.store-container p {
+    font-size: 1.2em;
+    text-align: center;
+    max-width: 600px;
+    margin-bottom: 1rem;
+}
+
 /* --- Store Page Styles --- */
 .product-grid {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 1.5rem;
     background: #0a0a0a;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Reduced from 280px to 220px */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Reduced from 220px to 180px */
     gap: 1.5rem; /* Reduced from 2rem to 1.5rem */
 }
 
 /* Ensure 4 products per row on larger screens */
-@media (min-width: 1000px) {
+@media (min-width: 800px) {
     .product-grid {
         grid-template-columns: repeat(4, 1fr);
     }
@@ -1215,7 +1748,7 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
 }
 
 .store-header img {
-    max-width: 200px;
+    max-width: 150px;
     margin: 0 auto 1rem;
 }
 
