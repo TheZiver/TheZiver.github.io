@@ -1765,6 +1765,45 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
     margin-right: auto;
 }
 
+/* Style for MetaMartian link */
+.community-members-container a,
+.metamartian-link {
+    text-decoration: none !important;
+    color: #8a2be2 !important;
+    border-bottom: none !important;
+}
+
+.community-members-container a:hover,
+.metamartian-link:hover {
+    text-decoration: none !important;
+    color: #9c27b0 !important;
+    border-bottom: none !important;
+}
+
+/* Specific style for MetaMartian text */
+.metamartian-text {
+    color: #8a2be2 !important;
+    border-bottom: none !important;
+    text-decoration: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Override any paragraph styles */
+p.metamartian-text {
+    color: #8a2be2 !important;
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.metamartian-text::after,
+.metamartian-text::before {
+    display: none !important;
+}
+
 .community-members-container h2 {
     margin-top: 0;
     margin-bottom: 1rem;

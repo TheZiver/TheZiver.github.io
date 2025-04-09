@@ -4,17 +4,22 @@
     display: inline-block;
 }
 
-/* Add dropdown toggle indicator */
-.dropdown > a::after {
-    content: '▼';
+/* Dropdown toggle button */
+.dropdown-toggle {
+    background: none;
+    border: none;
+    color: #4dd0e1;
     font-size: 0.7em;
-    margin-left: 5px;
-    display: inline-block;
+    padding: 0 5px;
+    margin-left: 2px;
+    cursor: pointer;
     vertical-align: middle;
     transition: transform 0.2s ease;
+    position: relative;
+    top: -1px;
 }
 
-.dropdown.active > a::after {
+.dropdown.active .dropdown-toggle {
     transform: rotate(180deg);
 }
 
@@ -37,7 +42,7 @@
     width: 200px; /* Same width as nav buttons */
     max-width: 90vw; /* Limit to 90% of viewport width */
     box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    z-index: 101;
+    z-index: 1001; /* Increased z-index to ensure it's above other elements */
     border-radius: 4px;
     border: 1px solid #333337;
     margin-top: 0; /* No gap */
@@ -45,6 +50,8 @@
     left: 50%;
     transform: translateX(-50%);
     top: 100%; /* Position right at the bottom of the parent */
+    max-height: 80vh; /* Limit height to 80% of viewport height */
+    overflow-y: auto; /* Add scrolling if needed */
 }
 
 /* Add a pseudo-element at the top of the dropdown to bridge any remaining gap */
@@ -102,15 +109,20 @@
 
     /* Add mobile-specific dropdown toggle button */
     .mobile-dropdown-toggle {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         margin-left: 5px;
         padding: 5px 10px;
-        background-color: #4dd0e1;
-        color: #121212;
-        border-radius: 4px;
+        background-color: rgba(77, 208, 225, 0.2);
+        color: #4dd0e1;
+        border-radius: 50%;
         font-size: 0.8em;
         vertical-align: middle;
         cursor: pointer;
+        width: 30px;
+        height: 30px;
+        z-index: 9999;
     }
 }
 
@@ -124,19 +136,97 @@
     z-index: 1000;
 }
 
+/* Dropdown toggle button styles */
+.dropdown-toggle {
+    background: none;
+    border: none;
+    color: #4dd0e1;
+    font-size: 0.7em;
+    padding: 0 5px;
+    margin-left: 2px;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: transform 0.2s ease;
+    position: relative;
+    top: -1px;
+    z-index: 1002; /* Ensure it's above other elements */
+}
+
+/* Special styles for theme-aquarium */
+.theme-aquarium .dropdown-content {
+    z-index: 9999; /* Very high z-index to ensure it's above everything */
+    position: absolute; /* Use absolute positioning */
+    top: 100%; /* Position right below the navbar */
+    max-height: 80vh; /* Limit height */
+    background-color: rgba(0, 0, 0, 0.9); /* Darker background for better visibility */
+    border: 2px solid #4dd0e1; /* Highlight border */
+}
+
+/* When dropdown is shown in aquarium theme */
+.theme-aquarium .dropdown-content.show {
+    display: block !important; /* Force display */
+}
+
+.dropdown.active .dropdown-toggle {
+    transform: rotate(180deg);
+}
+
 /* Mobile-specific dropdown styles */
 @media (max-width: 767px) {
+    /* Improved dropdown styles for mobile */
+    .dropdown-content.show {
+        position: fixed;
+        top: 40px; /* Adjust for mobile navbar height */
+        left: 0;
+        width: 100%;
+        z-index: 9999;
+        background-color: rgba(30, 30, 30, 0.95); /* Dark background for mobile */
+        border-left: 2px solid #4dd0e1; /* Highlight border */
+        border-right: 2px solid #4dd0e1; /* Highlight border */
+        border-bottom: 2px solid #4dd0e1; /* Highlight border */
+        display: block !important; /* Force display */
+        max-height: 80vh; /* Limit height */
+        overflow-y: auto; /* Enable scrolling if needed */
+    }
+
+    /* Make dropdown toggle more visible and tappable on mobile */
+    .dropdown-toggle {
+        width: 30px !important; /* Larger tap target */
+        height: 30px !important; /* Larger tap target */
+        font-size: 1em !important; /* Larger icon */
+        background-color: rgba(77, 208, 225, 0.2) !important; /* Visible background */
+        border-radius: 50% !important;
+        margin-left: 5px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
     /* Make the dropdown button more obvious */
     .dropdown > a {
         position: relative;
         z-index: 1001; /* Above the dropdown content */
+        background-color: rgba(77, 208, 225, 0.1); /* Light highlight */
+        border-radius: 4px;
     }
 
-    /* Make the dropdown arrow more visible */
-    .dropdown > a::after {
+    /* Make the dropdown toggle more visible on mobile */
+    .dropdown-toggle {
         font-size: 0.8em;
-        margin-left: 8px;
+        margin-left: 5px;
         color: #4dd0e1;
+        background-color: rgba(77, 208, 225, 0.1);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Style for active dropdown button */
+    .dropdown.active > a {
+        background-color: rgba(77, 208, 225, 0.2); /* Stronger highlight when active */
     }
 
     /* Style the dropdown content */
@@ -150,6 +240,19 @@
         box-shadow: 0 8px 16px rgba(0,0,0,0.5);
         background-color: #222226; /* Darker background */
         padding: 5px 0;
+        border-left: 3px solid #4dd0e1; /* Accent color border */
+        border-right: 3px solid #4dd0e1; /* Accent color border */
+        border-bottom: 3px solid #4dd0e1; /* Accent color border */
+        animation: fadeIn 0.2s ease-in-out; /* Subtle animation */
+        max-height: 80vh; /* Limit height to 80% of viewport height */
+        overflow-y: auto; /* Add scrolling if needed */
+        position: absolute; /* Ensure proper positioning */
+        z-index: 1001; /* High z-index to appear above other elements */
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     /* Style the dropdown links */

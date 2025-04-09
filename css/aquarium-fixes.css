@@ -1,0 +1,33 @@
+/**
+ * Special fixes for the Aquarium page
+ * - Completely disables dropdown menu
+ * - Ensures proper styling for the page
+ */
+
+/* Completely hide any dropdown content on the aquarium page */
+.theme-aquarium .dropdown-content,
+.theme-aquarium .dropdown-toggle,
+.theme-aquarium .mobile-dropdown-toggle {
+    display: none !important;
+}
+
+/* Make sure the swimming fish container doesn't overlap */
+.theme-aquarium .swimming-images-container {
+    z-index: 1 !important;
+}
+
+/* Ensure proper styling for the navigation */
+.theme-aquarium .main-nav {
+    z-index: 100 !important;
+}
+
+/* Ensure the Communities link is properly styled */
+.theme-aquarium .main-nav a[href="communities.html"] {
+    color: #cccccc !important;
+    background: none !important;
+}
+
+.theme-aquarium .main-nav a[href="communities.html"]:hover {
+    color: #ffffff !important;
+    background-color: #333337 !important;
+}

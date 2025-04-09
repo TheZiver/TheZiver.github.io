@@ -1,8 +1,8 @@
 /**
  * Dropdown menu functionality for mobile and desktop
- * - Always opens dropdown when clicking Communities tab
- * - Prevents navigation to the current page on both mobile and desktop
- * - Adds a direct navigation link to Communities page in the dropdown
+ * - Allows navigation to Communities page when clicking the Communities tab
+ * - Opens dropdown only when clicking the dropdown toggle button
+ * - Works on both mobile and desktop devices
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Get all navigation links
@@ -11,90 +11,140 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get the Communities link specifically
     const communitiesLink = document.querySelector('.main-nav a[href="communities.html"]');
 
+    // Get the Communities dropdown toggle button
+    const communitiesToggle = document.querySelector('.dropdown-toggle');
+
     // Check if we're on mobile
     const isMobile = window.innerWidth <= 767;
 
+    // Check if we're on the aquarium page
+    const isAquariumPage = window.location.pathname.includes('aquarium.html');
+
+    // Skip dropdown functionality if we're on the aquarium page
+    if (isAquariumPage) {
+        console.log('Aquarium page detected - dropdown functionality disabled');
+        return;
+    }
+
     // Add a mobile-specific button for the dropdown if on mobile
-    if (isMobile && communitiesLink) {
-        // Create a mobile-specific button
-        const mobileButton = document.createElement('span');
-        mobileButton.className = 'mobile-dropdown-toggle';
-        mobileButton.textContent = '▼';
-        mobileButton.setAttribute('aria-label', 'Toggle dropdown menu');
+    if (isMobile) {
+        // For all dropdown menus, not just Communities
+        document.querySelectorAll('.dropdown').forEach(dropdown => {
+            const link = dropdown.querySelector('a');
+            if (!link) return;
 
-        // Insert the button after the Communities link
-        communitiesLink.parentNode.insertBefore(mobileButton, communitiesLink.nextSibling);
+            // Create a mobile-specific button
+            const mobileButton = document.createElement('span');
+            mobileButton.className = 'mobile-dropdown-toggle';
+            mobileButton.textContent = '▼';
+            mobileButton.setAttribute('aria-label', 'Toggle dropdown menu');
+            mobileButton.style.padding = '8px';
+            mobileButton.style.marginLeft = '5px';
 
-        // Add click handler to the mobile button
-        mobileButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
+            // Insert the button after the link
+            link.parentNode.insertBefore(mobileButton, link.nextSibling);
 
-            // Find the dropdown parent
-            const dropdown = mobileButton.closest('.dropdown');
-            if (dropdown) {
+            // Add click handler to the mobile button
+            mobileButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+
                 // Toggle dropdown visibility
                 dropdown.classList.toggle('active');
                 const dropdownContent = dropdown.querySelector('.dropdown-content');
                 if (dropdownContent) {
                     dropdownContent.classList.toggle('show');
-                    console.log('Communities dropdown toggled via mobile button');
+                    console.log('Dropdown toggled via mobile button');
                 }
-            }
-        });
+            });
 
-        // Add touch handler to the mobile button
-        mobileButton.addEventListener('touchstart', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
+            // Add touch handler to the mobile button
+            mobileButton.addEventListener('touchstart', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
 
-            // Find the dropdown parent
-            const dropdown = mobileButton.closest('.dropdown');
-            if (dropdown) {
                 // Toggle dropdown visibility
                 dropdown.classList.toggle('active');
                 const dropdownContent = dropdown.querySelector('.dropdown-content');
                 if (dropdownContent) {
                     dropdownContent.classList.toggle('show');
-                    console.log('Communities dropdown toggled via mobile button touch');
+                    console.log('Dropdown toggled via mobile button touch');
+                }
+            }, {passive: false});
+        });
+    }
+
+    // Add a dropdown toggle button to each dropdown menu
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        const link = dropdown.querySelector('a');
+        if (!link) return;
+
+        // Create the toggle button if it doesn't exist
+        if (!dropdown.querySelector('.dropdown-toggle')) {
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'dropdown-toggle';
+            toggleBtn.innerHTML = '▼';
+            toggleBtn.setAttribute('aria-label', 'Toggle dropdown menu');
+            toggleBtn.setAttribute('type', 'button');
+
+            // Insert the toggle button after the link
+            dropdown.insertBefore(toggleBtn, link.nextSibling);
+        }
+    });
+
+    // Update the Communities toggle button reference
+    const communitiesToggle = document.querySelector('.dropdown:has(a[href="communities.html"]) .dropdown-toggle');
+
+    // Add a specific touch handler for mobile toggle button
+    if (communitiesToggle) {
+        communitiesToggle.addEventListener('touchend', function(event) {
+            // Prevent default to avoid navigation
+            event.preventDefault();
+
+            // Find the dropdown parent
+            const dropdown = communitiesToggle.closest('.dropdown');
+            if (dropdown) {
+                // Check if dropdown is already active
+                const isActive = dropdown.classList.contains('active');
+
+                // Toggle this dropdown
+                dropdown.classList.toggle('active');
+                const dropdownContent = dropdown.querySelector('.dropdown-content');
+                if (dropdownContent) {
+                    dropdownContent.classList.toggle('show');
+                    console.log('Communities dropdown toggled via toggle touchend, was ' + (isActive ? 'open' : 'closed'));
                 }
             }
         }, {passive: false});
     }
 
-    // Add a direct click handler to the Communities link
-    if (communitiesLink) {
-        communitiesLink.addEventListener('click', function(event) {
-            // Always prevent default navigation for Communities link
-            event.preventDefault();
+    // Prevent navigation to current page for all links
+    // This is the main handler that prevents clicking on the current page link
+    document.addEventListener('click', function(event) {
+        // Check if the clicked element is a link
+        let target = event.target;
 
-            // Find the dropdown parent
-            const dropdown = communitiesLink.closest('.dropdown');
+        // If we clicked on something inside a link (like an icon), find the parent link
+        while (target && target !== document && target.tagName !== 'A') {
+            target = target.parentNode;
+        }
+
+        // If we found a link and it has the active class, prevent navigation
+        if (target && target.tagName === 'A' && target.classList.contains('active')) {
+            event.preventDefault();
+            console.log('Prevented navigation to current page');
+
+            // If it's a dropdown link, toggle the dropdown
+            const dropdown = target.closest('.dropdown');
             if (dropdown) {
-                // Toggle dropdown visibility
-                dropdown.classList.toggle('active');
                 const dropdownContent = dropdown.querySelector('.dropdown-content');
                 if (dropdownContent) {
+                    dropdown.classList.toggle('active');
                     dropdownContent.classList.toggle('show');
-                    console.log('Communities dropdown toggled directly');
                 }
             }
-        });
-    }
-
-    // Prevent navigation to current page
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(event) {
-            // Skip the Communities link as it's handled separately
-            if (link === communitiesLink) return;
-
-            // Check if this link is for the current page
-            if (link.classList.contains('active')) {
-                // Prevent navigation to the same page
-                event.preventDefault();
-            }
-        });
-    });
+        }
+    }, true); // Use capture phase to ensure this runs before other handlers
 
     // Function to toggle dropdown visibility
     function toggleDropdown(dropdown) {
@@ -157,31 +207,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Get all dropdown toggle links
-    const dropdownToggles = document.querySelectorAll('.dropdown > a');
+    // Get all dropdown toggle buttons
+    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
 
-    // Add click event listener to each dropdown toggle link
+    // Add click event listener to each dropdown toggle button
     dropdownToggles.forEach(toggle => {
         toggle.addEventListener('click', function(event) {
-            // Check if this is the Communities link
-            if (toggle.textContent.trim().includes('COMMUNITIES')) {
-                // Always prevent default for Communities link to allow dropdown toggle
-                event.preventDefault();
+            // Always prevent default for toggle buttons
+            event.preventDefault();
 
-                // Get the parent dropdown
-                const dropdown = toggle.closest('.dropdown');
-                toggleDropdown(dropdown);
+            // Get the parent dropdown
+            const dropdown = toggle.closest('.dropdown');
+            toggleDropdown(dropdown);
 
-                // Log for debugging
-                console.log('Communities dropdown toggled');
-            } else if (toggle.classList.contains('active')) {
-                // For other active links, just toggle the dropdown
-                event.preventDefault();
-
-                // Get the parent dropdown
-                const dropdown = toggle.closest('.dropdown');
-                toggleDropdown(dropdown);
-            }
+            // Log for debugging
+            console.log('Dropdown toggled via toggle button');
         });
     });
 
@@ -197,22 +237,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Add specific touch handler for the Communities link on mobile
-    if (communitiesLink) {
-        communitiesLink.addEventListener('touchstart', function(event) {
-            // Always prevent default for touch on Communities link
+    // Add specific touch handler for the dropdown toggle button on mobile
+    if (communitiesToggle) {
+        communitiesToggle.addEventListener('touchstart', function(event) {
+            // Always prevent default for touch on toggle button
             event.preventDefault();
             event.stopPropagation();
 
             // Find the dropdown parent
-            const dropdown = communitiesLink.closest('.dropdown');
+            const dropdown = communitiesToggle.closest('.dropdown');
             if (dropdown) {
                 // Toggle dropdown visibility
                 dropdown.classList.toggle('active');
                 const dropdownContent = dropdown.querySelector('.dropdown-content');
                 if (dropdownContent) {
                     dropdownContent.classList.toggle('show');
-                    console.log('Communities dropdown toggled via direct touch');
+                    console.log('Communities dropdown toggled via toggle button touch');
                 }
             }
         }, {passive: false});
