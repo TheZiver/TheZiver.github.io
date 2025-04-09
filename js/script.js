@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.timerElementsMissing = false;
 
     // --- URLs for Data ---
-    const PRIMARY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw"; // For general site data
+    const PRIMARY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw"; // For special days and products
     const COMMUNITY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw"; // Specifically for community lists/info
     const ROSE_FISH_MEMBERS_URL = "https://gist.githubusercontent.com/TheZiver/9b85c8b8b6c1b4caa17dda8d37dc18ac/raw"; // For Rose Fish members list
 
@@ -585,19 +585,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function loadStoreInfo(data) {
-        if (!data?.store) {
-            if (luxuryMottoElement) luxuryMottoElement.innerHTML = '<i>Store data not available</i>';
+    function loadProducts(data) {
+        if (!data?.store?.products || !Array.isArray(data.store.products) || !luxuryProductsListElement) {
             return;
         }
 
-        // Load motto only
-        if (luxuryMottoElement) {
-            let motto = data.store.luxury_trash || '';
-            if (motto.startsWith('"') && motto.endsWith('"')) {
-                motto = motto.substring(1, motto.length - 1);
-            }
-            luxuryMottoElement.innerHTML = motto ? `<i>"${escapeHtml(motto)}"</i>` : '<i>Motto not available.</i>';
+        // Clear loading message
+        luxuryProductsListElement.innerHTML = '';
+
+        // Create product grid
+        const productsContainer = document.getElementById('products-container');
+        if (productsContainer) {
+            productsContainer.innerHTML = ''; // Clear loading message
+
+            data.store.products.forEach(product => {
+                if (!product.item || !product.link) return;
+
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product-item';
+
+                const productLink = document.createElement('a');
+                productLink.href = product.link;
+                productLink.target = '_blank';
+                productLink.rel = 'noopener noreferrer';
+                productLink.className = 'product-link';
+                productLink.textContent = product.item;
+
+                const productPrice = document.createElement('div');
+                productPrice.className = 'product-price';
+                productPrice.textContent = product.price || '';
+
+                productDiv.appendChild(productLink);
+                productDiv.appendChild(productPrice);
+                productsContainer.appendChild(productDiv);
+            });
         }
     }
 
@@ -904,17 +925,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get references to all elements needed by the script
         getAllElements();
 
-        // Load store data immediately since it's needed for the current page
-        if (luxuryMottoElement || luxuryProductsListElement) {
+        // Load products data immediately since it's needed for the current page
+        if (luxuryProductsListElement) {
             fetch(PRIMARY_DATA_URL)
                 .then(response => response.json())
                 .then(data => {
-                    loadStoreInfo(data);
+                    loadProducts(data);
                 })
                 .catch(error => {
-                    console.error('Error loading store data:', error);
-                    if (luxuryMottoElement) {
-                        luxuryMottoElement.innerHTML = '<i>Error loading store info</i>';
+                    console.error('Error loading products data:', error);
+                    const productsContainer = document.getElementById('products-container');
+                    if (productsContainer) {
+                        productsContainer.innerHTML = '<div class="loading-message">Error loading products. Please try again later.</div>';
                     }
                 });
         }
@@ -981,14 +1003,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Process calendar data first using primary data
                 processSpecialDays(primaryData);
 
-                // --- Populate General Content (using primaryData) ---
-                loadIntro(primaryData);
-                loadMeaningAndPrinciples(primaryData); // Handles principles list and note
-                loadCommunityInfo(primaryData); // MOVED: Load community descriptions (verified/certified/known info) using primaryData
-                loadDailyInfo(primaryData);
-                loadRoseFishInfo(primaryData);
-                loadRoseFishMembers(primaryData);
-                loadStoreInfo(primaryData);
+                // Only load products from external data
+                loadProducts(primaryData);
+
+                // Load Rose Fish members
+                loadRoseFishMembers();
 
                 // Render calendar only if its elements exist on this page
                 if (calendarGrid && monthYearDisplay && weekdaysContainer) {

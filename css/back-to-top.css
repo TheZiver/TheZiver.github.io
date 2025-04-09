@@ -3,17 +3,15 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 50px;
-    height: 50px;
-    border-radius: 8px; /* Changed from circle to rounded square */
-    background-color: rgba(77, 208, 225, 0.8); /* Using the accent color with transparency */
-    color: #fff;
-    font-size: 20px; /* Slightly smaller font for the triangle */
+    width: 40px;
+    height: 40px;
+    background-color: transparent; /* No background */
+    color: #4dd0e1; /* Blue triangle */
+    font-size: 24px; /* Larger font for the triangle */
     border: none;
     cursor: pointer;
     display: none; /* Hidden by default */
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
     opacity: 0;
     transform: translateY(20px);
@@ -29,28 +27,16 @@
 }
 
 #back-to-top:hover, #back-to-top:focus {
-    background-color: rgba(77, 208, 225, 1); /* Full opacity on hover */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     outline: none;
 }
 
-/* Theme-specific styles */
+/* Theme-specific styles - only color changes */
 body.theme-rosefish #back-to-top {
-    background-color: rgba(220, 20, 60, 0.8); /* Rose color with transparency */
-}
-
-body.theme-rosefish #back-to-top:hover,
-body.theme-rosefish #back-to-top:focus {
-    background-color: rgba(220, 20, 60, 1); /* Full opacity on hover */
+    color: #dc143c; /* Rose color */
 }
 
 body.theme-store #back-to-top {
-    background-color: rgba(212, 175, 55, 0.8); /* Gold color with transparency */
-}
-
-body.theme-store #back-to-top:hover,
-body.theme-store #back-to-top:focus {
-    background-color: rgba(212, 175, 55, 1); /* Full opacity on hover */
+    color: #d4af37; /* Gold color */
 }
 
 /* Only show on mobile devices */

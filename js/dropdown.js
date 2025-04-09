@@ -38,6 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
                 openDropdown.classList.remove('show');
             });
+            document.querySelectorAll('.dropdown.active').forEach(activeDropdown => {
+                if (activeDropdown !== dropdown) {
+                    activeDropdown.classList.remove('active');
+                }
+            });
 
             // Show this dropdown
             dropdownContent.classList.add('show');

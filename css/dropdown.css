@@ -76,6 +76,11 @@
 /* Show dropdown when active class is present (for mobile) */
 .dropdown-content.show {
     display: block;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
 }
 
 /* Style for active dropdown */
@@ -117,6 +122,11 @@
         width: 180px; /* Slightly smaller on mobile */
         min-width: 0;
         max-width: 95vw; /* Limit to 95% of viewport width on mobile */
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1001;
     }
 
     .fish-gallery {

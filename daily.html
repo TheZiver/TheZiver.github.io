@@ -35,6 +35,13 @@
     <section aria-labelledby="daily-event-heading">
         <!-- Daily VRChat image -->
         <img src="images/daily_vrchat.png" alt="Daily VRChat Fish Logo" class="community-image centered" loading="lazy">
+
+        <!-- Happening Now Container (moved above calendar) -->
+        <div id="happening-now-container" style="display: none;">
+            <span id="happening-now-message"></span><br>
+            <a id="happening-now-link" href="#" target="_blank" rel="noopener noreferrer">Click here to join the instance</a>
+        </div>
+
         <!-- START: VRChat Calendar -->
         <div class="calendar-container">
             <div class="calendar-header">
@@ -69,23 +76,74 @@
             <span id="closing-countdown-label">Daily VRChat (<span id="closing-countdown-day-label">---</span>) instance closes at 23:00 UTC in:</span>
             <span id="closing-countdown-timer">Calculating...</span>
         </div>
-         <div id="daily-extra-info"><p><i>Loading event details...</i></p></div>
-        <div id="happening-now-container" style="display: none;">
-            <span id="happening-now-message"></span><br>
-            <a id="happening-now-link" href="#" target="_blank" rel="noopener noreferrer">Click here to join the instance</a>
-        </div>
+         <div id="daily-extra-info" style="padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin: 15px auto; max-width: 800px;">
+             <h3 style="text-align: center; margin-top: 0; margin-bottom: 15px; font-size: 1.2em;">DAILY VRCHAT INFORMATION</h3>
+             <div style="display: flex; flex-wrap: wrap; justify-content: space-between; font-size: 0.9em;">
+                <div style="flex: 1; min-width: 180px; margin-right: 10px;">
+                    <strong style="font-size: 0.95em;">Important Notes:</strong>
+                    <div style="margin: 5px 0 0 10px; line-height: 1.4;">
+                        • Feel free to join before the start time<br>
+                        • Moderators close the instance when event ends<br>
+                        • Everyone is kicked when instance closes
+                    </div>
+                </div>
+                <div style="flex: 1; min-width: 180px;">
+                    <strong style="font-size: 0.95em;">Today's Instance:</strong>
+                    <div style="margin: 5px 0 0 10px; line-height: 1.4;">
+                        • Click today's date on the calendar below<br>
+                        • Instance changes daily based on day of week
+                    </div>
+                </div>
+             </div>
+         </div>
 
         <!-- Daily VRChat Details -->
-        <h2 id="daily-event-heading">MORE ABOUT DAILY VRCHAT</h2>
         <!-- Image can remain static or be set by JS -->
         <!-- Image moved above calendar -->
-        <div id="daily-description"><p><i>Loading description...</i></p></div>
+        <div id="daily-description" style="line-height: 1.6; max-width: 800px; margin: 15px auto; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
+            <h2 id="daily-event-heading" style="text-align: center; margin-top: 0; margin-bottom: 15px; font-size: 1.4em; color: inherit;">MORE ABOUT DAILY VRCHAT</h2>
+            <p style="margin-bottom: 15px;">
+                Public daily event that lets people freely express themselves without many restrictions. People are given the freedom to be as chaotic, offensive, and loud as they wish to be.
+            </p>
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-top: 15px; font-size: 0.9em;">
+                <div style="flex: 1; min-width: 180px; margin-right: 10px;">
+                    <strong style="font-size: 0.95em;">Event Details:</strong>
+                    <div style="margin: 5px 0 0 10px; line-height: 1.4;">
+                        • Time: 21:00 UTC - 23:00 UTC<br>
+                        • Days: Every day<br>
+                        • Location: Changes daily
+                    </div>
+                </div>
+                <div style="flex: 1; min-width: 180px;">
+                    <strong style="font-size: 0.95em;">How to Join:</strong>
+                    <div style="margin: 5px 0 0 10px; line-height: 1.4;">
+                        • Click today's date on the calendar
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Rules loaded from JSON -->
-        <div id="daily-rules">
-            <i>Loading rules...</i>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; max-width: 800px; margin: 20px auto;">
+            <div id="daily-rules" style="flex: 1; min-width: 300px; line-height: 1.6; padding: 20px; border: 1px solid #ddd; border-radius: 8px; margin: 0 10px 20px 0;">
+                <h3 style="text-align: center; margin-bottom: 15px;">EVENT RULES</h3>
+                <ol style="padding-left: 30px; font-size: 1.1em;">
+                    <li style="margin-bottom: 15px;">NSFW avatars are not allowed</li>
+                    <li style="margin-bottom: 15px;">Crasher avatars are not allowed</li>
+                </ol>
+                <p style="text-align: center; font-weight: bold; margin-top: 15px;">
+                    Breaking these rules will result in being kicked or banned
+                </p>
+            </div>
+
+            <div id="daily-warning" style="flex: 1; min-width: 300px; line-height: 1.6; padding: 20px; border: 2px solid #ffc107; background-color: rgba(255, 193, 7, 0.1); border-radius: 8px; margin: 0 0 20px 0;">
+                <h3 style="text-align: center; color: #ff8f00; margin-bottom: 15px;">⚠️<strong>WARNING!</strong> ⚠️</h3>
+                <p class="warning" style="font-size: 1.1em; color: #ff6d00;">
+                    This daily event is not your safe space. Moderators won't assist you with any hateful, racist, or homophobic behavior. And will only enforce 2 rules, If you get easily emotionally distressed <strong>DO NOT GO TO THIS EVENT</strong><br><br>
+                    VRChat's Terms of Service and Guidelines still apply, and violations could result in your account being banned.
+                </p>
+            </div>
         </div>
-        <div id="daily-warning"><p class="warning"><i>Loading warning...</i></p></div>
     </section>
 
     <!-- Fish animation removed -->

@@ -444,8 +444,6 @@ img[src="images/meaning_of_fish.png"] {
     list-style: none;
     padding-left: 0;
     display: grid;
-    /* Responsive grid that changes based on screen size */
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 15px; /* Moderate spacing between tiles */
     margin-top: 20px; /* Add some space above the grid */
     justify-content: center; /* Center the grid */
@@ -453,6 +451,31 @@ img[src="images/meaning_of_fish.png"] {
     margin-right: auto;
     max-width: 800px; /* Limit width to ensure centering */
     width: 100%; /* Take full width of container */
+}
+
+/* Simple, predictable responsive layout */
+@media (max-width: 599px) {
+    #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
+        display: block; /* Use block instead of grid for smallest screens */
+    }
+
+    #fish-verified-list li, #fish-certified-list li, #fish-known-list li, #fish-status-list li {
+        margin-bottom: 15px; /* Add spacing between items */
+    }
+}
+
+@media (min-width: 600px) and (max-width: 899px) {
+    #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Exactly 2 columns for medium screens */
+    }
+}
+
+@media (min-width: 900px) {
+    #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Exactly 3 columns for large screens */
+    }
 }
 
 /* --- Styles for Individual Community Tiles (List Items) --- */
@@ -476,37 +499,37 @@ img[src="images/meaning_of_fish.png"] {
 /* Control size of community list images */
 #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
     max-width: 100% !important;
-    width: 100px !important;
-    height: 100px !important;
+    width: 140px !important; /* Increased from 100px */
+    height: 140px !important; /* Increased from 100px */
     object-fit: contain !important;
 }
 
 /* Adjust image size for different screen sizes */
 @media (max-width: 800px) {
     #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
-        width: 90px !important;
-        height: 90px !important;
+        width: 120px !important; /* Increased from 90px */
+        height: 120px !important; /* Increased from 90px */
     }
 }
 
 @media (max-width: 600px) {
     #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
-        width: 60px !important;
-        height: 60px !important;
+        width: 100px !important; /* Increased from 60px */
+        height: 100px !important; /* Increased from 60px */
     }
 }
 
 @media (max-width: 400px) {
     #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
-        width: 40px !important;
-        height: 40px !important;
+        width: 80px !important; /* Increased from 40px */
+        height: 80px !important; /* Increased from 40px */
     }
 }
 
 @media (max-width: 320px) {
     #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
-        width: 35px !important;
-        height: 35px !important;
+        width: 70px !important; /* Increased from 35px */
+        height: 70px !important; /* Increased from 35px */
     }
     /* Single column for extremely small screens */
     #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
@@ -533,10 +556,10 @@ img[src="images/meaning_of_fish.png"] {
 .community-logo {
     max-width: 240px !important; /* Medium logo size */
     max-height: 240px !important;
-    width: auto !important;
-    height: auto !important;
+    width: 140px !important; /* Increased size */
+    height: 140px !important; /* Increased size */
     object-fit: contain !important;
-    margin-bottom: 8px; /* Reduced space below logo */
+    margin-bottom: 12px; /* Increased space below logo */
     margin-right: 0; /* Remove right margin */
     flex-shrink: 0;
     border-radius: 4px;
@@ -783,53 +806,68 @@ img[src="images/meaning_of_fish.png"] {
 .luxury-trash-theme p i { color: #FFEA00; } /* Style for the italic motto */
 .luxury-trash-theme ul#luxury-products-list li { color: #FFD700; } /* Ensure product list items have the color */
 
-/* Rose Fish Page Specific Styles (Black Background, White Text) */
+/* Rose Fish Page Specific Styles (Black Background, Dark Red Text) */
 body.theme-rosefish {
     background-color: #000000 !important; /* Black background for the whole page */
 }
 body.theme-rosefish .container {
     background-color: #000000 !important; /* Black background for the container */
     /* Override general container text color */
-    color: #FFFFFF; /* Default text color to white */
+    color: #801B23; /* Dark red text color */
 }
-/* Ensure paragraphs and list items inside the container are white */
+/* Ensure paragraphs and list items inside the container are dark red */
 body.theme-rosefish .container p,
 body.theme-rosefish .container li:not(#rosefish-members-list li), /* Exclude member list items styled below */
-body.theme-rosefish .container div:not(.rose-fish-theme div):not(.fish-animation) /* Exclude themed divs and animation */
+body.theme-rosefish .container div:not(.fish-animation) /* Exclude animation */
 {
-    color: #FFFFFF;
+    color: #801B23;
 }
-/* Keep links white unless overridden by theme */
+/* Keep links dark red unless overridden by theme */
 body.theme-rosefish .container a {
-    color: #f0f0f0; /* Light grey/white for default links */
+    color: #801B23; /* Dark red for default links */
 }
 body.theme-rosefish .container a:hover {
-    color: #ffffff;
+    color: #A52A2A; /* Slightly lighter on hover */
+}
+
+/* Keep navigation bar text white for better visibility */
+body.theme-rosefish .main-nav a {
+    color: #cccccc; /* Light grey for nav links */
+}
+body.theme-rosefish .main-nav a:hover {
+    color: #ffffff; /* White on hover */
+}
+body.theme-rosefish .main-nav a.active {
+    color: #121212; /* Dark text for active nav item */
+    background-color: #4dd0e1; /* Keep the original active background */
 }
 
 /* Style the pre tag holding the raw member list */
-body.theme-rosefish #rosefish-members-list pre {
+#rosefish-members-list pre {
     text-align: center; /* Center the text */
-    color: red;         /* Make the text red */
+    color: #801B23;     /* Consistent dark red color */
     font-family: inherit; /* Use the body's font */
     font-size: inherit;   /* Use the body's font size */
     line-height: inherit; /* Use the body's line height */
-    margin: 0;          /* Remove default pre margins */
+    margin: 0 auto;     /* Center the pre element */
     padding: 0;         /* Remove default pre padding */
     white-space: pre-wrap; /* Ensure wrapping */
+    max-width: 800px;   /* Limit width for better readability */
+    display: block;     /* Ensure it's a block element */
 }
 
-/* Rose Fish Theme (Keep existing red styles for headers/links within this section) */
+/* Rose Fish Theme (Consistent dark red styles for all elements) */
 .rose-fish-theme div, /* Target the loaded div */
 .rose-fish-theme p,
 .rose-fish-theme li,
 .rose-fish-theme h3,
-.rose-fish-theme ol { color: #FF6B6B; } /* Keep red */
-/* Override the general white link color set above for links *within* the rose-fish-theme section */
-.rose-fish-theme a { color: #FF8F8F !important; } /* Keep red, use !important if needed */
-.rose-fish-theme a:hover { color: #FFBDBD !important; } /* Keep light red */
-.rose-fish-theme h3 { color: #E57373 !important; }
-.rose-fish-theme ol li::marker { color: #FF6B6B; }
+.rose-fish-theme ol,
+.rose-fish-theme span { color: #801B23; } /* Consistent dark red */
+/* Links within the rose-fish-theme section */
+.rose-fish-theme a { color: #801B23 !important; } /* Dark red for links */
+.rose-fish-theme a:hover { color: #A52A2A !important; } /* Slightly lighter on hover */
+.rose-fish-theme h3 { color: #801B23 !important; } /* Same dark red as other text */
+.rose-fish-theme ol li::marker { color: #801B23; } /* Dark red bullet points */
 /* Style for Rose Fish members list */
 #rosefish-members-list { list-style: none; padding-left: 0; }
 #rosefish-members-list li {
@@ -844,14 +882,14 @@ body.theme-rosefish #rosefish-members-list pre {
 /* Specific styles for h4 (name) and p (info) within the list */
 #rosefish-members-list li h4 {
     display: block; /* Ensure name is on its own line */
-    color: red !important; /* Force red color */
+    color: #801B23 !important; /* Consistent dark red color */
     font-size: 1.05em; /* Keep existing size */
     margin: 0 0 5px 0; /* Reset default h4 margins and add bottom margin */
     font-weight: bold; /* Ensure name is bold */
 }
 #rosefish-members-list li p {
     display: block; /* Ensure info is on its own line */
-    color: red !important; /* Force red color */
+    color: #801B23 !important; /* Consistent dark red color */
     margin: 0; /* Reset default paragraph margins */
 }
 
@@ -976,22 +1014,25 @@ iframe {
 @media (max-width: 480px) {
     .cal-today-btn {
         position: absolute;
-        bottom: -45px;
+        top: 10px; /* Position at the top instead of bottom */
         right: 5px;
         margin-left: 0;
         font-size: 0.85em;
         padding: 4px 8px;
+        z-index: 10; /* Ensure it's above other elements */
     }
     .calendar-header {
         padding-bottom: 5px;
         flex-wrap: wrap;
         justify-content: center;
+        padding-top: 40px; /* Add space at the top for the Today button */
     }
     #start-day-controls {
-        margin-bottom: 45px;
+        margin-top: 10px; /* Reduced top margin */
+        margin-bottom: 10px; /* Reduced bottom margin */
     }
     .calendar-weekdays {
-        margin-top: 45px;
+        margin-top: 10px; /* Reduced top margin */
     }
     .calendar-header h3#cal-month-year {
         font-size: 1.1em;
@@ -1070,14 +1111,14 @@ iframe {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    font-size: 0.85em;
+    font-size: 0.75em; /* Reduced font size for mobile */
     cursor: default;
     transition: background-color 0.2s ease;
     overflow: hidden; /* Hide overflow, no scrollbars */
     position: relative;
     text-align: center;
     box-sizing: border-box; /* Include padding in height/width calculation */
-    min-height: 50px; /* Reduced minimum height for mobile */
+    min-height: 45px; /* Further reduced minimum height for mobile */
 }
 
 @media (min-width: 600px) {
@@ -1158,36 +1199,64 @@ iframe {
     word-wrap: break-word; /* Allow long words to break */
     overflow-wrap: normal; /* Only wrap at word boundaries */
     white-space: normal; /* Allow text to wrap */
+    width: 100%; /* Ensure it takes full width */
+    padding: 0 1px; /* Add minimal horizontal padding */
 }
 
 /* Use CSS clamp for responsive font sizing based on viewport width */
 .calendar-day .day-number {
-    font-size: clamp(0.8em, 2vw, 0.95em); /* Increased minimum size for better readability */
+    font-size: clamp(0.7em, 1.8vw, 0.9em); /* Reduced font size for better fit */
 }
 
 .calendar-day .daily-event-num {
-    font-size: clamp(0.65em, 1.5vw, 0.7em); /* Increased minimum size for better readability */
+    font-size: clamp(0.55em, 1.3vw, 0.65em); /* Reduced font size for better fit */
+    width: 100%; /* Ensure it takes full width */
+    padding: 0 1px; /* Add minimal horizontal padding */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
 }
 
 .calendar-day .event-location {
-    font-size: clamp(0.65em, 1.4vw, 0.7em); /* Increased minimum size for better readability */
-    transform: scale(0.95);
+    font-size: clamp(0.55em, 1.2vw, 0.65em); /* Reduced font size for better fit */
+    transform: scale(0.9); /* Slightly smaller scale */
+    max-width: 100%; /* Ensure text doesn't overflow */
+    width: 100%; /* Ensure it takes full width */
+    padding: 0 1px; /* Add minimal horizontal padding */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
 }
 
 /* Additional adjustments for different screen sizes */
 @media (max-width: 768px) {
     .calendar-day {
-        font-size: 0.8em;
-        padding: 2px 1px;
+        font-size: 0.7em;
+        padding: 1px 0px;
     }
     .calendar-day .event-location {
-        transform: scale(0.95);
+        transform: scale(0.85);
+        margin-top: -2px; /* Reduce space between elements */
+    }
+    .calendar-day .daily-event-num {
+        margin-top: -2px; /* Reduce space between elements */
     }
 }
 
-@media (max-width: 600px) {
+/* Even smaller screens */
+@media (max-width: 400px) {
+    .calendar-body,
+    .calendar-weekdays {
+        gap: 1px; /* Minimal gap for very small screens */
+    }
     .calendar-day {
-        font-size: 0.75em;
+        font-size: 0.65em;
+        padding: 0;
+        border-width: 1px;
+    }
+}
+
+@media (max-width: 600px) and (min-width: 401px) {
+    .calendar-day {
+        font-size: 0.7em;
         padding: 1px 1px;
     }
     .calendar-day .event-location {
@@ -1330,9 +1399,21 @@ iframe {
 }
 /* Specific margin for the last timer before the H2 */
 #closing-countdown-container { margin-bottom: 30px; }
-/* If happening now is shown, adjust margins */
-#happening-now-container:not([style*="display: none"]) { margin-bottom: 30px; }
-#happening-now-container:not([style*="display: none"]) ~ #closing-countdown-container { margin-bottom: 10px; }
+/* If happening now is shown, adjust margins and styling */
+#happening-now-container:not([style*="display: none"]) {
+    margin: 15px auto 25px auto;
+    padding: 12px 15px;
+    background-color: rgba(0, 191, 255, 0.15); /* Light blue background */
+    border: 2px solid var(--cal-secondary-color);
+    border-radius: 8px;
+    text-align: center;
+    max-width: 90%;
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
+}
+
+#happening-now-container:not([style*="display: none"]) ~ #closing-countdown-container {
+    margin-bottom: 10px;
+}
 /* Larger screens */
 @media (min-width: 600px) {
      #countdown-container, #closing-countdown-container, #happening-now-container { padding: 15px 20px; font-size: 1.2em; }
@@ -1576,32 +1657,32 @@ iframe {
 /* --- Theme: Rose Fish (Rose/Red/Blood) --- */
 body.theme-rosefish {
     background-color: #000000; /* Black background */
-    color: #FFFFFF; /* White text */
+    color: #801B23; /* Dark red text */
 }
 
 body.theme-rosefish .container {
     background-color: #000000; /* Black background */
-    color: #FFFFFF; /* White text */
-    border: 1px solid #DC143C; /* Crimson */
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+    color: #801B23; /* Dark red text */
+    border: 1px solid #801B23; /* Consistent dark red */
+    box-shadow: 0 0 15px rgba(128, 27, 35, 0.3);
 }
 
-body.theme-rosefish a { color: #FF69B4; } /* Hot pink links */
-body.theme-rosefish a:hover { color: #FFB6C1; } /* Light pink */
-body.theme-rosefish hr { border-top-color: #DC143C; }
+body.theme-rosefish a { color: #801B23; } /* Dark red links */
+body.theme-rosefish a:hover { color: #A52A2A; } /* Slightly lighter on hover */
+body.theme-rosefish hr { border-top-color: #801B23; }
 
 body.theme-rosefish h1,
 body.theme-rosefish h2,
-body.theme-rosefish h3 { /* Override default gradient */
-    background: linear-gradient(120deg, #DC143C, #FF1493); /* Crimson to Deep Pink */
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    animation: none; /* Disable default flow animation */
+body.theme-rosefish h3 { /* Use solid color instead of gradient */
+    background: none;
+    background-clip: initial;
+    -webkit-background-clip: initial;
+    color: #801B23;
+    -webkit-text-fill-color: initial;
+    animation: none;
 }
 
-body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
+body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
 
 /* --- Support Page Styles --- */
 .support-header {
