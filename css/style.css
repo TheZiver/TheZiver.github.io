@@ -44,6 +44,11 @@ body {
     padding: 0 0 20px 0;
     overflow-x: hidden;
     line-height: 1.7;
+    /* Prevent word breaking across the entire site */
+    word-break: normal;
+    word-wrap: normal;
+    overflow-wrap: normal;
+    hyphens: none;
 }
 
 /**
@@ -851,6 +856,10 @@ body.theme-rosefish .main-nav a.active {
     margin: 0 auto;     /* Center the pre element */
     padding: 0;         /* Remove default pre padding */
     white-space: pre-wrap; /* Ensure wrapping */
+    word-break: normal; /* Only break at word boundaries */
+    word-wrap: normal; /* Don't break long words */
+    overflow-wrap: normal; /* Only wrap at word boundaries */
+    hyphens: none; /* Prevent hyphenation */
     max-width: 800px;   /* Limit width for better readability */
     display: block;     /* Ensure it's a block element */
 }
@@ -1122,7 +1131,7 @@ iframe {
 
 @media (min-width: 600px) {
     .calendar-day {
-        min-height: 60px; /* Larger minimum height for desktop */
+        min-height: 90px; /* Increased minimum height for desktop to accommodate wrapping */
     }
 }
 
@@ -1156,6 +1165,13 @@ iframe {
     .calendar-day {
         font-size: 0.9em;
         padding: 8px 5px;
+        gap: 3px; /* Increase space between elements */
+    }
+    .calendar-day a,
+    .calendar-day.special-day a,
+    .calendar-day.special-day div:not([href]) {
+        padding: 8px 5px; /* Match parent padding */
+        gap: 3px; /* Match parent gap */
     }
 }
 /* Link inside calendar day (for REGULAR daily events) */
@@ -1168,10 +1184,11 @@ iframe {
     justify-content: flex-start;
     height: 100%;
     width: 100%;
-    padding: 0; /* Remove padding to prevent overflow */
+    padding: 4px 2px; /* Add padding for spacing */
     box-sizing: border-box;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    gap: 2px; /* Add gap between elements */
 }
 .calendar-day a:hover { color: inherit; background-color: rgba(255, 255, 255, 0.05); } /* Subtle hover for clickable days */
 .calendar-day:not(:has(a)):hover { background-color: #303034; } /* Hover effect only for non-linked cells */
@@ -1195,7 +1212,7 @@ iframe {
     line-height: 1;
     display: block;
     word-break: normal; /* Only break at word boundaries */
-    word-wrap: break-word; /* Allow long words to break */
+    word-wrap: normal; /* Don't break long words */
     overflow-wrap: normal; /* Only wrap at word boundaries */
     white-space: normal; /* Allow text to wrap */
     width: 100%; /* Ensure it takes full width */
@@ -1204,39 +1221,35 @@ iframe {
 
 /* Use CSS clamp for responsive font sizing based on viewport width */
 .calendar-day .day-number {
-    font-size: clamp(0.7em, 1.8vw, 0.9em); /* Reduced font size for better fit */
+    font-size: clamp(0.8em, 1.8vw, 1.0em); /* Adjusted font size for wrapping */
 }
 
 .calendar-day .daily-event-num {
-    font-size: clamp(0.55em, 1.3vw, 0.65em); /* Reduced font size for better fit */
+    font-size: clamp(0.7em, 1.6vw, 0.85em); /* Adjusted font size for wrapping */
     width: 100%; /* Ensure it takes full width */
     padding: 0 1px; /* Add minimal horizontal padding */
-    overflow: hidden; /* Hide overflow */
-    text-overflow: ellipsis; /* Add ellipsis for overflow text */
 }
 
 .calendar-day .event-location {
-    font-size: clamp(0.55em, 1.2vw, 0.65em); /* Reduced font size for better fit */
-    transform: scale(0.9); /* Slightly smaller scale */
+    font-size: clamp(0.7em, 1.6vw, 0.85em); /* Adjusted font size for wrapping */
+    transform: none; /* Remove scale transformation */
     max-width: 100%; /* Ensure text doesn't overflow */
     width: 100%; /* Ensure it takes full width */
     padding: 0 1px; /* Add minimal horizontal padding */
-    overflow: hidden; /* Hide overflow */
-    text-overflow: ellipsis; /* Add ellipsis for overflow text */
 }
 
 /* Additional adjustments for different screen sizes */
 @media (max-width: 768px) {
     .calendar-day {
-        font-size: 0.7em;
+        font-size: 0.8em;
         padding: 1px 0px;
     }
     .calendar-day .event-location {
-        transform: scale(0.85);
-        margin-top: -2px; /* Reduce space between elements */
+        transform: none; /* Remove scale transformation */
+        margin-top: 1px; /* Small space between elements */
     }
     .calendar-day .daily-event-num {
-        margin-top: -2px; /* Reduce space between elements */
+        margin-top: 1px; /* Small space between elements */
     }
 }
 
@@ -1247,7 +1260,7 @@ iframe {
         gap: 1px; /* Minimal gap for very small screens */
     }
     .calendar-day {
-        font-size: 0.65em;
+        font-size: 0.75em;
         padding: 0;
         border-width: 1px;
     }
@@ -1255,21 +1268,21 @@ iframe {
 
 @media (max-width: 600px) and (min-width: 401px) {
     .calendar-day {
-        font-size: 0.7em;
+        font-size: 0.8em;
         padding: 1px 1px;
     }
     .calendar-day .event-location {
-        transform: scale(0.9);
+        transform: none; /* Remove scale transformation */
     }
 }
 
 @media (max-width: 480px) {
     .calendar-day {
-        font-size: 0.7em;
+        font-size: 0.75em;
         padding: 1px 0px;
     }
     .calendar-day .event-location {
-        transform: scale(0.85);
+        transform: none; /* Remove scale transformation */
     }
 }
 
@@ -1279,30 +1292,30 @@ iframe {
         padding: 0;
     }
     .calendar-day .event-location {
-        transform: scale(0.8);
+        transform: none; /* Remove scale transformation */
     }
 }
 
 /* Very small screens */
 @media (max-width: 350px) {
     .calendar-day .event-location {
-        transform: scale(0.8);
+        transform: none; /* Remove scale transformation */
     }
     .calendar-day .day-number {
-        font-size: clamp(0.7em, 1.8vw, 0.8em);
+        font-size: clamp(0.85em, 2.0vw, 1.0em); /* Increased font size */
     }
     .calendar-day .daily-event-num {
-        font-size: clamp(0.65em, 1.3vw, 0.65em);
+        font-size: clamp(0.7em, 1.6vw, 0.8em); /* Increased font size */
     }
     .calendar-day .event-location {
-        font-size: clamp(0.65em, 1.3vw, 0.65em);
+        font-size: clamp(0.7em, 1.6vw, 0.8em); /* Increased font size */
     }
 }
 
 /* Extremely small screens */
 @media (max-width: 300px) {
     .calendar-day .event-location {
-        transform: scale(0.7);
+        transform: none; /* Remove scale transformation */
     }
     .calendar-body {
         gap: 1px;
@@ -1324,6 +1337,16 @@ iframe {
         justify-content: center;
         width: 100%;
     }
+    /* Adjust font sizes for extremely small screens */
+    .calendar-day .day-number {
+        font-size: clamp(0.8em, 1.8vw, 0.9em);
+    }
+    .calendar-day .daily-event-num {
+        font-size: clamp(0.65em, 1.5vw, 0.75em);
+    }
+    .calendar-day .event-location {
+        font-size: clamp(0.65em, 1.5vw, 0.75em);
+    }
 }
 /* Ordinal Event Number (Middle - for regular daily) */
 .calendar-day .daily-event-num {
@@ -1336,7 +1359,7 @@ iframe {
     opacity: 0.9;
     display: block;
     word-break: normal; /* Only break at word boundaries */
-    word-wrap: break-word; /* Allow long words to break */
+    word-wrap: normal; /* Don't break long words */
     overflow-wrap: normal; /* Only wrap at word boundaries */
     white-space: normal; /* Allow text to wrap */
 }
@@ -1347,16 +1370,16 @@ iframe {
     font-weight: bold;
     margin-top: 0px;
     margin-bottom: 0px;
-    line-height: 0.95; /* Even further reduced line height */
-    word-break: break-word; /* Allow breaking at any point if necessary */
-    word-wrap: break-word; /* Allow long words to break */
+    line-height: 1.1; /* Increased line height for better readability */
+    word-break: normal; /* Only break at word boundaries */
+    word-wrap: normal; /* Don't break long words */
     display: block;
     max-width: 100%;
-    overflow-wrap: break-word; /* Allow breaking at any point if necessary */
+    overflow-wrap: normal; /* Only wrap at word boundaries */
     white-space: normal; /* Allow text to wrap */
     /* transform is now controlled by media queries above */
-    letter-spacing: -0.03em; /* Further reduced letter spacing */
-    hyphens: auto; /* Allow hyphenation for better text fitting */
+    letter-spacing: normal; /* Normal letter spacing */
+    hyphens: none; /* Prevent hyphenation to avoid breaking words */
     padding: 0 1px; /* Add tiny horizontal padding */
 }
 
@@ -1503,11 +1526,12 @@ iframe {
         font-size: 16px; /* Base font size for better readability */
     }
 
-    /* Ensure all text content wraps properly */
+    /* Ensure all text content wraps properly without breaking words */
     p, li, a, div, span {
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        hyphens: auto;
+        word-wrap: normal;
+        overflow-wrap: normal;
+        word-break: normal;
+        hyphens: none;
     }
 
     /* Adjust heading sizes for mobile */
@@ -1590,7 +1614,7 @@ iframe {
 
     /* === CORE DAY CELL ADJUSTMENTS === */
     .calendar-day {
-        min-height: 95px;   /* INCREASED height to allow text wrapping */
+        min-height: 110px;   /* INCREASED height to allow text wrapping */
         padding: 4px 2px;     /* Reduced internal padding */
         font-size: 0.8em;   /* Smaller base font size */
         line-height: 1.2;   /* Adjust line height for smaller text */
@@ -1599,7 +1623,7 @@ iframe {
         flex-direction: column;
         justify-content: flex-start; /* Align content to top */
         align-items: center;
-        gap: 1px; /* Reduce space between elements inside */
+        gap: 2px; /* Increase space between elements inside */
     }
 
      /* Ensure link/div wrappers inside cells use the new padding */
@@ -1608,31 +1632,31 @@ iframe {
      .calendar-day.special-day div:not([href]) {
          padding: 4px 2px; /* Match parent padding */
          justify-content: flex-start; /* Align content to top */
-         gap: 1px; /* Match parent gap */
+         gap: 2px; /* Increase space between elements */
      }
 
     /* Day Number */
     .calendar-day .day-number {
-        font-size: 1em; /* Relative to parent's smaller font */
-        margin-bottom: 1px; /* Less space below */
+        font-size: 0.95em; /* Adjusted font size for wrapping */
+        margin-bottom: 2px; /* More space below */
     }
 
     /* Ordinal Event Number (e.g., 1264th) */
     .calendar-day .daily-event-num {
-        font-size: 0.75em; /* Make significantly SMALLER */
-        margin-top: 0px;
-        margin-bottom: 1px;
-        line-height: 1;    /* Tighten line height */
-        opacity: 0.8;      /* Make slightly less prominent */
+        font-size: 0.8em; /* Adjusted font size for wrapping */
+        margin-top: 1px;
+        margin-bottom: 2px;
+        line-height: 1.1;    /* Slightly increased line height for wrapping */
+        opacity: 0.9;      /* Make more prominent */
     }
 
     /* Event Location/Name (e.g., LUXURY TRASH) */
     .calendar-day .event-location {
-        font-size: 0.8em; /* Smaller location name */
-        line-height: 1.15; /* Tighter line height */
-        margin-top: 0px;
+        font-size: 0.8em; /* Adjusted font size for wrapping */
+        line-height: 1.2; /* Increased line height for better readability */
+        margin-top: 1px;
         max-width: 95%; /* Prevent text touching cell edges */
-        word-break: break-word; /* Ensure long words break */
+        word-break: normal; /* Only break at word boundaries */
     }
 
     .calendar-day.today {
@@ -2106,8 +2130,8 @@ p.metamartian-text {
     left: 0;
     right: 0;
     display: block;
-    word-break: break-word;
-    overflow-wrap: break-word;
+    word-break: normal;
+    overflow-wrap: normal;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
