@@ -444,9 +444,9 @@ img[src="images/meaning_of_fish.png"] {
     list-style: none;
     padding-left: 0;
     display: grid;
-    /* Always use 2-column grid to match the image */
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px; /* Increased spacing between tiles */
+    /* Always use 3-column grid */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px; /* Moderate spacing between tiles */
     margin-top: 20px; /* Add some space above the grid */
     justify-content: center; /* Center the grid */
     margin-left: auto;
@@ -460,7 +460,7 @@ img[src="images/meaning_of_fish.png"] {
     background-color: #222226; /* Darker tile background to match image */
     border: 1px solid #333337; /* Tile border */
     border-radius: 6px;
-    padding: 15px 10px; /* Increased padding */
+    padding: 10px 5px; /* Reduced padding for 3-column layout */
     display: flex; /* Use flex for content layout INSIDE the tile */
     flex-direction: column; /* Stack image and text vertically */
     align-items: center; /* Center content horizontally */
@@ -476,30 +476,53 @@ img[src="images/meaning_of_fish.png"] {
 /* Control size of community list images */
 #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
     max-width: 100% !important;
-    width: 120px !important;
-    height: 120px !important;
+    width: 100px !important;
+    height: 100px !important;
     object-fit: contain !important;
 }
 
 /* Adjust image size for different screen sizes */
 @media (max-width: 800px) {
     #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
-        width: 100px !important;
-        height: 100px !important;
+        width: 90px !important;
+        height: 90px !important;
     }
 }
 
 @media (max-width: 600px) {
     #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
-        width: 80px !important;
-        height: 80px !important;
+        width: 60px !important;
+        height: 60px !important;
     }
 }
 
 @media (max-width: 400px) {
     #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
-        width: 60px !important;
-        height: 60px !important;
+        width: 40px !important;
+        height: 40px !important;
+    }
+}
+
+@media (max-width: 320px) {
+    #fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
+        width: 35px !important;
+        height: 35px !important;
+    }
+    /* Maintain 3-column layout with minimal spacing */
+    #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px; /* Minimal gap for extremely small screens */
+    }
+    /* Minimal padding for extremely small screens */
+    #fish-verified-list li, #fish-certified-list li, #fish-known-list li, #fish-status-list li {
+        padding: 3px 1px;
+    }
+    /* Smaller font sizes for extremely small screens */
+    #fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b {
+        font-size: 0.7em;
+    }
+    #fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) {
+        font-size: 0.6em;
     }
 }
 
@@ -542,7 +565,7 @@ img[src="images/meaning_of_fish.png"] {
 /* Community Name (Line 1) */
 #fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b {
     display: block;
-    font-size: 1.05em;
+    font-size: 0.95em; /* Reduced font size for 3-column layout */
     font-weight: bold;
     margin-bottom: 3px;
     text-align: center; /* Ensure text is centered */
@@ -553,7 +576,7 @@ img[src="images/meaning_of_fish.png"] {
 /* Owner Info (was nth-of-type(1) after name bold) */
 #fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) {
     display: block; /* Changed to block for better centering */
-    font-size: 0.9em;
+    font-size: 0.8em; /* Reduced font size for 3-column layout */
     margin-bottom: 5px;
     text-align: center; /* Center the owner name */
     width: 100%; /* Full width to ensure proper centering */
@@ -563,19 +586,33 @@ img[src="images/meaning_of_fish.png"] {
 /* Adjust font size for different screen sizes */
 @media (max-width: 600px) {
     #fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b {
-        font-size: 0.95em;
+        font-size: 0.85em;
     }
     #fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) {
-        font-size: 0.8em;
+        font-size: 0.75em;
+    }
+    /* Always maintain 3-column layout */
+    #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px; /* Reduce gap on smaller screens */
     }
 }
 
 @media (max-width: 400px) {
     #fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b {
-        font-size: 0.85em;
+        font-size: 0.75em;
     }
     #fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) {
-        font-size: 0.7em;
+        font-size: 0.65em;
+    }
+    /* Maintain 3-column layout with even smaller gap */
+    #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px; /* Minimal gap for very small screens */
+    }
+    /* Reduce padding for very small screens */
+    #fish-verified-list li, #fish-certified-list li, #fish-known-list li, #fish-status-list li {
+        padding: 5px 2px;
     }
 }
 /* Owner Info (Line 3) */
@@ -1692,6 +1729,9 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
+    overflow: hidden; /* Prevent content from overflowing */
+    width: 100%; /* Ensure it takes full width of its parent */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .store-container h2 {
@@ -1702,6 +1742,10 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     margin-top: 1rem;
     background: transparent;
     padding: 0;
+    width: 100%; /* Ensure it takes full width of its parent */
+    max-width: 100%; /* Prevent it from exceeding container width */
+    box-sizing: border-box; /* Include padding in width calculation */
+    overflow: hidden; /* Prevent content from overflowing */
 }
 
 .store-container img {
@@ -1718,19 +1762,44 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
 
 /* --- Store Page Styles --- */
 .product-grid {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: 20px;
     background: #0a0a0a;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Reduced from 220px to 180px */
-    gap: 1.5rem; /* Reduced from 2rem to 1.5rem */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
 }
 
-/* Ensure 4 products per row on larger screens */
-@media (min-width: 800px) {
+/* Responsive grid adjustments */
+@media (max-width: 700px) {
     .product-grid {
-        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 500px) {
+    .product-grid {
+        gap: 12px;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 350px) {
+    .product-grid {
+        gap: 10px;
+        padding: 10px;
+    }
+}
+
+/* Adjust for small screens */
+@media (max-width: 400px) {
+    .product-grid {
+        padding: 0.8rem;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 0.6rem;
     }
 }
 
@@ -1756,29 +1825,72 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
 .product-card {
     background: #1a1a1a;
     border: 2px solid #d4af37;
-    border-radius: 8px;
     overflow: hidden;
     transition: all 0.3s ease;
-    padding: 0; /* Remove padding to allow image to fill */
+    padding: 0;
     text-align: center;
-    display: flex; /* Use flexbox for better control */
-    flex-direction: column; /* Stack items vertically */
-    font-size: 0.95em; /* Slightly smaller text */
+    display: flex;
+    flex-direction: column;
+    width: calc(33.333% - 20px); /* Exactly 3 per row with gap considered */
+    min-width: 0;
+    max-width: 250px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    flex: 0 0 auto; /* Don't allow flex to grow or shrink */
 }
 
 .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
+    border-color: #ffd700; /* Brighter gold on hover */
+}
+
+/* Adjust product card for smaller screens */
+@media (max-width: 600px) {
+    .product-card {
+        font-size: 0.9em;
+        border-width: 2px;
+        width: calc(33.333% - 15px); /* Maintain 3 per row with smaller gap */
+    }
+}
+
+@media (max-width: 400px) {
+    .product-card {
+        font-size: 0.85em;
+        border-width: 2px;
+        width: calc(33.333% - 12px); /* Maintain 3 per row with even smaller gap */
+        max-width: 120px; /* Limit maximum width on small screens */
+    }
 }
 
 /* Product Images */
 .product-image {
-    width: 100%; /* Make image fill card width */
-    height: auto; /* Maintain aspect ratio */
-    display: block; /* Remove extra space below image */
-    border-top-left-radius: 6px; /* Match card radius */
-    border-top-right-radius: 6px;
-    margin-bottom: 15px; /* Space between image and text */
+    width: 100%;
+    height: 150px;
+    display: block;
+    margin-bottom: 8px;
+    object-fit: contain;
+    object-position: center;
+    background-color: #111;
+    border-bottom: 1px solid #d4af37;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+/* Adjust product image spacing for smaller screens */
+@media (max-width: 600px) {
+    .product-image {
+        margin-bottom: 6px;
+        height: 120px;
+        padding: 4px;
+    }
+}
+
+@media (max-width: 400px) {
+    .product-image {
+        margin-bottom: 4px;
+        height: 90px;
+        padding: 3px;
+    }
 }
 
 /* Product Text */
@@ -1786,8 +1898,10 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     text-decoration: none;
     display: block;
     transition: all 0.2s ease;
-    margin-bottom: 8px;
-    padding: 0 12px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    color: inherit;
 }
 
 .product-title-link:hover {
@@ -1795,10 +1909,38 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
 }
 
 .product-name {
-    font-size: 1.1rem; /* Reduced from 1.2rem */
+    font-size: 0.95rem;
     color: #d4af37;
     position: relative;
-    display: inline-block;
+    display: block;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    font-weight: bold;
+    padding: 0 5px;
+    margin: 0 0 5px 0;
+    height: 2.4em; /* Fixed height for 2 lines */
+}
+
+/* Adjust product name size for smaller screens */
+@media (max-width: 600px) {
+    .product-name {
+        font-size: 0.85rem;
+        padding: 0 3px;
+        margin: 0 0 3px 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .product-name {
+        font-size: 0.75rem;
+        padding: 0 2px;
+        margin: 0 0 2px 0;
+        height: 2.2em;
+    }
 }
 
 /* Add underline effect on hover */
@@ -1821,12 +1963,29 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
 }
 
 .product-price {
-    font-size: 1rem; /* Reduced from 1.1rem */
-    margin-bottom: 15px; /* Increased from 12px to add space at bottom */
+    font-size: 1rem;
+    margin-bottom: 8px;
     color: #d4af37;
     font-weight: bold;
-    padding-left: 12px; /* Reduced from 15px */
-    padding-right: 12px; /* Reduced from 15px */
+    padding: 0 5px;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Adjust product price for smaller screens */
+@media (max-width: 600px) {
+    .product-price {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+        padding: 0 3px;
+    }
+}
+
+@media (max-width: 400px) {
+    .product-price {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+        padding: 0 2px;
+    }
 }
 
 /* Product Card Link */
@@ -1834,12 +1993,35 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #DC143C; }
     text-decoration: none;
     color: inherit;
     display: block;
+    width: calc(33.333% - 20px); /* Exactly 3 per row with gap considered */
+    box-sizing: border-box;
+    overflow: hidden;
+    max-width: 250px;
+    flex: 0 0 auto; /* Don't allow flex to grow or shrink */
+}
+
+/* Adjust product card link for smaller screens */
+@media (max-width: 600px) {
+    .product-card-link {
+        width: calc(33.333% - 15px); /* Maintain 3 per row with smaller gap */
+    }
+}
+
+@media (max-width: 400px) {
+    .product-card-link {
+        width: calc(33.333% - 12px); /* Maintain 3 per row with even smaller gap */
+        max-width: 120px; /* Limit maximum width on small screens */
+    }
 }
 
 /* Product Card Hover Effect */
 .product-card {
     cursor: pointer;
     height: 100%; /* Ensure the card fills the entire link wrapper */
+    width: 100%; /* Ensure the card takes full width of its grid cell */
+    margin: 0; /* Remove margin */
+    display: flex;
+    flex-direction: column;
 }
 
 .product-card:hover .product-image {

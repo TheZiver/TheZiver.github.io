@@ -1,8 +1,8 @@
 /**
  * Dropdown menu functionality for mobile and desktop
- * - Allows navigation to the communities page when clicking the main link
- * - When on the communities page, clicking the tab toggles the dropdown menu
+ * - Always opens dropdown when clicking Communities tab
  * - Prevents navigation to the current page on both mobile and desktop
+ * - Adds a direct navigation link to Communities page in the dropdown
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Get all navigation links
@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (link.classList.contains('active')) {
                 // Prevent navigation to the same page
                 event.preventDefault();
-                console.log('Prevented navigation to current page');
             }
         });
     });
@@ -45,14 +44,53 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Process all dropdown menus to add navigation links if needed
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        const toggle = dropdown.querySelector('> a');
+        const dropdownContent = dropdown.querySelector('.dropdown-content');
+
+        // Only process Communities dropdown
+        if (toggle && toggle.textContent.trim() === 'COMMUNITIES' && dropdownContent) {
+            // If we're not on the Communities page, add a navigation link
+            if (!toggle.classList.contains('active') && !dropdownContent.querySelector('.goto-communities')) {
+                // Create a separator
+                const separator = document.createElement('div');
+                separator.className = 'dropdown-separator';
+                separator.style.borderTop = '1px solid rgba(255, 255, 255, 0.1)';
+                separator.style.margin = '5px 0';
+
+                // Create the navigation link
+                const navLink = document.createElement('a');
+                navLink.href = toggle.getAttribute('href');
+                navLink.className = 'goto-communities';
+                navLink.textContent = 'Go to Communities Page';
+                navLink.style.textAlign = 'center';
+                navLink.style.padding = '8px 10px';
+                navLink.style.display = 'block';
+
+                // Add them to the dropdown
+                dropdownContent.appendChild(separator);
+                dropdownContent.appendChild(navLink);
+            }
+        }
+    });
+
     // Get all dropdown toggle links
     const dropdownToggles = document.querySelectorAll('.dropdown > a');
 
     // Add click event listener to each dropdown toggle link
     dropdownToggles.forEach(toggle => {
         toggle.addEventListener('click', function(event) {
-            // If this is the active link (we're on that page), toggle the dropdown
-            if (toggle.classList.contains('active')) {
+            // Check if this is the Communities link
+            if (toggle.textContent.trim() === 'COMMUNITIES') {
+                // Always prevent default for Communities link to allow dropdown toggle
+                event.preventDefault();
+
+                // Get the parent dropdown
+                const dropdown = toggle.closest('.dropdown');
+                toggleDropdown(dropdown);
+            } else if (toggle.classList.contains('active')) {
+                // For other active links, just toggle the dropdown
                 event.preventDefault();
 
                 // Get the parent dropdown
