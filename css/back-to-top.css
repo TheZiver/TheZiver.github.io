@@ -5,10 +5,10 @@
     right: 20px;
     width: 50px;
     height: 50px;
-    border-radius: 50%;
+    border-radius: 8px; /* Changed from circle to rounded square */
     background-color: rgba(77, 208, 225, 0.8); /* Using the accent color with transparency */
     color: #fff;
-    font-size: 24px;
+    font-size: 20px; /* Slightly smaller font for the triangle */
     border: none;
     cursor: pointer;
     display: none; /* Hidden by default */
@@ -17,10 +17,13 @@
     transition: all 0.3s ease;
     opacity: 0;
     transform: translateY(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #back-to-top.visible {
-    display: block;
+    display: flex;
     opacity: 1;
     transform: translateY(0);
 }
@@ -36,7 +39,7 @@ body.theme-rosefish #back-to-top {
     background-color: rgba(220, 20, 60, 0.8); /* Rose color with transparency */
 }
 
-body.theme-rosefish #back-to-top:hover, 
+body.theme-rosefish #back-to-top:hover,
 body.theme-rosefish #back-to-top:focus {
     background-color: rgba(220, 20, 60, 1); /* Full opacity on hover */
 }

@@ -444,8 +444,8 @@ img[src="images/meaning_of_fish.png"] {
     list-style: none;
     padding-left: 0;
     display: grid;
-    /* Always use 3-column grid */
-    grid-template-columns: repeat(3, 1fr);
+    /* Responsive grid that changes based on screen size */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 15px; /* Moderate spacing between tiles */
     margin-top: 20px; /* Add some space above the grid */
     justify-content: center; /* Center the grid */
@@ -508,9 +508,9 @@ img[src="images/meaning_of_fish.png"] {
         width: 35px !important;
         height: 35px !important;
     }
-    /* Maintain 3-column layout with minimal spacing */
+    /* Single column for extremely small screens */
     #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: 1fr; /* Force single column */
         gap: 3px; /* Minimal gap for extremely small screens */
     }
     /* Minimal padding for extremely small screens */
@@ -583,7 +583,14 @@ img[src="images/meaning_of_fish.png"] {
     white-space: nowrap; /* Prevent owner text wrapping */
 } /* Changed to block display for better centering */
 
-/* Adjust font size for different screen sizes */
+/* Adjust font size and grid for different screen sizes */
+@media (max-width: 900px) {
+    #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+    }
+}
+
 @media (max-width: 600px) {
     #fish-verified-list li > div b, #fish-certified-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b {
         font-size: 0.85em;
@@ -591,9 +598,8 @@ img[src="images/meaning_of_fish.png"] {
     #fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) {
         font-size: 0.75em;
     }
-    /* Always maintain 3-column layout */
     #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 8px; /* Reduce gap on smaller screens */
     }
 }
@@ -605,9 +611,9 @@ img[src="images/meaning_of_fish.png"] {
     #fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) {
         font-size: 0.65em;
     }
-    /* Maintain 3-column layout with even smaller gap */
+    /* Adjust to 2 columns for small screens */
     #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         gap: 5px; /* Minimal gap for very small screens */
     }
     /* Reduce padding for very small screens */
@@ -1011,12 +1017,47 @@ iframe {
 .cal-start-day-btn:hover { background-color: #4a4a4a; border-color: #777; }
 .cal-start-day-btn.active { background-color: var(--cal-primary-color); color: var(--cal-button-text); border-color: var(--cal-primary-color); font-weight: bold; }
 /* Weekday Header Styles */
-.calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid var(--cal-border-color); margin-left: -15px; margin-right: -15px; padding-left: 15px; padding-right: 15px; }
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px; /* Reduced gap for mobile */
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--cal-border-color);
+    margin-left: -15px;
+    margin-right: -15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
 @media (min-width: 600px) { .calendar-weekdays { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; } }
-.weekday-header { text-align: center; font-weight: bold; font-size: 0.85em; color: var(--cal-dim-text-color); padding: 4px 0; text-transform: uppercase; }
-@media (min-width: 600px) { .weekday-header { font-size: 0.9em; } }
+.weekday-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.75em; /* Smaller font size for mobile */
+    color: var(--cal-dim-text-color);
+    padding: 4px 0;
+    text-transform: uppercase;
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Hide overflow */
+}
+@media (min-width: 600px) {
+    .weekday-header {
+        font-size: 0.9em;
+    }
+}
 /* Calendar Body Grid */
-.calendar-body { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+.calendar-body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px; /* Reduced gap for mobile to match weekday headers */
+}
+
+@media (min-width: 600px) {
+    .calendar-body,
+    .calendar-weekdays {
+        gap: 5px; /* Restore larger gap on desktop */
+    }
+}
 /* Calendar Day Cell Styles */
 .calendar-day {
     background-color: var(--cal-header-bg);
@@ -1036,7 +1077,13 @@ iframe {
     position: relative;
     text-align: center;
     box-sizing: border-box; /* Include padding in height/width calculation */
-    min-height: 60px; /* Ensure minimum height for readability */
+    min-height: 50px; /* Reduced minimum height for mobile */
+}
+
+@media (min-width: 600px) {
+    .calendar-day {
+        min-height: 60px; /* Larger minimum height for desktop */
+    }
 }
 
 /* Calendar body grid with responsive gap */

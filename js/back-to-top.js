@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Create the back to top button
     const backToTopBtn = document.createElement('button');
     backToTopBtn.id = 'back-to-top';
-    backToTopBtn.innerHTML = '↑';
+    backToTopBtn.innerHTML = '▲';
     backToTopBtn.setAttribute('aria-label', 'Back to top');
     backToTopBtn.setAttribute('title', 'Back to top');
     document.body.appendChild(backToTopBtn);
