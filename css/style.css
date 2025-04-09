@@ -51,18 +51,27 @@ body {
  * Customize width, padding, and appearance here
  */
 .container {
-    width: 90%;
+    width: 95%; /* Increased from 90% to 95% for mobile */
     max-width: 850px;
     margin: 20px auto 40px auto;
-    padding: 20px;
+    padding: 15px; /* Reduced padding on mobile */
     background-color: var(--container-bg);
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     text-align: left;
-    overflow: hidden;
+    overflow-x: hidden; /* Prevent horizontal overflow */
+    overflow-y: auto; /* Allow vertical scrolling if needed */
     position: relative;
     border: 1px solid var(--border-color);
+    box-sizing: border-box; /* Include padding in width calculation */
 }
+
+/* Ensure all content inside container respects boundaries */
+.container img, .container iframe, .container table {
+    max-width: 100%;
+    height: auto;
+}
+
 @media (min-width: 600px) {
     .container {
         width: 80%;
@@ -329,6 +338,54 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     max-width: 300px;
 }
 
+/* Limit size of images from the image folder */
+[src^="images/"] {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Specific size limits for fish status icons */
+img[src="images/fish_known.png"] {
+    max-width: 60px;
+    max-height: 60px;
+}
+
+img[src="images/fish_certified.png"] {
+    max-width: 90px;
+    max-height: 90px;
+}
+
+img[src="images/fish_verified.png"] {
+    max-width: 120px;
+    max-height: 120px;
+}
+
+/* Size limits for other specific images */
+img[src="images/FISH.png"] {
+    max-width: 300px;
+}
+
+img[src="images/meaning_of_fish.png"] {
+    max-width: 500px;
+}
+
+img[src="images/daily_vrchat.png"] {
+    max-width: 200px;
+}
+
+img[src="images/luxury_trash.png"] {
+    max-width: 200px;
+}
+
+img[src="images/rose_fish_spin.gif"] {
+    max-width: 200px;
+}
+
+/* General size limit for any other images in the folder */
+.container img[src^="images/"]:not([class]) {
+    max-width: 200px;
+}
+
 /* Utility Classes */
 .centered {
     display: block;
@@ -398,6 +455,14 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
     flex-direction: column; /* Stack image and text vertically */
     align-items: center; /* Center content horizontally */
     text-align: center; /* Center text */
+}
+
+/* Control size of community list images */
+#fish-verified-list img, #fish-certified-list img, #fish-known-list img, #fish-status-list img {
+    max-width: 80px;
+    max-height: 80px;
+    width: auto;
+    height: auto;
 }
 
 /* Remove the :last-child rule that removed bottom border */
@@ -931,6 +996,38 @@ iframe {
     .main-nav a {
         font-size: 1em;
         padding: 6px 10px;
+    }
+
+    /* Improve mobile text readability */
+    body {
+        font-size: 16px; /* Base font size for better readability */
+    }
+
+    /* Ensure all text content wraps properly */
+    p, li, a, div, span {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+
+    /* Adjust heading sizes for mobile */
+    h1 {
+        font-size: 2em;
+    }
+
+    h2 {
+        font-size: 1.7em;
+    }
+
+    h3 {
+        font-size: 1.4em;
+    }
+
+    /* Ensure tables don't overflow */
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
     }
 }
 
