@@ -57,8 +57,9 @@
     <div class="support-section">
         <div class="store-container">
             <h2 class="text-center">OR BUY LUXURY TRASH :D</h2>
-            <a href="https://theziver.booth.pm/" target="_blank" rel="noopener noreferrer">
-                <img src="images/luxury_trash.png" alt="Luxury trash image" class="verified-image" loading="lazy">
+
+            <a href="https://theziver.booth.pm/" target="_blank" rel="noopener noreferrer" style="text-align: center; display: block; margin: 0 auto 20px; max-width: 200px;">
+                <img src="images/luxury_trash.png" alt="Luxury trash image" class="verified-image" style="max-width: 100%;" loading="lazy">
             </a>
             <p id="luxury-motto" style="text-align: center; font-style: italic; margin: 15px auto; max-width: 800px; line-height: 1.6;">"Success and money are important, but they shouldn't limit your creativity. Use them as tools for growth, not as the final goal."</p>
 
@@ -72,7 +73,12 @@
     <div class="support-section">
         <div class="community-members-container">
             <h2 class="text-center community-members-heading">BUY STUFF FROM COMMUNITY MEMBERS</h2>
-            <p class="text-center" style="font-size: 1.2em; font-style: italic; margin-top: 0.5rem;">Coming soon...</p>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 20px auto;">
+                <a href="https://metamartian.net/shop/" target="_blank" rel="noopener noreferrer" style="text-align: center; display: block; max-width: 250px;">
+                    <img src="images/KEYCHAIN.png" alt="MetaMartian Shop - 3D Printed Keychain" style="max-width: 100%; border-radius: 10px;" loading="lazy">
+                    <p style="margin-top: 10px; font-weight: bold; color: #fff;">3D Printed Items</p>
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -90,9 +96,14 @@
     }
 
     // Fetch product data from GitHub gist
+    console.log('Fetching product data from GitHub gist...');
     fetch('https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw')
-        .then(response => response.json())
+        .then(response => {
+            console.log('Response received:', response.status);
+            return response.json();
+        })
         .then(data => {
+            console.log('Data loaded:', data);
             // Update luxury motto with linkified text
             document.getElementById('luxury-motto').innerHTML = linkify(data.store.luxury_trash);
 
@@ -149,11 +160,12 @@
                 // Append the link wrapper to the container
                 container.appendChild(cardLink);
             });
+            console.log('Products loaded successfully');
         })
         .catch(error => {
             console.error('Error loading product data:', error);
             document.getElementById('products-container').innerHTML =
-                '<div class="error-message">Failed to load products. Please try again later.</div>';
+                `<div class="error-message">Failed to load products: ${error.message}. Please try again later.</div>`;
         });
 </script>
 

@@ -1849,16 +1849,17 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
     align-items: center;
     justify-content: center;
     margin: 1rem 0;
-    padding: 1.5rem;
-    background-color: transparent;
-    border-radius: 8px;
-    border: 2px solid #d4af37;
+    padding: 2rem;
+    background-color: rgba(20, 20, 20, 0.7);
+    border-radius: 15px;
+    border: 3px solid #d4af37; /* Golden border */
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
     overflow: hidden; /* Prevent content from overflowing */
     width: 100%; /* Ensure it takes full width of its parent */
     box-sizing: border-box; /* Include padding in width calculation */
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3); /* Golden glow */
 }
 
 .store-container h2 {
@@ -1891,49 +1892,54 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
 .product-grid {
     max-width: 900px;
     margin: 0 auto;
-    padding: 20px;
-    background: #0a0a0a;
+    padding: 30px;
+    background: transparent;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
+    gap: 25px;
+    border-radius: 15px;
+    position: relative;
 }
 
 /* Responsive grid adjustments */
 @media (max-width: 700px) {
     .product-grid {
-        gap: 15px;
-        padding: 15px;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .store-container {
+        padding: 1.5rem;
     }
 }
 
 @media (max-width: 500px) {
     .product-grid {
-        gap: 12px;
-        padding: 12px;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .store-container {
+        padding: 1.2rem;
     }
 }
 
 @media (max-width: 350px) {
     .product-grid {
-        gap: 10px;
+        gap: 12px;
         padding: 10px;
     }
-}
 
-/* Adjust for small screens */
-@media (max-width: 400px) {
-    .product-grid {
-        padding: 0.8rem;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 0.6rem;
+    .store-container {
+        padding: 1rem;
     }
 }
 
 /* Store Header */
 .store-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 
 .store-header h1 {
@@ -1941,34 +1947,32 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
     font-size: 2.8em;
     margin-bottom: 1rem;
     text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .store-header img {
     max-width: 150px;
     margin: 0 auto 1rem;
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.3));
 }
 
 /* Product Card */
 .product-card {
-    background: #1a1a1a;
-    border: 2px solid #d4af37;
+    background: #222222;
+    border-radius: 12px;
     overflow: hidden;
     transition: all 0.3s ease;
     padding: 0;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    width: calc(33.333% - 20px); /* Exactly 3 per row with gap considered */
-    min-width: 0;
-    max-width: 250px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    flex: 0 0 auto; /* Don't allow flex to grow or shrink */
+    width: 100%;
+    height: 250px; /* Fixed height for consistent card size */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
 }
 
 .product-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
-    border-color: #ffd700; /* Brighter gold on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
 }
 
 /* Adjust product card for smaller screens */
@@ -1992,15 +1996,23 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
 /* Product Images */
 .product-image {
     width: 100%;
-    height: 150px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
     display: block;
-    margin-bottom: 8px;
-    object-fit: contain;
+    margin-bottom: 0;
+    object-fit: cover;
     object-position: center;
-    background-color: #111;
-    border-bottom: 1px solid #d4af37;
-    padding: 5px;
+    background-color: #181818;
+    transition: transform 0.5s ease;
+    padding: 0;
     box-sizing: border-box;
+    z-index: 1;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
 }
 
 /* Adjust product image spacing for smaller screens */
@@ -2037,94 +2049,124 @@ body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
 
 .product-name {
     font-size: 0.95rem;
-    color: #d4af37;
-    position: relative;
+    color: #ffffff;
+    position: absolute;
+    bottom: 35px; /* Position above the price */
+    left: 0;
+    right: 0;
     display: block;
     word-break: break-word;
     overflow-wrap: break-word;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1.2;
-    font-weight: bold;
-    padding: 0 5px;
-    margin: 0 0 5px 0;
-    height: 2.4em; /* Fixed height for 2 lines */
+    line-height: 1.3;
+    font-weight: 600;
+    padding: 10px 10px 5px 10px;
+    margin: 0;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    transition: background-color 0.3s ease;
+    z-index: 2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 /* Adjust product name size for smaller screens */
 @media (max-width: 600px) {
     .product-name {
         font-size: 0.85rem;
-        padding: 0 3px;
-        margin: 0 0 3px 0;
+        padding: 8px 8px 4px 8px;
     }
 }
 
 @media (max-width: 400px) {
     .product-name {
         font-size: 0.75rem;
-        padding: 0 2px;
-        margin: 0 0 2px 0;
-        height: 2.2em;
+        padding: 6px 6px 3px 6px;
     }
-}
-
-/* Add underline effect on hover */
-.product-name::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    bottom: -4px;
-    left: 0;
-    background-color: #ffd700;
-    transform: scaleX(0);
-    transform-origin: bottom right;
-    transition: transform 0.3s ease;
-}
-
-.product-title-link:hover .product-name::after {
-    transform: scaleX(1);
-    transform-origin: bottom left;
 }
 
 .product-price {
     font-size: 1rem;
-    margin-bottom: 8px;
+    margin: 0;
     color: #d4af37;
     font-weight: bold;
-    padding: 0 5px;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    padding: 0 10px 10px 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    letter-spacing: 0.5px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 /* Adjust product price for smaller screens */
 @media (max-width: 600px) {
     .product-price {
         font-size: 0.9rem;
-        margin-bottom: 6px;
-        padding: 0 3px;
+        margin: 0 0 8px 0;
+        padding: 0 8px 8px 8px;
     }
 }
 
 @media (max-width: 400px) {
     .product-price {
         font-size: 0.8rem;
-        margin-bottom: 4px;
-        padding: 0 2px;
+        margin: 0 0 6px 0;
+        padding: 0 6px 6px 6px;
     }
 }
 
-/* Product Card Link */
+/* Product card link wrapper */
 .product-card-link {
     text-decoration: none;
     color: inherit;
     display: block;
-    width: calc(33.333% - 20px); /* Exactly 3 per row with gap considered */
-    box-sizing: border-box;
-    overflow: hidden;
+    width: calc(33.333% - 20px);
     max-width: 250px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
     flex: 0 0 auto; /* Don't allow flex to grow or shrink */
+    height: 250px; /* Match the height of the product card */
+}
+
+@media (max-width: 600px) {
+    .product-card-link {
+        width: calc(33.333% - 15px);
+    }
+}
+
+@media (max-width: 400px) {
+    .product-card-link {
+        width: calc(33.333% - 12px);
+        max-width: 120px;
+    }
+}
+
+/* Add a subtle gold accent to product cards */
+.product-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+/* Loading message styles */
+.loading-message, .error-message {
+    color: #d4af37;
+    font-size: 1.1rem;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    font-style: italic;
 }
 
 /* Adjust product card link for smaller screens */
