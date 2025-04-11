@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FISH ＜＞＜ COMMUNITY - Fish Craft</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dropdown.css">
+    <link rel="stylesheet" href="css/back-to-top.css">
+    <style>
+        /* Fish Craft specific styles */
+        .fishcraft-container {
+            border: 3px solid #6E9F94; /* Outline color as specified */
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px auto;
+            max-width: 800px;
+            color: #ADBFDA; /* Text color as specified */
+        }
+
+        .fishcraft-container h1,
+        .fishcraft-container h2,
+        .fishcraft-container p,
+        .fishcraft-container li,
+        .fishcraft-container strong {
+            color: #ADBFDA; /* Ensure all text has the specified color */
+        }
+
+        .fishcraft-image {
+            display: block;
+            margin: 20px auto;
+            max-width: 240px;
+            height: auto;
+        }
+
+        .fishcraft-info {
+            margin-top: 30px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .fishcraft-info li {
+            margin-bottom: 15px;
+        }
+
+        .server-ip-container {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .server-ip {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 8px 12px;
+            border-radius: 4px 0 0 4px;
+            font-family: monospace;
+            font-size: 1.1em;
+            display: inline-block;
+            border: 1px solid #6E9F94;
+            border-right: none;
+        }
+
+        .copy-button {
+            background-color: #6E9F94;
+            color: #ADBFDA;
+            border: 1px solid #6E9F94;
+            border-radius: 0 4px 4px 0;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .copy-button:hover {
+            background-color: #5d8a80;
+        }
+
+        .copy-button:active {
+            transform: scale(0.95);
+        }
+
+        .copy-message {
+            margin-left: 10px;
+            font-size: 0.9em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background container for swimming community images -->
+<div id="swimming-images-background" class="swimming-images-container"></div>
+
+<nav class="main-nav">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="daily.html">DAILY VRCHAT</a></li>
+        <li class="dropdown">
+            <a href="communities.html">COMMUNITIES</a>
+            <div class="dropdown-content">
+                <a href="aquarium.html">AQUARIUM</a>
+            </div>
+        </li>
+        <li><a href="rosefish.html">ROSE FISH</a></li>
+        <li><a href="support.html">SUPPORT</a></li>
+        <li><a href="fishcraft.html" class="active">FISH CRAFT</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <div class="fishcraft-container">
+        <h1>FISH CRAFT</h1>
+
+        <img src="images/FISH_CRAFT.png" alt="Fish Craft Server" class="fishcraft-image" loading="lazy">
+
+        <p class="server-description" style="text-align: center; margin: 20px 0; font-size: 1.2em; color: #ADBFDA;">An <strong>Anarchy Minecraft Server</strong> where there are no rules</p>
+
+        <div class="fishcraft-info">
+            <ul>
+                <li><strong>VERSION:</strong> Java 1.20.6</li>
+                <li><strong>SERVER TYPE:</strong> Anarchy</li>
+                <li>
+                    <strong>IP ADDRESS:</strong>
+                    <div class="server-ip-container">
+                        <span class="server-ip" id="server-ip">mc.theziver.com</span>
+                        <button class="copy-button" id="copy-ip-button">Copy</button>
+                        <span class="copy-message" id="copy-message">Copied!</span>
+                    </div>
+                </li>
+                <li><strong>FISH CRAFT</strong> was opened <span id="server-time" data-timestamp="1702483200"></span></li>
+                <li>The main person responsible for the server is <strong>@akiyuki101</strong></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="js/prevent-navigation.js"></script>
+<script src="js/script.js"></script>
+<script src="js/swimming-fish.js"></script>
+<script src="js/dropdown.js"></script>
+<script src="js/back-to-top.js"></script>
+<script src="js/lazy-loading.js"></script>
+
+<script>
+    // Function to format relative time (like "5 months ago")
+    function formatRelativeTime(timestamp) {
+        const now = Math.floor(Date.now() / 1000);
+        const diff = now - timestamp;
+
+        // Define time units in seconds
+        const minute = 60;
+        const hour = minute * 60;
+        const day = hour * 24;
+        const week = day * 7;
+        const month = day * 30;
+        const year = day * 365;
+
+        // Calculate the appropriate time unit
+        if (diff < minute) {
+            return 'just now';
+        } else if (diff < hour) {
+            const minutes = Math.floor(diff / minute);
+            return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
+        } else if (diff < day) {
+            const hours = Math.floor(diff / hour);
+            return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
+        } else if (diff < week) {
+            const days = Math.floor(diff / day);
+            return `${days} ${days === 1 ? 'day' : 'days'} ago`;
+        } else if (diff < month) {
+            const weeks = Math.floor(diff / week);
+            return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+        } else if (diff < year) {
+            const months = Math.floor(diff / month);
+            return `${months} ${months === 1 ? 'month' : 'months'} ago`;
+        } else {
+            const years = Math.floor(diff / year);
+            return `${years} ${years === 1 ? 'year' : 'years'} ago`;
+        }
+    }
+
+    // Display the relative time when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle server time display
+        const serverTimeElement = document.getElementById('server-time');
+        if (serverTimeElement) {
+            const timestamp = parseInt(serverTimeElement.getAttribute('data-timestamp'));
+            if (!isNaN(timestamp)) {
+                serverTimeElement.textContent = formatRelativeTime(timestamp);
+
+                // Also display the actual date as a tooltip
+                const date = new Date(timestamp * 1000);
+                serverTimeElement.title = date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+        }
+
+        // Handle IP address copy functionality
+        const copyButton = document.getElementById('copy-ip-button');
+        const serverIp = document.getElementById('server-ip');
+        const copyMessage = document.getElementById('copy-message');
+
+        if (copyButton && serverIp) {
+            copyButton.addEventListener('click', function() {
+                const ipText = serverIp.textContent;
+
+                // Try to use the modern Clipboard API first
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(ipText)
+                        .then(() => {
+                            // Show success message
+                            if (copyMessage) {
+                                copyMessage.style.opacity = '1';
+                                setTimeout(function() {
+                                    copyMessage.style.opacity = '0';
+                                }, 2000);
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Failed to copy with Clipboard API:', err);
+                            // Fall back to the older method
+                            fallbackCopy();
+                        });
+                } else {
+                    // Fall back to the older method for browsers that don't support Clipboard API
+                    fallbackCopy();
+                }
+
+                // Fallback copy method using execCommand
+                function fallbackCopy() {
+                    // Create a temporary textarea element to copy from
+                    const textarea = document.createElement('textarea');
+                    textarea.value = ipText;
+                    textarea.style.position = 'fixed';  // Prevent scrolling to the element
+                    document.body.appendChild(textarea);
+                    textarea.select();
+
+                    try {
+                        // Execute the copy command
+                        const successful = document.execCommand('copy');
+
+                        // Show the success message
+                        if (successful && copyMessage) {
+                            copyMessage.style.opacity = '1';
+                            setTimeout(function() {
+                                copyMessage.style.opacity = '0';
+                            }, 2000);
+                        }
+                    } catch (err) {
+                        console.error('Failed to copy IP address:', err);
+                    }
+
+                    // Remove the temporary textarea
+                    document.body.removeChild(textarea);
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
