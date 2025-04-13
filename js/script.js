@@ -212,11 +212,14 @@ document.addEventListener('DOMContentLoaded', function() {
              verifiedInfoElement.innerHTML = '<p><i>Verification info not available.</i></p>';
         }
 
-        if (certifiedInfoElement && data?.fish_communities?.certified_info) {
-            certifiedInfoElement.innerHTML = `<p>${escapeHtml(data.fish_communities.certified_info).replace(/\n/g, '<br>')}</p>`;
-        } else if (certifiedInfoElement) {
-            certifiedInfoElement.innerHTML = '<p><i>Certification info not available.</i></p>';
-       }
+        // Skip loading certified info from JSON if it's already populated in HTML
+        if (certifiedInfoElement && certifiedInfoElement.innerHTML.trim() === '') {
+            if (data?.fish_communities?.certified_info && data.fish_communities.certified_info.trim() !== '') {
+                certifiedInfoElement.innerHTML = `<p>${escapeHtml(data.fish_communities.certified_info).replace(/\n/g, '<br>')}</p>`;
+            } else {
+                certifiedInfoElement.innerHTML = '<p><i>Certification info not available.</i></p>';
+            }
+        }
 
        // Add handling for known_info
        if (knownInfoElement && data?.fish_communities?.known_info) {
@@ -1106,7 +1109,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                  if (isCommunityError || !isPrimaryError) { // Show community errors if community failed OR if it's a general error
                     if(verifiedInfoElement) verifiedInfoElement.innerHTML = errorMsg;
-                    if(certifiedInfoElement) certifiedInfoElement.innerHTML = errorMsg;
+                    // Only show error for certifiedInfoElement if it's empty
+                    if(certifiedInfoElement && certifiedInfoElement.innerHTML.trim() === '') {
+                        certifiedInfoElement.innerHTML = errorMsg;
+                    }
                     // Add known info error handling if needed: if (knownInfoElement) knownInfoElement.innerHTML = errorMsg;
                     if(verifiedListElement) verifiedListElement.innerHTML = errorLi;
                     if(certifiedListElement) certifiedListElement.innerHTML = errorLi;
