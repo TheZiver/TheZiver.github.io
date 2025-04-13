@@ -1112,7 +1112,7 @@ iframe {
     background-color: var(--cal-header-bg);
     border: 1px solid var(--cal-border-color);
     border-radius: 4px;
-    padding: 1px 0px; /* Minimal padding to maximize content space */
+    padding: 3px 2px; /* Increased padding */
     width: 100%; /* Full width of grid cell */
     height: 100%; /* Full height of wrapper */
     display: flex;
@@ -1122,11 +1122,12 @@ iframe {
     font-size: 0.75em; /* Reduced font size for mobile */
     cursor: default;
     transition: background-color 0.2s ease;
-    overflow: hidden; /* Hide overflow, no scrollbars */
+    overflow: hidden; /* Keep content within bounds */
     position: relative;
     text-align: center;
     box-sizing: border-box; /* Include padding in height/width calculation */
     min-height: 45px; /* Further reduced minimum height for mobile */
+    max-height: 100%; /* Limit height to container */
 }
 
 @media (min-width: 600px) {
@@ -1139,17 +1140,22 @@ iframe {
 .calendar-body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: clamp(2px, 0.8vw, 4px); /* Slightly reduced gap to allow more space for content */
+    gap: clamp(3px, 1vw, 6px); /* Increased gap between days */
     width: 100%;
+    grid-auto-rows: 1fr; /* Make all rows the same height */
+    overflow: visible; /* Allow overflow to be visible */
+    margin-bottom: 10px; /* Add space at the bottom of the calendar */
 }
 
 /* Create a wrapper for each calendar day to maintain aspect ratio */
 .calendar-day-wrapper {
     position: relative;
     width: 100%;
-    padding-bottom: 100%; /* Creates a 1:1 aspect ratio */
+    padding-bottom: 110%; /* Even taller aspect ratio to fit more content */
     min-height: 0; /* Ensure the wrapper doesn't get too tall */
     max-height: none; /* Allow the wrapper to be as tall as needed */
+    margin-bottom: 0; /* Prevent extra space between rows */
+    overflow: hidden; /* Keep content within bounds */
 }
 
 /* Position the calendar day absolutely within the wrapper */
@@ -1184,11 +1190,12 @@ iframe {
     justify-content: flex-start;
     height: 100%;
     width: 100%;
-    padding: 4px 2px; /* Add padding for spacing */
+    padding: 3px 2px; /* Adjusted padding */
     box-sizing: border-box;
     cursor: pointer;
     transition: background-color 0.2s ease;
-    gap: 2px; /* Add gap between elements */
+    gap: 3px; /* Increased gap between elements */
+    overflow: hidden; /* Keep content within bounds */
 }
 .calendar-day a:hover { color: inherit; background-color: rgba(255, 255, 255, 0.05); } /* Subtle hover for clickable days */
 .calendar-day:not(:has(a)):hover { background-color: #303034; } /* Hover effect only for non-linked cells */
@@ -1221,21 +1228,35 @@ iframe {
 
 /* Use CSS clamp for responsive font sizing based on viewport width */
 .calendar-day .day-number {
-    font-size: clamp(0.8em, 1.8vw, 1.0em); /* Adjusted font size for wrapping */
+    font-size: clamp(0.9em, 2.0vw, 1.1em); /* Increased font size for better readability */
+    font-weight: bold; /* Make day number bold for better visibility */
 }
 
 .calendar-day .daily-event-num {
-    font-size: clamp(0.7em, 1.6vw, 0.85em); /* Adjusted font size for wrapping */
+    font-size: clamp(0.75em, 1.7vw, 0.9em); /* Increased font size for better readability */
     width: 100%; /* Ensure it takes full width */
     padding: 0 1px; /* Add minimal horizontal padding */
+    margin-top: 2px; /* Add a tiny bit of space above */
 }
 
 .calendar-day .event-location {
-    font-size: clamp(0.7em, 1.6vw, 0.85em); /* Adjusted font size for wrapping */
+    font-size: clamp(0.55em, 1.3vw, 0.7em); /* Smaller font size to fit more text */
     transform: none; /* Remove scale transformation */
     max-width: 100%; /* Ensure text doesn't overflow */
     width: 100%; /* Ensure it takes full width */
     padding: 0 1px; /* Add minimal horizontal padding */
+    margin-top: 2px; /* Add a tiny bit of space above */
+    overflow: hidden; /* Keep content within bounds */
+    white-space: normal; /* Allow text to wrap */
+    line-height: 1.1; /* Tighter line height */
+    height: auto; /* Allow height to adjust to content */
+    min-height: 1.1em; /* Minimum height */
+    display: block; /* Simple block display */
+    color: #00BFFF; /* Brighter blue color for better visibility */
+    font-weight: 600; /* Make text bolder */
+    word-break: break-word; /* Allow breaking long words */
+    hyphens: auto; /* Enable hyphenation */
+    letter-spacing: -0.02em; /* Tighter letter spacing */
 }
 
 /* Additional adjustments for different screen sizes */
@@ -1305,10 +1326,28 @@ iframe {
         font-size: clamp(0.85em, 2.0vw, 1.0em); /* Increased font size */
     }
     .calendar-day .daily-event-num {
-        font-size: clamp(0.7em, 1.6vw, 0.8em); /* Increased font size */
+        font-size: clamp(0.6em, 1.5vw, 0.7em); /* Reduced font size */
+        min-height: 1.1em; /* Minimum height */
+        height: auto; /* Allow height to adjust to content */
+        overflow: hidden; /* Hide overflow */
     }
     .calendar-day .event-location {
-        font-size: clamp(0.7em, 1.6vw, 0.8em); /* Increased font size */
+        font-size: clamp(0.5em, 1.2vw, 0.6em); /* Smaller font size to fit more text */
+        min-height: 1.1em; /* Minimum height */
+        height: auto; /* Allow height to adjust to content */
+        overflow: hidden; /* Keep content within bounds */
+        white-space: normal; /* Allow text to wrap */
+        display: block; /* Simple block display */
+        color: #00BFFF; /* Brighter blue for better visibility */
+        font-weight: 600; /* Make text bolder */
+        word-break: break-word; /* Allow breaking long words */
+        hyphens: auto; /* Enable hyphenation */
+        letter-spacing: -0.03em; /* Tighter letter spacing */
+    }
+
+    /* Ensure calendar cells don't overlap */
+    .calendar-day-wrapper {
+        padding-bottom: 95%; /* Slightly reduce the aspect ratio */
     }
 }
 
@@ -1322,6 +1361,7 @@ iframe {
     }
     .calendar-container {
         min-width: 280px; /* Ensure calendar doesn't get too small */
+        padding: 10px 5px; /* Reduce padding to maximize space */
     }
     /* Further reduce button and title sizes */
     .cal-nav-btn, .cal-today-btn {
@@ -1342,10 +1382,31 @@ iframe {
         font-size: clamp(0.8em, 1.8vw, 0.9em);
     }
     .calendar-day .daily-event-num {
-        font-size: clamp(0.65em, 1.5vw, 0.75em);
+        font-size: clamp(0.55em, 1.4vw, 0.65em);
+        min-height: 1em; /* Minimum height */
+        height: auto; /* Allow height to adjust to content */
+        white-space: normal; /* Allow text to wrap */
+        overflow: hidden; /* Hide overflow */
     }
     .calendar-day .event-location {
-        font-size: clamp(0.65em, 1.5vw, 0.75em);
+        font-size: clamp(0.45em, 1.1vw, 0.55em); /* Even smaller font size to fit more text */
+        min-height: 1em; /* Minimum height */
+        height: auto; /* Allow height to adjust to content */
+        white-space: normal; /* Allow text to wrap */
+        overflow: hidden; /* Keep content within bounds */
+        display: block; /* Simple block display */
+        color: #00BFFF; /* Brighter blue for better visibility */
+        font-weight: 600; /* Make text bolder */
+        letter-spacing: -0.03em; /* Tighter letter spacing */
+        text-shadow: 0 0 1px rgba(0, 191, 255, 0.3); /* Subtle text shadow for better visibility */
+        word-break: break-word; /* Allow breaking long words */
+        hyphens: auto; /* Enable hyphenation */
+    }
+
+    /* Adjust aspect ratio for mobile */
+    .calendar-day-wrapper {
+        padding-bottom: 100%; /* Standard 1:1 aspect ratio */
+        overflow: hidden; /* Keep content within bounds */
     }
 }
 /* Ordinal Event Number (Middle - for regular daily) */
@@ -1406,6 +1467,8 @@ iframe {
     color: inherit; text-decoration: none; display: flex; flex-direction: column;
     align-items: center; justify-content: flex-start; height: 100%; width: 100%;
     padding: inherit; box-sizing: border-box; transition: background-color 0.2s ease;
+    overflow: hidden; /* Keep content within bounds */
+    gap: 3px; /* Increased gap between elements */
 }
 .calendar-day.special-day a { cursor: pointer; }
 .calendar-day.special-day div:not([href]) { cursor: default; }
@@ -1614,7 +1677,7 @@ iframe {
 
     /* === CORE DAY CELL ADJUSTMENTS === */
     .calendar-day {
-        min-height: 110px;   /* INCREASED height to allow text wrapping */
+        min-height: 100px;   /* Reduced height to prevent overflow */
         padding: 4px 2px;     /* Reduced internal padding */
         font-size: 0.8em;   /* Smaller base font size */
         line-height: 1.2;   /* Adjust line height for smaller text */
@@ -1624,6 +1687,7 @@ iframe {
         justify-content: flex-start; /* Align content to top */
         align-items: center;
         gap: 2px; /* Increase space between elements inside */
+        overflow: hidden; /* Keep content within bounds */
     }
 
      /* Ensure link/div wrappers inside cells use the new padding */
@@ -1652,11 +1716,19 @@ iframe {
 
     /* Event Location/Name (e.g., LUXURY TRASH) */
     .calendar-day .event-location {
-        font-size: 0.8em; /* Adjusted font size for wrapping */
-        line-height: 1.2; /* Increased line height for better readability */
+        font-size: 0.6em; /* Smaller font size to fit more text */
+        line-height: 1.1; /* Tighter line height */
         margin-top: 1px;
-        max-width: 95%; /* Prevent text touching cell edges */
-        word-break: normal; /* Only break at word boundaries */
+        max-width: 100%; /* Use full width */
+        word-break: break-word; /* Allow breaking long words */
+        color: #00BFFF; /* Brighter blue for better visibility */
+        font-weight: 600; /* Make text bolder */
+        text-shadow: 0 0 1px rgba(0, 191, 255, 0.3); /* Subtle text shadow */
+        overflow: hidden; /* Keep content within bounds */
+        white-space: normal; /* Allow text to wrap */
+        hyphens: auto; /* Enable hyphenation */
+        letter-spacing: -0.03em; /* Tighter letter spacing */
+        text-overflow: ellipsis; /* Add ellipsis for overflow text */
     }
 
     .calendar-day.today {
