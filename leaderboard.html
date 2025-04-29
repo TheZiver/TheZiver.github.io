@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>FISH ＜＞＜ COMMUNITY - Leaderboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dropdown.css">
+    <link rel="stylesheet" href="css/back-to-top.css">
+    <style>
+        /* Prevent text size adjustment - global override */
+        html, body, * {
+            -webkit-text-size-adjust: none !important;
+            -moz-text-size-adjust: none !important;
+            -ms-text-size-adjust: none !important;
+            text-size-adjust: none !important;
+            font-size-adjust: none !important;
+            max-height: 999999px; /* Prevent browser zoom affecting text */
+        }
+
+        /* Leaderboard specific styles using global CSS variables */
+        .page {
+            display: none;
+            width: 100%;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .nav-button {
+            background-color: #e63946;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #c1272d;
+            transform: translateY(-2px);
+        }
+
+        /* Podium styles */
+        #podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin: 30px auto;
+            position: relative;
+            max-width: 500px;
+        }
+
+        .podium-entry {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 10px;
+        }
+
+        .podium-bar {
+            width: 120px;
+            background-color: #e63946;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .icon-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .crown-emoji {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            z-index: 2;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .group-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            background-color: transparent; /* Remove white background */
+            object-fit: contain;
+            padding: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .wins-label {
+            color: white;
+            font-size: 1.2em !important;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .wins-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            width: 100%;
+            height: 100%;
+        }
+
+        .wins-text {
+            font-size: 0.7em !important;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            position: relative;
+            text-align: center;
+        }
+
+        .wins-number {
+            font-size: 1.2em !important;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 auto;
+            width: 100%;
+            height: auto;
+            font-weight: bold;
+        }
+
+        /* List entries styles */
+        #list-entries {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            gap: 10px;
+        }
+
+        .entries-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-wrap: nowrap;
+        }
+
+        .list-entry {
+            display: flex;
+            align-items: center; /* Center items vertically */
+            justify-content: space-between; /* Space between icon and number */
+            height: 60px;
+            background-color: #e63946;
+            overflow: visible;
+            width: 100%;
+            margin: 5px 0;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+            box-sizing: border-box;
+            padding: 0 20px;
+            border-radius: 5px;
+            position: relative;
+            flex-basis: 100%;
+            text-align: center;
+        }
+
+        /* Ensure all content is vertically centered */
+        .list-entry > * {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            position: relative;
+        }
+
+        .icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            height: 100%;
+        }
+
+        .entry-icon {
+            width: 50px;
+            height: 50px;
+            background-color: transparent; /* Remove white background */
+            object-fit: contain;
+            padding: 5px;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+            position: relative;
+            margin: auto 0; /* Center vertically */
+        }
+
+        .crown {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            z-index: 10;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .entry-bar {
+            flex-grow: 1;
+            padding: 0 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: visible;
+            position: relative;
+            height: 100%;
+            min-width: 120px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .entry-wins {
+            color: white;
+            font-size: 1.2em !important;
+            font-weight: bold;
+            white-space: nowrap;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            width: 100%;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            z-index: 2;
+            overflow: visible;
+            letter-spacing: 1px;
+            font-family: Arial, sans-serif !important;
+            height: 100%;
+        }
+
+        /* Wins container styling is defined above */
+
+        /* Wins number styling is defined above */
+
+        /* Loading and error messages */
+        .loading-message, .error-message {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-style: italic;
+        }
+
+        .error-message {
+            color: #e63946;
+        }
+
+        /* Attribution styling */
+        .attribution {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            color: #ADBFDA;
+            font-size: 1em;
+            font-weight: bold;
+            border-top: 1px solid #6E9F94;
+        }
+
+        .attribution a {
+            color: #ADBFDA;
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .group-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .podium-bar {
+                width: 80px;
+            }
+
+            .entry-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .nav-button {
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background container for swimming community images -->
+<div id="swimming-images-background" class="swimming-images-container"></div>
+
+<nav class="main-nav">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="daily.html">DAILY VRCHAT</a></li>
+        <li class="dropdown">
+            <a href="communities.html">COMMUNITIES</a>
+            <div class="dropdown-content">
+                <a href="aquarium.html">AQUARIUM</a>
+            </div>
+        </li>
+        <li><a href="rosefish.html">ROSE FISH</a></li>
+        <li><a href="support.html">SUPPORT</a></li>
+        <li><a href="fishcraft.html">FISH CRAFT</a></li>
+        <li><a href="leaderboard.html" class="active">LEADERBOARD</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <!-- Page 1 - Podium View -->
+    <div id="page1" class="page active">
+        <h1>FISH RACE CHAMPIONS</h1>
+        <div class="nav-buttons">
+            <button class="nav-button" id="otherButton">OTHER</button>
+        </div>
+        <div id="podium">
+            <div class="loading-message">Loading leaderboard data...</div>
+        </div>
+    </div>
+
+    <!-- Page 2 - List View -->
+    <div id="page2" class="page">
+        <h1>ALL FISH</h1>
+        <div class="nav-buttons">
+            <button class="nav-button" id="backButton">BACK</button>
+        </div>
+        <div id="list-entries">
+            <div class="loading-message">Loading leaderboard data...</div>
+        </div>
+    </div>
+
+    <!-- Attribution text -->
+    <div class="attribution">
+        DATA MANAGED BY RAT FISH <a href="https://vrc.group/RAT.3149" target="_blank">https://vrc.group/RAT.3149</a>
+    </div>
+</div>
+
+<script src="js/leaderboard.js"></script>
+<script src="js/prevent-navigation.js"></script>
+<script src="js/script.js"></script>
+<script src="js/swimming-fish.js"></script>
+<script src="js/dropdown.js"></script>
+<script src="js/back-to-top.js"></script>
+<script src="js/lazy-loading.js"></script>
+</body>
+</html>
