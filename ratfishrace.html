@@ -2,45 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting to RAT FISH RACE</title>
-    <meta http-equiv="refresh" content="0; URL=ratfishrace.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>FISH ＜＞＜ COMMUNITY - RAT FISH RACE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dropdown.css">
+    <link rel="stylesheet" href="css/back-to-top.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: white;
-            text-align: center;
-            padding: 50px;
-            margin: 0;
+        /* Prevent text size adjustment - global override */
+        html, body, * {
+            -webkit-text-size-adjust: none !important;
+            -moz-text-size-adjust: none !important;
+            -ms-text-size-adjust: none !important;
+            text-size-adjust: none !important;
+            font-size-adjust: none !important;
+            max-height: 999999px; /* Prevent browser zoom affecting text */
         }
 
-        h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
+        /* Leaderboard specific styles using global CSS variables */
+        .page {
+            display: none;
+            width: 100%;
         }
 
-        p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
+        .page.active {
+            display: block;
         }
 
-        a {
-            color: #e63946;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.2em;
-            padding: 10px 20px;
-            border: 2px solid #e63946;
-            border-radius: 5px;
-            transition: all 0.3s ease;
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
         }
 
-        a:hover {
+        .nav-button {
             background-color: #e63946;
             color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #c1272d;
+            transform: translateY(-2px);
         }
 
         /* Podium styles */
@@ -467,8 +479,76 @@
     </style>
 </head>
 <body>
-    <h1>RAT FISH RACE</h1>
-    <p>This page has been moved to a new location.</p>
-    <a href="ratfishrace.html">GO TO RAT FISH RACE</a>
+
+<!-- Background container for swimming community images -->
+<div id="swimming-images-background" class="swimming-images-container"></div>
+
+<nav class="main-nav">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="daily.html">DAILY VRCHAT</a></li>
+        <li class="dropdown">
+            <a href="communities.html">COMMUNITIES</a>
+            <div class="dropdown-content">
+                <a href="aquarium.html">AQUARIUM</a>
+            </div>
+        </li>
+        <li><a href="rosefish.html">ROSE FISH</a></li>
+        <li><a href="support.html">SUPPORT</a></li>
+        <li><a href="fishcraft.html">FISH CRAFT</a></li>
+        <li><a href="ratfishrace.html" class="active">RAT FISH RACE</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <!-- Page 1 - Podium View -->
+    <div id="page1" class="page active">
+        <h1>RAT FISH RACE CHAMPIONS</h1>
+        <div class="nav-buttons">
+            <button class="nav-button" id="otherButton">OTHER</button>
+        </div>
+        <div id="podium">
+            <div class="loading-message">Loading race data...</div>
+        </div>
+
+        <!-- Social embeds container (only on first page) -->
+        <div class="social-embeds" id="rat-fish-social-embeds">
+            <!-- Social embeds will be added here dynamically -->
+        </div>
+    </div>
+
+    <!-- Page 2 - List View -->
+    <div id="page2" class="page">
+        <h1>ALL RAT FISH RACERS</h1>
+        <p class="reset-notice">Data resets every 1st of the month</p>
+        <div class="nav-buttons">
+            <button class="nav-button" id="backButton">BACK</button>
+        </div>
+        <div id="list-entries">
+            <div class="loading-message">Loading race data...</div>
+        </div>
+    </div>
+
+    <!-- Attribution text (moved to bottom) -->
+    <div class="attribution">
+        <div class="attribution-text">
+            DATA MANAGED BY RAT FISH<br>
+            <a href="https://vrc.group/RAT.3149" target="_blank">https://vrc.group/RAT.3149</a>
+        </div>
+        <div class="attribution-image-container">
+            <a href="https://vrc.group/RAT.3149" target="_blank">
+                <img id="rat-fish-logo" class="attribution-image" alt="RAT FISH Logo" data-group-id="grp_e88dee2f-928c-4f41-a52d-0ff0fdd9c34a">
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="js/leaderboard.js"></script>
+<script src="js/prevent-navigation.js"></script>
+<script src="js/script.js"></script>
+<script src="js/swimming-fish.js"></script>
+<script src="js/dropdown.js"></script>
+<script src="js/back-to-top.js"></script>
+<script src="js/lazy-loading.js"></script>
 </body>
 </html>

@@ -120,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const page2 = document.getElementById('page2');
     const otherButton = document.getElementById('otherButton');
     const backButton = document.getElementById('backButton');
+    const ratFishLogo = document.getElementById('rat-fish-logo');
     // Add cache-busting parameter with current timestamp
     const timestamp = new Date().getTime();
     const leaderboardUrl = `https://gist.githubusercontent.com/Luiswillich-1/bc42cd2a914e54334a7673f66a659cd0/raw?_=${timestamp}`;
@@ -141,114 +142,107 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Switched back to page 1');
     });
 
-    // First check the raw content of the icons URL
-    fetch(iconsUrl)
-        .catch(error => {
-            console.error('Failed to fetch icons URL:', error);
-            // Continue with leaderboard data even if icons fetch fails
-            return fetch(leaderboardUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error fetching leaderboard! Status: ${response.status}`);
-                    }
-                    return response.json().catch(error => {
-                        console.error('Error parsing leaderboard JSON:', error);
-                        return [];
-                    });
-                })
-                .then(data => processLeaderboardData(data, podiumContainer, listEntriesContainer, groupIcons));
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error fetching icons! Status: ${response.status}`);
-            }
-            // Clone the response to use it twice
-            const clonedResponse = response.clone();
+    // First fetch the leaderboard data to ensure we have it
+    console.log('Fetching leaderboard data from:', leaderboardUrl);
 
-            // Get the raw text to see what we're dealing with
-            clonedResponse.text().then(text => {
-                console.log('Raw icons data:', text.substring(0, 500) + '...');
-                try {
-                    // Try to parse it manually to see if it's valid JSON
-                    const parsed = JSON.parse(text);
-                    console.log('Manual parse successful, data type:', typeof parsed);
-                } catch (e) {
-                    console.error('Manual JSON parse failed:', e);
-                }
-            });
+    // Show loading message
+    podiumContainer.innerHTML = '<div class="loading-message">Fetching race data...</div>';
+    listEntriesContainer.innerHTML = '<div class="loading-message">Fetching race data...</div>';
 
-            // Continue with the normal flow
-            return response.json().catch(error => {
-                console.error('Error parsing icons JSON:', error);
-                // Return an empty array as fallback
-                return [];
-            });
-        })
-        .then(iconsData => {
-            // Debug: Log the actual data structure
-            console.log('Icons data structure:', JSON.stringify(iconsData).substring(0, 500) + '...');
-
-            // Check if iconsData is an object with community_groups array
-            if (typeof iconsData === 'object' && iconsData !== null && Array.isArray(iconsData.community_groups)) {
-                console.log('Icons data contains community_groups array with length:', iconsData.community_groups.length);
-
-                // Store icons data by group ID for easy lookup
-                iconsData.community_groups.forEach(group => {
-                    if (group.group_id && group.icon_url) {
-                        console.log(`Adding icon for group: ${group.group_name} (${group.group_id})`);
-                        groupIcons[group.group_id] = {
-                            url: group.icon_url,
-                            tags: group.tags || []
-                        };
-                    }
-                });
-
-                console.log('Total group icons loaded:', Object.keys(groupIcons).length);
-            } else if (Array.isArray(iconsData)) {
-                console.log('Icons data is a direct array with length:', iconsData.length);
-                // Store icons data by group ID for easy lookup
-                iconsData.forEach(icon => {
-                    if (icon.group_id && icon.icon_url) {
-                        groupIcons[icon.group_id] = icon.icon_url;
-                    }
-                });
-            } else if (typeof iconsData === 'object' && iconsData !== null) {
-                console.log('Icons data is an object with keys:', Object.keys(iconsData));
-                // If it's an object, iterate through its properties
-                for (const key in iconsData) {
-                    if (iconsData.hasOwnProperty(key) && iconsData[key] && iconsData[key].icon_url) {
-                        groupIcons[key] = iconsData[key].icon_url;
-                    }
-                }
-            } else {
-                console.error('Icons data is not in expected format. Type:', typeof iconsData);
-                console.error('Value:', iconsData);
-            }
-
-            console.log('Group icons collected:', Object.keys(groupIcons).length);
-
-            // Now fetch the leaderboard data
-            return fetch(leaderboardUrl);
-        })
+    fetch(leaderboardUrl)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error fetching leaderboard! Status: ${response.status}`);
             }
-            return response.json().catch(error => {
-                console.error('Error parsing leaderboard JSON:', error);
-                // Return an empty array as fallback
-                return [];
-            });
+            console.log('Leaderboard response received, parsing JSON...');
+            return response.json();
         })
-        .then(data => processLeaderboardData(data, podiumContainer, listEntriesContainer, groupIcons))
-        .catch(error => {
-            console.error('Error fetching data:', error);
+        .then(leaderboardData => {
+            console.log('Leaderboard data fetched successfully:', typeof leaderboardData);
 
-            // Log more detailed information for debugging
-            if (error.response) {
-                console.error('Response status:', error.response.status);
-                console.error('Response headers:', error.response.headers);
+            // Update loading message
+            podiumContainer.innerHTML = '<div class="loading-message">Fetching community icons...</div>';
+            listEntriesContainer.innerHTML = '<div class="loading-message">Fetching community icons...</div>';
+
+            // Now fetch the icons data
+            console.log('Fetching icons data from:', iconsUrl);
+            return fetch(iconsUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        console.warn(`HTTP error fetching icons! Status: ${response.status}`);
+                        // Continue with leaderboard data even if icons fetch fails
+                        return { leaderboardData, iconsData: null };
+                    }
+                    console.log('Icons response received, parsing JSON...');
+                    return response.json()
+                        .then(iconsData => {
+                            console.log('Icons data parsed successfully:', typeof iconsData);
+                            return { leaderboardData, iconsData };
+                        })
+                        .catch(error => {
+                            console.error('Error parsing icons JSON:', error);
+                            return { leaderboardData, iconsData: null };
+                        });
+                })
+                .catch(error => {
+                    console.error('Failed to fetch icons URL:', error);
+                    return { leaderboardData, iconsData: null };
+                });
+        })
+        .then(data => {
+            // Process the combined data
+            console.log('Processing combined data');
+
+            const { leaderboardData, iconsData } = data;
+
+            // Process icons data if available
+            if (iconsData) {
+                console.log('Icons data available, processing...');
+
+                // Check if iconsData is an object with community_groups array
+                if (typeof iconsData === 'object' && iconsData !== null && Array.isArray(iconsData.community_groups)) {
+                    console.log('Icons data contains community_groups array with length:', iconsData.community_groups.length);
+
+                    // Store icons data by group ID for easy lookup
+                    iconsData.community_groups.forEach(group => {
+                        if (group.group_id && group.icon_url) {
+                            console.log(`Adding icon for group: ${group.group_name} (${group.group_id})`);
+                            groupIcons[group.group_id] = {
+                                url: group.icon_url,
+                                tags: group.tags || []
+                            };
+                        }
+                    });
+                } else if (Array.isArray(iconsData)) {
+                    console.log('Icons data is a direct array with length:', iconsData.length);
+                    // Store icons data by group ID for easy lookup
+                    iconsData.forEach(icon => {
+                        if (icon.group_id && icon.icon_url) {
+                            groupIcons[icon.group_id] = icon.icon_url;
+                        }
+                    });
+                } else if (typeof iconsData === 'object' && iconsData !== null) {
+                    console.log('Icons data is an object with keys:', Object.keys(iconsData));
+                    // If it's an object, iterate through its properties
+                    for (const key in iconsData) {
+                        if (iconsData.hasOwnProperty(key) && iconsData[key] && iconsData[key].icon_url) {
+                            groupIcons[key] = iconsData[key].icon_url;
+                        }
+                    }
+                }
+
+                console.log('Group icons collected:', Object.keys(groupIcons).length);
+            } else {
+                console.log('No icons data available, using empty groupIcons object');
             }
+
+            // Now process the leaderboard data
+            console.log('Calling processLeaderboardData with data and groupIcons');
+            processLeaderboardData(leaderboardData, podiumContainer, listEntriesContainer, groupIcons);
+            return true; // Return a simple value instead of the result of processLeaderboardData
+        })
+        .catch(error => {
+            console.error('Error processing data:', error);
 
             // Display user-friendly error message
             const errorMessage = `<div class="error-message">Failed to load data: ${error.message}</div>`;
@@ -269,6 +263,193 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 });
 
+// Function to handle the RAT FISH logo and social embeds
+function processRatFishLogoAndSocials(data, groupIcons) {
+    console.log('Processing RAT FISH logo and social embeds');
+
+    const ratFishLogo = document.getElementById('rat-fish-logo');
+    if (!ratFishLogo) {
+        console.warn('RAT FISH logo element not found');
+        return;
+    }
+
+    // Load the RAT FISH logo using the group ID
+    const ratFishGroupId = ratFishLogo.dataset.groupId;
+    console.log('RAT FISH group ID:', ratFishGroupId);
+
+    if (ratFishGroupId && groupIcons && groupIcons[ratFishGroupId]) {
+        // Get the icon URL from the groupIcons object
+        const iconData = groupIcons[ratFishGroupId];
+        console.log('Found icon data for RAT FISH:', iconData);
+
+        if (typeof iconData === 'object' && iconData.url) {
+            console.log('Using URL from object:', iconData.url);
+            ratFishLogo.src = iconData.url;
+        } else if (typeof iconData === 'string') {
+            console.log('Using URL from string:', iconData);
+            ratFishLogo.src = iconData;
+        }
+    } else {
+        // Fallback to local image if not found in groupIcons
+        console.log('Using fallback image for RAT FISH logo');
+        ratFishLogo.src = 'images/rat_fish.png';
+        // Add error handling in case the local image also fails
+        ratFishLogo.onerror = function() {
+            console.error('Failed to load RAT FISH logo fallback image');
+            this.src = 'images/fish_known.png'; // Ultimate fallback
+        };
+    }
+
+    // Add error handling to the image
+    addImageErrorHandling(ratFishLogo);
+
+    // Get global settings for social links
+    let globalSettings = null;
+
+    // Check if data has the new structure with global_settings at the top
+    if (data && typeof data === 'object' && data.global_settings) {
+        console.log('Found global settings in new data structure');
+        globalSettings = data.global_settings;
+    } else if (Array.isArray(data)) {
+        // Try to find global_settings in the array (old format)
+        const settingsEntry = data.find(entry => entry.global_settings);
+        if (settingsEntry && settingsEntry.global_settings) {
+            console.log('Found global settings in old data structure');
+            globalSettings = settingsEntry.global_settings;
+        }
+    } else {
+        console.log('No global settings found in data');
+    }
+
+    // Check if we have valid global settings with at least one social link
+    const hasSocialLinks = globalSettings &&
+        ((globalSettings.twitter_link && globalSettings.twitter_link.trim() !== '') ||
+         (globalSettings.youtube_link && globalSettings.youtube_link.trim() !== ''));
+
+    if (hasSocialLinks) {
+        // Add social media embeds if available
+        const socialEmbedsContainer = document.getElementById('rat-fish-social-embeds');
+        if (socialEmbedsContainer) {
+            // Clear any existing embeds
+            socialEmbedsContainer.innerHTML = '';
+
+            // Add Twitter embed if available and not empty
+            if (globalSettings.twitter_link && globalSettings.twitter_link.trim() !== '') {
+                // Handle Twitter/X embed
+                try {
+                    const twitterEmbed = document.createElement('div');
+                    twitterEmbed.className = 'social-embed twitter-embed';
+
+                    // Convert x.com URLs to twitter.com for better compatibility with the widget
+                    let tweetUrl = globalSettings.twitter_link;
+                    if (tweetUrl.includes('x.com')) {
+                        tweetUrl = tweetUrl.replace('x.com', 'twitter.com');
+                        console.log('Converted X URL to Twitter URL:', tweetUrl);
+                    }
+
+                    // Use a simpler approach for Twitter embeds without the View on Twitter link
+                    twitterEmbed.innerHTML = `
+                        <blockquote class="twitter-tweet" data-theme="dark" data-width="560">
+                            <a href="${tweetUrl}"></a>
+                        </blockquote>
+                    `;
+
+                    // Create and append the Twitter script separately
+                    // Check if the script is already on the page
+                    if (!document.querySelector('script[src="https://platform.twitter.com/widgets.js"]')) {
+                        const twitterScript = document.createElement('script');
+                        twitterScript.async = true;
+                        twitterScript.src = "https://platform.twitter.com/widgets.js";
+                        twitterScript.charset = "utf-8";
+                        document.body.appendChild(twitterScript);
+
+                        // Force Twitter widgets to load
+                        twitterScript.onload = function() {
+                            if (window.twttr && window.twttr.widgets) {
+                                window.twttr.widgets.load();
+                                console.log('Twitter widgets loaded');
+                            }
+                        };
+                    } else {
+                        // If script already exists, try to force load
+                        if (window.twttr && window.twttr.widgets) {
+                            window.twttr.widgets.load();
+                            console.log('Twitter widgets reloaded');
+                        }
+                    }
+
+                    socialEmbedsContainer.appendChild(twitterEmbed);
+                    console.log('Twitter embed added with URL:', tweetUrl);
+                } catch (e) {
+                    console.error('Error creating Twitter embed:', e);
+                }
+            }
+
+            // Add YouTube embed if available and not empty
+            if (globalSettings.youtube_link && globalSettings.youtube_link.trim() !== '') {
+                // Extract YouTube video ID or channel ID from URL
+                let youtubeId = '';
+                let isChannel = false;
+
+                try {
+                    const youtubeUrl = new URL(globalSettings.youtube_link);
+
+                    if (youtubeUrl.hostname.includes('youtube.com')) {
+                        if (youtubeUrl.pathname.includes('/channel/')) {
+                            // Channel URL
+                            youtubeId = youtubeUrl.pathname.split('/channel/')[1].split('/')[0];
+                            isChannel = true;
+                        } else if (youtubeUrl.pathname.includes('/watch')) {
+                            // Video URL
+                            youtubeId = youtubeUrl.searchParams.get('v');
+                        }
+                    } else if (youtubeUrl.hostname === 'youtu.be') {
+                        // Short URL
+                        youtubeId = youtubeUrl.pathname.substring(1);
+                    }
+                } catch (e) {
+                    console.error('Invalid YouTube URL:', globalSettings.youtube_link);
+                }
+
+                if (youtubeId) {
+                    const youtubeEmbed = document.createElement('div');
+                    youtubeEmbed.className = 'social-embed youtube-embed';
+
+                    if (isChannel) {
+                        // Channel embed (using latest video from channel)
+                        youtubeEmbed.innerHTML = `
+                            <iframe
+                                width="560"
+                                height="315"
+                                src="https://www.youtube.com/embed?listType=user_uploads&list=${youtubeId}&autoplay=1"
+                                frameborder="0"
+                                allowfullscreen>
+                            </iframe>
+                        `;
+                    } else {
+                        // Video embed
+                        youtubeEmbed.innerHTML = `
+                            <iframe
+                                width="560"
+                                height="315"
+                                src="https://www.youtube.com/embed/${youtubeId}?&autoplay=1"
+                                frameborder="0"
+                                allowfullscreen>
+                            </iframe>
+                        `;
+                    }
+
+                    socialEmbedsContainer.appendChild(youtubeEmbed);
+                    console.log('YouTube embed added with ID:', youtubeId);
+                }
+            }
+        }
+    }
+
+    // Log that processing is complete
+    console.log('RAT FISH logo and social embeds processing complete');
+}
+// Fix for the extra closing bracket
 // Create podium with top 3 entries
 function createPodium(sortedData, podiumContainer, groupIcons = {}) {
     const podiumEntries = sortedData.slice(0, 3);
@@ -453,7 +634,6 @@ function createPodium(sortedData, podiumContainer, groupIcons = {}) {
         // Add crown to the icon container
         iconContainer.appendChild(crown);
         iconContainer.appendChild(firstIcon);
-
         firstBar.appendChild(firstWins);
         firstPlace.appendChild(iconContainer);
         firstPlace.appendChild(firstBar);
@@ -545,31 +725,74 @@ function processLeaderboardData(data, podiumContainer, listEntriesContainer, gro
     // Debug: Log the leaderboard data structure
     console.log('Leaderboard data structure:', JSON.stringify(data).substring(0, 500) + '...');
 
-    // Check if data is an array
-    if (!Array.isArray(data)) {
-        console.error('Leaderboard data is not an array. Type:', typeof data);
-        throw new Error('Leaderboard data is not in the expected format');
-    }
+    // Clear loading messages immediately to show progress
+    podiumContainer.innerHTML = '<div class="loading-message">Processing data...</div>';
+    listEntriesContainer.innerHTML = '<div class="loading-message">Processing data...</div>';
 
-    // Sort data by wins in descending order
-    const sortedData = data.sort((a, b) => b.wins - a.wins);
-    console.log('Sorted data length:', sortedData.length);
+    let leaderboardEntries = [];
+    let globalSettings = null;
 
-    if (sortedData.length === 0) {
-        podiumContainer.innerHTML = '<div class="error-message">No leaderboard data available.</div>';
-        listEntriesContainer.innerHTML = '<div class="error-message">No leaderboard data available.</div>';
+    try {
+        // Check if data has the new structure with global_settings
+        if (data && typeof data === 'object' && data.global_settings && Array.isArray(data.leaderboard)) {
+            // New structure with global_settings at the top
+            console.log('Using new data structure with global_settings');
+            leaderboardEntries = data.leaderboard;
+            globalSettings = data.global_settings;
+        } else if (Array.isArray(data)) {
+            // Old structure (just an array of entries)
+            console.log('Using old data structure (array only)');
+            leaderboardEntries = data;
+
+            // Try to find global_settings in the array (old format)
+            const settingsEntry = data.find(entry => entry.global_settings);
+            if (settingsEntry && settingsEntry.global_settings) {
+                globalSettings = settingsEntry.global_settings;
+            }
+        } else {
+            console.error('Leaderboard data is not in a recognized format. Type:', typeof data);
+            throw new Error('Leaderboard data is not in the expected format');
+        }
+
+        // Process the RAT FISH logo and social embeds
+        processRatFishLogoAndSocials(data, groupIcons);
+    } catch (error) {
+        console.error('Error processing leaderboard data structure:', error);
+        podiumContainer.innerHTML = `<div class="error-message">Error processing data: ${error.message}</div>`;
+        listEntriesContainer.innerHTML = `<div class="error-message">Error processing data: ${error.message}</div>`;
         return;
     }
 
-    // Clear loading messages
-    podiumContainer.innerHTML = '';
-    listEntriesContainer.innerHTML = '';
+    try {
+        // Sort data by wins in descending order
+        console.log('Sorting leaderboard entries, count:', leaderboardEntries.length);
+        const sortedData = leaderboardEntries.sort((a, b) => b.wins - a.wins);
+        console.log('Sorted data length:', sortedData.length);
 
-    // Create podium (top 3)
-    createPodium(sortedData, podiumContainer, groupIcons);
+        if (sortedData.length === 0) {
+            podiumContainer.innerHTML = '<div class="error-message">No race data available.</div>';
+            listEntriesContainer.innerHTML = '<div class="error-message">No race data available.</div>';
+            return;
+        }
 
-    // Create list entries (for page 2)
-    createListEntries(sortedData, listEntriesContainer, groupIcons);
+        // Clear loading messages
+        podiumContainer.innerHTML = '';
+        listEntriesContainer.innerHTML = '';
+
+        // Create podium (top 3)
+        console.log('Creating podium with top entries');
+        createPodium(sortedData, podiumContainer, groupIcons);
+
+        // Create list entries (for page 2)
+        console.log('Creating list entries for page 2');
+        createListEntries(sortedData, listEntriesContainer, groupIcons);
+
+        console.log('Leaderboard rendering complete');
+    } catch (error) {
+        console.error('Error rendering leaderboard:', error);
+        podiumContainer.innerHTML = `<div class="error-message">Error rendering leaderboard: ${error.message}</div>`;
+        listEntriesContainer.innerHTML = `<div class="error-message">Error rendering leaderboard: ${error.message}</div>`;
+    }
 }
 
 // Create list entries for page 2
@@ -729,6 +952,45 @@ function createListEntries(sortedData, listEntriesContainer, groupIcons = {}) {
 
         // Add the container to the wins element
         winsElement.appendChild(winsContainer);
+
+        // Add social media links if available
+        if (item.twitter_link || item.youtube_link) {
+            const socialLinks = document.createElement('div');
+            socialLinks.className = 'social-links';
+            socialLinks.style.margin = '0';
+            socialLinks.style.position = 'absolute';
+            socialLinks.style.right = '10px';
+            socialLinks.style.top = '50%';
+            socialLinks.style.transform = 'translateY(-50%)';
+
+            if (item.twitter_link) {
+                const twitterLink = document.createElement('a');
+                twitterLink.href = item.twitter_link;
+                twitterLink.className = 'social-link twitter';
+                twitterLink.target = '_blank';
+                twitterLink.rel = 'noopener noreferrer';
+                twitterLink.innerHTML = '<i class="fab fa-twitter"></i>';
+                twitterLink.title = 'Twitter';
+                twitterLink.style.width = '30px';
+                twitterLink.style.height = '30px';
+                socialLinks.appendChild(twitterLink);
+            }
+
+            if (item.youtube_link) {
+                const youtubeLink = document.createElement('a');
+                youtubeLink.href = item.youtube_link;
+                youtubeLink.className = 'social-link youtube';
+                youtubeLink.target = '_blank';
+                youtubeLink.rel = 'noopener noreferrer';
+                youtubeLink.innerHTML = '<i class="fab fa-youtube"></i>';
+                youtubeLink.title = 'YouTube';
+                youtubeLink.style.width = '30px';
+                youtubeLink.style.height = '30px';
+                socialLinks.appendChild(youtubeLink);
+            }
+
+            barElement.appendChild(socialLinks);
+        }
 
         barElement.appendChild(winsElement);
         entry.appendChild(iconContainer);
