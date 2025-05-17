@@ -697,6 +697,8 @@ document.addEventListener('DOMContentLoaded', function() {
         monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
         weekdaysContainer.innerHTML = '';
         const weekdayNamesShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+        // Always show all weekdays, respecting the start day setting
         let orderedWeekdays = (startDayOfWeekSetting === 1)
             ? weekdayNamesShort
             : [...weekdayNamesShort.slice(6), ...weekdayNamesShort.slice(0, 6)];
@@ -716,6 +718,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let startingDayOffset = (firstDayIndex - startDayOfWeekSetting + 7) % 7;
 
         try {
+            // Create all cells as normal - CSS will handle hiding cells on small screens
             for (let i = 0; i < startingDayOffset; i++) {
                 calendarGrid.appendChild(createDayCell(lastDayOfPrevMonth - startingDayOffset + 1 + i, true));
             }
@@ -729,6 +732,8 @@ document.addEventListener('DOMContentLoaded', function() {
             for (let i = 0; i < remainingCells; i++) {
                 calendarGrid.appendChild(createDayCell(i + 1, true));
             }
+
+            // On small screens, CSS will hide Fri, Sat, Sun cells using nth-child selectors
         } catch (error) {
             console.error("Error occurred while creating calendar day cells:", error);
             calendarGrid.innerHTML = `<p class='error-message' style='grid-column: 1 / -1; text-align: center;'><i>Error generating calendar days: ${escapeHtml(error.message)}</i></p>`;

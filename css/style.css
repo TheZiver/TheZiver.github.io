@@ -1354,19 +1354,24 @@ iframe {
         padding-bottom: 100%; /* Make cells more square */
     }
 
-    /* Make the calendar grid display fewer columns on small screens */
+    /* Make the calendar grid display all days but in a more compact layout */
     .calendar-body {
-        grid-template-columns: repeat(4, 1fr); /* Show 4 days per row instead of 7 */
+        display: grid;
+        grid-template-columns: repeat(7, 1fr); /* Keep all 7 days */
+        gap: 1px; /* Minimal gap between cells */
     }
 
-    /* Adjust weekday headers to match the 4-column layout */
+    /* Keep all weekday headers but make them more compact */
     .calendar-weekdays {
-        grid-template-columns: repeat(4, 1fr);
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
     }
 
-    /* Hide some weekday headers to fit the 4-column layout */
-    .calendar-weekdays .weekday-header:nth-child(n+5) {
-        display: none;
+    /* Make weekday headers more compact */
+    .weekday-header {
+        font-size: 0.7em; /* Smaller font */
+        padding: 2px 0;
     }
 
     /* Adjust link/div wrappers inside cells */
@@ -1435,19 +1440,22 @@ iframe {
         overflow: visible; /* Allow content to be visible */
     }
 
-    /* Keep the 4-column layout from previous breakpoints */
+    /* Keep the 7-column layout but make it even more compact */
     .calendar-body {
-        grid-template-columns: repeat(4, 1fr); /* Show 4 days per row */
+        grid-template-columns: repeat(7, 1fr); /* Show all 7 days */
+        gap: 1px; /* Minimal gap */
     }
 
-    /* Adjust weekday headers to match the 4-column layout */
+    /* Keep all weekday headers but make them even smaller */
     .calendar-weekdays {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
     }
 
-    /* Hide some weekday headers to fit the 4-column layout */
-    .calendar-weekdays .weekday-header:nth-child(n+5) {
-        display: none;
+    /* Make weekday headers even more compact */
+    .weekday-header {
+        font-size: 0.6em; /* Even smaller font */
+        padding: 1px 0;
     }
 }
 /* Ordinal Event Number (Middle - for regular daily) */
