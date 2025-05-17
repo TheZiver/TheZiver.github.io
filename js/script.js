@@ -75,13 +75,44 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentYear = today.getUTCFullYear();
     let startDayOfWeekSetting = 1;
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const WORLD_IDS = {
-        0: "wrld_b0812b34-cd7c-44b8-9b29-4f921a9e4d5a", 1: "wrld_9806f25c-0644-4ed7-a3b9-404763bd7dbc",
-        2: "wrld_a1caec89-3313-42d3-977a-3f8ac819a5a9", 3: "wrld_94d6eb87-7246-4dd8-81c0-cb1f468f096a",
-        4: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355", 5: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355",
-        6: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355" };
+    // Weekday-specific world and instance configuration
+    // This makes it easy to change which world is used for each day of the week
+    // Keys are 0-6 where 0=Sunday, 1=Monday, etc.
+    const WEEKDAY_WORLD_IDS = {
+        0: "wrld_b0812b34-cd7c-44b8-9b29-4f921a9e4d5a", // Sunday - YES?
+        1: "wrld_9806f25c-0644-4ed7-a3b9-404763bd7dbc", // Monday - LUXURY TRASH
+        2: "wrld_a1caec89-3313-42d3-977a-3f8ac819a5a9", // Tuesday - The Fishing Mall
+        3: "wrld_94d6eb87-7246-4dd8-81c0-cb1f468f096a", // Wednesday - Retrocubic Nexus
+        4: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355", // Thursday - Cunks Coughing City
+        5: "wrld_991916a7-6c03-422f-9fe5-cd74f7d796b8", // Friday - ≺ ≻ ≺ CASINO
+        6: "wrld_b0812b34-cd7c-44b8-9b29-4f921a9e4d5a"  // Saturday - YES?
+    };
+
+    // Instance IDs for special recurring events
+    // Use null for regular daily events that use the day number as instance ID
+    const WEEKDAY_INSTANCE_IDS = {
+        0: null, // Sunday - regular daily event
+        1: null, // Monday - regular daily event
+        2: null, // Tuesday - regular daily event
+        3: null, // Wednesday - regular daily event
+        4: null, // Thursday - regular daily event
+        5: null, // Friday - CASINO now uses day number like other events
+        6: null  // Saturday - regular daily event
+    };
+
+    // For backward compatibility
+    const WORLD_IDS = WEEKDAY_WORLD_IDS;
+
     const VRC_GROUP_ID = "grp_2b910dc4-e984-4fd5-813c-877edcea29d2";
-    const locations = [ "YES?", "LUXURY TRASH", "The Fishing Mall", "Retrocubic Nexus", "Cunks Coughing City", "YES?", "YES?" ];
+    const locations = [
+        "YES?",              // Sunday (0)
+        "LUXURY TRASH",      // Monday (1)
+        "The Fishing Mall",  // Tuesday (2)
+        "Retrocubic Nexus",  // Wednesday (3)
+        "Cunks Coughing City", // Thursday (4)
+        "≺ ≻ ≺ CASINO",      // Friday (5)
+        "YES?"               // Saturday (6)
+    ];
     let specialDaysMap = new Map();
     let dailySpecialDaysMap = new Map();
     window.timerElementsChecked = false;
@@ -748,32 +779,73 @@ document.addEventListener('DOMContentLoaded', function() {
                 isHandled = true;
             }
 
+            // Handle weekday-specific events (but only if not already handled by special days)
+            if (!isHandled) {
+                const dayOfWeek = cellDate.getUTCDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+                const locationName = locations[dayOfWeek];
+                const worldId = WEEKDAY_WORLD_IDS[dayOfWeek];
+                const customInstanceId = WEEKDAY_INSTANCE_IDS[dayOfWeek];
+
+                // If this day has a custom instance ID, it's a special recurring event
+                if (customInstanceId !== null) {
+                    // This is a special recurring event (like Friday CASINO)
+                    // No special styling for regular recurring events - only special days from JSON get highlighted
+
+                    const eventLink = document.createElement('a');
+                    const instanceParams = `~group(${VRC_GROUP_ID})~groupAccessType(public)~region(eu)`;
+                    eventLink.href = `https://vrchat.com/home/launch?worldId=${worldId}&instanceId=${customInstanceId}${instanceParams}`;
+                    eventLink.target = "_blank";
+                    eventLink.rel = "noopener noreferrer";
+                    eventLink.title = `Join the ${locationName}`;
+                    eventLink.appendChild(dayNumberSpan);
+
+                    // Add the daily number for consistency with other days
+                    if (dailyDay !== null) {
+                        const suffix = getOrdinalSuffix(dailyDay);
+                        const eventNumSpan = document.createElement('span');
+                        eventNumSpan.classList.add('daily-event-num');
+                        eventNumSpan.textContent = `${dailyDay}${suffix}`;
+                        eventLink.appendChild(eventNumSpan);
+                    }
+
+                    const eventNameSpan = document.createElement('span');
+                    eventNameSpan.classList.add('event-location');
+                    eventNameSpan.innerHTML = locationName.replace('≺ ≻ ≺', '＜＞＜'); // Replace ASCII with proper characters if needed
+                    eventLink.appendChild(eventNameSpan);
+
+                    dayCell.appendChild(eventLink);
+                    isHandled = true;
+                }
+            }
+
             if (!isHandled && dailyDay !== null) {
                 const suffix = getOrdinalSuffix(dailyDay);
                 const instanceId = dailyDay;
-                const dayOfWeekForWorld = (cellDate.getUTCDay() + 6) % 7;
-                const worldId = WORLD_IDS[dayOfWeekForWorld];
-                const dayOfWeekForLocation = cellDate.getUTCDay();
-                const locationName = locations[dayOfWeekForLocation];
-                const baseUrl = "https://vrchat.com/home/launch?worldId=" + worldId + "&instanceId=";
+                const dayOfWeek = cellDate.getUTCDay();
+                const worldId = WEEKDAY_WORLD_IDS[dayOfWeek];
+                const locationName = locations[dayOfWeek];
                 const instanceParams = `~group(${VRC_GROUP_ID})~groupAccessType(public)~region(eu)`;
-                const vrchatLink = baseUrl + instanceId + instanceParams;
+                const vrchatLink = `https://vrchat.com/home/launch?worldId=${worldId}&instanceId=${instanceId}${instanceParams}`;
+
                 const dayLink = document.createElement('a');
                 dayLink.href = vrchatLink;
                 dayLink.target = "_blank";
                 dayLink.rel = "noopener noreferrer";
                 dayLink.title = `Join Daily VRChat #${dailyDay}${suffix}`;
                 dayLink.appendChild(dayNumberSpan);
+
                 const eventNumSpan = document.createElement('span');
                 eventNumSpan.classList.add('daily-event-num');
                 eventNumSpan.textContent = `${dailyDay}${suffix}`;
                 dayLink.appendChild(eventNumSpan);
+
                 if (locationName) {
                     const locationSpan = document.createElement('span');
                     locationSpan.classList.add('event-location');
                     locationSpan.textContent = locationName;
                     dayLink.appendChild(locationSpan);
                 }
+
                 dayCell.appendChild(dayLink);
                 isHandled = true;
             }
@@ -843,13 +915,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 const instanceId = currentDayNumber;
 
                 if (instanceId !== null) {
-                     const dayOfWeekForWorld = (todayStartUTC.getUTCDay() + 6) % 7;
-                     const worldId = WORLD_IDS[dayOfWeekForWorld];
-                     const baseUrl = "https://vrchat.com/home/launch?worldId=" + worldId + "&instanceId=";
+                     const dayOfWeek = todayStartUTC.getUTCDay();
+                     const worldId = WEEKDAY_WORLD_IDS[dayOfWeek];
+                     const customInstanceId = WEEKDAY_INSTANCE_IDS[dayOfWeek];
+                     const locationName = locations[dayOfWeek];
                      const instanceParams = `~group(${VRC_GROUP_ID})~groupAccessType(public)~region(eu)`;
-                     const vrchatLink = baseUrl + instanceId + instanceParams;
 
-                     happeningNowMessage.textContent = `DAILY VRCHAT (${currentDayNumber}${currentDaySuffix}) IS CURRENTLY HAPPENING`;
+                     // Use custom instance ID if available, otherwise use the day number
+                     const finalInstanceId = customInstanceId !== null ? customInstanceId : instanceId;
+                     const vrchatLink = `https://vrchat.com/home/launch?worldId=${worldId}&instanceId=${finalInstanceId}${instanceParams}`;
+
+                     // Show location name in the happening now message if available
+                     const locationText = locationName ? ` at ${locationName}` : '';
+                     happeningNowMessage.textContent = `DAILY VRCHAT (${currentDayNumber}${currentDaySuffix})${locationText} IS CURRENTLY HAPPENING`;
                      happeningNowLink.href = vrchatLink;
                      happeningNowContainer.style.display = 'block';
                 } else {
