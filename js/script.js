@@ -79,13 +79,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // This makes it easy to change which world is used for each day of the week
     // Keys are 0-6 where 0=Sunday, 1=Monday, etc.
     const WEEKDAY_WORLD_IDS = {
-        0: "wrld_b0812b34-cd7c-44b8-9b29-4f921a9e4d5a", // Sunday - YES?
-        1: "wrld_9806f25c-0644-4ed7-a3b9-404763bd7dbc", // Monday - LUXURY TRASH
-        2: "wrld_a1caec89-3313-42d3-977a-3f8ac819a5a9", // Tuesday - The Fishing Mall
-        3: "wrld_94d6eb87-7246-4dd8-81c0-cb1f468f096a", // Wednesday - Retrocubic Nexus
-        4: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355", // Thursday - Cunks Coughing City
+        0: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355", // Sunday - YES?
+        1: "wrld_b0812b34-cd7c-44b8-9b29-4f921a9e4d5a", // Monday - LUXURY TRASH
+        2: "wrld_9806f25c-0644-4ed7-a3b9-404763bd7dbc", // Tuesday - The Fishing Mall
+        3: "wrld_a1caec89-3313-42d3-977a-3f8ac819a5a9", // Wednesday - Retrocubic Nexus
+        4: "wrld_94d6eb87-7246-4dd8-81c0-cb1f468f096a", // Thursday - Cunks Coughing City
         5: "wrld_991916a7-6c03-422f-9fe5-cd74f7d796b8", // Friday - ≺ ≻ ≺ CASINO
-        6: "wrld_b0812b34-cd7c-44b8-9b29-4f921a9e4d5a"  // Saturday - YES?
+        6: "wrld_72b30439-62a0-4c0d-a0e6-b3eb7292d355"  // Saturday - YES?
     };
 
     // Instance IDs for special recurring events
