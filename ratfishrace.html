@@ -5,476 +5,172 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>FISH ＜＞＜ COMMUNITY - RAT FISH RACE</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Links to your external CSS files -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dropdown.css">
     <link rel="stylesheet" href="css/back-to-top.css">
     <style>
-        /* Prevent text size adjustment - global override */
-        html, body, * {
-            -webkit-text-size-adjust: none !important;
-            -moz-text-size-adjust: none !important;
-            -ms-text-size-adjust: none !important;
-            text-size-adjust: none !important;
-            font-size-adjust: none !important;
-            max-height: 999999px; /* Prevent browser zoom affecting text */
-        }
-
-        /* Leaderboard specific styles using global CSS variables */
-        .page {
-            display: none;
-            width: 100%;
-        }
-
-        .page.active {
-            display: block;
-        }
+        /* Leaderboard specific styles */
+        .page { display: none; width: 100%; }
+        .page.active { display: block; }
 
         /* Navigation buttons */
-        .nav-buttons {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        .nav-button {
-            background-color: #e63946;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 0 10px;
-            font-size: 1.2em;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .nav-button:hover {
-            background-color: #c1272d;
-            transform: translateY(-2px);
-        }
+        .nav-buttons { display: flex; justify-content: center; margin: 20px 0; position: relative; }
+        .nav-button { background-color: #e63946; color: white; border: none; padding: 10px 20px; margin: 0 10px; font-size: 1.2em; cursor: pointer; text-transform: uppercase; font-weight: bold; transition: background-color 0.3s; }
+        .nav-button:hover { background-color: #c1272d; transform: translateY(-2px); }
 
         /* Podium styles */
-        #podium {
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            margin: 30px auto;
-            position: relative;
-            max-width: 500px;
-        }
+        #podium { display: flex; justify-content: center; align-items: flex-end; margin: 30px auto; position: relative; max-width: 500px; }
+        .podium-entry { display: flex; flex-direction: column; align-items: center; margin: 0 10px; }
+        .podium-bar { width: 120px; background-color: #e63946; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); text-align: center; overflow: hidden; padding: 10px 5px; box-sizing: border-box; }
+        
+        .icon-container { position: relative; display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; }
+        #podium .icon-container { margin-bottom: 10px; }
+        .list-entry .icon-container { display: flex; align-items: center; justify-content: center; position: relative; height: 100%; width: 90px; padding: 0 5px; margin-left: 10px; box-sizing: border-box; margin-bottom: 0; }
+        
+        .crown-emoji { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 40px; z-index: 2; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); }
+        .group-icon { width: 80px; height: 80px; background-color: transparent; object-fit: contain; padding: 5px; filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.95)); }
 
-        .podium-entry {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0 10px;
-        }
-
-        .podium-bar {
-            width: 120px;
-            background-color: #e63946;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .icon-container {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .crown-emoji {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 40px;
-            z-index: 2;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        }
-
-        .group-icon {
-            width: 80px;
-            height: 80px;
-            /* Removed border-radius for non-circular icons */
-            margin-bottom: 10px;
-            background-color: transparent; /* Remove white background */
-            object-fit: contain;
-            padding: 5px;
-            /* Enhanced drop shadow for better visibility regardless of icon color */
-            filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.95));
-        }
-
-        .wins-label {
-            color: white;
-            font-size: 1.2em !important;
+        /* --- WINS text styling (Podium) --- */
+        .wins-label { color: white; font-weight: bold; text-align: center; width: 100%; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); position: relative; display: flex; align-items: center; justify-content: center; height: 100%; padding: 0; box-sizing: border-box; }
+        .podium-bar .wins-label { font-size: 0.85rem !important; }
+        
+        .wins-label-text { /* General style for "WINS: X" - used by podium and list initially */
+            font-size: 1em; 
             font-weight: bold;
-            text-align: center;
-            width: 100%;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            margin: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-        }
-
-        .wins-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            margin: auto;
-            width: 100%;
-            height: 100%;
-        }
-
-        .wins-text {
-            font-size: 0.7em !important;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: bold;
-            position: relative;
-            text-align: center;
-        }
-
-        .wins-number {
-            font-size: 1.2em !important;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            margin: 0 auto;
-            width: 100%;
-            height: auto;
-            font-weight: bold;
-        }
-
-        /* List entries styles */
-        #list-entries {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            gap: 10px;
-        }
-
-        .entries-wrapper {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            flex-wrap: nowrap;
-        }
-
-        .list-entry {
-            display: flex;
-            align-items: center; /* Center items vertically */
-            justify-content: space-between; /* Space between icon and number */
-            height: 60px;
-            background-color: #e63946;
-            overflow: visible;
-            width: 100%;
-            margin: 5px 0;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
-            box-sizing: border-box;
-            padding: 0 20px;
-            border-radius: 5px;
-            position: relative;
-            flex-basis: 100%;
-            text-align: center;
-        }
-
-        /* Ensure all content is vertically centered */
-        .list-entry > * {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            position: relative;
-        }
-
-        .icon-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            height: 100%;
-        }
-
-        .entry-icon {
-            width: 50px;
-            height: 50px;
-            background-color: transparent; /* Remove white background */
-            object-fit: contain;
-            padding: 5px;
-            /* Removed border-radius for non-circular icons */
-            /* Replaced box-shadow with filter:drop-shadow for better visibility */
-            filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.95));
-            position: relative;
-            margin: auto 0; /* Center vertically */
-        }
-
-        .crown {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 28px;
-            z-index: 10;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        }
-
-        .entry-bar {
-            flex-grow: 1;
-            padding: 0 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: visible;
-            position: relative;
-            height: 100%;
-            min-width: 120px;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
-        }
-
-        .entry-wins {
-            color: white;
-            font-size: 1.2em !important;
-            font-weight: bold;
-            white-space: nowrap;
+            color: white !important; 
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
             text-align: center;
-            width: 100%;
-            padding: 0;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            margin: auto;
-            z-index: 2;
-            overflow: visible;
-            letter-spacing: 1px;
-            font-family: Arial, sans-serif !important;
-            height: 100%;
+            width: 100%; 
+            line-height: 1.15; 
+            font-size-adjust: auto !important; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Wins container styling is defined above */
+        .wins-container { /* This class is applied by JS to the container of .wins-label-text */
+            display: flex; 
+            flex-direction: column; /* For podium, this makes sense if icon/text are stacked */
+            align-items: center;    /* For column flex, this centers horizontally */
+            justify-content: center;/* For column flex, this centers vertically */
+            position: relative;      /* As per original JS inspection */
+            margin: 0 auto;          /* As per original JS inspection */
+            width: 100%;
+            height: 100%;
+            padding: 0 2px;          /* As per original JS inspection, was 0 5px */
+            box-sizing: border-box;
+        }
+        /* If .wins-container is used in a row context (like list view text), these might be better: */
+        /* .entry-wins .wins-container { flex-direction: row; } */
 
-        /* Wins number styling is defined above */
+
+        .wins-text { font-size: 0.8em !important; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; position: relative; text-align: center; width: 100%; display: block; }
+        .wins-number { line-height: 1; display: block; text-align: center; position: relative; margin: 0 auto; width: 100%; font-weight: bold; }
+        .podium-bar .wins-label-text .wins-number { font-size: 1.25em !important; }
+
+        /* --- List entries styles --- */
+        #list-entries { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 500px; margin: 0 auto; gap: 10px; }
+        .entries-wrapper { width: 100%; display: flex; flex-direction: column; gap: 10px; flex-wrap: nowrap; }
+        .list-entry { display: flex; align-items: center; justify-content: flex-start; height: 70px; background-color: #e63946; overflow: hidden; width: 100%; margin: 5px 0; box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); box-sizing: border-box; padding: 0; border-radius: 5px; position: relative; }
+        .list-entry > * { display: flex; align-items: center; height: 100%; position: relative; }
+        
+        .entry-icon { width: 60px; height: 60px; background-color: transparent; object-fit: contain; padding: 2px; filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.95)); position: relative; }
+        .crown { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 28px; z-index: 10; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); }
+        
+        .entry-bar { flex-grow: 1; padding: 0 10px; display: flex; justify-content: center; align-items: center; height: 100%; text-align: center; overflow: hidden; }
+        .entry-wins { /* Parent container for list entry text, uses flex for centering */
+            color: white; 
+            font-weight: bold; 
+            white-space: nowrap; 
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); 
+            text-align: center; 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100%; 
+            font-family: Arial, sans-serif !important; 
+        }
+
+        /* Refined style for LIST ENTRY TEXT - for better vertical centering */
+        .list-entry .wins-label-text {
+            /* Core Visibility & Color */
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+            background-color: transparent !important;
+            border: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+
+            /* Font Styling */
+            font-family: Arial, sans-serif !important;
+            font-size: 1.1rem !important; 
+            font-weight: bold !important; 
+            line-height: 1 !important; /* CRITICAL: Makes the text's own line box tight */
+            letter-spacing: normal !important;
+            text-align: center !important; /* Centers text within its own box */
+            
+            /* Crucial for Rendering & Overrides */
+            font-size-adjust: auto !important; 
+            background-clip: initial !important; 
+            -webkit-background-clip: initial !important; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+
+            /* Layout - Let the parent flex container (.wins-container or .entry-wins) do the centering work. */
+            padding: 2px 5px !important; /* Minimal padding around the text, this box will be centered */
+            margin: 0 !important; /* Ensure no margins are pushing it */
+        }
+
 
         /* Reset notice styling */
-        .reset-notice {
-            text-align: center;
-            color: #adbfda;
-            font-size: 0.9em;
-            margin: -10px 0 15px 0;
-            font-style: italic;
-        }
+        .reset-notice { text-align: center; color: #adbfda; font-size: 0.9em; margin: -10px 0 15px 0; font-style: italic; }
+        .loading-message, .error-message { text-align: center; padding: 20px; color: white; font-style: italic; }
+        .error-message { color: #e63946; }
 
-        /* Loading and error messages */
-        .loading-message, .error-message {
-            text-align: center;
-            padding: 20px;
-            color: white;
-            font-style: italic;
-        }
+        /* Attribution styling (condensed) */
+        .attribution { text-align: center; margin-top: 40px; padding: 20px 15px; color: #ADBFDA; font-size: 1em; font-weight: bold; border-top: 1px solid #6E9F94; display: flex; flex-direction: column; align-items: center; gap: 15px; background-color: rgba(0, 0, 0, 0.3); }
+        .attribution-text { font-size: 1.2em; color: #ADBFDA; text-shadow: 0 0 5px rgba(173, 191, 218, 0.5); line-height: 1.5; margin-bottom: 0; }
+        .attribution a { color: #ADBFDA; text-decoration: underline; }
+        .attribution-image-container { margin-top: 5px; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; }
+        .attribution-image-container a { display: block; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease; }
+        .attribution-image-container a:hover { transform: scale(1.1); }
+        .attribution-image { max-width: 100%; height: auto; filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.95)); }
 
-        .error-message {
-            color: #e63946;
-        }
-
-        /* Attribution styling */
-        .attribution {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px 15px;
-            color: #ADBFDA;
-            font-size: 1em;
-            font-weight: bold;
-            border-top: 1px solid #6E9F94;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px; /* Increased gap between elements */
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-
-        .attribution-text {
-            font-size: 1.2em;
-            color: #ADBFDA;
-            text-shadow: 0 0 5px rgba(173, 191, 218, 0.5);
-            line-height: 1.5;
-            margin-bottom: 0; /* Remove bottom margin */
-        }
-
-        .attribution a {
-            color: #ADBFDA;
-            text-decoration: underline;
-        }
-
-        .attribution-image-container {
-            margin-top: 5px; /* Reduced top margin */
-            width: 100px;
-            height: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .attribution-image-container a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.2s ease;
-        }
-
-        .attribution-image-container a:hover {
-            transform: scale(1.1);
-        }
-
-        .attribution-image {
-            max-width: 100%;
-            height: auto;
-            filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.95));
-        }
-
-        /* Social embeds styling */
-        .social-embeds {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 25px;
-            margin: 40px auto 25px;
-            width: 100%;
-            max-width: 800px;
-            border-top: 1px solid rgba(110, 159, 148, 0.3);
-            padding-top: 30px;
-        }
-
-        .social-embed {
-            width: 100%;
-            max-width: 560px;
-            margin: 0 auto;
-            filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
-        }
-
-        .twitter-embed, .youtube-embed {
-            width: 100%;
-            overflow: hidden;
-            border-radius: 5px;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* Twitter embed styling - matched to YouTube embed size */
-        .twitter-embed {
-            max-width: 560px; /* Match YouTube width */
-            margin: 20px auto; /* Match YouTube margin */
-            width: 100%;
-            border-radius: 5px;
-            overflow: visible;
-            position: relative;
-            z-index: 1;
-            min-height: 315px; /* Match YouTube height */
-            display: flex;
-            justify-content: center;
-        }
-
-        /* Make Twitter embeds responsive and match YouTube size */
-        .twitter-embed .twitter-tweet,
-        .twitter-embed blockquote.twitter-tweet {
-            margin: 0 auto !important;
-            width: 100% !important;
-            max-width: 560px !important; /* Match YouTube width */
-            border: none !important;
-            box-shadow: none !important;
-            background: transparent !important;
-            display: block !important;
-            z-index: 2;
-            position: relative;
-        }
-
-        /* Fix for Twitter embed visibility */
-        .twitter-embed iframe {
-            margin: 0 auto !important;
-            display: block !important;
-            width: 560px !important; /* Match YouTube width */
-            max-width: 100% !important;
-            min-height: 315px !important; /* Match YouTube height */
-        }
-
-        /* YouTube embed styling */
-        .youtube-embed {
-            width: 100%;
-            max-width: 560px;
-            margin: 20px auto;
-            display: flex;
-            justify-content: center;
-        }
-
-        .youtube-embed iframe {
-            border-radius: 5px;
-            width: 560px;
-            height: 315px;
-            background-color: #000;
-        }
+        /* Social embeds styling (condensed) */
+        .social-embeds { display: flex; flex-direction: column; align-items: center; gap: 25px; margin: 40px auto 25px; width: 100%; max-width: 800px; border-top: 1px solid rgba(110, 159, 148, 0.3); padding-top: 30px; }
+        .social-embed { width: 100%; max-width: 560px; margin: 0 auto; filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5)); }
+        .twitter-embed, .youtube-embed { width: 100%; overflow: hidden; border-radius: 5px; display: flex; justify-content: center; }
+        .twitter-embed { max-width: 560px; margin: 20px auto; width: 100%; border-radius: 5px; overflow: visible; position: relative; z-index: 1; min-height: 315px; display: flex; justify-content: center; }
+        .twitter-embed .twitter-tweet, .twitter-embed blockquote.twitter-tweet { margin: 0 auto !important; width: 100% !important; max-width: 560px !important; border: none !important; box-shadow: none !important; background: transparent !important; display: block !important; z-index: 2; position: relative; }
+        .twitter-embed iframe { margin: 0 auto !important; display: block !important; width: 560px !important; max-width: 100% !important; min-height: 315px !important; }
+        .youtube-embed { width: 100%; max-width: 560px; margin: 20px auto; display: flex; justify-content: center; }
+        .youtube-embed iframe { border-radius: 5px; width: 560px; height: 315px; background-color: #000; }
 
         /* Responsive adjustments */
         @media (max-width: 600px) {
-            .group-icon {
-                width: 50px;
-                height: 50px;
-                /* Ensure drop shadow is maintained on smaller screens */
-                filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.95));
+            .group-icon { width: 50px; height: 50px; }
+            .podium-bar { width: 80px; padding: 8px 3px; }
+            .podium-bar .wins-label { font-size: 0.75rem !important; }
+            .podium-bar .wins-label-text .wins-number { font-size: 1.2em !important; }
+            
+            .entry-icon { width: 50px; height: 50px; }
+            .list-entry .icon-container { width: 70px; margin-left: 5px; }
+            
+            /* Responsive LIST ENTRY TEXT */
+            .list-entry .wins-label-text {
+                font-size: 1.0rem !important; /* Slightly smaller for mobile */
+                padding: 2px 5px !important; /* Adjust padding if needed for mobile */
+                line-height: 1 !important; /* Maintain tight line height */
             }
-
-            .podium-bar {
-                width: 80px;
-            }
-
-            .entry-icon {
-                width: 40px;
-                height: 40px;
-                /* Ensure drop shadow is maintained on smaller screens */
-                filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.95));
-            }
-
-            .nav-button {
-                padding: 8px 15px;
-            }
+            
+            .wins-text { font-size: 0.7em !important; }
+            .wins-container { padding: 0 2px; }
+            
+            .list-entry { height: 65px; }
+            .nav-button { padding: 8px 15px; font-size: 1.1em; }
         }
     </style>
 </head>
@@ -510,10 +206,8 @@
         <div id="podium">
             <div class="loading-message">Loading race data...</div>
         </div>
-
-        <!-- Social embeds container (only on first page) -->
         <div class="social-embeds" id="rat-fish-social-embeds">
-            <!-- Social embeds will be added here dynamically -->
+            <!-- Social embeds will be added here dynamically by JavaScript -->
         </div>
     </div>
 
@@ -543,9 +237,10 @@
     </div>
 </div>
 
-<script src="js/leaderboard.js"></script>
+<!-- Assuming these JS files exist in a 'js' directory relative to your HTML file -->
+<script src="js/leaderboard.js"></script> <!-- Contains your main leaderboard logic -->
 <script src="js/prevent-navigation.js"></script>
-<script src="js/script.js"></script>
+<script src="js/script.js"></script> <!-- General site scripts -->
 <script src="js/swimming-fish.js"></script>
 <script src="js/dropdown.js"></script>
 <script src="js/back-to-top.js"></script>

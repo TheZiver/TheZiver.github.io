@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.reload();
             });
 
-            podiumContainer.appendChild(retryButton);
+            podiumContainer.appendChild(retryButton.cloneNode(true));
             listEntriesContainer.appendChild(retryButton.cloneNode(true));
         });
 });
@@ -498,12 +498,7 @@ function createPodium(sortedData, podiumContainer, groupIcons = {}) {
         // Create a container for the "Wins:" text and number
         const winsContainer = document.createElement('div');
         winsContainer.className = 'wins-container';
-        winsContainer.style.position = 'absolute';
-        winsContainer.style.top = '0';
-        winsContainer.style.left = '0';
-        winsContainer.style.right = '0';
-        winsContainer.style.bottom = '0';
-        winsContainer.style.margin = 'auto';
+        winsContainer.style.position = 'relative';
         winsContainer.style.width = '100%';
         winsContainer.style.height = '100%';
         winsContainer.style.display = 'flex';
@@ -511,32 +506,17 @@ function createPodium(sortedData, podiumContainer, groupIcons = {}) {
         winsContainer.style.alignItems = 'center';
         winsContainer.style.justifyContent = 'center';
 
-        // Create the "Wins:" label
-        const winsText = document.createElement('div');
-        winsText.className = 'wins-text';
-        winsText.textContent = 'Wins:';
-        winsText.style.fontSize = '0.7em';
-        winsText.style.marginBottom = '5px';
-        winsText.style.textAlign = 'center';
-        winsText.style.position = 'relative';
+        // Simplified approach - use a single element with HTML
+        const winsLabel = document.createElement('div');
+        winsLabel.className = 'wins-label-text';
+        winsLabel.innerHTML = `WINS:<br><span class="wins-number">${podiumEntries[1].wins}</span>`;
+        winsLabel.style.textAlign = 'center';
+        winsLabel.style.width = '100%';
+        winsLabel.style.color = 'white';
+        winsLabel.style.textShadow = '1px 1px 3px rgba(0, 0, 0, 0.7)';
 
-        // Create the number element
-        const winsNumber = document.createElement('div');
-        winsNumber.className = 'wins-number';
-        winsNumber.textContent = podiumEntries[1].wins;
-        winsNumber.style.fontSize = '1.2em !important';
-        winsNumber.style.fontWeight = 'bold';
-        winsNumber.style.display = 'flex';
-        winsNumber.style.alignItems = 'center';
-        winsNumber.style.justifyContent = 'center';
-        winsNumber.style.position = 'relative';
-        winsNumber.style.margin = '0 auto';
-        winsNumber.style.width = '100%';
-        winsNumber.style.height = '100%';
-
-        // Add both elements to the container
-        winsContainer.appendChild(winsText);
-        winsContainer.appendChild(winsNumber);
+        // Add the label to the container
+        winsContainer.appendChild(winsLabel);
 
         // Add the container to the wins label
         secondWins.appendChild(winsContainer);
@@ -596,32 +576,17 @@ function createPodium(sortedData, podiumContainer, groupIcons = {}) {
         winsContainer.style.alignItems = 'center';
         winsContainer.style.justifyContent = 'center';
 
-        // Create the "Wins:" label
-        const winsText = document.createElement('div');
-        winsText.className = 'wins-text';
-        winsText.textContent = 'Wins:';
-        winsText.style.fontSize = '0.7em';
-        winsText.style.marginBottom = '5px';
-        winsText.style.textAlign = 'center';
-        winsText.style.position = 'relative';
+        // Simplified approach - use a single element with HTML
+        const winsLabel = document.createElement('div');
+        winsLabel.className = 'wins-label-text';
+        winsLabel.innerHTML = `WINS:<br><span class="wins-number">${podiumEntries[0].wins}</span>`;
+        winsLabel.style.textAlign = 'center';
+        winsLabel.style.width = '100%';
+        winsLabel.style.color = 'white';
+        winsLabel.style.textShadow = '1px 1px 3px rgba(0, 0, 0, 0.7)';
 
-        // Create the number element
-        const winsNumber = document.createElement('div');
-        winsNumber.className = 'wins-number';
-        winsNumber.textContent = podiumEntries[0].wins;
-        winsNumber.style.fontSize = '1.2em !important';
-        winsNumber.style.fontWeight = 'bold';
-        winsNumber.style.display = 'flex';
-        winsNumber.style.alignItems = 'center';
-        winsNumber.style.justifyContent = 'center';
-        winsNumber.style.position = 'relative';
-        winsNumber.style.margin = '0 auto';
-        winsNumber.style.width = '100%';
-        winsNumber.style.height = '100%';
-
-        // Add both elements to the container
-        winsContainer.appendChild(winsText);
-        winsContainer.appendChild(winsNumber);
+        // Add the label to the container
+        winsContainer.appendChild(winsLabel);
 
         // Add the container to the wins label
         firstWins.appendChild(winsContainer);
@@ -682,32 +647,17 @@ function createPodium(sortedData, podiumContainer, groupIcons = {}) {
         winsContainer.style.alignItems = 'center';
         winsContainer.style.justifyContent = 'center';
 
-        // Create the "Wins:" label
-        const winsText = document.createElement('div');
-        winsText.className = 'wins-text';
-        winsText.textContent = 'Wins:';
-        winsText.style.fontSize = '0.7em';
-        winsText.style.marginBottom = '5px';
-        winsText.style.textAlign = 'center';
-        winsText.style.position = 'relative';
+        // Simplified approach - use a single element with HTML
+        const winsLabel = document.createElement('div');
+        winsLabel.className = 'wins-label-text';
+        winsLabel.innerHTML = `WINS:<br><span class="wins-number">${podiumEntries[2].wins}</span>`;
+        winsLabel.style.textAlign = 'center';
+        winsLabel.style.width = '100%';
+        winsLabel.style.color = 'white';
+        winsLabel.style.textShadow = '1px 1px 3px rgba(0, 0, 0, 0.7)';
 
-        // Create the number element
-        const winsNumber = document.createElement('div');
-        winsNumber.className = 'wins-number';
-        winsNumber.textContent = podiumEntries[2].wins;
-        winsNumber.style.fontSize = '1.2em !important';
-        winsNumber.style.fontWeight = 'bold';
-        winsNumber.style.display = 'flex';
-        winsNumber.style.alignItems = 'center';
-        winsNumber.style.justifyContent = 'center';
-        winsNumber.style.position = 'relative';
-        winsNumber.style.margin = '0 auto';
-        winsNumber.style.width = '100%';
-        winsNumber.style.height = '100%';
-
-        // Add both elements to the container
-        winsContainer.appendChild(winsText);
-        winsContainer.appendChild(winsNumber);
+        // Add the label to the container
+        winsContainer.appendChild(winsLabel);
 
         // Add the container to the wins label
         thirdWins.appendChild(winsContainer);
@@ -726,7 +676,9 @@ function processLeaderboardData(data, podiumContainer, listEntriesContainer, gro
     console.log('Leaderboard data structure:', JSON.stringify(data).substring(0, 500) + '...');
 
     // Clear loading messages immediately to show progress
-    podiumContainer.innerHTML = '<div class="loading-message">Processing data...</div>';
+    if (podiumContainer) {
+        podiumContainer.innerHTML = '<div class="loading-message">Processing data...</div>';
+    }
     listEntriesContainer.innerHTML = '<div class="loading-message">Processing data...</div>';
 
     let leaderboardEntries = [];
@@ -758,7 +710,9 @@ function processLeaderboardData(data, podiumContainer, listEntriesContainer, gro
         processRatFishLogoAndSocials(data, groupIcons);
     } catch (error) {
         console.error('Error processing leaderboard data structure:', error);
-        podiumContainer.innerHTML = `<div class="error-message">Error processing data: ${error.message}</div>`;
+        if (podiumContainer) {
+            podiumContainer.innerHTML = `<div class="error-message">Error processing data: ${error.message}</div>`;
+        }
         listEntriesContainer.innerHTML = `<div class="error-message">Error processing data: ${error.message}</div>`;
         return;
     }
@@ -770,18 +724,24 @@ function processLeaderboardData(data, podiumContainer, listEntriesContainer, gro
         console.log('Sorted data length:', sortedData.length);
 
         if (sortedData.length === 0) {
-            podiumContainer.innerHTML = '<div class="error-message">No race data available.</div>';
+            if (podiumContainer) {
+                podiumContainer.innerHTML = '<div class="error-message">No race data available.</div>';
+            }
             listEntriesContainer.innerHTML = '<div class="error-message">No race data available.</div>';
             return;
         }
 
         // Clear loading messages
-        podiumContainer.innerHTML = '';
+        if (podiumContainer) {
+            podiumContainer.innerHTML = '';
+        }
         listEntriesContainer.innerHTML = '';
 
-        // Create podium (top 3)
-        console.log('Creating podium with top entries');
-        createPodium(sortedData, podiumContainer, groupIcons);
+        // Create podium (top 3) if podium container exists
+        if (podiumContainer) {
+            console.log('Creating podium with top entries');
+            createPodium(sortedData, podiumContainer, groupIcons);
+        }
 
         // Create list entries (for page 2)
         console.log('Creating list entries for page 2');
@@ -790,7 +750,9 @@ function processLeaderboardData(data, podiumContainer, listEntriesContainer, gro
         console.log('Leaderboard rendering complete');
     } catch (error) {
         console.error('Error rendering leaderboard:', error);
-        podiumContainer.innerHTML = `<div class="error-message">Error rendering leaderboard: ${error.message}</div>`;
+        if (podiumContainer) {
+            podiumContainer.innerHTML = `<div class="error-message">Error rendering leaderboard: ${error.message}</div>`;
+        }
         listEntriesContainer.innerHTML = `<div class="error-message">Error rendering leaderboard: ${error.message}</div>`;
     }
 }
@@ -799,28 +761,6 @@ function processLeaderboardData(data, podiumContainer, listEntriesContainer, gro
 function createListEntries(sortedData, listEntriesContainer, groupIcons = {}) {
     // Clear the container first
     listEntriesContainer.innerHTML = '';
-
-    // Calculate entry width and height based on number of entries
-    const totalEntries = sortedData.length;
-    let entryWidth = '100%';  // Default to full width
-    let entryHeight = '60px'; // Default height
-
-    // Adjust entry width based on number of entries
-    if (totalEntries <= 5) {
-        entryWidth = '100%';  // Very few entries - full width
-        entryHeight = '60px'; // Consistent height
-    } else if (totalEntries <= 10) {
-        entryWidth = '90%';   // Few entries - slightly narrower
-        entryHeight = '60px'; // Consistent height
-    } else if (totalEntries <= 20) {
-        entryWidth = '80%';   // Medium number of entries
-        entryHeight = '60px'; // Consistent height
-    } else {
-        entryWidth = '70%';   // Many entries - more compact
-        entryHeight = '60px'; // Consistent height
-    }
-
-    console.log(`Total entries: ${totalEntries}, setting entry width to ${entryWidth}`);
 
     // Create a container for all entries
     const entriesWrapper = document.createElement('div');
@@ -832,13 +772,9 @@ function createListEntries(sortedData, listEntriesContainer, groupIcons = {}) {
         const entry = document.createElement('div');
         entry.className = 'list-entry';
 
-        // Create icon container to allow for crown positioning
+        // Create icon container
         const iconContainer = document.createElement('div');
         iconContainer.className = 'icon-container';
-        iconContainer.style.display = 'flex';
-        iconContainer.style.alignItems = 'center';
-        iconContainer.style.justifyContent = 'center';
-        iconContainer.style.height = '100%';
 
         // Add crown to first place
         if (index === 0) {
@@ -848,13 +784,9 @@ function createListEntries(sortedData, listEntriesContainer, groupIcons = {}) {
             iconContainer.appendChild(crownElement);
         }
 
+        // Create and add icon
         const iconElement = document.createElement('img');
         iconElement.className = 'entry-icon';
-        iconElement.style.margin = 'auto 0'; // Center vertically
-        iconElement.style.backgroundColor = 'transparent'; // Ensure transparent background
-        iconElement.style.display = 'flex';
-        iconElement.style.alignItems = 'center';
-        iconElement.style.justifyContent = 'center';
         const iconData = getGroupIconUrl(item.groupId, item.groupName, groupIcons);
         iconElement.src = iconData.url;
         iconElement.alt = item.groupName;
@@ -862,140 +794,53 @@ function createListEntries(sortedData, listEntriesContainer, groupIcons = {}) {
             iconElement.dataset.groupTag = iconData.tags.join(',');
         }
         addImageErrorHandling(iconElement);
-
         iconContainer.appendChild(iconElement);
 
+        // Create entry bar (contains the wins text)
         const barElement = document.createElement('div');
         barElement.className = 'entry-bar';
-        barElement.style.width = '100%';
-        barElement.style.display = 'flex';
-        barElement.style.justifyContent = 'center';
-        barElement.style.alignItems = 'center';
-        barElement.style.height = '100%'; // Ensure full height
-        barElement.style.position = 'relative'; // Ensure proper positioning
 
-        // Adjust bar width based on the number value
-        const wins = item.wins;
-        const maxWins = sortedData[0].wins; // Highest number of wins
-        const minWidthPercent = 75; // Higher minimum width percentage for more consistent appearance
-        const maxWidthPercent = 100; // Maximum width percentage
-
-        // Calculate width as a percentage of the maximum wins
-        const widthPercentage = minWidthPercent + ((wins / maxWins) * (maxWidthPercent - minWidthPercent));
-
-        // Apply the width to the entry itself
-        entry.style.width = `${widthPercentage}%`;
-        entry.style.maxWidth = '100%';
-
+        // Create wins container
         const winsElement = document.createElement('div');
         winsElement.className = 'entry-wins';
-        winsElement.style.fontSize = '1.2em !important'; // Fixed font size with !important
-        winsElement.style.fontFamily = 'Arial, sans-serif !important'; // Ensure consistent font
-        winsElement.style.display = 'flex';
-        winsElement.style.alignItems = 'center';
-        winsElement.style.justifyContent = 'center';
-        winsElement.style.height = '100%';
-        winsElement.style.position = 'absolute';
-        winsElement.style.top = '0';
-        winsElement.style.left = '0';
-        winsElement.style.right = '0';
-        winsElement.style.bottom = '0';
-        winsElement.style.margin = 'auto';
 
         // Create a container for the "Wins:" text and number
         const winsContainer = document.createElement('div');
         winsContainer.className = 'wins-container';
-        winsContainer.style.position = 'absolute';
-        winsContainer.style.top = '0';
-        winsContainer.style.left = '0';
-        winsContainer.style.right = '0';
-        winsContainer.style.bottom = '0';
-        winsContainer.style.margin = 'auto';
-        winsContainer.style.width = '100%';
-        winsContainer.style.height = '100%';
-        winsContainer.style.display = 'flex';
-        winsContainer.style.flexDirection = 'column';
-        winsContainer.style.alignItems = 'center';
-        winsContainer.style.justifyContent = 'center';
 
-        // Create the "Wins:" label
-        const winsText = document.createElement('div');
-        winsText.className = 'wins-text';
-        winsText.textContent = 'Wins:';
-        winsText.style.fontSize = '0.7em';
-        winsText.style.marginBottom = '5px';
-        winsText.style.textAlign = 'center';
-        winsText.style.position = 'relative';
+        // Simplified approach - use a single element with HTML
+        const winsLabel = document.createElement('div');
+        winsLabel.className = 'wins-label-text';
+        winsLabel.innerHTML = `WINS: ${item.wins}`;
+        winsLabel.style.textAlign = 'center';
+        winsLabel.style.width = '100%';
+        winsLabel.style.color = 'white';
+        winsLabel.style.textShadow = '1px 1px 3px rgba(0, 0, 0, 0.7)';
+        winsLabel.style.fontSize = '1.2em';
+        winsLabel.style.fontWeight = 'bold';
 
-        // Create the number element
-        const winsNumber = document.createElement('div');
-        winsNumber.className = 'wins-number';
-        winsNumber.textContent = item.wins;
-        winsNumber.style.display = 'flex'; // Use flex for better centering
-        winsNumber.style.alignItems = 'center';
-        winsNumber.style.justifyContent = 'center';
-        winsNumber.style.fontSize = '1.2em !important'; // Reduced font size with !important
-        winsNumber.style.fontWeight = 'bold'; // Make it bold
-        winsNumber.style.lineHeight = '1'; // Improve vertical alignment
-        winsNumber.style.margin = '0 auto'; // Center horizontally
-        winsNumber.style.textShadow = '1px 1px 2px rgba(0,0,0,0.5)'; // Add shadow for better visibility
-        winsNumber.style.width = '100%'; // Full width
-        winsNumber.style.height = '100%'; // Full height
-        winsNumber.style.position = 'relative'; // Use relative positioning
-        winsNumber.style.margin = '0 auto';
-        // Add data attribute to mark this as fixed size
-        winsNumber.setAttribute('data-fixed-size', 'true');
-
-        // Add both elements to the container
-        winsContainer.appendChild(winsText);
-        winsContainer.appendChild(winsNumber);
+        // Add the label to the container
+        winsContainer.appendChild(winsLabel);
 
         // Add the container to the wins element
         winsElement.appendChild(winsContainer);
 
-        // Add social media links if available
-        if (item.twitter_link || item.youtube_link) {
-            const socialLinks = document.createElement('div');
-            socialLinks.className = 'social-links';
-            socialLinks.style.margin = '0';
-            socialLinks.style.position = 'absolute';
-            socialLinks.style.right = '10px';
-            socialLinks.style.top = '50%';
-            socialLinks.style.transform = 'translateY(-50%)';
-
-            if (item.twitter_link) {
-                const twitterLink = document.createElement('a');
-                twitterLink.href = item.twitter_link;
-                twitterLink.className = 'social-link twitter';
-                twitterLink.target = '_blank';
-                twitterLink.rel = 'noopener noreferrer';
-                twitterLink.innerHTML = '<i class="fab fa-twitter"></i>';
-                twitterLink.title = 'Twitter';
-                twitterLink.style.width = '30px';
-                twitterLink.style.height = '30px';
-                socialLinks.appendChild(twitterLink);
-            }
-
-            if (item.youtube_link) {
-                const youtubeLink = document.createElement('a');
-                youtubeLink.href = item.youtube_link;
-                youtubeLink.className = 'social-link youtube';
-                youtubeLink.target = '_blank';
-                youtubeLink.rel = 'noopener noreferrer';
-                youtubeLink.innerHTML = '<i class="fab fa-youtube"></i>';
-                youtubeLink.title = 'YouTube';
-                youtubeLink.style.width = '30px';
-                youtubeLink.style.height = '30px';
-                socialLinks.appendChild(youtubeLink);
-            }
-
-            barElement.appendChild(socialLinks);
-        }
-
+        // Add wins element to bar
         barElement.appendChild(winsElement);
+
+        // Add elements to entry
         entry.appendChild(iconContainer);
         entry.appendChild(barElement);
 
+        // Adjust width based on wins
+        const wins = item.wins;
+        const maxWins = sortedData[0].wins || 1; // Highest number of wins (default to 1 if no wins)
+        const minWidthPercent = 75;
+        const maxWidthPercent = 100;
+        const widthPercentage = minWidthPercent + ((wins / maxWins) * (maxWidthPercent - minWidthPercent));
+        entry.style.width = `${widthPercentage}%`;
+
+        // Add to wrapper
         entriesWrapper.appendChild(entry);
     });
 }
