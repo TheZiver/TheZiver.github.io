@@ -297,4 +297,43 @@ body.theme-rosefish { background-color: #000000; color: #801B23; } body.theme-ro
 .loading-message { text-align: center; padding: 2rem; color: #d4af37; font-style: italic; }
 body.theme-store { background-color: #121212; color: #e0e0e0; } .theme-store .container { background-color: #0a0a0a; border: 2px solid #d4af37; box-shadow: 0 0 20px rgba(212,175,55,0.4); } .theme-store h1, .theme-store h2 { background: linear-gradient(120deg, #d4af37, #ffd700, #d4af37); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; animation: gradientFlow 8s ease infinite; } .theme-store hr { border-top-color: #d4af37; } .theme-store a { color: #ffd700; } .theme-store a:hover { color: #ffec8b; }
 
+/* YouTube Embed Adjustment */
+.social-embed.youtube-embed {
+    margin: 0 0 8px 0 !important; /* Only a tiny space below each video */
+    padding: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* Remove margin from the last embed */
+.social-embed.youtube-embed:last-child {
+    margin-bottom: 0 !important;
+}
+
 /* --- END OF STYLE.CSS --- */
+.wins-label-text, .entry-wins .wins-label-text, .wins-label, .entry-wins, .podium-entry .wins-label, .podium-entry .wins-label-text {
+    font-family: 'Inter', Arial, sans-serif !important;
+    font-size: 1em !important;
+    font-weight: 700 !important;
+    color: white !important;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7) !important;
+    text-align: center !important;
+    letter-spacing: 0.01em !important;
+    line-height: 1.15 !important;
+}
+
+.entry-text, .podium-entry .entry-text {
+    font-family: 'Inter', Arial, sans-serif !important;
+    font-size: 0.95em !important;
+    font-weight: 400 !important;
+    color: white !important;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7) !important;
+    text-align: center !important;
+    letter-spacing: 0.01em !important;
+    line-height: 1.2 !important;
+    opacity: 0.85 !important;
+    overflow-wrap: break-word !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}

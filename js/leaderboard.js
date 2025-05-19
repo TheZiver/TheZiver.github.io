@@ -123,7 +123,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const ratFishLogo = document.getElementById('rat-fish-logo');
     // Add cache-busting parameter with current timestamp
     const timestamp = new Date().getTime();
-    const leaderboardUrl = `https://gist.githubusercontent.com/Luiswillich-1/bc42cd2a914e54334a7673f66a659cd0/raw?_=${timestamp}`;
+    // CHANGED: leaderboardUrl now points to the original TheZiver Gist link
+    const leaderboardUrl = `https://gist.githubusercontent.com/TheZiver/e7848c0392ab02649af0859f56507e44/raw?_=${timestamp}`;
     const iconsUrl = `https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw?_=${timestamp}`;
 
     // Store for group icons
@@ -324,7 +325,7 @@ function processRatFishLogoAndSocials(data, groupIcons) {
     // Check if we have valid global settings with at least one social link
     const hasSocialLinks = globalSettings &&
         ((globalSettings.twitter_link && globalSettings.twitter_link.trim() !== '') ||
-         (globalSettings.youtube_link && globalSettings.youtube_link.trim() !== ''));
+         Object.keys(globalSettings).some(key => /^youtube_link(_\d+)?$/.test(key) && globalSettings[key] && globalSettings[key].trim() !== ''));
 
     if (hasSocialLinks) {
         // Add social media embeds if available
@@ -385,15 +386,23 @@ function processRatFishLogoAndSocials(data, groupIcons) {
                 }
             }
 
-            // Add YouTube embed if available and not empty
-            if (globalSettings.youtube_link && globalSettings.youtube_link.trim() !== '') {
-                // Extract YouTube video ID or channel ID from URL
+            // Add all YouTube embeds for keys matching youtube_link, youtube_link_1, youtube_link_2, ...
+            let youtubeKeys = Object.keys(globalSettings).filter(key => /^youtube_link(_\d+)?$/.test(key) && globalSettings[key] && globalSettings[key].trim() !== '');
+            // Sort so that the highest number is first (youtube_link_3, youtube_link_2, youtube_link_1, youtube_link)
+            youtubeKeys = youtubeKeys.sort((a, b) => {
+                // Extract numbers, default to 0 for 'youtube_link'
+                const getNum = key => {
+                    const match = key.match(/^youtube_link(?:_(\d+))?$/);
+                    return match && match[1] ? parseInt(match[1], 10) : 0;
+                };
+                return getNum(b) - getNum(a);
+            });
+            youtubeKeys.forEach(youtubeKey => {
+                const youtubeUrlRaw = globalSettings[youtubeKey];
                 let youtubeId = '';
                 let isChannel = false;
-
                 try {
-                    const youtubeUrl = new URL(globalSettings.youtube_link);
-
+                    const youtubeUrl = new URL(youtubeUrlRaw);
                     if (youtubeUrl.hostname.includes('youtube.com')) {
                         if (youtubeUrl.pathname.includes('/channel/')) {
                             // Channel URL
@@ -408,20 +417,18 @@ function processRatFishLogoAndSocials(data, groupIcons) {
                         youtubeId = youtubeUrl.pathname.substring(1);
                     }
                 } catch (e) {
-                    console.error('Invalid YouTube URL:', globalSettings.youtube_link);
+                    console.error('Invalid YouTube URL:', youtubeUrlRaw);
                 }
-
                 if (youtubeId) {
                     const youtubeEmbed = document.createElement('div');
                     youtubeEmbed.className = 'social-embed youtube-embed';
-
                     if (isChannel) {
                         // Channel embed (using latest video from channel)
                         youtubeEmbed.innerHTML = `
                             <iframe
                                 width="560"
                                 height="315"
-                                src="https://www.youtube.com/embed?listType=user_uploads&list=${youtubeId}&autoplay=1"
+                                src="https://www.youtube.com/embed?listType=user_uploads&list=${youtubeId}"
                                 frameborder="0"
                                 allowfullscreen>
                             </iframe>
@@ -432,17 +439,16 @@ function processRatFishLogoAndSocials(data, groupIcons) {
                             <iframe
                                 width="560"
                                 height="315"
-                                src="https://www.youtube.com/embed/${youtubeId}?&autoplay=1"
+                                src="https://www.youtube.com/embed/${youtubeId}"
                                 frameborder="0"
                                 allowfullscreen>
                             </iframe>
                         `;
                     }
-
                     socialEmbedsContainer.appendChild(youtubeEmbed);
                     console.log('YouTube embed added with ID:', youtubeId);
                 }
-            }
+            });
         }
     }
 
@@ -518,6 +524,26 @@ function createPodium(sortedData, podiumContainer, groupIcons = {}) {
         // Add the label to the container
         winsContainer.appendChild(winsLabel);
 
+        // Add the text below wins
+        if (podiumEntries[1].text) {
+            const textDiv = document.createElement('div');
+            textDiv.className = 'entry-text';
+            textDiv.textContent = podiumEntries[1].text;
+            textDiv.style.marginTop = '4px';
+            textDiv.style.fontSize = '1em'; // Match .wins-label-text
+            textDiv.style.fontWeight = 'bold';
+            textDiv.style.color = 'white';
+            textDiv.style.textAlign = 'center';
+            textDiv.style.textShadow = '1px 1px 3px rgba(0,0,0,0.7)';
+            textDiv.style.width = '100%';
+            textDiv.style.overflowWrap = 'break-word';
+            textDiv.style.lineHeight = '1.15';
+            textDiv.style.letterSpacing = 'normal';
+            textDiv.style.padding = '2px 5px';
+            textDiv.style.margin = '0';
+            winsContainer.appendChild(textDiv);
+        }
+
         // Add the container to the wins label
         secondWins.appendChild(winsContainer);
         secondWins.style.fontSize = `${calculateFontSize(podiumEntries[1].wins)}em`;
@@ -587,6 +613,26 @@ function createPodium(sortedData, podiumContainer, groupIcons = {}) {
 
         // Add the label to the container
         winsContainer.appendChild(winsLabel);
+
+        // Add the text below wins
+        if (podiumEntries[0].text) {
+            const textDiv = document.createElement('div');
+            textDiv.className = 'entry-text';
+            textDiv.textContent = podiumEntries[0].text;
+            textDiv.style.marginTop = '4px';
+            textDiv.style.fontSize = '1em'; // Match .wins-label-text
+            textDiv.style.fontWeight = 'bold';
+            textDiv.style.color = 'white';
+            textDiv.style.textAlign = 'center';
+            textDiv.style.textShadow = '1px 1px 3px rgba(0,0,0,0.7)';
+            textDiv.style.width = '100%';
+            textDiv.style.overflowWrap = 'break-word';
+            textDiv.style.lineHeight = '1.15';
+            textDiv.style.letterSpacing = 'normal';
+            textDiv.style.padding = '2px 5px';
+            textDiv.style.margin = '0';
+            winsContainer.appendChild(textDiv);
+        }
 
         // Add the container to the wins label
         firstWins.appendChild(winsContainer);
@@ -658,6 +704,26 @@ function createPodium(sortedData, podiumContainer, groupIcons = {}) {
 
         // Add the label to the container
         winsContainer.appendChild(winsLabel);
+
+        // Add the text below wins
+        if (podiumEntries[2].text) {
+            const textDiv = document.createElement('div');
+            textDiv.className = 'entry-text';
+            textDiv.textContent = podiumEntries[2].text;
+            textDiv.style.marginTop = '4px';
+            textDiv.style.fontSize = '1em'; // Match .wins-label-text
+            textDiv.style.fontWeight = 'bold';
+            textDiv.style.color = 'white';
+            textDiv.style.textAlign = 'center';
+            textDiv.style.textShadow = '1px 1px 3px rgba(0,0,0,0.7)';
+            textDiv.style.width = '100%';
+            textDiv.style.overflowWrap = 'break-word';
+            textDiv.style.lineHeight = '1.15';
+            textDiv.style.letterSpacing = 'normal';
+            textDiv.style.padding = '2px 5px';
+            textDiv.style.margin = '0';
+            winsContainer.appendChild(textDiv);
+        }
 
         // Add the container to the wins label
         thirdWins.appendChild(winsContainer);
@@ -787,6 +853,12 @@ function createListEntries(sortedData, listEntriesContainer, groupIcons = {}) {
         // Create and add icon
         const iconElement = document.createElement('img');
         iconElement.className = 'entry-icon';
+        iconElement.style.width = '60px';
+        iconElement.style.height = '60px';
+        iconElement.style.maxWidth = '70px';
+        iconElement.style.maxHeight = '70px';
+        iconElement.style.minWidth = '50px';
+        iconElement.style.minHeight = '50px';
         const iconData = getGroupIconUrl(item.groupId, item.groupName, groupIcons);
         iconElement.src = iconData.url;
         iconElement.alt = item.groupName;
@@ -796,49 +868,84 @@ function createListEntries(sortedData, listEntriesContainer, groupIcons = {}) {
         addImageErrorHandling(iconElement);
         iconContainer.appendChild(iconElement);
 
-        // Create entry bar (contains the wins text)
+        // Create entry bar (contains the wins text and the text below)
         const barElement = document.createElement('div');
         barElement.className = 'entry-bar';
+        barElement.style.display = 'flex';
+        barElement.style.flexDirection = 'column';
+        barElement.style.alignItems = 'center';
+        barElement.style.justifyContent = 'center';
+        barElement.style.width = '100%';
+        barElement.style.minHeight = '60px';
+        barElement.style.height = 'auto'; // let it grow with content
+        barElement.style.overflow = 'visible';
+        barElement.style.boxSizing = 'border-box';
+        barElement.style.padding = '8px 20px 10px 20px';
 
         // Create wins container
         const winsElement = document.createElement('div');
         winsElement.className = 'entry-wins';
+        winsElement.style.display = 'flex';
+        winsElement.style.flexDirection = 'column';
+        winsElement.style.alignItems = 'center';
+        winsElement.style.justifyContent = 'center';
+        winsElement.style.height = 'auto';
+        winsElement.style.fontSize = '1.1em';
+        winsElement.style.fontWeight = 'bold';
+        winsElement.style.color = 'white';
+        winsElement.style.textShadow = '1px 1px 3px rgba(0,0,0,0.7)';
+        winsElement.style.whiteSpace = 'nowrap';
+        winsElement.style.textAlign = 'center';
+        winsElement.style.margin = '0 0 2px 0';
 
-        // Create a container for the "Wins:" text and number
-        const winsContainer = document.createElement('div');
-        winsContainer.className = 'wins-container';
-
-        // Simplified approach - use a single element with HTML
-        const winsLabel = document.createElement('div');
+        // Wins label (WINS: n)
+        const winsLabel = document.createElement('span');
         winsLabel.className = 'wins-label-text';
         winsLabel.innerHTML = `WINS: ${item.wins}`;
-        winsLabel.style.textAlign = 'center';
-        winsLabel.style.width = '100%';
-        winsLabel.style.color = 'white';
-        winsLabel.style.textShadow = '1px 1px 3px rgba(0, 0, 0, 0.7)';
-        winsLabel.style.fontSize = '1.2em';
         winsLabel.style.fontWeight = 'bold';
+        winsLabel.style.fontSize = '1em';
+        winsLabel.style.letterSpacing = '0.02em';
+        winsLabel.style.margin = '0 0 2px 0';
+        winsLabel.style.display = 'block';
+        winsElement.appendChild(winsLabel);
 
-        // Add the label to the container
-        winsContainer.appendChild(winsLabel);
+        // Text below wins
+        const textDiv = document.createElement('div');
+        textDiv.className = 'entry-text';
+        textDiv.textContent = item.text || '';
+        textDiv.style.fontSize = '0.95em'; // smaller and consistent
+        textDiv.style.fontWeight = 'normal';
+        textDiv.style.color = 'white';
+        textDiv.style.textAlign = 'center';
+        textDiv.style.textShadow = '1px 1px 3px rgba(0,0,0,0.7)';
+        textDiv.style.overflowWrap = 'break-word';
+        textDiv.style.lineHeight = '1.2';
+        textDiv.style.letterSpacing = 'normal';
+        textDiv.style.padding = '0';
+        textDiv.style.margin = '0';
+        textDiv.style.opacity = '0.85';
+        textDiv.style.whiteSpace = 'normal';
+        textDiv.style.overflow = 'visible';
+        textDiv.style.textOverflow = 'unset';
+        textDiv.style.boxSizing = 'border-box';
+        textDiv.style.width = '100%';
+        winsElement.appendChild(textDiv);
 
-        // Add the container to the wins element
-        winsElement.appendChild(winsContainer);
-
-        // Add wins element to bar
         barElement.appendChild(winsElement);
-
-        // Add elements to entry
         entry.appendChild(iconContainer);
         entry.appendChild(barElement);
 
         // Adjust width based on wins
         const wins = item.wins;
-        const maxWins = sortedData[0].wins || 1; // Highest number of wins (default to 1 if no wins)
+        const maxWins = sortedData[0].wins || 1;
         const minWidthPercent = 75;
         const maxWidthPercent = 100;
         const widthPercentage = minWidthPercent + ((wins / maxWins) * (maxWidthPercent - minWidthPercent));
         entry.style.width = `${widthPercentage}%`;
+        entry.style.height = 'auto';
+        entry.style.minHeight = '60px';
+        entry.style.alignItems = 'center';
+        entry.style.boxSizing = 'border-box';
 
         // Add to wrapper
         entriesWrapper.appendChild(entry);
