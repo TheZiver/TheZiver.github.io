@@ -62,6 +62,19 @@ body {
     /* font-size-adjust: auto; /* Or remove if it was 'none !important' */
 }
 
+body {
+    background-color: #181818;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
+}
+
+/* Example for other pages (add more as needed):
+body[data-page="leaderboard"] {
+    background-image: url('images/leaderboard-bg.jpg');
+}
+*/
 
 /**
  * Main container - holds all page content
@@ -192,6 +205,20 @@ img[src="images/meaning_of_fish.png"] { max-width: 480px !important; width: 100%
 .grayscale { filter: grayscale(80%); }
 .text-center { text-align: center; }
 .database-link { margin-top: 5px; margin-bottom: 20px; }
+
+#page-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    pointer-events: none;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center center;
+}
 
 /* --- Theme Styles (condensed - structure remains the same) --- */
 .fish-verified-theme div, .fish-verified-theme p, .fish-verified-theme li, .fish-verified-theme h3, .fish-verified-theme ol { color: #FFFFFF; } .fish-verified-theme a { color: #A7D8FF; } .fish-verified-theme a:hover { color: #D0EFFF; } .fish-verified-theme h3 { color: #F0F0F0 !important; } .fish-verified-theme ol li::marker { color: #FFFFFF; }

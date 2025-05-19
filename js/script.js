@@ -1221,7 +1221,88 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+    // --- Background Image Preload and Lazy Loading ---
+const PAGE_BG_IMAGES = {
+    home: 'images/HOME_BG.jpg',
+    daily: 'images/DVRC_BG.jpg',
+    rosefish: 'images/ROSE_FISH_BG.jpg',
+    fishcraft: 'images/FISH_CRAFT_BG.jpg',
+    support: 'images/SUPPORT_BG.jpg',
+    ratfishrace: 'images/RAT_FISH_RACE_BG.jpg',
+    communities: 'images/COMMUNITIES_BG.jpg',
+    aquarium: 'images/AQUARIUM_BG.jpg'
+};
+
+// Preload all background images for caching
+function preloadBackgroundImages() {
+    Object.values(PAGE_BG_IMAGES).forEach(src => {
+        const img = new Image();
+        img.src = src;
+        img.loading = 'eager'; // force eager load for cache
+    });
+}
+
+// Lazy load background image for current page
+function lazyLoadBackground(page, bgDiv) {
+    const bgUrl = PAGE_BG_IMAGES[page];
+    if (!bgUrl) return;
+    // Use a temporary image to lazy load
+    const tempImg = new window.Image();
+    tempImg.src = bgUrl;
+    tempImg.loading = 'lazy';
+    tempImg.onload = function() {
+        bgDiv.style.backgroundImage = `url('${bgUrl}')`;
+    };
+    // Optionally, show a loading spinner or blur until loaded
+}
+
+// Call preload on DOMContentLoaded
+preloadBackgroundImages();
+
     // --- Run Initialization ---
     initializePage();
 
 }); // End DOMContentLoaded
+
+(function() {
+    // Set data-page attribute on <body> for per-page backgrounds
+    const pageMap = {
+        'index.html': 'home',
+        '': 'home', // for root
+        'leaderboard.html': 'leaderboard',
+        'daily.html': 'daily',
+        'communities.html': 'communities',
+        'rosefish.html': 'rosefish',
+        'support.html': 'support',
+        'fishcraft.html': 'fishcraft',
+        'ratfishrace.html': 'ratfishrace',
+        'aquarium.html': 'aquarium'
+        // Add more as needed
+    };
+    const path = window.location.pathname.split('/').pop();
+    const page = pageMap[path] || '';
+    if (page) {
+        document.body.setAttribute('data-page', page);
+        const bgDiv = document.getElementById('page-background');
+        let bgUrl = '';
+        if (page === 'home') bgUrl = 'images/HOME_BG.jpg';
+        else if (page === 'daily') bgUrl = 'images/DVRC_BG.jpg';
+        else if (page === 'rosefish') bgUrl = 'images/ROSE_FISH_BG.jpg';
+        else if (page === 'fishcraft') bgUrl = 'images/FISH_CRAFT_BG.jpg';
+        else if (page === 'support') bgUrl = 'images/SUPPORT_BG.jpg';
+        else if (page === 'ratfishrace') bgUrl = 'images/RAT_FISH_RACE_BG.jpg';
+        else if (page === 'communities') bgUrl = 'images/COMMUNITIES_BG.jpg';
+        else if (page === 'aquarium') bgUrl = 'images/AQUARIUM_BG.jpg';
+        // Add more per-page backgrounds as needed
+        if (bgDiv) {
+            bgDiv.style.backgroundImage = bgUrl ? `url('${bgUrl}')` : '';
+        } else {
+            const bgDivNew = document.createElement('div');
+            bgDivNew.id = 'page-background';
+            if (bgUrl) {
+                bgDivNew.style.backgroundImage = `url('${bgUrl}')`;
+            }
+            document.body.insertBefore(bgDivNew, document.body.firstChild);
+        }
+    }
+})();
