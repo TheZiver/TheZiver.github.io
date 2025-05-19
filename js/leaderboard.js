@@ -123,8 +123,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const ratFishLogo = document.getElementById('rat-fish-logo');
     // Add cache-busting parameter with current timestamp
     const timestamp = new Date().getTime();
-    // CHANGED: leaderboardUrl now points to the original TheZiver Gist link
-    const leaderboardUrl = `https://gist.githubusercontent.com/TheZiver/e7848c0392ab02649af0859f56507e44/raw?_=${timestamp}`;
+    // CHANGED: leaderboardUrl now points to the new Luiswillich-1 Gist link
+    const leaderboardUrl = `https://gist.githubusercontent.com/Luiswillich-1/bc42cd2a914e54334a7673f66a659cd0/raw?_=${timestamp}`;
     const iconsUrl = `https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw?_=${timestamp}`;
 
     // Store for group icons
