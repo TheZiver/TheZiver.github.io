@@ -218,17 +218,19 @@ img[src="images/meaning_of_fish.png"] { max-width: 480px !important; width: 100%
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center center;
-    animation: bg-zoom-in 12s cubic-bezier(0.4,0,0.2,1) infinite alternate;
+    animation: bg-zoom-in 16s linear infinite alternate;
     transition: background-image 1s ease-in-out, filter 1s linear, opacity 1s;
-    will-change: background-size;
+    will-change: background-size, transform;
 }
 
 @keyframes bg-zoom-in {
     0% {
         background-size: 100% 100%;
+        transform: scale(1);
     }
     100% {
         background-size: 108% 108%;
+        transform: scale(1.04);
     }
 }
 

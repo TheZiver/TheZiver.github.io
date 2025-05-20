@@ -153,7 +153,22 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch(leaderboardUrl)
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP error fetching leaderboard! Status: ${response.status}`);
+                // Instead of throwing, show a user-friendly error and do not trigger a download
+                const errorMessage = `<div class="error-message">Failed to load leaderboard data (Status: ${response.status}).</div>`;
+                podiumContainer.innerHTML = errorMessage;
+                listEntriesContainer.innerHTML = errorMessage;
+                // Add a retry button
+                const retryButton = document.createElement('button');
+                retryButton.className = 'nav-button';
+                retryButton.textContent = 'Retry';
+                retryButton.style.marginTop = '20px';
+                retryButton.addEventListener('click', () => {
+                    window.location.reload();
+                });
+                podiumContainer.appendChild(retryButton.cloneNode(true));
+                listEntriesContainer.appendChild(retryButton.cloneNode(true));
+                // Return a rejected promise to stop further processing
+                return Promise.reject(new Error(`HTTP error fetching leaderboard! Status: ${response.status}`));
             }
             console.log('Leaderboard response received, parsing JSON...');
             return response.json();
