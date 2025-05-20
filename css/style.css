@@ -173,7 +173,7 @@ a:active { transform: translateY(1px) scale(0.98); transition-duration: 0.1s; }
 .main-nav a:before { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background-color: currentColor; transition: all 0.3s ease; opacity: 0; transform: translateX(-50%); }
 .main-nav a:hover { background-color: #333337; color: #e0e0e0; transform: translateY(-2px); }
 .main-nav a:hover:before { width: 80%; opacity: 1; }
-@keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(77, 208, 225, 0.4); } 50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(77, 208, 225, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(77, 208, 225, 0); } }
+@keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 208, 225, 0.4); } 50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(0, 208, 225, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 208, 225, 0); } }
 .main-nav a.active { position: relative; z-index: 1; }
 .main-nav a.active:hover { animation: pulse 1.5s infinite; }
 
@@ -218,8 +218,9 @@ img[src="images/meaning_of_fish.png"] { max-width: 480px !important; width: 100%
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center center;
-    animation: bg-zoom-in 30s linear infinite alternate;
-    transition: background-image 1s ease-in-out, filter 1s linear;
+    animation: bg-zoom-in 12s cubic-bezier(0.4,0,0.2,1) infinite alternate;
+    transition: background-image 1s ease-in-out, filter 1s linear, opacity 1s;
+    will-change: background-size;
 }
 
 @keyframes bg-zoom-in {
@@ -227,7 +228,7 @@ img[src="images/meaning_of_fish.png"] { max-width: 480px !important; width: 100%
         background-size: 100% 100%;
     }
     100% {
-        background-size: 110% 110%;
+        background-size: 108% 108%;
     }
 }
 
