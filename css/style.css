@@ -218,6 +218,17 @@ img[src="images/meaning_of_fish.png"] { max-width: 480px !important; width: 100%
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center center;
+    animation: bg-zoom-in 30s linear infinite alternate;
+    transition: background-image 1s ease-in-out, filter 1s linear;
+}
+
+@keyframes bg-zoom-in {
+    0% {
+        background-size: 100% 100%;
+    }
+    100% {
+        background-size: 110% 110%;
+    }
 }
 
 /* --- Theme Styles (condensed - structure remains the same) --- */

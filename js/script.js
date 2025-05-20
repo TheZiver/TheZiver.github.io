@@ -1285,24 +1285,70 @@ preloadBackgroundImages();
         document.body.setAttribute('data-page', page);
         const bgDiv = document.getElementById('page-background');
         let bgUrl = '';
-        if (page === 'home') bgUrl = 'images/HOME_BG.jpg';
-        else if (page === 'daily') bgUrl = 'images/DVRC_BG.jpg';
-        else if (page === 'rosefish') bgUrl = 'images/ROSE_FISH_BG.jpg';
-        else if (page === 'fishcraft') bgUrl = 'images/FISH_CRAFT_BG.jpg';
-        else if (page === 'support') bgUrl = 'images/SUPPORT_BG.jpg';
-        else if (page === 'ratfishrace') bgUrl = 'images/RAT_FISH_RACE_BG.jpg';
-        else if (page === 'communities') bgUrl = 'images/COMMUNITIES_BG.jpg';
-        else if (page === 'aquarium') bgUrl = 'images/AQUARIUM_BG.jpg';
-        // Add more per-page backgrounds as needed
-        if (bgDiv) {
-            bgDiv.style.backgroundImage = bgUrl ? `url('${bgUrl}')` : '';
-        } else {
-            const bgDivNew = document.createElement('div');
-            bgDivNew.id = 'page-background';
-            if (bgUrl) {
-                bgDivNew.style.backgroundImage = `url('${bgUrl}')`;
+        if (page === 'daily') {
+            // Cycle through DVRC backgrounds every 6 seconds with crossfade and zoom-in
+            const bgImages = [
+                'images/DVRC_BG.jpg',
+                'images/DVRC_BG_1.jpg',
+                'images/DVRC_BG_2.jpg',
+                'images/DVRC_BG_3.jpg',
+                'images/DVRC_BG_4.jpg',
+                'images/DVRC_BG_5.jpg'
+            ];
+            let idx = 0;
+            let isFirst = true;
+            function setBg(fade = true) {
+                if (bgDiv) {
+                    if (fade && !isFirst) {
+                        bgDiv.style.transition = 'opacity 1s ease-in-out';
+                        bgDiv.style.opacity = '0';
+                        setTimeout(() => {
+                            bgDiv.style.backgroundImage = `url('${bgImages[idx]}')`;
+                            // Restart zoom-in animation
+                            bgDiv.style.animation = 'none';
+                            void bgDiv.offsetWidth; // force reflow
+                            bgDiv.style.animation = '';
+                            bgDiv.style.opacity = '1';
+                        }, 500);
+                    } else {
+                        bgDiv.style.backgroundImage = `url('${bgImages[idx]}')`;
+                        bgDiv.style.opacity = '1';
+                        // Ensure animation is running
+                        bgDiv.style.animation = '';
+                    }
+                } else {
+                    const bgDivNew = document.createElement('div');
+                    bgDivNew.id = 'page-background';
+                    bgDivNew.style.backgroundImage = `url('${bgImages[idx]}')`;
+                    bgDivNew.style.opacity = '1';
+                    document.body.insertBefore(bgDivNew, document.body.firstChild);
+                }
+                isFirst = false;
             }
-            document.body.insertBefore(bgDivNew, document.body.firstChild);
+            setBg(false);
+            setInterval(() => {
+                idx = (idx + 1) % bgImages.length;
+                setBg(true);
+            }, 6000); // 6 seconds
+        } else {
+            if (page === 'home') bgUrl = 'images/HOME_BG.jpg';
+            else if (page === 'rosefish') bgUrl = 'images/ROSE_FISH_BG.jpg';
+            else if (page === 'fishcraft') bgUrl = 'images/FISH_CRAFT_BG.jpg';
+            else if (page === 'support') bgUrl = 'images/SUPPORT_BG.jpg';
+            else if (page === 'ratfishrace') bgUrl = 'images/RAT_FISH_RACE_BG.jpg';
+            else if (page === 'communities') bgUrl = 'images/COMMUNITIES_BG.jpg';
+            else if (page === 'aquarium') bgUrl = 'images/AQUARIUM_BG.jpg';
+            // Add more per-page backgrounds as needed
+            if (bgDiv) {
+                bgDiv.style.backgroundImage = bgUrl ? `url('${bgUrl}')` : '';
+            } else {
+                const bgDivNew = document.createElement('div');
+                bgDivNew.id = 'page-background';
+                if (bgUrl) {
+                    bgDivNew.style.backgroundImage = `url('${bgUrl}')`;
+                }
+                document.body.insertBefore(bgDivNew, document.body.firstChild);
+            }
         }
     }
 })();
