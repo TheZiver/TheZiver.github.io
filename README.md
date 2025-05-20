@@ -29,3 +29,11 @@ The site provides detailed information and access points for various aspects of 
     *   Support TheZiver for building and maintaining the FISH community.
     *   Donate through Ko-fi or become a Patron on Patreon.
     *   Browse themed digital assets from the Luxury Trash store, such as VRChat prefabs and models, available for purchase.
+
+## Additional Features
+
+*   **Aquarium:** A virtual aquarium experience.
+*   **Fishcraft:** Information about the Fishcraft game.
+*   **Ratfishrace:** Details on the Ratfish Race event.
+*   **Leaderboard:** A leaderboard for community members.
+*   **Store:** The Luxury Trash store, offering digital assets.
