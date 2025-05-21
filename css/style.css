@@ -234,9 +234,61 @@ img[src="images/meaning_of_fish.png"] { max-width: 480px !important; width: 100%
     }
 }
 
+
+/* ========================================================
+   CONSISTENT TEXT STYLES FOR INFO BLOCKS
+   ======================================================== */
+
+#verified-info p,
+#verified-info li,
+#verified-info ol,
+#verified-info ul,
+#certified-info p,
+#certified-info li,
+#certified-info ol,
+#certified-info ul,
+#known-info p,
+#known-info li,
+#known-info ol,
+#known-info ul {
+    color: #FFFFFF; /* White text for paragraphs and list items */
+    /* Font-size, line-height, and margins will be inherited from global p, ul, ol styles */
+}
+
+#verified-info h3,
+#certified-info h3,
+#known-info h3 {
+    color: #F0F0F0 !important; /* Light gray H3 - consistent with original .fish-verified-theme h3 */
+    /* Font-size and margins will be inherited from global h3 styles */
+}
+
+#verified-info a,
+#certified-info a,
+#known-info a {
+    color: #A7D8FF; /* Light blue links */
+    text-decoration: underline; /* Ensure links are underlined, matching default browser or your base 'a' style */
+}
+
+#verified-info a:hover,
+#certified-info a:hover,
+#known-info a:hover {
+    color: #D0EFFF; /* Lighter blue on hover */
+}
+
+#verified-info ol li::marker,
+#certified-info ol li::marker,
+#known-info ol li::marker {
+    color: #FFFFFF; /* White markers for ordered lists */
+}
+
 /* --- Theme Styles (condensed - structure remains the same) --- */
 .fish-verified-theme div, .fish-verified-theme p, .fish-verified-theme li, .fish-verified-theme h3, .fish-verified-theme ol { color: #FFFFFF; } .fish-verified-theme a { color: #A7D8FF; } .fish-verified-theme a:hover { color: #D0EFFF; } .fish-verified-theme h3 { color: #F0F0F0 !important; } .fish-verified-theme ol li::marker { color: #FFFFFF; }
-.fish-certified-theme div, .fish-certified-theme p, .fish-certified-theme li, .fish-certified-theme h3, .fish-certified-theme ol { color: #cccccc; } .fish-certified-theme a { color: #8bc34a; } .fish-certified-theme a:hover { color: #aed581; } .fish-certified-theme h3 { color: #e0e0e0 !important; }
+
+/* .fish-certified-theme div, .fish-certified-theme p, .fish-certified-theme li, .fish-certified-theme h3, .fish-certified-theme ol { color: #cccccc; } */ /* Handled by specific #certified-info rules now */
+/* .fish-certified-theme a { color: #8bc34a; } */ /* Handled by specific #certified-info rules now */
+/* .fish-certified-theme a:hover { color: #aed581; } */ /* Handled by specific #certified-info rules now */
+/* .fish-certified-theme h3 { color: #e0e0e0 !important; } */ /* Handled by specific #certified-info rules now */
+
 #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list { list-style: none; padding-left: 0; display: grid; gap: 15px; margin-top: 20px; justify-content: center; margin-left: auto; margin-right: auto; width: 100%; }
 @media (max-width: 599px) { #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list { display: block; } #fish-verified-list li, #fish-certified-list li, #fish-known-list li, #fish-status-list li { margin-bottom: 15px; } }
 @media (min-width: 600px) and (max-width: 899px) { #fish-verified-list, #fish-certified-list, #fish-known-list, #fish-status-list { display: grid; grid-template-columns: repeat(2, 1fr); } }
@@ -270,7 +322,12 @@ img[src="images/meaning_of_fish.png"] { max-width: 480px !important; width: 100%
 .community-link-icon:hover i.fa-discord { color: #707bf5; } .community-link-icon:hover i.fa-x-twitter { color: #cccccc; }
 #fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) { margin-bottom: 2px; }
 .community-member-count { margin-top: 3px; font-size: 0.8em; }
-.fish-known-theme div, .fish-known-theme p, .fish-known-theme li:not(#fish-known-list li), .fish-known-theme h3, .fish-known-theme ol { color: #bdbdbd; } .fish-known-theme a:not(#fish-known-list li a) { color: #ffb74d; } .fish-known-theme a:not(#fish-known-list li a):hover { color: #ffcc80; } .fish-known-theme h3 { color: #e0e0e0 !important; }
+
+/* .fish-known-theme div, .fish-known-theme p, .fish-known-theme li:not(#fish-known-list li), .fish-known-theme h3, .fish-known-theme ol { color: #bdbdbd; } */ /* Handled by specific #known-info rules now */
+/* .fish-known-theme a:not(#fish-known-list li a) { color: #ffb74d; } */ /* Handled by specific #known-info rules now */
+/* .fish-known-theme a:not(#fish-known-list li a):hover { color: #ffcc80; } */ /* Handled by specific #known-info rules now */
+/* .fish-known-theme h3 { color: #e0e0e0 !important; } */ /* Handled by specific #known-info rules now */
+
 .luxury-trash-theme div, .luxury-trash-theme p, .luxury-trash-theme li, .luxury-trash-theme h3 { color: #FFD700; } .luxury-trash-theme a { color: #FFEC8B; } .luxury-trash-theme a:hover { color: #FFFACD; } .luxury-trash-theme h3 { color: #FBC02D !important; } .luxury-trash-theme p i { color: #FFEA00; } .luxury-trash-theme ul#luxury-products-list li { color: #FFD700; }
 body.theme-rosefish { background-color: #000000 !important; } body.theme-rosefish .container { background-color: #000000 !important; color: #801B23; } body.theme-rosefish .container p, body.theme-rosefish .container li:not(#rosefish-members-list li), body.theme-rosefish .container div:not(.fish-animation) { color: #801B23; } body.theme-rosefish .container a { color: #801B23; } body.theme-rosefish .container a:hover { color: #A52A2A; }
 body.theme-rosefish .main-nav a { color: #cccccc; } body.theme-rosefish .main-nav a:hover { color: #ffffff; } body.theme-rosefish .main-nav a.active { color: #121212; background-color: #4dd0e1; }
