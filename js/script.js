@@ -816,6 +816,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const eventNameSpan = document.createElement('span');
                     eventNameSpan.classList.add('event-location');
                     eventNameSpan.innerHTML = locationName.replace('≺ ≻ ≺', '＜＞＜'); // Replace ASCII with proper characters if needed
+                    eventNameSpan.title = locationName; // Show full name on hover
                     eventLink.appendChild(eventNameSpan);
 
                     dayCell.appendChild(eventLink);
@@ -848,6 +849,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const locationSpan = document.createElement('span');
                     locationSpan.classList.add('event-location');
                     locationSpan.textContent = locationName;
+                    locationSpan.title = locationName; // Show full name on hover
                     dayLink.appendChild(locationSpan);
                 }
 
