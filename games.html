@@ -80,10 +80,7 @@
 
         <div class="section" id="bonk-game">
             <h2>itch.io | Bonk Game</h2>
-            <div class="bonk-wrapper">
-                <img src="images/BONK_GAME.jpg" alt="Bonk Game" class="bonk-image" loading="lazy">
-                <button id="open-bonk" class="play-button" aria-label="Play Bonk Game">PLAY</button>
-            </div>
+            <iframe frameborder="0" src="https://itch.io/embed/3481421" width="552" height="167"><a href="https://tekkerskillet.itch.io/bonk-game">Bonk Game by TekkerSkillet</a></iframe>
         </div>
 
     </div>
@@ -138,16 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Bonk Game: many itch.io pages block top-level embedding. Try the embed widget first if we have one.
-  const playBtn = document.getElementById('open-bonk');
-  if (playBtn) {
-    playBtn.addEventListener('click', () => window.open('https://tekkerskillet.itch.io/bonk-game','_blank','noopener'));
-  }
 
-  // If the developer exposes an embed upload id, we could use itch.io/embed-upload/:id?file=... .
-  // This page doesn’t publish that id, so a reliable inline-play isn’t possible without the developer enabling embedding.
-  // Leave a friendly message in console so we remember why.
-  console.info('Bonk Game: Inline embed may be blocked by itch.io. Using Play in new tab as primary option.');
 });
 </script>
 </body>
