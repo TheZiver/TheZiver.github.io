@@ -194,18 +194,18 @@
         width: 30px !important; /* Larger tap target */
         height: 30px !important; /* Larger tap target */
         font-size: 1em !important; /* Larger icon */
-        background-color: rgba(77, 208, 225, 0.2) !important; /* Visible background */
+        background-color: transparent !important; /* Match other buttons */
         border-radius: 50% !important;
         margin-left: 5px !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
     }
-    /* Make the dropdown button more obvious */
+    /* Keep dropdown link consistent with other nav links on mobile */
     .dropdown > a {
         position: relative;
         z-index: 1001; /* Above the dropdown content */
-        background-color: rgba(77, 208, 225, 0.1); /* Light highlight */
+        background-color: transparent; /* Match other buttons */
         border-radius: 4px;
     }
 
@@ -214,7 +214,7 @@
         font-size: 0.8em;
         margin-left: 5px;
         color: #4dd0e1;
-        background-color: rgba(77, 208, 225, 0.1);
+        background-color: transparent; /* Match other buttons */
         border-radius: 50%;
         width: 20px;
         height: 20px;
@@ -224,9 +224,9 @@
         justify-content: center;
     }
 
-    /* Style for active dropdown button */
+    /* Keep active dropdown link using the same .active style as others (handled in style.css) */
     .dropdown.active > a {
-        background-color: rgba(77, 208, 225, 0.2); /* Stronger highlight when active */
+        background-color: transparent;
     }
 
     /* Style the dropdown content */

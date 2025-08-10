@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FISH ＜＞＜ COMMUNITY - Games</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dropdown.css">
+    <link rel="stylesheet" href="css/back-to-top.css">
+    <style>
+        .games-container { border: 3px solid #6E9F94; padding: 20px; border-radius: 8px; margin: 20px auto; max-width: 900px; color: #ADBFDA; }
+        .games-container h1, .games-container h2, .games-container p, .games-container li, .games-container strong { color: #ADBFDA; }
+        .section { margin: 25px 0; }
+        .fishcraft-image { display: block; margin: 20px auto; max-width: 240px; height: auto; }
+        .bonk-image { display: block; margin: 12px auto 14px; max-width: 560px; width: 100%; height: auto; border: 1px solid #6E9F94; border-radius: 6px; }
+        .server-description { text-align: center; margin: 20px 0; font-size: 1.2em; color: #ADBFDA; }
+        .fishcraft-info { margin-top: 15px; font-size: 1.05em; line-height: 1.6; }
+        .fishcraft-info li { margin-bottom: 12px; }
+        .server-ip-container { display: flex; align-items: center; margin-top: 5px; flex-wrap: wrap; max-width: 100%; }
+        .server-ip { background-color: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 4px 0 0 4px; font-family: monospace; font-size: 1.1em; display: inline-block; border: 1px solid #6E9F94; border-right: none; max-width: 100%; box-sizing: border-box; overflow: hidden; text-overflow: ellipsis; }
+        .copy-button { background-color: #6E9F94; color: #ADBFDA; border: 1px solid #6E9F94; border-radius: 0 4px 4px 0; padding: 8px 12px; cursor: pointer; font-family: monospace; font-size: 1.1em; transition: all 0.3s ease; }
+        .copy-button:hover { background-color: #5d8a80; }
+        .copy-button:active { transform: scale(0.95); }
+        .copy-message { margin-left: 10px; font-size: 0.9em; opacity: 0; transition: opacity 0.3s ease; }
+        .game-notice { text-align: center; font-size: 0.95em; margin-top: 8px; }
+        .play-button { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #e63946; color: #ffffff; border: none; border-radius: 8px; padding: 16px 34px; font-size: 1.4em; font-weight: 900; letter-spacing: 2px; cursor: pointer; box-shadow: 0 6px 14px rgba(0,0,0,0.45); transition: transform .1s ease, filter .2s ease; }
+        .play-button:hover { filter: brightness(1.08); transform: translate(-50%, calc(-50% - 1px)); }
+        .play-button:active { transform: translate(-50%, calc(-50% + 1px)) scale(0.99); }
+        .bonk-wrapper { position: relative; display: block; max-width: 560px; width: 100%; margin: 0 auto 12px; }
+        @media (max-width: 480px) { .server-ip-container { flex-direction: column; align-items: flex-start; } .server-ip { width: 100%; border-radius: 4px 4px 0 0; border-right: 1px solid #6E9F94; border-bottom: none; text-align: center; } .copy-button { width: 100%; border-radius: 0 0 4px 4px; border-top: none; } .copy-message { margin-left: 0; margin-top: 5px; width: 100%; text-align: center; } }
+    </style>
+</head>
+<body>
+
+<div id="swimming-images-background" class="swimming-images-container"></div>
+
+<nav class="main-nav">
+    <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="daily.html">DAILY VRCHAT</a></li>
+        <li class="dropdown">
+            <a href="communities.html">COMMUNITIES</a>
+            <div class="dropdown-content">
+                <a href="aquarium.html">AQUARIUM</a>
+            </div>
+        </li>
+        <li><a href="rosefish.html">ROSE FISH</a></li>
+        <li><a href="support.html">SUPPORT</a></li>
+        <li><a href="games.html" class="active">GAMES</a></li>
+        <li><a href="ratfishrace.html">RAT FISH RACE</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <div class="games-container">
+        <h1>GAMES</h1>
+
+        <div class="section" id="minecraft">
+            <h2>Minecraft — FISH CRAFT</h2>
+            <img src="images/FISH_CRAFT.png" alt="Fish Craft Server" class="fishcraft-image" loading="lazy">
+            <p class="server-description">An <strong>Anarchy Minecraft Server</strong> where there are no rules</p>
+            <div class="fishcraft-info">
+                <ul>
+                    <li><strong>VERSION:</strong> Java 1.20.6</li>
+                    <li><strong>SERVER TYPE:</strong> Anarchy</li>
+                    <li>
+                        <strong>IP ADDRESS:</strong>
+                        <div class="server-ip-container">
+                            <span class="server-ip" id="server-ip">mc.theziver.com</span>
+                            <button class="copy-button" id="copy-ip-button">Copy</button>
+                            <span class="copy-message" id="copy-message">Copied!</span>
+                        </div>
+                    </li>
+                    <li><strong>FISH CRAFT</strong> was opened <span id="server-time" data-timestamp="1702483200"></span></li>
+                    <li>The main person responsible for the server is <strong>@akiyuki101</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="section" id="bonk-game">
+            <h2>Bonk Game</h2>
+            <div class="bonk-wrapper">
+                <img src="images/BONK_GAME.jpg" alt="Bonk Game" class="bonk-image" loading="lazy">
+                <button id="open-bonk" class="play-button" aria-label="Play Bonk Game">PLAY</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="js/prevent-navigation.js"></script>
+<script src="js/script.js"></script>
+<script src="js/swimming-fish.js"></script>
+<script src="js/dropdown.js"></script>
+<script src="js/back-to-top.js"></script>
+<script src="js/lazy-loading.js"></script>
+<script>
+// Reuse fishcraft copy + time logic
+function formatRelativeTime(timestamp) {
+  const now = Math.floor(Date.now() / 1000);
+  const diff = now - timestamp;
+  const minute = 60, hour = 60*minute, day = 24*hour, week = 7*day, month = 30*day, year = 365*day;
+  if (diff < minute) return 'just now';
+  if (diff < hour) { const m = Math.floor(diff/minute); return `${m} ${m===1?'minute':'minutes'} ago`; }
+  if (diff < day)  { const h = Math.floor(diff/hour);   return `${h} ${h===1?'hour':'hours'} ago`; }
+  if (diff < week) { const d = Math.floor(diff/day);    return `${d} ${d===1?'day':'days'} ago`; }
+  if (diff < month){ const w = Math.floor(diff/week);   return `${w} ${w===1?'week':'weeks'} ago`; }
+  if (diff < year) { const mo= Math.floor(diff/month);  return `${mo} ${mo===1?'month':'months'} ago`; }
+  const y = Math.floor(diff/year); return `${y} ${y===1?'year':'years'} ago`;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Server opened time and copy IP
+  const serverTimeElement = document.getElementById('server-time');
+  if (serverTimeElement) {
+    const timestamp = parseInt(serverTimeElement.getAttribute('data-timestamp'));
+    if (!isNaN(timestamp)) {
+      serverTimeElement.textContent = formatRelativeTime(timestamp);
+      const date = new Date(timestamp * 1000);
+      serverTimeElement.title = date.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    }
+  }
+  const copyButton = document.getElementById('copy-ip-button');
+  const serverIp = document.getElementById('server-ip');
+  const copyMessage = document.getElementById('copy-message');
+  if (copyButton && serverIp) {
+    copyButton.addEventListener('click', function() {
+      const ipText = serverIp.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ipText).then(()=>{ if(copyMessage){copyMessage.style.opacity='1'; setTimeout(()=>copyMessage.style.opacity='0',2000);} }).catch(()=>fallbackCopy());
+      } else { fallbackCopy(); }
+      function fallbackCopy(){
+        const textarea=document.createElement('textarea'); textarea.value=ipText; textarea.style.position='fixed'; document.body.appendChild(textarea); textarea.select();
+        try { if(document.execCommand('copy') && copyMessage){ copyMessage.style.opacity='1'; setTimeout(()=>copyMessage.style.opacity='0',2000);} } catch(e){}
+        document.body.removeChild(textarea);
+      }
+    });
+  }
+
+  // Bonk Game: many itch.io pages block top-level embedding. Try the embed widget first if we have one.
+  const playBtn = document.getElementById('open-bonk');
+  if (playBtn) {
+    playBtn.addEventListener('click', () => window.open('https://tekkerskillet.itch.io/bonk-game','_blank','noopener'));
+  }
+
+  // If the developer exposes an embed upload id, we could use itch.io/embed-upload/:id?file=... .
+  // This page doesn’t publish that id, so a reliable inline-play isn’t possible without the developer enabling embedding.
+  // Leave a friendly message in console so we remember why.
+  console.info('Bonk Game: Inline embed may be blocked by itch.io. Using Play in new tab as primary option.');
+});
+</script>
+</body>
+</html>

@@ -1276,7 +1276,7 @@ preloadBackgroundImages();
         'communities.html': 'communities',
         'rosefish.html': 'rosefish',
         'support.html': 'support',
-        'fishcraft.html': 'fishcraft',
+        'games.html': 'games',
         'ratfishrace.html': 'ratfishrace',
         'aquarium.html': 'aquarium'
         // Add more as needed
