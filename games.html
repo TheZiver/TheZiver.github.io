@@ -29,6 +29,10 @@
         .play-button:active { transform: translate(-50%, calc(-50% + 1px)) scale(0.99); }
         .bonk-wrapper { position: relative; display: block; max-width: 560px; width: 100%; margin: 0 auto 12px; }
         @media (max-width: 480px) { .server-ip-container { flex-direction: column; align-items: flex-start; } .server-ip { width: 100%; border-radius: 4px 4px 0 0; border-right: 1px solid #6E9F94; border-bottom: none; text-align: center; } .copy-button { width: 100%; border-radius: 0 0 4px 4px; border-top: none; } .copy-message { margin-left: 0; margin-top: 5px; width: 100%; text-align: center; } }
+        .game-link { display: inline-block; background-color: #6E9F94; color: #ADBFDA; border: 1px solid #6E9F94; border-radius: 9999px; padding: 10px 16px; font-weight: 800; letter-spacing: 1px; text-decoration: none; transition: background-color 0.2s ease, transform 0.1s ease; }
+        .game-link:hover { background-color: #5d8a80; }
+        .game-link:active { transform: translateY(1px); }
+
     </style>
 </head>
 <body>
@@ -45,7 +49,7 @@
                 <a href="aquarium.html">AQUARIUM</a>
             </div>
         </li>
-        <li><a href="rosefish.html">ROSE FISH</a></li>
+        <li><a href="database.html">DATABASE</a></li>
         <li><a href="support.html">SUPPORT</a></li>
         <li><a href="games.html" class="active">GAMES</a></li>
         <li><a href="ratfishrace.html">RAT FISH RACE</a></li>
@@ -54,8 +58,29 @@
 
 <div class="container">
     <div class="games-container">
+
+
+
+
+
+        <div class="section" id="bonk-game">
+            <h2>itch.io | Bonk Game</h2>
+            <iframe frameborder="0" src="https://itch.io/embed/3481421" width="552" height="167"><a href="https://tekkerskillet.itch.io/bonk-game">Bonk Game by TekkerSkillet</a></iframe>
+        </div>
+
+        <hr>
+
+            <div class="section" id="fish-game">
+                <h2>github.io | Fish Game</h2>
+                <p style="text-align:center;">
+                    <a class="game-link" href="https://0kamisweetfang.github.io/" target="_blank" rel="noopener noreferrer">Play Fish Game</a>
+                </p>
+            </div>
+
+            <hr>
+
         <div class="section" id="minecraft">
-            <h2>Minecraft | FISH CRAFT</h2>
+            <h2>Minecraft Server | FISH CRAFT</h2>
             <img src="images/FISH_CRAFT.png" alt="Fish Craft Server" class="fishcraft-image" loading="lazy">
             <p class="server-description">An <strong>Anarchy Minecraft Server</strong> where there are no rules</p>
             <div class="fishcraft-info">
@@ -74,13 +99,6 @@
                     <li>The main person responsible for the server is <strong>@akiyuki101</strong></li>
                 </ul>
             </div>
-        </div>
-
-        <hr>
-
-        <div class="section" id="bonk-game">
-            <h2>itch.io | Bonk Game</h2>
-            <iframe frameborder="0" src="https://itch.io/embed/3481421" width="552" height="167"><a href="https://tekkerskillet.itch.io/bonk-game">Bonk Game by TekkerSkillet</a></iframe>
         </div>
 
     </div>

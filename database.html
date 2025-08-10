@@ -3,11 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FISH ＜＞＜ COMMUNITY - Rose Fish & Creations</title>
+    <title>FISH ＜＞＜ COMMUNITY - Database</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dropdown.css">
     <link rel="stylesheet" href="css/back-to-top.css">
+    <style>
+        /* DATABASE page action chips - minimal, equal size, no icons */
+        .db-pills { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:8px 0; }
+        .db-pill {
+            display:inline-flex; align-items:center; justify-content:center; text-decoration:none;
+            padding:6px 12px; border-radius:9999px; border:1px solid rgba(128,27,35,.55);
+            background:
+                linear-gradient(180deg, rgba(18,8,9,.96), rgba(18,8,9,.96)),
+                linear-gradient(135deg, rgba(122,26,34,.42), rgba(162,43,43,.26));
+            color:#ffffff; font-weight:800; text-transform:uppercase; letter-spacing:.45px; font-size:.85rem; line-height:1;
+            min-width:150px; height:32px; box-shadow:0 4px 10px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.06);
+            transition:transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+        }
+        .db-pill:hover { transform:translateY(-1px); border-color:#d06a6a; box-shadow:0 8px 14px rgba(0,0,0,.46); }
+        @media (max-width: 480px) {
+            .db-pill { min-width:130px; height:30px; font-size:.82rem; padding:5px 10px; }
+        }
+    </style>
 </head>
 <body class="theme-rosefish">
 
@@ -24,7 +42,7 @@
                 <a href="aquarium.html">AQUARIUM</a>
             </div>
         </li>
-        <li><a href="rosefish.html" class="active">ROSE FISH</a></li>
+        <li><a href="database.html" class="active">DATABASE</a></li>
         <li><a href="support.html">SUPPORT</a></li>
         <li><a href="games.html">GAMES</a></li>
         <li><a href="ratfishrace.html">RAT FISH RACE</a></li>
@@ -39,9 +57,11 @@
         <a href="https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vSvFf-FKzHBSBqEoSFnHaEAuGnwG2uTgMnJEgZMtHvTVLcpWAoH5ESYr1J14aiZn0PJJuw-CzfETrWg/pubhtml" target="_blank" rel="noopener noreferrer">
             <img src="images/rose_fish_spin.gif" alt="Spinning Rose Fish Logo" class="verified-image" loading="lazy">
         </a>
-        <!-- Database Links -->
-        <p class="text-center database-link">DATABASE <br> <a href="https://rosefish.theziver.com" target="_blank">rosefish.theziver.com</a></p>
-        <p class="text-center database-link">SUBMIT TO DATABASE <br> <a href="https://forms.gle/x1BAmsJe1bxQ38pZ8" target="_blank">https://forms.gle/x1BAmsJe1bxQ38pZ8</a></p>
+        <!-- Database Links (minimal pill buttons) -->
+        <div class="db-pills">
+            <a class="db-pill" href="https://rosefish.theziver.com" target="_blank" rel="noopener noreferrer">Full Database</a>
+            <a class="db-pill" href="https://forms.gle/x1BAmsJe1bxQ38pZ8" target="_blank" rel="noopener noreferrer">Submit to Database</a>
+        </div>
     </section>
 
     <hr>
@@ -140,7 +160,6 @@
     </section>
      <!-- *** END MOVED SECTION *** -->
 
-    <!-- Fish animation removed -->
 </div>
 
 <script src="js/prevent-navigation.js"></script>
