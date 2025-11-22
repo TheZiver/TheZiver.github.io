@@ -261,6 +261,54 @@
             return processedHtml;
         }
 
+        function linkify(element) {
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+            const nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+
+            // Regex to find URLs
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+            nodes.forEach(node => {
+                // Skip if already inside a link or script/style
+                if (node.parentNode.closest('a') || node.parentNode.tagName === 'SCRIPT' || node.parentNode.tagName === 'STYLE') return;
+
+                const text = node.nodeValue;
+                if (text.match(urlRegex)) {
+                    const fragment = document.createDocumentFragment();
+                    let lastIndex = 0;
+                    let match;
+
+                    // Reset regex state
+                    urlRegex.lastIndex = 0;
+
+                    while ((match = urlRegex.exec(text)) !== null) {
+                        let url = match[0];
+
+                        // Trim trailing punctuation
+                        while (['.', ',', ';', '!', ')', ']'].includes(url.slice(-1))) {
+                            url = url.slice(0, -1);
+                        }
+
+                        const preText = text.substring(lastIndex, match.index);
+                        fragment.appendChild(document.createTextNode(preText));
+
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.target = '_blank';
+                        a.textContent = url;
+                        a.onclick = (e) => e.stopPropagation();
+                        fragment.appendChild(a);
+
+                        lastIndex = match.index + url.length;
+                    }
+
+                    fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+                    node.parentNode.replaceChild(fragment, node);
+                }
+            });
+        }
+
         function renderTweets(tweets) {
             const container = document.getElementById('feed');
             const loading = document.getElementById('loading');
@@ -274,7 +322,7 @@
                 article.className = 'tweet';
                 article.onclick = (e) => {
                     // Don't trigger if clicking a link or iframe inside
-                    if (e.target.tagName !== 'A' && e.target.tagName !== 'IFRAME') {
+                    if (!e.target.closest('a') && e.target.tagName !== 'IFRAME') {
                         window.open(tweet.link, '_blank');
                     }
                 };
@@ -297,6 +345,12 @@
                     </div>
                 </div>
             `;
+
+                // Make links clickable in the content
+                const contentDiv = article.querySelector('.tweet-content-html');
+                if (contentDiv) {
+                    linkify(contentDiv);
+                }
 
                 container.appendChild(article);
             });
