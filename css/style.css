@@ -197,6 +197,39 @@ a:active { transform: translateY(1px) scale(0.98); transition-duration: 0.1s; }
 .main-nav a.active { position: relative; z-index: 1; }
 .main-nav a.active:hover { animation: pulse 1.5s infinite; }
 
+/* Disable heavy hover transforms inside tweet feed to avoid layout shifting */
+.feed-wrapper .tweet a {
+    position: static;
+    text-decoration: underline;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+.feed-wrapper .tweet a:hover {
+    /* Keep it visually clickable, but without moving layout */
+    color: var(--accent-color);
+    text-shadow: 0 0 8px rgba(0, 247, 255, 0.7);
+    transform: none;
+}
+
+/* FISH NEWS: keep YouTube embeds from causing layout jumps */
+.feed-wrapper .video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid var(--feed-border);
+    background: #000;
+}
+
+.feed-wrapper .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
 .warning { color: #ffc107; font-weight: bold; }
 hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 @media (min-width: 600px) { hr { margin: 50px 0; } }
@@ -594,7 +627,7 @@ iframe { width: 100%; max-width: 100%; border: 1px solid #444; margin-top: 1.5em
 
 .cal-start-day-btn.active {
     background-color: var(--cal-primary-color);
-    color: var(--cal-button-text);
+    color: var(--button-text);
     border-color: var(--cal-primary-color);
 }
 
@@ -1067,6 +1100,7 @@ body.theme-store { background-color: #121212; color: #e0e0e0; } .theme-store .co
 }
 
 /* Remove margin from the last embed */
+
 .social-embed.youtube-embed:last-child {
     margin-bottom: 0 !important;
 }

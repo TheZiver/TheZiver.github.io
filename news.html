@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="css/back-to-top.css">
 
     <style>
-        /* Feed Specific Styles - Adapted for Dark Theme */
         :root {
             --feed-border: var(--border-color, #333337);
             --feed-hover: rgba(255, 255, 255, 0.03);
@@ -37,7 +36,6 @@
             font-style: italic;
         }
 
-        /* Tweet Card */
         .tweet {
             display: flex;
             padding: 16px;
@@ -64,6 +62,7 @@
             border-radius: 50%;
             object-fit: cover;
             background-color: #333;
+            display: block;
         }
 
         .content-col {
@@ -71,7 +70,6 @@
             min-width: 0;
         }
 
-        /* Tweet Header */
         .tweet-header {
             display: flex;
             align-items: baseline;
@@ -101,7 +99,6 @@
             color: var(--text-secondary);
         }
 
-        /* Tweet Body & Media */
         .tweet-text {
             font-size: 1em;
             line-height: 1.6;
@@ -137,8 +134,6 @@
 <body>
 
     <div id="page-background"></div>
-
-    <!-- Background container for swimming community images -->
     <div id="swimming-images-background" class="swimming-images-container"></div>
 
     <nav class="main-nav">
@@ -177,186 +172,223 @@
     <script>
         const FEED_URL = 'https://gist.githubusercontent.com/TheZiver/c526bbcc9a1cdd8892186268a4c6b244/raw';
 
-        // Helper: Convert date to relative time
         function timeAgo(dateString) {
             const date = new Date(dateString);
+            if (isNaN(date.getTime())) return '';
+
             const now = new Date();
             const seconds = Math.floor((now - date) / 1000);
-            const interval = Math.floor(seconds / 31536000);
 
-            if (interval > 1) return date.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+            const years = Math.floor(seconds / 31536000);
+            if (years >= 1) return date.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
 
-            const day = Math.floor(seconds / 86400);
-            if (day > 1) return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+            const days = Math.floor(seconds / 86400);
+            if (days >= 2) return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+            if (days === 1) return '1d';
 
-            const hour = Math.floor(seconds / 3600);
-            if (hour >= 1) return hour + "h";
+            const hours = Math.floor(seconds / 3600);
+            if (hours >= 1) return hours + 'h';
 
-            const minute = Math.floor(seconds / 60);
-            if (minute >= 1) return minute + "m";
+            const minutes = Math.floor(seconds / 60);
+            if (minutes >= 1) return minutes + 'm';
 
-            return "Just now";
+            return 'Just now';
+        }
+
+        function processContent(html) {
+            if (!html) return '';
+
+            var processedHtml = html;
+            var youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gi;
+            var matches = [];
+            var match;
+
+            while ((match = youtubeRegex.exec(html)) !== null) {
+                matches.push(match);
+            }
+
+            var uniqueVideos = {};
+
+            for (var i = 0; i < matches.length; i++) {
+                var videoId = matches[i][1];
+                if (!uniqueVideos[videoId]) {
+                    uniqueVideos[videoId] = true;
+                    processedHtml +=
+                        '<div class="video-container">' +
+                        '<iframe src="https://www.youtube.com/embed/' + videoId + '" ' +
+                        'title="YouTube video player" ' +
+                        'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
+                        'allowfullscreen></iframe>' +
+                        '</div>';
+                }
+            }
+
+            return processedHtml;
+        }
+
+        function linkify(element) {
+            var walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+            var nodes = [];
+            var node;
+
+            while ((node = walker.nextNode())) {
+                nodes.push(node);
+            }
+
+            var urlRegex = /(https?:\/\/[^\s]+)/g;
+
+            for (var i = 0; i < nodes.length; i++) {
+                var textNode = nodes[i];
+
+                if (!textNode.parentNode ||
+                    textNode.parentNode.closest('a') ||
+                    textNode.parentNode.tagName === 'SCRIPT' ||
+                    textNode.parentNode.tagName === 'STYLE') {
+                    continue;
+                }
+
+                var text = textNode.nodeValue;
+                if (!urlRegex.test(text)) {
+                    urlRegex.lastIndex = 0;
+                    continue;
+                }
+
+                var frag = document.createDocumentFragment();
+                var lastIndex = 0;
+                var m;
+                urlRegex.lastIndex = 0;
+
+                while ((m = urlRegex.exec(text)) !== null) {
+                    var url = m[0];
+
+                    while (url.length && /[.,;!\])]/.test(url.charAt(url.length - 1))) {
+                        url = url.slice(0, -1);
+                    }
+
+                    var pre = text.substring(lastIndex, m.index);
+                    if (pre) frag.appendChild(document.createTextNode(pre));
+
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.textContent = url;
+                    a.onclick = function (e) { e.stopPropagation(); };
+                    frag.appendChild(a);
+
+                    lastIndex = m.index + m[0].length;
+                }
+
+                var rest = text.substring(lastIndex);
+                if (rest) frag.appendChild(document.createTextNode(rest));
+
+                textNode.parentNode.replaceChild(frag, textNode);
+            }
+        }
+
+        function renderTweets(tweets) {
+            var container = document.getElementById('feed');
+            var loading = document.getElementById('loading');
+            if (loading && loading.parentNode) {
+                loading.parentNode.removeChild(loading);
+            }
+
+            for (var i = 0; i < tweets.length; i++) {
+                var tweet = tweets[i];
+                var timeString = timeAgo(tweet.dateObj);
+                var processedContent = processContent(tweet.contentHtml);
+
+                var article = document.createElement('article');
+                article.className = 'tweet';
+                article.style.cursor = 'pointer';
+
+                article.onclick = function (t) {
+                    return function (e) {
+                        if (e.target && (e.target.closest('a') || e.target.tagName === 'IFRAME')) {
+                            e.stopPropagation();
+                            return;
+                        }
+                        if (t.link) {
+                            window.open(t.link, '_blank');
+                        }
+                    };
+                }(tweet);
+
+                var html = '' +
+                    '<div class="avatar-col">' +
+                    '<img src="' + tweet.avatar + '" alt="' + tweet.handle + '" class="avatar" ' +
+                    'onerror="this.onerror=null;this.src=\'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png\';">' +
+                    '</div>' +
+                    '<div class="content-col">' +
+                    '<div class="tweet-header">' +
+                    '<span class="display-name">' + tweet.displayName + '</span>' +
+                    '<span class="handle">' + tweet.handle + '</span>' +
+                    '<span class="dot">·</span>' +
+                    '<span class="time">' + timeString + '</span>' +
+                    '</div>' +
+                    '<div class="tweet-text">' +
+                    '<div class="tweet-content-html">' + processedContent + '</div>' +
+                    '</div>' +
+                    '</div>';
+
+                article.innerHTML = html;
+
+                var contentDiv = article.querySelector('.tweet-content-html');
+                if (contentDiv) {
+                    linkify(contentDiv);
+                }
+
+                container.appendChild(article);
+            }
         }
 
         async function fetchAndRenderFeed() {
             try {
-                const response = await fetch(FEED_URL);
-                if (!response.ok) throw new Error("Failed to fetch feed");
-                const data = await response.json();
+                var response = await fetch(FEED_URL, { cache: 'no-store' });
+                if (!response.ok) throw new Error('Failed to fetch feed');
+                var data = await response.json();
 
-                let allTweets = [];
+                var accountDefaults = {
+                    TheRoseFish: 'https://pbs.twimg.com/profile_images/1988644928881127424/ql-Ds2HI.jpg',
+                    TheZiver: 'https://pbs.twimg.com/profile_images/1764321982638632960/8DuUQtQP.jpg',
+                    RandumUwU: 'https://pbs.twimg.com/profile_images/1919424934293692416/MPA6JH94.jpg'
+                };
 
-                if (data.items && Array.isArray(data.items)) {
-                    data.items.forEach(item => {
-                        const displayName = item.author || 'TheRoseFish';
-                        const handle = `@${displayName}`;
-                        const avatarUrl = item.author_avatar || 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png';
+                var allTweets = [];
+                if (data && Array.isArray(data.items)) {
+                    for (var i = 0; i < data.items.length; i++) {
+                        var item = data.items[i];
+                        var displayName = item.author || 'TheRoseFish';
+                        var handle = '@' + displayName;
+                        var avatarUrl = accountDefaults[displayName] ||
+                            item.author_avatar ||
+                            'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png';
 
                         allTweets.push({
                             displayName: displayName,
                             handle: handle,
                             avatar: avatarUrl,
                             dateObj: new Date(item.date),
-                            contentHtml: item.html_content,
-                            link: item.url
+                            contentHtml: item.html_content || '',
+                            link: item.url || ''
                         });
-                    });
+                    }
                 }
 
-                allTweets.sort((a, b) => b.dateObj - a.dateObj);
+                allTweets.sort(function (a, b) { return b.dateObj - a.dateObj; });
                 renderTweets(allTweets);
-
-            } catch (error) {
-                document.getElementById('loading').innerHTML = `<p style="color:#ff6b6b; text-align:center">Error loading feed: ${error.message}</p>`;
-                console.error(error);
+            } catch (err) {
+                var loading = document.getElementById('loading');
+                if (loading) {
+                    loading.innerHTML = '<p style="color:#ff6b6b; text-align:center">Error loading feed: ' + err.message + '</p>';
+                }
+                console.error(err);
             }
         }
 
-        function processContent(html) {
-            // Regex to find YouTube video IDs
-            const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gi;
-            const matches = [...html.matchAll(youtubeRegex)];
-
-            let processedHtml = html;
-            let uniqueVideos = new Set();
-
-            if (matches.length > 0) {
-                matches.forEach(match => {
-                    const videoId = match[1];
-                    if (!uniqueVideos.has(videoId)) {
-                        uniqueVideos.add(videoId);
-                        const embedCode = `
-                            <div class="video-container" style="margin-top: 10px; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; border: 1px solid var(--feed-border);">
-                                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" 
-                                    src="https://www.youtube.com/embed/${videoId}" 
-                                    title="YouTube video player" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                    allowfullscreen>
-                                </iframe>
-                            </div>`;
-                        processedHtml += embedCode;
-                    }
-                });
-            }
-            return processedHtml;
-        }
-
-        function linkify(element) {
-            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
-            const nodes = [];
-            while (walker.nextNode()) nodes.push(walker.currentNode);
-
-            // Regex to find URLs
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-
-            nodes.forEach(node => {
-                // Skip if already inside a link or script/style
-                if (node.parentNode.closest('a') || node.parentNode.tagName === 'SCRIPT' || node.parentNode.tagName === 'STYLE') return;
-
-                const text = node.nodeValue;
-                if (text.match(urlRegex)) {
-                    const fragment = document.createDocumentFragment();
-                    let lastIndex = 0;
-                    let match;
-
-                    // Reset regex state
-                    urlRegex.lastIndex = 0;
-
-                    while ((match = urlRegex.exec(text)) !== null) {
-                        let url = match[0];
-
-                        // Trim trailing punctuation
-                        while (['.', ',', ';', '!', ')', ']'].includes(url.slice(-1))) {
-                            url = url.slice(0, -1);
-                        }
-
-                        const preText = text.substring(lastIndex, match.index);
-                        fragment.appendChild(document.createTextNode(preText));
-
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.target = '_blank';
-                        a.textContent = url;
-                        a.onclick = (e) => e.stopPropagation();
-                        fragment.appendChild(a);
-
-                        lastIndex = match.index + url.length;
-                    }
-
-                    fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
-                    node.parentNode.replaceChild(fragment, node);
-                }
-            });
-        }
-
-        function renderTweets(tweets) {
-            const container = document.getElementById('feed');
-            const loading = document.getElementById('loading');
-            if (loading) loading.remove();
-
-            tweets.forEach(tweet => {
-                const timeString = timeAgo(tweet.dateObj);
-                const processedContent = processContent(tweet.contentHtml);
-
-                const article = document.createElement('article');
-                article.className = 'tweet';
-                article.onclick = (e) => {
-                    // Don't trigger if clicking a link or iframe inside
-                    if (!e.target.closest('a') && e.target.tagName !== 'IFRAME') {
-                        window.open(tweet.link, '_blank');
-                    }
-                };
-                article.style.cursor = 'pointer';
-
-                article.innerHTML = `
-                <div class="avatar-col">
-                    <img src="${tweet.avatar}" alt="${tweet.handle}" class="avatar" onerror="this.src='https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png'">
-                </div>
-                <div class="content-col">
-                    <div class="tweet-header">
-                        <span class="display-name">${tweet.displayName}</span>
-                        <span class="handle">${tweet.handle}</span>
-                        <span class="dot">·</span>
-                        <span class="time">${timeString}</span>
-                    </div>
-                    
-                    <div class="tweet-text">
-                        <div class="tweet-content-html">${processedContent}</div>
-                    </div>
-                </div>
-            `;
-
-                // Make links clickable in the content
-                const contentDiv = article.querySelector('.tweet-content-html');
-                if (contentDiv) {
-                    linkify(contentDiv);
-                }
-
-                container.appendChild(article);
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', fetchAndRenderFeed);
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchAndRenderFeed();
+        });
     </script>
 
 </body>
