@@ -195,10 +195,33 @@
             return 'Just now';
         }
 
-        function processContent(html) {
-            if (!html) return '';
+        function processContent(html, media) {
+            if (!html) html = '';
 
             var processedHtml = html;
+
+            // 1) Append media from the JSON `media` array (images, direct mp4, etc.)
+            if (Array.isArray(media)) {
+                for (var i = 0; i < media.length; i++) {
+                    var m = media[i];
+                    if (!m || !m.url) continue;
+
+                    var safeUrl = m.url.replace(/&amp;/g, '&');
+
+                    if (m.type === 'image') {
+                        processedHtml +=
+                            '<br><img src="' + safeUrl + '" alt="Tweet image">';
+                    } else if (m.type === 'video') {
+                        processedHtml +=
+                            '<br><video controls playsinline preload="metadata">' +
+                            '<source src="' + safeUrl + '" type="video/mp4">' +
+                            'Your browser does not support the video tag.' +
+                            '</video>';
+                    }
+                }
+            }
+
+            // 2) Auto-embed YouTube links that appear in the text/html
             var youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gi;
             var matches = [];
             var match;
@@ -209,8 +232,8 @@
 
             var uniqueVideos = {};
 
-            for (var i = 0; i < matches.length; i++) {
-                var videoId = matches[i][1];
+            for (var j = 0; j < matches.length; j++) {
+                var videoId = matches[j][1];
                 if (!uniqueVideos[videoId]) {
                     uniqueVideos[videoId] = true;
                     processedHtml +=
@@ -296,7 +319,7 @@
             for (var i = 0; i < tweets.length; i++) {
                 var tweet = tweets[i];
                 var timeString = timeAgo(tweet.dateObj);
-                var processedContent = processContent(tweet.contentHtml);
+                var processedContent = processContent(tweet.contentHtml, tweet.media);
 
                 var article = document.createElement('article');
                 article.className = 'tweet';
@@ -370,6 +393,7 @@
                             avatar: avatarUrl,
                             dateObj: new Date(item.date),
                             contentHtml: item.html_content || '',
+                            media: Array.isArray(item.media) ? item.media : [],
                             link: item.url || ''
                         });
                     }
