@@ -164,8 +164,10 @@ document.addEventListener('DOMContentLoaded', function() {
         verifiedInfoElement = document.getElementById('verified-info');
         certifiedInfoElement = document.getElementById('certified-info');
         knownInfoElement = document.getElementById('known-info'); // Added selector for known info
+        registeredInfoElement = document.getElementById('registered-info'); // Added selector for registered info
         verifiedListElement = document.getElementById('fish-verified-list');
         certifiedListElement = document.getElementById('fish-certified-list');
+        registeredListElement = document.getElementById('fish-registered-list'); // Added selector for registered list
         knownListElement = document.getElementById('fish-known-list');
         fishStatusListElement = document.getElementById('fish-status-list'); // Added selector for FISH status list
         rosefishInfoElement = document.getElementById('rosefish-info');
@@ -270,10 +272,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check if ANY of the relevant list elements exist on the page
         console.log("List elements exist? verifiedListElement:", !!verifiedListElement,
                    "certifiedListElement:", !!certifiedListElement,
+                   "registeredListElement:", !!registeredListElement,
                    "knownListElement:", !!knownListElement,
                    "fishStatusListElement:", !!fishStatusListElement);
 
-        if (!verifiedListElement && !certifiedListElement && !knownListElement && !fishStatusListElement) {
+        if (!verifiedListElement && !certifiedListElement && !registeredListElement && !knownListElement && !fishStatusListElement) {
             console.log("No list elements found on page, returning early");
             return;
         }
@@ -285,6 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
              if(verifiedListElement) verifiedListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
              if(certifiedListElement) certifiedListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
+             if(registeredListElement) registeredListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
              if(knownListElement) knownListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
              if(fishStatusListElement) fishStatusListElement.innerHTML = '<li class="error-message"><i>Could not load communities data (invalid structure).</i></li>';
              return;
@@ -293,11 +297,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear any existing content
         if(verifiedListElement) verifiedListElement.innerHTML = '';
         if(certifiedListElement) certifiedListElement.innerHTML = '';
+        if(registeredListElement) registeredListElement.innerHTML = '';
         if(knownListElement) knownListElement.innerHTML = '';
         if(fishStatusListElement) fishStatusListElement.innerHTML = ''; // Clear FISH status list
 
         let verifiedCount = 0;
         let certifiedCount = 0;
+        let registeredCount = 0;
         let knownCount = 0;
         let fishStatusCount = 0; // Counter for FISH status groups
 
@@ -477,10 +483,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log(`Adding ${community.group_name} to certified list`);
                     certifiedListElement.appendChild(listItem);
                     certifiedCount++;
+                } else if (community.tags.includes('FISH_REGISTERED') && registeredListElement) {
+                    console.log(`Adding ${community.group_name} to registered list`);
+                    registeredListElement.appendChild(listItem);
+                    registeredCount++;
                 } else if (community.tags.includes('FISH_KNOWN') && knownListElement) {
-                    console.log(`Adding ${community.group_name} to known list`);
-                    knownListElement.appendChild(listItem);
-                    knownCount++;
+                    // Only add to FISH_KNOWN if not already FISH_REGISTERED
+                    if (!community.tags.includes('FISH_REGISTERED')) {
+                        console.log(`Adding ${community.group_name} to known list`);
+                        knownListElement.appendChild(listItem);
+                        knownCount++;
+                    }
                 } else if (community.tags.includes('FISH') && fishStatusListElement) { // Handle FISH status
                     console.log(`Adding ${community.group_name} to FISH status list`);
                     // Need to clone the listItem because it might be appended elsewhere if status changes
@@ -502,6 +515,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log(`Adding ${community.group_name} to certified list (status)`);
                     certifiedListElement.appendChild(listItem);
                     certifiedCount++;
+                } else if (community.status === 'FISH_REGISTERED' && registeredListElement) {
+                    console.log(`Adding ${community.group_name} to registered list (status)`);
+                    registeredListElement.appendChild(listItem);
+                    registeredCount++;
                 } else if (community.status === 'FISH_KNOWN' && knownListElement) {
                     console.log(`Adding ${community.group_name} to known list (status)`);
                     knownListElement.appendChild(listItem);
@@ -529,6 +546,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (certifiedListElement && certifiedCount === 0) {
             certifiedListElement.innerHTML = '<li><i>No certified communities listed currently.</i></li>';
+        }
+        if (registeredListElement && registeredCount === 0) {
+            registeredListElement.innerHTML = '<li><i>No registered communities listed currently.</i></li>';
         }
         if (knownListElement && knownCount === 0) {
             knownListElement.innerHTML = '<li><i>No known communities listed currently.</i></li>';
@@ -1201,6 +1221,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Add known info error handling if needed: if (knownInfoElement) knownInfoElement.innerHTML = errorMsg;
                     if(verifiedListElement) verifiedListElement.innerHTML = errorLi;
                     if(certifiedListElement) certifiedListElement.innerHTML = errorLi;
+                    if(registeredListElement) registeredListElement.innerHTML = errorLi; // Add registered list error
                     if(knownListElement) knownListElement.innerHTML = errorLi; // Add known list error
 
                     // Try to load community data from a local fallback file
