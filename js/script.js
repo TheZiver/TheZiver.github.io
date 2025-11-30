@@ -882,6 +882,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             if (isToday) {
                 dayCell.classList.add('today');
+                // Add fish emoji for current day - append to the link if it exists
+                const fishEmoji = document.createElement('span');
+                fishEmoji.classList.add('today-fish');
+                fishEmoji.textContent = '🐟';
+                const linkElement = dayCell.querySelector('a');
+                if (linkElement) {
+                    linkElement.appendChild(fishEmoji);
+                } else {
+                    dayCell.appendChild(fishEmoji);
+                }
             }
         } else {
             dayCell.appendChild(dayNumberSpan);

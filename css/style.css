@@ -903,6 +903,14 @@ iframe { width: 100%; max-width: 100%; border: 1px solid #444; margin-top: 1.5em
     color: var(--cal-primary-color);
 }
 
+.calendar-day .today-fish {
+    display: block;
+    font-size: 1.2em;
+    line-height: 1;
+    margin-top: 2px;
+    pointer-events: none;
+}
+
 .calendar-day .day-number {
     color: var(--cal-text-color);
     margin: 0;
