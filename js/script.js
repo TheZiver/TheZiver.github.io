@@ -1073,6 +1073,30 @@ document.addEventListener('DOMContentLoaded', function() {
              startSunButton.addEventListener('click', () => updateStartDaySelection(0));
              startMonButton.addEventListener('click', () => updateStartDaySelection(1));
         }
+
+        // Set up daily fish image click handler to open today's instance
+        const dailyFishImage = document.getElementById('daily-fish-image');
+        if (dailyFishImage) {
+            dailyFishImage.addEventListener('click', function() {
+                const nowUTC = new Date();
+                const todayUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate()));
+                const dayNumber = calculateDailyVrchatDay(todayUTC);
+                
+                if (dayNumber !== null) {
+                    const dayOfWeek = todayUTC.getUTCDay();
+                    const worldId = WEEKDAY_WORLD_IDS[dayOfWeek];
+                    const customInstanceId = WEEKDAY_INSTANCE_IDS[dayOfWeek];
+                    const instanceParams = `~group(${VRC_GROUP_ID})~groupAccessType(public)~region(eu)`;
+                    const finalInstanceId = customInstanceId !== null ? customInstanceId : dayNumber;
+                    const vrchatLink = `https://vrchat.com/home/launch?worldId=${worldId}&instanceId=${finalInstanceId}${instanceParams}`;
+                    
+                    window.open(vrchatLink, '_blank', 'noopener,noreferrer');
+                } else {
+                    alert('Unable to determine today\'s Daily VRChat instance. The event may not have started yet (events began July 20, 2023).');
+                }
+            });
+        }
+
         if (monthYearDisplay) monthYearDisplay.textContent = "Loading...";
 
         /**
