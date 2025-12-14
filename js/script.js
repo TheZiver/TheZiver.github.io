@@ -952,6 +952,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 const instanceId = currentDayNumber;
 
                 if (instanceId !== null) {
+                     // Check if today is a special day with a custom link
+                     if (dailySpecialDaysMap.has(currentDayNumber)) {
+                         const specialDay = dailySpecialDaysMap.get(currentDayNumber);
+                         if (specialDay.link) {
+                             const specialName = specialDay.name ? specialDay.name.replace(/\n/g, ' ') : '';
+                             happeningNowMessage.textContent = `DAILY VRCHAT (${currentDayNumber}${currentDaySuffix}) ${specialName} IS CURRENTLY HAPPENING`;
+                             happeningNowLink.href = specialDay.link;
+                             happeningNowContainer.style.display = 'block';
+                             return;
+                         }
+                     }
+                     
                      const dayOfWeek = todayStartUTC.getUTCDay();
                      const worldId = WEEKDAY_WORLD_IDS[dayOfWeek];
                      const customInstanceId = WEEKDAY_INSTANCE_IDS[dayOfWeek];
@@ -1083,6 +1095,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const dayNumber = calculateDailyVrchatDay(todayUTC);
                 
                 if (dayNumber !== null) {
+                    // Check if today is a special day with a custom link
+                    if (dailySpecialDaysMap.has(dayNumber)) {
+                        const specialDay = dailySpecialDaysMap.get(dayNumber);
+                        if (specialDay.link) {
+                            window.open(specialDay.link, '_blank', 'noopener,noreferrer');
+                            return;
+                        }
+                    }
+                    
+                    // Otherwise use the regular daily event link
                     const dayOfWeek = todayUTC.getUTCDay();
                     const worldId = WEEKDAY_WORLD_IDS[dayOfWeek];
                     const customInstanceId = WEEKDAY_INSTANCE_IDS[dayOfWeek];
