@@ -1305,7 +1305,6 @@ const PAGE_BG_IMAGES = {
     home: 'images/HOME_BG.jpg',
     daily: 'images/DVRC_BG.jpg',
     rosefish: 'images/ROSE_FISH_BG.jpg',
-    fishcraft: 'images/FISH_CRAFT_BG.jpg',
     support: 'images/SUPPORT_BG.jpg',
     ratfishrace: 'images/RAT_FISH_RACE_BG.jpg',
     communities: 'images/COMMUNITIES_BG.jpg',
@@ -1412,7 +1411,6 @@ preloadBackgroundImages();
         } else {
             if (page === 'home') bgUrl = 'images/HOME_BG.jpg';
             else if (page === 'rosefish') bgUrl = 'images/ROSE_FISH_BG.jpg';
-            else if (page === 'fishcraft') bgUrl = 'images/FISH_CRAFT_BG.jpg';
             else if (page === 'support') bgUrl = 'images/SUPPORT_BG.jpg';
             else if (page === 'ratfishrace') bgUrl = 'images/RAT_FISH_RACE_BG.jpg';
             else if (page === 'communities') bgUrl = 'images/COMMUNITIES_BG.jpg';
