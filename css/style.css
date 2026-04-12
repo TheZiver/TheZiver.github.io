@@ -157,7 +157,7 @@ h1, h2 {
     100% { background-position: 0% 50%; }
 }
 
-h1 { font-size: 2.4em; letter-spacing: -0.02em; margin-bottom: 15px; text-align: center; }
+h1 { font-size: 2.4em; letter-spacing: -0.02em; margin-bottom: 15px; text-align: center; color: #e0e0e0; }
  @media (min-width: 600px) { h1 { font-size: 2.8em; margin-bottom: 20px; } }
 
 h2 { font-size: 1.8em; margin-top: 40px; margin-bottom: 20px; }
@@ -1170,6 +1170,7 @@ body.theme-store { background-color: #121212; color: #e0e0e0; } .theme-store .co
     margin: 0 0 5px 0;
     font-size: 2.8em;
     line-height: 1.2;
+    color: #e0e0e0;
 }
 
 @media (max-width: 768px) {
