@@ -952,18 +952,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const instanceId = currentDayNumber;
 
                 if (instanceId !== null) {
-                     // Check if today is a special day with a custom link
-                     if (dailySpecialDaysMap.has(currentDayNumber)) {
-                         const specialDay = dailySpecialDaysMap.get(currentDayNumber);
-                         if (specialDay.link) {
-                             const specialName = specialDay.name ? specialDay.name.replace(/\n/g, ' ') : '';
-                             happeningNowMessage.textContent = `DAILY VRCHAT (${currentDayNumber}${currentDaySuffix}) ${specialName} IS CURRENTLY HAPPENING`;
-                             happeningNowLink.href = specialDay.link;
-                             happeningNowContainer.style.display = 'block';
-                             return;
-                         }
-                     }
-                     
                      const dayOfWeek = todayStartUTC.getUTCDay();
                      const worldId = WEEKDAY_WORLD_IDS[dayOfWeek];
                      const customInstanceId = WEEKDAY_INSTANCE_IDS[dayOfWeek];
@@ -1085,40 +1073,6 @@ document.addEventListener('DOMContentLoaded', function() {
              startSunButton.addEventListener('click', () => updateStartDaySelection(0));
              startMonButton.addEventListener('click', () => updateStartDaySelection(1));
         }
-
-        // Set up daily fish image click handler to open today's instance
-        const dailyFishImage = document.getElementById('daily-fish-image');
-        if (dailyFishImage) {
-            dailyFishImage.addEventListener('click', function() {
-                const nowUTC = new Date();
-                const todayUTC = new Date(Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), nowUTC.getUTCDate()));
-                const dayNumber = calculateDailyVrchatDay(todayUTC);
-                
-                if (dayNumber !== null) {
-                    // Check if today is a special day with a custom link
-                    if (dailySpecialDaysMap.has(dayNumber)) {
-                        const specialDay = dailySpecialDaysMap.get(dayNumber);
-                        if (specialDay.link) {
-                            window.open(specialDay.link, '_blank', 'noopener,noreferrer');
-                            return;
-                        }
-                    }
-                    
-                    // Otherwise use the regular daily event link
-                    const dayOfWeek = todayUTC.getUTCDay();
-                    const worldId = WEEKDAY_WORLD_IDS[dayOfWeek];
-                    const customInstanceId = WEEKDAY_INSTANCE_IDS[dayOfWeek];
-                    const instanceParams = `~group(${VRC_GROUP_ID})~groupAccessType(public)~region(eu)`;
-                    const finalInstanceId = customInstanceId !== null ? customInstanceId : dayNumber;
-                    const vrchatLink = `https://vrchat.com/home/launch?worldId=${worldId}&instanceId=${finalInstanceId}${instanceParams}`;
-                    
-                    window.open(vrchatLink, '_blank', 'noopener,noreferrer');
-                } else {
-                    alert('Unable to determine today\'s Daily VRChat instance. The event may not have started yet (events began July 20, 2023).');
-                }
-            });
-        }
-
         if (monthYearDisplay) monthYearDisplay.textContent = "Loading...";
 
         /**
@@ -1302,9 +1256,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Background Image Preload and Lazy Loading ---
 const PAGE_BG_IMAGES = {
-    home: 'images/HOME_BG.jpg',
+    home: 'images/DVRC_BG.jpg',
     daily: 'images/DVRC_BG.jpg',
     rosefish: 'images/ROSE_FISH_BG.jpg',
+    fishcraft: 'images/FISH_CRAFT_BG.jpg',
     support: 'images/SUPPORT_BG.jpg',
     ratfishrace: 'images/RAT_FISH_RACE_BG.jpg',
     communities: 'images/COMMUNITIES_BG.jpg',
@@ -1411,6 +1366,7 @@ preloadBackgroundImages();
         } else {
             if (page === 'home') bgUrl = 'images/HOME_BG.jpg';
             else if (page === 'rosefish') bgUrl = 'images/ROSE_FISH_BG.jpg';
+            else if (page === 'fishcraft') bgUrl = 'images/FISH_CRAFT_BG.jpg';
             else if (page === 'support') bgUrl = 'images/SUPPORT_BG.jpg';
             else if (page === 'ratfishrace') bgUrl = 'images/RAT_FISH_RACE_BG.jpg';
             else if (page === 'communities') bgUrl = 'images/COMMUNITIES_BG.jpg';
