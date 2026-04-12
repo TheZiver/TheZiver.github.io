@@ -1170,7 +1170,8 @@ body.theme-store { background-color: #121212; color: #e0e0e0; } .theme-store .co
     margin: 0 0 5px 0;
     font-size: 2.8em;
     line-height: 1.2;
-    color: #e0e0e0;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 @media (max-width: 768px) {
