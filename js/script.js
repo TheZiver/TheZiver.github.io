@@ -1142,6 +1142,64 @@ document.addEventListener('DOMContentLoaded', function() {
                    console.log("Timer interval started.");
                 }
 
+                // Set up daily_vrchat.png image click handler to open today's event
+                // Use event delegation to handle the image whenever it gets clicked
+                document.addEventListener('click', function(e) {
+                    const dailyImage = e.target;
+                    if (dailyImage.tagName === 'IMG' && dailyImage.src && dailyImage.src.includes('daily_vrchat.png')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const now = new Date();
+                        const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+                        const dailyDay = calculateDailyVrchatDay(todayUTC);
+                        
+                        if (dailyDay !== null) {
+                            let vrchatLink = null;
+                            
+                            // Check if today is a special day first (same logic as calendar)
+                            if (dailySpecialDaysMap.has(dailyDay)) {
+                                const specialDay = dailySpecialDaysMap.get(dailyDay);
+                                if (specialDay.link) {
+                                    vrchatLink = specialDay.link;
+                                }
+                            }
+                            
+                            // If not a special day or no special link, use the regular weekday logic
+                            if (!vrchatLink) {
+                                const dayOfWeek = todayUTC.getUTCDay();
+                                const worldId = WEEKDAY_WORLD_IDS[dayOfWeek];
+                                const instanceId = dailyDay;
+                                const instanceParams = `~group(${VRC_GROUP_ID})~groupAccessType(public)~region(eu)`;
+                                vrchatLink = `https://vrchat.com/home/launch?worldId=${worldId}&instanceId=${instanceId}${instanceParams}`;
+                            }
+                            
+                            console.log("Opening Daily VRChat link from image click:", vrchatLink);
+                            window.open(vrchatLink, '_blank', 'noopener,noreferrer');
+                        } else {
+                            console.warn("Could not calculate Daily VRChat day");
+                        }
+                    }
+                }, true);
+                
+                // Also set up direct click handlers on any existing daily images
+                function attachDailyImageHandlers() {
+                    const dailyImages = document.querySelectorAll('img[src="images/daily_vrchat.png"]');
+                    dailyImages.forEach(img => {
+                        img.style.cursor = 'pointer';
+                        img.setAttribute('title', 'Click to join today\'s Daily VRChat event');
+                    });
+                    if (dailyImages.length > 0) {
+                        console.log("Found " + dailyImages.length + " daily VRChat image(s)");
+                    }
+                }
+                
+                // Attach handlers immediately
+                attachDailyImageHandlers();
+                // Also attach when images load (for lazy loading)
+                window.addEventListener('load', attachDailyImageHandlers);
+                // And check again after a short delay
+                setTimeout(attachDailyImageHandlers, 500);
+
                 console.log("Primary content loading complete. Fetching community data...");
                 console.log("Step 6: Starting community data fetch from:", COMMUNITY_DATA_URL);
                 // --- Fetch Community Data ---
