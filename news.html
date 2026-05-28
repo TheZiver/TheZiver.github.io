@@ -169,7 +169,7 @@
     <script src="js/lazy-loading.js"></script>
 
     <script>
-        const FEED_URL = 'https://gist.githubusercontent.com/TheZiver/c526bbcc9a1cdd8892186268a4c6b244/raw';
+        const FEED_URL = 'https://gist.githubusercontent.com/TheZiver/c526bbcc9a1cdd8892186268a4c6b244/raw/359a85e964d670d2ff05a3b0194893c11f1682f7/fish_news_feed.json';
 
         function timeAgo(dateString) {
             const date = new Date(dateString);
@@ -326,7 +326,7 @@
 
                 article.onclick = function (t) {
                     return function (e) {
-                        if (e.target && (e.target.closest('a') || e.target.tagName === 'IFRAME')) {
+                        if (e.target && (e.target.closest('a') || e.target.tagName === 'IFRAME' || e.target.tagName === 'VIDEO')) {
                             e.stopPropagation();
                             return;
                         }
