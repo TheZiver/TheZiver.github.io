@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://www.youtube.com https://itch.io https://storage.ko-fi.com https://docs.google.com; connect-src 'self' https://api.github.com https://gist.githubusercontent.com https://cdn.discordapp.com; base-uri 'self'; form-action 'none'">
+    <title>＜＞＜ AQUARIUM</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="my-favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="96x96" href="my-favicon/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="my-favicon/apple-touch-icon.png">
+    <link rel="manifest" href="my-favicon/site.webmanifest">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link href="css/fonts.css" rel="stylesheet">
+</head>
+    <body class="theme-aquarium">
+    <div id="page-background"></div>
+    <!-- Background container for swimming community images -->
+    <div id="swimming-images-background" class="swimming-images-container"></div>
+
+    <!-- Only the navigation and background fish -->
+    <nav class="main-nav">
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="daily.html">DAILY VRCHAT</a></li>
+            <li><a href="communities.html">COMMUNITIES</a></li>
+            <li><a href="aquarium.html" class="active">AQUARIUM</a></li>
+            <li><a href="database.html">DATABASE</a></li>
+            <li><a href="support.html">SUPPORT</a></li>
+            <li><a href="news.html">FISH NEWS</a></li>
+            <li><a href="games.html">GAMES</a></li>
+            <li><a href="soundboard.html">SOUNDBOARD</a></li>
+        </ul>
+    </nav>
+
+    <!-- Include scripts for background fish functionality -->
+    <script src="js/prevent-navigation.js"></script>
+    <script src="js/swimming-fish.js"></script>
+<button id="back-to-top" aria-label="Back to top">↑</button>
+</body>
+</html>
