@@ -1308,7 +1308,8 @@ document.addEventListener('DOMContentLoaded', function () {
         'games.html': 'games',
         'ratfishrace.html': 'ratfishrace',
         'aquarium.html': 'aquarium',
-        'soundboard.html': 'soundboard'
+        'soundboard.html': 'soundboard',
+        'gallery.html': 'gallery'
         // Add more as needed
     };
     const path = window.location.pathname.split('/').pop() || '';

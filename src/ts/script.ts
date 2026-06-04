@@ -1402,7 +1402,8 @@ preloadBackgroundImages();
         'games.html': 'games',
         'ratfishrace.html': 'ratfishrace',
         'aquarium.html': 'aquarium',
-        'soundboard.html': 'soundboard'
+        'soundboard.html': 'soundboard',
+        'gallery.html': 'gallery'
         // Add more as needed
     };
     const path: string = window.location.pathname.split('/').pop() || '';

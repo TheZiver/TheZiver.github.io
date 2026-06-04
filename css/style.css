@@ -227,7 +227,7 @@
 
 /* Soundboard page */
 .soundboard-container { max-width: 100%; margin: 0 auto; }
-.soundboard-container iframe { display: block; border: 1px solid #444; border-radius: 8px; background: #111; }
+.soundboard-container iframe { display: block; border: 1px solid #444; border-radius: 8px; background: #111; height: calc(100vh - 120px); min-height: 400px; }
 .soundboard-open-btn {
     display: block; text-align: center;
     margin: 0 auto 16px; padding: 8px 0;

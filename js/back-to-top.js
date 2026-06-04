@@ -2,11 +2,13 @@
 (function () {
     function init() {
         const btn = document.getElementById('back-to-top');
-        if (!btn) return;
+        if (!btn)
+            return;
         function toggle() {
             if (window.scrollY > 300) {
                 btn.classList.add('show');
-            } else {
+            }
+            else {
                 btn.classList.remove('show');
             }
         }
@@ -18,7 +20,8 @@
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
-    } else {
+    }
+    else {
         init();
     }
 })();
