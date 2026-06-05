@@ -227,7 +227,7 @@
 
 /* Soundboard page */
 .soundboard-container { max-width: 100%; margin: 0 auto; }
-.soundboard-container iframe { display: block; border: 1px solid #444; border-radius: 8px; background: #111; height: calc(100vh - 120px); min-height: 400px; }
+.soundboard-container iframe { display: block; border: 1px solid #444; border-radius: 8px; background: #111; min-height: 400px; }
 .soundboard-open-btn {
     display: block; text-align: center;
     margin: 0 auto 16px; padding: 8px 0;
@@ -1413,8 +1413,10 @@ body.theme-rosefish #back-to-top::after { border-bottom-color: #dc143c; }
 body.theme-rosefish #back-to-top:hover::after { border-bottom-color: #b2102f; }
 body.theme-store #back-to-top::after { border-bottom-color: #d4af37; }
 body.theme-store #back-to-top:hover::after { border-bottom-color: #c9a032; }
-body.theme-soundboard #back-to-top::after { border-bottom-color: #4caf50; }
-body.theme-soundboard #back-to-top:hover::after { border-bottom-color: #388e3c; }
+body.theme-gallery #back-to-top::after { border-bottom-color: #00ff66; }
+body.theme-gallery #back-to-top:hover::after { border-bottom-color: #00cc52; }
+body.theme-soundboard #back-to-top::after { border-bottom-color: #00ff66; }
+body.theme-soundboard #back-to-top:hover::after { border-bottom-color: #00cc52; }
 
 /* --- MERGED FROM AQUARIUM-FIXES.CSS --- */
 .theme-aquarium .swimming-images-container { z-index: 1 !important; }
