@@ -395,6 +395,8 @@ h3 { font-size: 1.3em; margin-top: 30px; margin-bottom: 15px; color: #bbbbbb; }
     @media (hover: none) and (pointer: coarse) {
         h1, h2 {
             animation: none;
+            color: #e0e0e0;
+            -webkit-text-fill-color: #e0e0e0;
         }
     }
 }
