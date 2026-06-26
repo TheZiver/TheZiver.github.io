@@ -373,13 +373,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const linksContainer = document.createElement('div');
             linksContainer.classList.add('community-links-container'); // New class for styling the row
 
-            // Add VRChat Group Link as an icon (only for FISH_VERIFIED and FISH_CERTIFIED)
+            // Add VRChat Group Link as an icon (only for FISH_VERIFIED, FISH_CERTIFIED, and FISH_REGISTERED)
             const vrchatLink = community.group_link;
             const isKnownGroup = community.tags && Array.isArray(community.tags) && community.tags.includes('FISH_KNOWN');
             const isVerifiedOrCertified = community.tags && Array.isArray(community.tags) &&
-                (community.tags.includes('FISH_VERIFIED') || community.tags.includes('FISH_CERTIFIED'));
+                (community.tags.includes('FISH_VERIFIED') || community.tags.includes('FISH_CERTIFIED') || community.tags.includes('FISH_REGISTERED'));
 
-            // Only add VRChat icon link for FISH_VERIFIED and FISH_CERTIFIED groups
+            // Only add VRChat icon link for FISH_VERIFIED, FISH_CERTIFIED, and FISH_REGISTERED groups
             // FISH_KNOWN groups will only have the image clickable, not this icon
             if (isVerifiedOrCertified && vrchatLink && (vrchatLink.startsWith('http') || vrchatLink.startsWith('vrchat://'))) {
                 const a = document.createElement('a');
@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 linksContainer.appendChild(a);
             }
 
-            // External group links (only for FISH_VERIFIED and FISH_CERTIFIED)
+            // External group links (only for FISH_VERIFIED, FISH_CERTIFIED, and FISH_REGISTERED)
             // FISH_KNOWN groups will only have the image clickable, not these external links
             if (isVerifiedOrCertified && Array.isArray(community.group_links) && community.group_links.length > 0) {
                 community.group_links.forEach((link: string) => {
@@ -433,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof community.member_count === 'number') {
                 const memberCountSpan = document.createElement('span');
                 memberCountSpan.classList.add('community-member-count'); // Class for styling
-                memberCountSpan.innerHTML = `<b>Members:</b> ${escapeHtml(community.member_count.toLocaleString())}`; // Format with commas
+                memberCountSpan.innerHTML = `<i class="fa-solid fa-user"></i> ${escapeHtml(community.member_count.toLocaleString())}`;
                 textDiv.appendChild(memberCountSpan); // Append after links container
             }
 
@@ -457,9 +457,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (mappedPath) {
                     imageSource = mappedPath;
                 } else {
-                    // 3. Use fish_known.png as the final fallback
-                    imageSource = 'images/fish_known.png';
-                    console.warn(`No icon_url or local mapping for ${community.group_name}, using fallback.`);
+                    // 3. Use VRC_GROUP.png as the final fallback
+                    imageSource = 'images/VRC_GROUP.png';
+                    console.warn(`No icon_url or local mapping for ${community.group_name}, using VRC_GROUP.png fallback.`);
                 }
             }
 
@@ -468,8 +468,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add error handler ONLY if we attempted to load icon_url
             if (addErrorFallback) {
                 img.onerror = () => {
-                    console.warn(`Failed to load image from icon_url: ${img.src}. Using fallback.`);
-                    img.src = 'images/fish_known.png';
+                    console.warn(`Failed to load image from icon_url: ${img.src}. Using VRC_GROUP.png fallback.`);
+                    img.src = 'images/VRC_GROUP.png';
                     // Remove the error handler to prevent infinite loops if fallback also fails
                     img.onerror = null;
                 };

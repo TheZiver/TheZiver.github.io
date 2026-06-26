@@ -583,32 +583,46 @@ img[src="images/meaning_of_fish.png"] { max-width: 480px !important; width: 100%
 @media (max-width: 320px) { #fish-verified-list, #fish-certified-list, #fish-registered-list, #fish-known-list, #fish-status-list { grid-template-columns: 1fr; gap: 4px; } }
 @media (min-width: 600px) and (max-width: 899px) { #fish-verified-list, #fish-certified-list, #fish-registered-list, #fish-known-list, #fish-status-list { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; } }
 @media (min-width: 900px) { #fish-verified-list, #fish-certified-list, #fish-registered-list, #fish-known-list, #fish-status-list { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; } }
-#fish-verified-list li, #fish-certified-list li, #fish-registered-list li, #fish-known-list li, #fish-status-list li { background-color: #222226; border: 1px solid #333337; border-radius: 6px; padding: 6px 3px; display: flex; flex-direction: column; align-items: center; text-align: center; margin: 0; width: 100%; max-width: 100%; min-height: auto; overflow: hidden; box-sizing: border-box; }
-@media (max-width: 320px) { #fish-verified-list li, #fish-certified-list li, #fish-registered-list li, #fish-known-list li, #fish-status-list li { padding: 4px 2px; } }
-.community-logo { max-width: 80px !important; max-height: 80px !important; width: 80px !important; height: 80px !important; object-fit: contain !important; margin-bottom: 5px; margin-right: 0; flex-shrink: 0; border-radius: 4px; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0s; opacity: 1; }
+#fish-verified-list li, #fish-certified-list li, #fish-registered-list li, #fish-known-list li, #fish-status-list li { background: linear-gradient(180deg, #1e1e24 0%, #18181c 100%); border: 1px solid #2a2a30; border-top-width: 3px; border-radius: 8px; padding: 8px 5px; display: flex; flex-direction: column; align-items: center; text-align: center; margin: 0; width: 100%; max-width: 100%; min-height: auto; overflow: hidden; box-sizing: border-box; box-shadow: 0 2px 6px rgba(0,0,0,0.3); transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; will-change: transform; }
+#fish-verified-list li { border-top-color: #ffffff; } #fish-certified-list li { border-top-color: #d4d4d4; } #fish-registered-list li { border-top-color: #a8a8a8; } #fish-known-list li, #fish-status-list li { border-top-color: #000000; }
+#fish-verified-list li:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(255, 255, 255, 0.12); border-color: #ffffff; } #fish-certified-list li:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(212, 212, 212, 0.12); border-color: #d4d4d4; } #fish-registered-list li:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(168, 168, 168, 0.12); border-color: #a8a8a8; } #fish-known-list li:hover, #fish-status-list li:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); border-color: #333333; }
+@media (max-width: 320px) { #fish-verified-list li, #fish-certified-list li, #fish-registered-list li, #fish-known-list li, #fish-status-list li { padding: 5px 3px; } }
+.community-logo { max-width: 80px !important; max-height: 80px !important; width: 80px !important; height: 80px !important; object-fit: contain !important; margin-bottom: 6px; margin-right: 0; flex-shrink: 0; border-radius: 6px; border: 2px solid rgba(255,255,255,0.08); box-shadow: 0 2px 8px rgba(0,0,0,0.4); transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease, box-shadow 0.3s ease; opacity: 1; }
+#fish-verified-list .community-logo { border-color: rgba(255, 255, 255, 0.3); } #fish-certified-list .community-logo { border-color: rgba(212, 212, 212, 0.3); } #fish-registered-list .community-logo { border-color: rgba(168, 168, 168, 0.3); } #fish-known-list .community-logo, #fish-status-list .community-logo { border-color: rgba(0, 0, 0, 0.3); }
 @media (max-width: 600px) { .community-logo { max-width: 70px !important; max-height: 70px !important; width: 70px !important; height: 70px !important; } }
 @media (max-width: 400px) { .community-logo { max-width: 60px !important; max-height: 60px !important; width: 60px !important; height: 60px !important; } }
 @media (max-width: 320px) { .community-logo { max-width: 50px !important; max-height: 50px !important; width: 50px !important; height: 50px !important; } }
-.community-logo:hover { transform: rotate(360deg); }
+.community-logo:hover { transform: rotate(360deg) scale(1.08); border-color: rgba(255,255,255,0.25); box-shadow: 0 4px 16px rgba(0,0,0,0.5); }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 #fish-verified-list li > div, #fish-certified-list li > div, #fish-registered-list li > div, #fish-known-list li > div, #fish-status-list li > div { flex-grow: 1; line-height: 1.15; margin-bottom: 0; text-align: center; width: 100%; }
-#fish-verified-list li > div b, #fish-certified-list li > div b, #fish-registered-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b { display: block; font-size: 0.55em; font-weight: bold; margin-bottom: 1px; text-align: center; width: 100%; white-space: nowrap; }
-#fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-registered-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) { display: block; font-size: 0.65em; margin-bottom: 2px; text-align: center; width: 100%; white-space: nowrap; }
+#fish-verified-list li > div b, #fish-certified-list li > div b, #fish-registered-list li > div b, #fish-known-list li > div b, #fish-status-list li > div b { display: block; font-size: 0.6em; font-weight: bold; margin-bottom: 1px; text-align: center; width: 100%; white-space: nowrap; letter-spacing: 0.3px; color: #e8e8e8; }
+#fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-registered-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) { display: block; font-size: 0.6em; margin-bottom: 2px; text-align: center; width: 100%; white-space: nowrap; opacity: 0.7; }
 #fish-verified-list li > div span:nth-of-type(1) b, #fish-certified-list li > div span:nth-of-type(1) b, #fish-registered-list li > div span:nth-of-type(1) b, #fish-known-list li > div span:nth-of-type(1) b, #fish-status-list li > div span:nth-of-type(1) b { font-weight: normal; }
 #fish-verified-list li > div span { color: #FFFFFF; } #fish-certified-list li > div span { color: #E0E0E0; } #fish-registered-list li > div span { color: #CFCFCF; } #fish-known-list li > div span, #fish-status-list li > div span { color: #BDBDBD; }
 #fish-verified-list li a, #fish-certified-list li a, #fish-registered-list li a, #fish-known-list li a, #fish-status-list li a { color: #64B5F6; text-decoration: underline; }
 #fish-verified-list li a:hover, #fish-certified-list li a:hover, #fish-registered-list li a:hover, #fish-known-list li a:hover, #fish-status-list li a:hover { color: #90CAF9; }
-.community-member-count { display: block; font-size: 0.75em; color: #bdbdbd; margin-top: 2px; }
-.community-member-count b { font-weight: normal; }
-.community-links-container { display: flex; flex-wrap: nowrap; justify-content: center; gap: 3px; margin-top: 3px; margin-bottom: 3px; }
-.community-link-icon { display: inline-block; text-decoration: none !important; color: #64B5F6; margin: 0 2px; vertical-align: middle; background-color: transparent; border: none; padding: 0; line-height: 1; transition: color 0.2s ease; }
+.community-member-count { display: block; font-size: 0.6em; color: #888; margin-top: 3px; }
+.community-member-count i { margin-right: 3px; font-size: 0.85em; }
+.community-links-container { display: flex; flex-wrap: nowrap; justify-content: center; gap: 2px; margin-top: 4px; margin-bottom: 4px; }
+.community-link-icon { display: inline-flex; align-items: center; justify-content: center; text-decoration: none !important; color: #64B5F6; margin: 0; vertical-align: middle; background-color: transparent; border: none; padding: 3px; line-height: 1; border-radius: 4px; transition: background-color 0.2s ease, color 0.2s ease; min-width: 22px; min-height: 22px; }
 .community-link-icon i { font-size: 0.85em; vertical-align: middle; }
 .community-link-icon .si { font-size: 0.85em; vertical-align: middle; }
-.community-link-icon-img { width: 1.2em !important; height: 1.2em !important; vertical-align: middle; display: inline-block; object-fit: contain; border: none; border-radius: 2px; }
-.community-link-icon:hover { color: #90CAF9; background-color: transparent; border: none; }
+.community-link-icon-img { width: 1em !important; height: 1em !important; vertical-align: middle; display: inline-block; object-fit: contain; border: none; border-radius: 2px; }
+.community-link-icon:hover { color: #90CAF9; border: none; }
+#fish-verified-list .community-link-icon:hover { background-color: rgba(255, 255, 255, 0.12); } #fish-certified-list .community-link-icon:hover { background-color: rgba(212, 212, 212, 0.12); } #fish-registered-list .community-link-icon:hover { background-color: rgba(168, 168, 168, 0.12); } #fish-known-list .community-link-icon:hover, #fish-status-list .community-link-icon:hover { background-color: rgba(0, 0, 0, 0.12); }
 .community-link-icon i.fa-discord { color: #5865F2; } .community-link-icon i.fa-x-twitter { color: #ffffff; } .community-link-icon i.fa-patreon { color: #f96854; } .community-link-icon i.fa-youtube { color: #FF0000; } .community-link-icon i.fa-github { color: #ffffff; } .community-link-icon i.fa-twitch { color: #9146FF; }
 .community-link-icon:hover i.fa-discord { color: #707bf5; } .community-link-icon:hover i.fa-x-twitter { color: #cccccc; }
-#fish-verified-list li > div span:nth-of-type(1), #fish-certified-list li > div span:nth-of-type(1), #fish-known-list li > div span:nth-of-type(1), #fish-status-list li > div span:nth-of-type(1) { margin-bottom: 2px; }
+
+.community-info-toggle { margin-top: 10px; border: 1px solid #333337; border-radius: 6px; padding: 0; background: #1a1a1e; }
+.community-info-toggle summary { cursor: pointer; padding: 10px 12px; color: #bbb; font-size: 0.85em; list-style: none; display: flex; align-items: center; gap: 8px; user-select: none; transition: color 0.2s, background-color 0.2s; border-radius: 5px; }
+.community-info-toggle summary::-webkit-details-marker { display: none; }
+.community-info-toggle summary::before { content: '\f067'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 0.7em; color: #888; width: 16px; text-align: center; transition: transform 0.2s; }
+.community-info-toggle[open] summary::before { content: '\f068'; }
+.community-info-toggle summary:hover { color: #fff; background-color: rgba(255,255,255,0.04); }
+.community-info-toggle[open] { border-color: #444448; }
+.community-info-toggle[open] summary { border-bottom: 1px solid #333337; border-radius: 5px 5px 0 0; }
+.community-info-toggle > div { padding: 0 12px 12px; border-top: none; margin-top: 0; }
+.community-info-toggle summary .click-hint { color: #666; font-size: 0.8em; margin-left: auto; }
 
 /* .fish-known-theme div, .fish-known-theme p, .fish-known-theme li:not(#fish-known-list li), .fish-known-theme h3, .fish-known-theme ol { color: #bdbdbd; } */
 /* .fish-known-theme a:not(#fish-known-list li a) { color: #ffb74d; } */ /* Handled by specific #known-info rules now */

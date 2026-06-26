@@ -2,16 +2,17 @@
     function init(): void {
         const btn = document.getElementById('back-to-top') as HTMLButtonElement | null;
         if (!btn) return;
+        const el = btn;
         function toggle(): void {
             if (window.scrollY > 300) {
-                btn.classList.add('show');
+                el.classList.add('show');
             } else {
-                btn.classList.remove('show');
+                el.classList.remove('show');
             }
         }
         toggle();
         window.addEventListener('scroll', toggle, { passive: true });
-        btn.addEventListener('click', function(): void {
+        el.addEventListener('click', function(): void {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
