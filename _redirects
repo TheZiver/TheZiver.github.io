@@ -1,3 +1,0 @@
-# Cloudflare Pages auto-matches /page to page.html and 308-redirects .html to clean URLs.
-# Only non-standard rewrites are listed here.
-/home /index.html 200
