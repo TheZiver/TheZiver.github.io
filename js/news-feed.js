@@ -62,9 +62,12 @@
                 video.style.cssText = 'max-width:100%;height:auto;border-radius:12px;margin-top:12px;display:block';
                 const source = document.createElement('source');
                 source.src = m.url.replace(/&amp;/g, '&');
-                source.type = 'video/mp4';
                 video.appendChild(source);
-                video.appendChild(document.createTextNode('Your browser does not support the video tag.'));
+                const fallback = document.createElement('p');
+                fallback.style.cssText = 'color:#ff6b6b;font-size:0.85em;margin-top:8px';
+                fallback.textContent = 'Video couldn\'t be loaded. Try opening the tweet directly.';
+                video.appendChild(fallback);
+                video.onerror = function () { fallback.style.display = 'block'; };
                 container.appendChild(document.createElement('br'));
                 container.appendChild(video);
             }
@@ -170,10 +173,11 @@
             const avatarCol = document.createElement('div');
             avatarCol.className = 'avatar-col';
             const avatarImg = document.createElement('img');
-            avatarImg.src = isValidUrl(tweet.avatar) ? tweet.avatar : 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png';
+            const DEFAULT_AVATAR = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%23333%22/%3E%3Ccircle cx=%2250%22 cy=%2238%22 r=%2218%22 fill=%22%23666%22/%3E%3Cellipse cx=%2250%22 cy=%2282%22 rx=%2232%22 ry=%2222%22 fill=%22%23666%22/%3E%3C/svg%3E';
+            avatarImg.src = isValidUrl(tweet.avatar) ? tweet.avatar : DEFAULT_AVATAR;
             avatarImg.alt = tweet.displayName;
             avatarImg.className = 'avatar';
-            avatarImg.onerror = function () { this.onerror = null; this.src = 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png'; };
+            avatarImg.onerror = function () { this.onerror = null; this.src = DEFAULT_AVATAR; };
             avatarCol.appendChild(avatarImg);
             const contentCol = document.createElement('div');
             contentCol.className = 'content-col';
@@ -235,7 +239,7 @@
                         avatarUrl = isValidUrl(item.author_avatar) ? item.author_avatar : '';
                     }
                     if (!avatarUrl) {
-                        avatarUrl = 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png';
+                        avatarUrl = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%23333%22/%3E%3Ccircle cx=%2250%22 cy=%2238%22 r=%2218%22 fill=%22%23666%22/%3E%3Cellipse cx=%2250%22 cy=%2282%22 rx=%2232%22 ry=%2222%22 fill=%22%23666%22/%3E%3C/svg%3E';
                     }
                     allTweets.push({
                         displayName: displayName,
