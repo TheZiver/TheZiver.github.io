@@ -4,7 +4,8 @@
     const FEED_URL = 'https://api.github.com/gists/' + GIST_ID;
     function createTweetIframe(tweetUrl) {
         const iframe = document.createElement('iframe');
-        iframe.src = tweetUrl.replace('twitter.com', 'fxtwitter.com').replace('x.com', 'fixupx.com');
+        const statusId = tweetUrl.match(/\/status\/(\d+)/)?.[1] || null;
+        iframe.src = 'https://platform.twitter.com/embed/Tweet.html?theme=dark&id=' + (statusId || '');
         iframe.style.cssText = 'width:100%;max-width:700px;border:none;border-radius:12px;margin:8px 0 8px auto;display:block;min-height:700px';
         iframe.setAttribute('frameborder', '0');
         return iframe;
