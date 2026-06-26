@@ -1,47 +1,13 @@
 (function() {
     const FEED_URL: string = 'https://gist.githubusercontent.com/TheZiver/c526bbcc9a1cdd8892186268a4c6b244/raw/359a85e964d670d2ff05a3b0194893c11f1682f7/fish_news_feed.json';
 
-    function isValidUrl(str: unknown): str is string {
-        return typeof str === 'string' && /^https?:\/\/[^\s"]+$/i.test(str);
-    }
-
-    function getTweetStatusId(tweetUrl: string): string | null {
-        const match: RegExpMatchArray | null = tweetUrl.match(/\/status\/(\d+)/);
-        return match ? match[1] : null;
-    }
-
     function createTweetIframe(tweetUrl: string): HTMLIFrameElement {
         const iframe: HTMLIFrameElement = document.createElement('iframe');
-        const statusId: string | null = getTweetStatusId(tweetUrl);
-        iframe.src = 'https://platform.twitter.com/embed/Tweet.html?theme=dark&id=' + statusId;
-        iframe.style.cssText = 'width:100%;max-width:700px;border:none;border-radius:12px;margin:16px auto;display:block;min-height:250px';
-        iframe.setAttribute('scrolling', 'no');
+        iframe.src = tweetUrl.replace('twitter.com', 'fxtwitter.com').replace('x.com', 'fixupx.com');
+        iframe.style.cssText = 'width:100%;max-width:700px;border:none;border-radius:12px;margin:16px auto;display:block;min-height:500px';
+        iframe.setAttribute('scrolling', 'yes');
         iframe.setAttribute('frameborder', '0');
-        iframe.setAttribute('allowfullscreen', '');
-        if (statusId) { iframe.dataset.statusId = statusId; }
         return iframe;
-    }
-
-    function handleTwitterResize(e: MessageEvent): void {
-        if (e.origin !== 'https://platform.twitter.com') return;
-        let height: number | undefined;
-        try {
-            const data: any = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-            if (data?.twttr?.embed?.height) {
-                height = data.twttr.embed.height;
-            } else if (data?.type === 'resize' && data?.height) {
-                height = data.height;
-            }
-        } catch (_) { return; }
-        if (!height || height < 100) return;
-        const iframes: NodeListOf<HTMLIFrameElement> = document.querySelectorAll<HTMLIFrameElement>('iframe[data-status-id]');
-        for (let i: number = 0; i < iframes.length; i++) {
-            if (iframes[i].contentWindow === e.source) {
-                iframes[i].style.height = height + 'px';
-                iframes[i].style.minHeight = 'auto';
-                break;
-            }
-        }
     }
 
     function renderTweets(tweets: Array<{ link: string }>): void {
@@ -53,7 +19,7 @@
         }
         for (let i: number = 0; i < tweets.length; i++) {
             const tweet = tweets[i];
-            if (tweet.link && getTweetStatusId(tweet.link)) {
+            if (tweet.link) {
                 container.appendChild(createTweetIframe(tweet.link));
             }
         }
@@ -89,8 +55,6 @@
             console.error(err);
         }
     }
-
-    window.addEventListener('message', handleTwitterResize);
 
     document.addEventListener('DOMContentLoaded', function() {
         fetchAndRenderFeed();
