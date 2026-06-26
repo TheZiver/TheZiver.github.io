@@ -105,14 +105,12 @@
 .support-header { text-align: center; padding: 30px 0 20px; }
 .support-title { font-size: 2.8em; margin: 0 0 10px; letter-spacing: 3px; color: #f96854; }
 @supports (background-clip: text) or (-webkit-background-clip: text) {
-    @media (min-width: 768px) {
-        .support-title {
-            background: linear-gradient(135deg, #f96854, #ffd700, #29abe0);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
-        }
+    .support-title {
+        background: linear-gradient(135deg, #f96854, #ffd700, #29abe0);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
     }
 }
 .support-subhead { font-size: 1.1em; color: #a0a0a0; margin: 0; line-height: 1.5; }
@@ -169,14 +167,12 @@
 .store-icon-wrap { font-size: 2em; color: #d4af37; margin-bottom: 12px; }
 .store-heading { font-size: 1.5em; margin: 0 0 24px; letter-spacing: 2px; color: #ffd700; }
 @supports (background-clip: text) or (-webkit-background-clip: text) {
-    @media (min-width: 768px) {
-        .store-heading {
-            background: linear-gradient(135deg, #ffd700, #d4af37);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
-        }
+    .store-heading {
+        background: linear-gradient(135deg, #ffd700, #d4af37);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
     }
 }
 .store-image-link { display: block; margin: 0 auto 20px; max-width: 200px; transition: transform 0.3s ease; }
@@ -234,12 +230,23 @@
 .soundboard-container iframe { display: block; border: 1px solid #444; border-radius: 8px; background: #111; min-height: 400px; }
 .soundboard-open-btn {
     display: block; text-align: center;
-    margin: 0 auto 16px; padding: 8px 0;
-    color: #66bb6a !important; font-size: 1.1em;
-    text-decoration: underline; text-underline-offset: 3px;
-    background: none; border: none; width: fit-content;
+    margin: 0 auto 16px; padding: 8px 20px;
+    color: #fff !important; font-size: 0.9em; font-weight: bold;
+    text-decoration: none;
+    background: linear-gradient(135deg, #43a047, #66bb6a);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    width: fit-content;
+    box-shadow: 0 3px 10px rgba(67, 160, 71, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
-.soundboard-open-btn:hover { color: #81c784 !important; }
+.soundboard-open-btn i { margin-right: 6px; font-size: 0.85em; }
+.soundboard-open-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 18px rgba(67, 160, 71, 0.5);
+    background: linear-gradient(135deg, #4caf50, #81c784);
+    color: #fff !important;
+}
 
 /* --- Base Styles --- */
 html {
@@ -373,19 +380,17 @@ h3 { font-size: 1.3em; margin-top: 30px; margin-bottom: 15px; color: #bbbbbb; }
 }
 
 @supports (background-clip: text) or (-webkit-background-clip: text) {
-    @media (min-width: 768px) {
-        h1, h2 {
-            background: linear-gradient(
-                var(--gradient-angle, 135deg),
-                #00bcd4, #ff4081, #4caf50, #ffc107, #00bcd4
-            );
-            background-size: 200% 200%;
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            -webkit-text-fill-color: transparent;
-            animation: gradientFlow 8s ease-in-out infinite;
-        }
+    h1, h2 {
+        background: linear-gradient(
+            var(--gradient-angle, 135deg),
+            #00bcd4, #ff4081, #4caf50, #ffc107, #00bcd4
+        );
+        background-size: 200% 200%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        animation: gradientFlow 8s ease-in-out infinite;
     }
 }
 
@@ -1539,10 +1544,8 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 @supports (background-clip: text) or (-webkit-background-clip: text) {
-    @media (min-width: 768px) {
-        .hero-title {
-            -webkit-text-fill-color: transparent;
-        }
+    .hero-title {
+        -webkit-text-fill-color: transparent;
     }
 }
 
