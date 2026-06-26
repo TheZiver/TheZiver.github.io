@@ -39,65 +39,6 @@
             return minutes + 'm';
         return 'Just now';
     }
-    function appendMedia(container, media, tweetUrl) {
-        if (!Array.isArray(media))
-            return;
-        for (let i = 0; i < media.length; i++) {
-            const m = media[i];
-            if (!m || !m.url || !isValidUrl(m.url))
-                continue;
-            if (m.type === 'image') {
-                const img = document.createElement('img');
-                img.src = m.url.replace(/&amp;/g, '&');
-                img.alt = 'Media';
-                img.style.cssText = 'max-width:100%;height:auto;border-radius:12px;margin-top:12px;display:block';
-                container.appendChild(document.createElement('br'));
-                container.appendChild(img);
-            }
-            else if (m.type === 'video') {
-                const video = document.createElement('video');
-                video.controls = true;
-                video.playsInline = true;
-                video.preload = 'metadata';
-                video.style.cssText = 'max-width:100%;height:auto;border-radius:12px;margin-top:12px;display:block';
-                const source = document.createElement('source');
-                source.src = m.url.replace(/&amp;/g, '&');
-                video.appendChild(source);
-                const fallback = document.createElement('p');
-                fallback.style.cssText = 'color:#ff6b6b;font-size:0.85em;margin-top:8px';
-                fallback.style.display = 'none';
-                if (tweetUrl && isValidUrl(tweetUrl)) {
-                    const link = document.createElement('a');
-                    link.href = tweetUrl;
-                    link.target = '_blank';
-                    link.rel = 'noopener noreferrer';
-                    link.textContent = 'View on X';
-                    link.style.cssText = 'color:#1d9bf0;text-decoration:underline';
-                    fallback.appendChild(document.createTextNode('Video blocked. '));
-                    fallback.appendChild(link);
-                }
-                else {
-                    fallback.textContent = 'Video couldn\'t be loaded.';
-                }
-                video.appendChild(fallback);
-                video.onerror = function () {
-                    fallback.style.display = 'block';
-                    const statusMatch = tweetUrl ? tweetUrl.match(/\/status\/(\d+)/) : null;
-                    if (statusMatch) {
-                        const iframe = document.createElement('iframe');
-                        iframe.src = 'https://platform.twitter.com/embed/Tweet.html?id=' + statusMatch[1];
-                        iframe.style.cssText = 'width:100%;max-width:550px;border:none;border-radius:12px;margin-top:12px;height:500px';
-                        iframe.setAttribute('scrolling', 'no');
-                        iframe.setAttribute('frameborder', '0');
-                        iframe.setAttribute('allowfullscreen', '');
-                        video.parentNode?.insertBefore(iframe, video.nextSibling);
-                    }
-                };
-                container.appendChild(document.createElement('br'));
-                container.appendChild(video);
-            }
-        }
-    }
     function appendYouTubeEmbeds(container, html) {
         const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gi;
         let match;
@@ -169,6 +110,39 @@
             parent.replaceChild(frag, textNode);
         }
     }
+    function appendImages(container, media) {
+        if (!Array.isArray(media))
+            return;
+        for (let i = 0; i < media.length; i++) {
+            const m = media[i];
+            if (!m || !m.url || !isValidUrl(m.url) || m.type === 'video')
+                continue;
+            const img = document.createElement('img');
+            img.src = m.url.replace(/&amp;/g, '&');
+            img.alt = 'Media';
+            img.style.cssText = 'max-width:100%;height:auto;border-radius:12px;margin-top:12px;display:block';
+            container.appendChild(document.createElement('br'));
+            container.appendChild(img);
+        }
+    }
+    function hasVideoMedia(media) {
+        if (!Array.isArray(media))
+            return false;
+        return media.some(function (m) { return m.type === 'video'; });
+    }
+    function getTweetStatusId(tweetUrl) {
+        const match = tweetUrl.match(/\/status\/(\d+)/);
+        return match ? match[1] : null;
+    }
+    function createTweetIframe(tweetUrl) {
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://platform.twitter.com/embed/Tweet.html?theme=dark&id=' + getTweetStatusId(tweetUrl);
+        iframe.style.cssText = 'width:100%;max-width:550px;border:none;border-radius:12px;margin:16px auto;display:block;min-height:400px';
+        iframe.setAttribute('scrolling', 'no');
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allowfullscreen', '');
+        return iframe;
+    }
     function renderTweets(tweets) {
         const container = document.getElementById('feed');
         if (!container)
@@ -179,6 +153,10 @@
         }
         for (let i = 0; i < tweets.length; i++) {
             const tweet = tweets[i];
+            if (hasVideoMedia(tweet.media) && tweet.link && getTweetStatusId(tweet.link)) {
+                container.appendChild(createTweetIframe(tweet.link));
+                continue;
+            }
             const timeString = timeAgo(tweet.dateObj.toISOString());
             const article = document.createElement('article');
             article.className = 'tweet';
@@ -186,7 +164,7 @@
             article.onclick = (function (t) {
                 return function (e) {
                     const target = e.target;
-                    if (target && (target.closest('a') || target.tagName === 'IFRAME' || target.tagName === 'VIDEO')) {
+                    if (target && (target.closest('a') || target.tagName === 'IFRAME')) {
                         e.stopPropagation();
                         return;
                     }
@@ -233,7 +211,7 @@
                 contentDiv.innerHTML = tweet.contentHtml;
             }
             appendYouTubeEmbeds(contentDiv, tweet.contentHtml);
-            appendMedia(contentDiv, tweet.media, tweet.link);
+            appendImages(contentDiv, tweet.media);
             linkify(contentDiv);
             tweetText.appendChild(contentDiv);
             contentCol.appendChild(tweetText);
