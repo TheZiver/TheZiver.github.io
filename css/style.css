@@ -1484,7 +1484,7 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
 .feed-wrapper .tweet-content-html { margin-top: 8px; }
 .feed-wrapper .tweet-content-html img, .feed-wrapper .tweet-content-html video { max-width: 100%; height: auto; border-radius: 12px; margin-top: 12px; border: 1px solid var(--feed-border); display: block; }
 
-.feed-wrapper iframe[src*="platform.twitter.com"] { max-width: 550px; margin: 20px auto; display: block; border: none; border-radius: 12px; }
+.feed-wrapper iframe[src*="platform.twitter.com"] { max-width: 700px; margin: 20px auto; display: block; border: none; border-radius: 12px; }
 
 /* --- MERGED FROM DATABASE.HTML INLINE <STYLE> --- */
 .db-pills { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:8px 0; }
