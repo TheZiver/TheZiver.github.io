@@ -39,7 +39,7 @@
             return minutes + 'm';
         return 'Just now';
     }
-    function appendMedia(container, media) {
+    function appendMedia(container, media, tweetUrl) {
         if (!Array.isArray(media))
             return;
         for (let i = 0; i < media.length; i++) {
@@ -65,7 +65,20 @@
                 video.appendChild(source);
                 const fallback = document.createElement('p');
                 fallback.style.cssText = 'color:#ff6b6b;font-size:0.85em;margin-top:8px';
-                fallback.textContent = 'Video couldn\'t be loaded. Try opening the tweet directly.';
+                fallback.style.display = 'none';
+                if (tweetUrl && isValidUrl(tweetUrl)) {
+                    const link = document.createElement('a');
+                    link.href = tweetUrl;
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    link.textContent = 'View on X';
+                    link.style.cssText = 'color:#1d9bf0;text-decoration:underline';
+                    fallback.appendChild(document.createTextNode('Video blocked by browser. '));
+                    fallback.appendChild(link);
+                }
+                else {
+                    fallback.textContent = 'Video couldn\'t be loaded.';
+                }
                 video.appendChild(fallback);
                 video.onerror = function () { fallback.style.display = 'block'; };
                 container.appendChild(document.createElement('br'));
@@ -208,7 +221,7 @@
                 contentDiv.innerHTML = tweet.contentHtml;
             }
             appendYouTubeEmbeds(contentDiv, tweet.contentHtml);
-            appendMedia(contentDiv, tweet.media);
+            appendMedia(contentDiv, tweet.media, tweet.link);
             linkify(contentDiv);
             tweetText.appendChild(contentDiv);
             contentCol.appendChild(tweetText);
