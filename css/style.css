@@ -1465,7 +1465,7 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
 .game-link:active { transform: translateY(1px); }
 
 /* --- MERGED FROM NEWS.HTML INLINE <STYLE> --- */
-.feed-wrapper { max-width: 700px; margin: 0 auto; }
+.feed-wrapper { max-width: 700px; margin: 0 0 0 auto; }
 .feed-wrapper .loading { padding: 40px; text-align: center; color: var(--text-secondary); font-style: italic; }
 .feed-wrapper .tweet { display: flex; padding: 16px; border-bottom: 1px solid var(--feed-border); transition: background-color 0.2s; }
 .feed-wrapper .tweet:last-child { border-bottom: none; }
@@ -1484,7 +1484,7 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
 .feed-wrapper .tweet-content-html { margin-top: 8px; }
 .feed-wrapper .tweet-content-html img, .feed-wrapper .tweet-content-html video { max-width: 100%; height: auto; border-radius: 12px; margin-top: 12px; border: 1px solid var(--feed-border); display: block; }
 
-.feed-wrapper iframe[src*="platform.twitter.com"] { max-width: 700px; margin: 8px auto; display: block; border: none; border-radius: 12px; overflow: hidden; }
+.feed-wrapper iframe[src*="platform.twitter.com"] { max-width: 700px; margin: 8px 0 8px auto; display: block; border: none; border-radius: 12px; overflow: hidden; }
 
 /* --- MERGED FROM DATABASE.HTML INLINE <STYLE> --- */
 .db-pills { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:8px 0; }

@@ -10,7 +10,7 @@
         const iframe: HTMLIFrameElement = document.createElement('iframe');
         const statusId: string | null = getTweetStatusId(tweetUrl);
         iframe.src = 'https://platform.twitter.com/embed/Tweet.html?theme=dark&id=' + statusId;
-        iframe.style.cssText = 'width:100%;max-width:700px;border:none;border-radius:12px;margin:8px auto;display:block;min-height:700px';
+        iframe.style.cssText = 'width:100%;max-width:700px;border:none;border-radius:12px;margin:8px 0 8px auto;display:block;min-height:700px';
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allowfullscreen', '');
         if (statusId) { iframe.dataset.statusId = statusId; }
