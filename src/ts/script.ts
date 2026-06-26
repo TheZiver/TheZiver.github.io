@@ -388,7 +388,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 a.rel = 'noopener noreferrer';
                 a.classList.add('community-link-icon');
                 a.title = 'VRChat Group';
-                a.innerHTML = '<i class="fas fa-vr-cardboard fa-fw"></i>';
+                if (vrchatLink.startsWith('http')) {
+                    const domain = new URL(vrchatLink).hostname;
+                    a.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=16" alt="" class="community-link-icon-img" loading="lazy">`;
+                } else {
+                    a.innerHTML = '<i class="si si-vrchat"></i>';
+                }
                 linksContainer.appendChild(a);
             }
 
@@ -403,31 +408,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         a.rel = 'noopener noreferrer';
                         a.classList.add('community-link-icon');
 
-                        // Determine icon class and title
-                        let iconClass = 'fas fa-link fa-fw';
+                        // Use website favicon as icon
                         let iconTitle = 'External Link';
                         try {
                             const url = new URL(link);
-                            const hostname = url.hostname.replace(/^www\./, '');
-                            iconTitle = hostname;
-
-                            if (hostname.includes('discord.gg')) { iconClass = 'fab fa-discord fa-fw'; iconTitle = 'Discord'; }
-                            else if (hostname.includes('twitter.com')) { iconClass = 'fab fa-x-twitter fa-fw'; iconTitle = 'Twitter/X'; }
-                            else if (hostname.includes('patreon.com')) { iconClass = 'fab fa-patreon fa-fw'; iconTitle = 'Patreon'; }
-                            else if (hostname.includes('ko-fi.com')) { iconClass = 'fas fa-mug-saucer fa-fw'; iconTitle = 'Ko-fi'; }
-                            else if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) { iconClass = 'fab fa-youtube fa-fw'; iconTitle = 'YouTube'; }
-                            else if (hostname.includes('booth.pm')) { iconClass = 'fas fa-store fa-fw'; iconTitle = 'Booth'; }
-                            else if (hostname.includes('github.com')) { iconClass = 'fab fa-github fa-fw'; iconTitle = 'GitHub'; }
-                            else if (hostname.includes('twitch.tv')) { iconClass = 'fab fa-twitch fa-fw'; iconTitle = 'Twitch'; }
-                            else if (hostname.includes('github.io') || url.pathname.length > 1) { iconClass = 'fas fa-globe fa-fw'; iconTitle = 'Website'; }
-                            else { iconClass = 'fas fa-globe fa-fw'; iconTitle = hostname; }
+                            const domain = url.hostname.replace(/^www\./, '');
+                            iconTitle = domain;
+                            a.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=16" alt="" class="community-link-icon-img" loading="lazy">`;
                         } catch (e: unknown) {
-                            iconClass = 'fas fa-link fa-fw';
+                            a.innerHTML = '<i class="fas fa-link"></i>';
                             console.warn(`Could not parse URL for icon: ${link}`, e);
                         }
-                        const prefix = iconClass.startsWith('fa-brands') || iconClass.startsWith('fab') ? 'fab' : 'fas';
-                        const iconName = iconClass.split(' ')[1];
-                        a.innerHTML = `<i class="${prefix} ${iconName} fa-fw"></i>`;
                         a.title = escapeHtml(iconTitle);
                         linksContainer.appendChild(a);
                     }
