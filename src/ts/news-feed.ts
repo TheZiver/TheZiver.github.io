@@ -1,5 +1,6 @@
 (function() {
-    const FEED_URL: string = 'https://gist.githubusercontent.com/TheZiver/c526bbcc9a1cdd8892186268a4c6b244/raw/359a85e964d670d2ff05a3b0194893c11f1682f7/fish_news_feed.json';
+    const GIST_ID: string = 'c526bbcc9a1cdd8892186268a4c6b244';
+    const FEED_URL: string = 'https://api.github.com/gists/' + GIST_ID;
 
     function getTweetStatusId(tweetUrl: string): string | null {
         const match: RegExpMatchArray | null = tweetUrl.match(/\/status\/(\d+)/);
@@ -54,9 +55,12 @@
 
     async function fetchAndRenderFeed(): Promise<void> {
         try {
-            const response: Response = await fetch(FEED_URL, { cache: 'no-store' });
+            const response: Response = await fetch(FEED_URL);
             if (!response.ok) throw new Error('Failed to fetch feed');
-            const data: NewsFeedData = await response.json() as NewsFeedData;
+            const gistData: any = await response.json();
+            const raw: string = gistData?.files?.['fish_news_feed.json']?.content;
+            if (!raw) throw new Error('Feed content not found');
+            const data: NewsFeedData = JSON.parse(raw) as NewsFeedData;
             const allTweets: Array<{ link: string; dateObj: Date }> = [];
             if (data && Array.isArray(data.items)) {
                 for (let i: number = 0; i < data.items.length; i++) {
