@@ -73,14 +73,26 @@
                     link.rel = 'noopener noreferrer';
                     link.textContent = 'View on X';
                     link.style.cssText = 'color:#1d9bf0;text-decoration:underline';
-                    fallback.appendChild(document.createTextNode('Video blocked by browser. '));
+                    fallback.appendChild(document.createTextNode('Video blocked. '));
                     fallback.appendChild(link);
                 }
                 else {
                     fallback.textContent = 'Video couldn\'t be loaded.';
                 }
                 video.appendChild(fallback);
-                video.onerror = function () { fallback.style.display = 'block'; };
+                video.onerror = function () {
+                    fallback.style.display = 'block';
+                    const statusMatch = tweetUrl ? tweetUrl.match(/\/status\/(\d+)/) : null;
+                    if (statusMatch) {
+                        const iframe = document.createElement('iframe');
+                        iframe.src = 'https://platform.twitter.com/embed/Tweet.html?id=' + statusMatch[1];
+                        iframe.style.cssText = 'width:100%;max-width:550px;border:none;border-radius:12px;margin-top:12px;height:500px';
+                        iframe.setAttribute('scrolling', 'no');
+                        iframe.setAttribute('frameborder', '0');
+                        iframe.setAttribute('allowfullscreen', '');
+                        video.parentNode?.insertBefore(iframe, video.nextSibling);
+                    }
+                };
                 container.appendChild(document.createElement('br'));
                 container.appendChild(video);
             }
