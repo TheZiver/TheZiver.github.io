@@ -1465,7 +1465,7 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
 .game-link:active { transform: translateY(1px); }
 
 /* --- MERGED FROM NEWS.HTML INLINE <STYLE> --- */
-.feed-wrapper { max-width: 700px; margin: 0 auto; }
+.feed-wrapper { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
 .feed-wrapper .loading { padding: 40px; text-align: center; color: var(--text-secondary); font-style: italic; }
 .feed-wrapper .tweet { display: flex; padding: 16px; border-bottom: 1px solid var(--feed-border); transition: background-color 0.2s; }
 .feed-wrapper .tweet:last-child { border-bottom: none; }
