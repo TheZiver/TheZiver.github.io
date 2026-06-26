@@ -50,12 +50,19 @@
         if (loading && loading.parentNode) {
             loading.parentNode.removeChild(loading);
         }
-        for (let i = 0; i < tweets.length; i++) {
+        const feed = container;
+        let i = 0;
+        function renderNext() {
+            if (i >= tweets.length)
+                return;
             const tweet = tweets[i];
             if (tweet.link && getTweetStatusId(tweet.link)) {
-                container.appendChild(createTweetIframe(tweet.link));
+                feed.appendChild(createTweetIframe(tweet.link));
             }
+            i++;
+            requestAnimationFrame(renderNext);
         }
+        renderNext();
     }
     async function fetchAndRenderFeed() {
         try {
