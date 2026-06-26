@@ -584,8 +584,8 @@ img[src="images/meaning_of_fish.png"] { max-width: 480px !important; width: 100%
 /* .fish-certified-theme h3 { color: #e0e0e0 !important; } */ /* Handled by specific #certified-info rules now */
 
 #fish-verified-list, #fish-certified-list, #fish-registered-list, #fish-known-list, #fish-status-list { list-style: none; padding-left: 0; display: grid; gap: 8px; margin-top: 15px; justify-content: center; margin-left: auto; margin-right: auto; width: 100%; }
-@media (max-width: 599px) { #fish-verified-list, #fish-certified-list, #fish-registered-list, #fish-known-list, #fish-status-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; } }
-@media (max-width: 400px) { #fish-verified-list, #fish-certified-list, #fish-registered-list, #fish-known-list, #fish-status-list { grid-template-columns: repeat(2, 1fr); gap: 5px; } }
+@media (max-width: 599px) { #fish-verified-list, #fish-certified-list, #fish-registered-list, #fish-known-list, #fish-status-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, auto)); gap: 6px; } }
+@media (max-width: 400px) { #fish-verified-list, #fish-certified-list, #fish-registered-list, #fish-known-list, #fish-status-list { grid-template-columns: repeat(auto-fit, minmax(110px, auto)); gap: 5px; } }
 @media (max-width: 320px) { #fish-verified-list, #fish-certified-list, #fish-registered-list, #fish-known-list, #fish-status-list { grid-template-columns: 1fr; gap: 4px; } }
 @media (min-width: 600px) and (max-width: 899px) { #fish-verified-list, #fish-certified-list, #fish-registered-list, #fish-known-list, #fish-status-list { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; } }
 @media (min-width: 900px) { #fish-verified-list, #fish-certified-list, #fish-registered-list, #fish-known-list, #fish-status-list { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; } }
@@ -1640,6 +1640,7 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
 
 .fish-groups-section {
     margin: 12px 0;
+    text-align: center;
 }
 
 /* Quick Actions Section */

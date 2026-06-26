@@ -1,0 +1,10 @@
+# Clean URL rewrites (browser sees /daily, Cloudflare serves daily.html)
+/communities /communities.html 200
+/daily /daily.html 200
+/aquarium /aquarium.html 200
+/database /database.html 200
+/support /support.html 200
+/soundboard /soundboard.html 200
+/gallery /gallery.html 200
+/news /news.html 200
+/games /games.html 200
