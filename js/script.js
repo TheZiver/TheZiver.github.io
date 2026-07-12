@@ -35,6 +35,30 @@ document.addEventListener('DOMContentLoaded', function () {
             return "rd";
         return "th";
     }
+    const getFaviconUrl = (resource) => {
+        try {
+            const url = new URL(resource);
+            return `https://icons.duckduckgo.com/ip2/${url.host}.ico`;
+        }
+        catch {
+            return '';
+        }
+    };
+    const setLinkIcon = (a, link) => {
+        const url = getFaviconUrl(link);
+        if (!url) {
+            a.innerHTML = '<i class="fas fa-link"></i>';
+            return;
+        }
+        const img = document.createElement('img');
+        img.className = 'community-link-icon-img';
+        img.alt = '';
+        img.loading = 'lazy';
+        img.src = url;
+        img.onerror = function () { this.outerHTML = '<i class="fas fa-link"></i>'; };
+        a.innerHTML = '';
+        a.appendChild(img);
+    };
     const targetDate = new Date(Date.UTC(2023, 6, 20)); // July 20, 2023 UTC
     const oneDay = 24 * 60 * 60 * 1000;
     function calculateDailyVrchatDay(date) {
@@ -318,8 +342,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 a.classList.add('community-link-icon');
                 a.title = 'VRChat Group';
                 if (vrchatLink.startsWith('http')) {
-                    const domain = new URL(vrchatLink).hostname;
-                    a.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=16" alt="" class="community-link-icon-img" loading="lazy">`;
+                    const faviconUrl = getFaviconUrl(vrchatLink);
+                    a.innerHTML = `<img src="${faviconUrl}" alt="" class="community-link-icon-img" loading="lazy">`;
+                    a.querySelector('.community-link-icon-img').onerror = function () { this.outerHTML = '<i class="fas fa-link"></i>'; };
                 }
                 else {
                     a.innerHTML = '<i class="si si-vrchat"></i>';
@@ -336,13 +361,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         a.target = '_blank';
                         a.rel = 'noopener noreferrer';
                         a.classList.add('community-link-icon');
-                        // Use website favicon as icon
                         let iconTitle = 'External Link';
                         try {
                             const url = new URL(link);
-                            const domain = url.hostname.replace(/^www\./, '');
-                            iconTitle = domain;
-                            a.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=16" alt="" class="community-link-icon-img" loading="lazy">`;
+                            iconTitle = url.hostname.replace(/^www\./, '');
+                            setLinkIcon(a, link);
                         }
                         catch (e) {
                             a.innerHTML = '<i class="fas fa-link"></i>';
