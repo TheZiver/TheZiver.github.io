@@ -35,7 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
             return "rd";
         return "th";
     }
-    const getFaviconUrl = (resource) => {
+    const FAVICON_WORKER = 'https://favicon-worker.YOUR-ACCOUNT.workers.dev'; // CHANGE THIS after deploying
+    const getDdgFaviconUrl = (resource) => {
         try {
             const url = new URL(resource);
             return `https://icons.duckduckgo.com/ip2/${url.host}.ico`;
@@ -45,19 +46,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
     const setLinkIcon = (a, link) => {
-        const url = getFaviconUrl(link);
-        if (!url) {
-            a.innerHTML = '<i class="fas fa-link"></i>';
-            return;
-        }
         const img = document.createElement('img');
         img.className = 'community-link-icon-img';
         img.alt = '';
         img.loading = 'lazy';
-        img.src = url;
-        img.onerror = function () { this.outerHTML = '<i class="fas fa-link"></i>'; };
         a.innerHTML = '';
         a.appendChild(img);
+        // Show domain-level icon immediately
+        img.src = getDdgFaviconUrl(link);
+        let upgraded = false;
+        img.onerror = () => {
+            if (!upgraded) {
+                img.outerHTML = '<i class="fas fa-link"></i>';
+            }
+        };
+        // Then try page-specific icon via Worker in background
+        fetch(`${FAVICON_WORKER}?url=${encodeURIComponent(link)}`)
+            .then(r => r.json())
+            .then(data => {
+            if (data.icon) {
+                upgraded = true;
+                img.src = data.icon;
+            }
+        })
+            .catch(() => { });
     };
     const targetDate = new Date(Date.UTC(2023, 6, 20)); // July 20, 2023 UTC
     const oneDay = 24 * 60 * 60 * 1000;
@@ -342,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 a.classList.add('community-link-icon');
                 a.title = 'VRChat Group';
                 if (vrchatLink.startsWith('http')) {
-                    const faviconUrl = getFaviconUrl(vrchatLink);
+                    const faviconUrl = getDdgFaviconUrl(vrchatLink);
                     a.innerHTML = `<img src="${faviconUrl}" alt="" class="community-link-icon-img" loading="lazy">`;
                     a.querySelector('.community-link-icon-img').onerror = function () { this.outerHTML = '<i class="fas fa-link"></i>'; };
                 }
