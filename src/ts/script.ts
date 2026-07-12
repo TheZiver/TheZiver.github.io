@@ -59,10 +59,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Silently upgrade to page-specific icon if Worker finds one
         const workerUrl = `${FAVICON_WORKER}?url=${encodeURIComponent(link)}`;
-        const probe = new Image();
-        probe.onload = () => { img.src = workerUrl; };
-        probe.onerror = () => {};
-        probe.src = workerUrl;
+        fetch(workerUrl).then(r => {
+            if (r.ok) img.src = workerUrl;
+        }).catch(() => {});
     };
 
     const targetDate = new Date(Date.UTC(2023, 6, 20)); // July 20, 2023 UTC
