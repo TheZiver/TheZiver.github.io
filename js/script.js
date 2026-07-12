@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return "rd";
         return "th";
     }
-    const FAVICON_WORKER = 'https://favicon-worker.YOUR-ACCOUNT.workers.dev'; // CHANGE THIS after deploying
+    const FAVICON_WORKER = 'https://favicon-worker.ziver64.workers.dev';
     const getDdgFaviconUrl = (resource) => {
         try {
             const url = new URL(resource);
