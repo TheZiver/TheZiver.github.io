@@ -52,18 +52,16 @@ document.addEventListener('DOMContentLoaded', function () {
         img.loading = 'lazy';
         a.innerHTML = '';
         a.appendChild(img);
-        // Try page-specific icon via Worker (proxies the image with CORS headers)
-        img.src = `${FAVICON_WORKER}?url=${encodeURIComponent(link)}`;
-        let ddgTried = false;
+        img.src = getDdgFaviconUrl(link);
         img.onerror = () => {
-            if (!ddgTried) {
-                ddgTried = true;
-                img.src = getDdgFaviconUrl(link);
-            }
-            else {
-                img.outerHTML = '<i class="fas fa-link"></i>';
-            }
+            img.outerHTML = '<i class="fas fa-link"></i>';
         };
+        // Silently upgrade to page-specific icon if Worker finds one
+        const workerUrl = `${FAVICON_WORKER}?url=${encodeURIComponent(link)}`;
+        const probe = new Image();
+        probe.onload = () => { img.src = workerUrl; };
+        probe.onerror = () => { };
+        probe.src = workerUrl;
     };
     const targetDate = new Date(Date.UTC(2023, 6, 20)); // July 20, 2023 UTC
     const oneDay = 24 * 60 * 60 * 1000;
