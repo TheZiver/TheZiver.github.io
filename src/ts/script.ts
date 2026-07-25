@@ -1421,7 +1421,6 @@ preloadBackgroundImages();
         'communities.html': 'communities',
         'rosefish.html': 'rosefish',
         'support.html': 'support',
-        'games.html': 'games',
         'ratfishrace.html': 'ratfishrace',
         'aquarium.html': 'aquarium',
         'soundboard.html': 'soundboard',

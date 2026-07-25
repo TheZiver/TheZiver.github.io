@@ -59,15 +59,40 @@
             }
         }
     }
-    const observer = new MutationObserver(processMutations);
-    observer.observe(document.documentElement, {
-        childList: true,
-        subtree: true
-    });
+    // Prefer IntersectionObserver to detect when lazy images enter the viewport.
+    // This avoids observing the whole document and accumulating mutation records.
+    var io = null;
+    if ('IntersectionObserver' in window) {
+        io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    var img = entry.target;
+                    loadImage(img);
+                    io.unobserve(img);
+                }
+            });
+        }, { rootMargin: '200px 0px' });
+    }
+
+    function observeLazyImages(root) {
+        var images = (root || document).querySelectorAll('img.' + LAZY_CLASS);
+        images.forEach(function (img) {
+            if (img.dataset.src) {
+                if (io) {
+                    io.observe(img);
+                }
+                else {
+                    // Fallback for old browsers: try to load immediately
+                    loadImage(img);
+                }
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-        loadImages();
+        observeLazyImages(document);
     });
     window.addEventListener('load', function () {
-        loadImages();
+        observeLazyImages(document);
     });
 })();

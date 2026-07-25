@@ -1464,6 +1464,13 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
 .game-link:hover { background-color: #5d8a80; }
 .game-link:active { transform: translateY(1px); }
 
+.embed-with-longcat { position: relative; width: 100%; overflow: hidden; }
+.embed-with-longcat iframe { display: block; width: 100%; position: relative; z-index: 1; }
+.longcat-overlay { position: absolute; left: 50%; bottom: 300px; transform: translateX(-50%); z-index: 20; pointer-events: none; display: flex; align-items: center; justify-content: center; will-change: transform; }
+.longcat-spin { display: block; width: auto; max-width: min(520px, 86vw); max-height: min(320px, 28vh); height: auto; transform: scale(6.4); transform-origin: center; animation: longcat-spin 4s linear infinite; filter: drop-shadow(0 28px 48px rgba(0,0,0,0.6)); }
+@keyframes longcat-spin { from { transform: scale(6.4) rotate(0deg); } to { transform: scale(6.4) rotate(360deg); } }
+@media (max-width: 600px) { .embed-with-longcat { overflow: hidden; } .longcat-overlay { bottom: 72px; } .longcat-spin { max-width: min(360px, 90vw); max-height: min(240px, 30vh); transform: scale(4.8); } @keyframes longcat-spin { from { transform: scale(4.8) rotate(0deg); } to { transform: scale(4.8) rotate(360deg); } } }
+
 /* --- MERGED FROM NEWS.HTML INLINE <STYLE> --- */
 .feed-wrapper { max-width: 700px; margin: 0 0 0 auto; }
 .feed-wrapper .loading { padding: 40px; text-align: center; color: var(--text-secondary); font-style: italic; }
