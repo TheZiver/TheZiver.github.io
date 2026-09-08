@@ -148,6 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- URLs for Data ---
     const PRIMARY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/13fc44e6b228346750401f7fbfc995ed/raw"; // For special days and products
     const COMMUNITY_DATA_URL = "https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw"; // Specifically for community lists/info
+    const CACHE_BUSTER = `t=${new Date().getTime()}`;
     const ROSE_FISH_MEMBERS_URL = "https://gist.githubusercontent.com/TheZiver/9b85c8b8b6c1b4caa17dda8d37dc18ac/raw"; // For Rose Fish members list
     // --- Element Selectors (Placeholders) ---
     let introElement, 
@@ -1061,7 +1062,7 @@ document.addEventListener('DOMContentLoaded', function () {
         getAllElements();
         // Load products data immediately since it's needed for the current page
         if (luxuryProductsListElement) {
-            fetch(PRIMARY_DATA_URL)
+            fetch(`${PRIMARY_DATA_URL}?${CACHE_BUSTER}`)
                 .then((response) => response.json())
                 .then((data) => {
                 loadProducts(data);
@@ -1099,7 +1100,7 @@ document.addEventListener('DOMContentLoaded', function () {
          * To customize content, edit these JSON files
          */
         Promise.resolve()
-            .then(() => fetch(PRIMARY_DATA_URL, { cache: "no-cache" }).then(handleResponseJson))
+            .then(() => fetch(`${PRIMARY_DATA_URL}?${CACHE_BUSTER}`, { cache: "no-store" }).then(handleResponseJson))
             .then((primaryData) => {
             const pd = primaryData;
             processSpecialDays(pd);
@@ -1164,7 +1165,7 @@ document.addEventListener('DOMContentLoaded', function () {
             attachDailyImageHandlers();
             window.addEventListener('load', attachDailyImageHandlers);
             setTimeout(attachDailyImageHandlers, 500);
-            return fetch(COMMUNITY_DATA_URL, { cache: "no-cache" }).then(handleResponseJson);
+            return fetch(`${COMMUNITY_DATA_URL}?${CACHE_BUSTER}`, { cache: "no-store" }).then(handleResponseJson);
         })
             .then((communityData) => {
             const cd = communityData;
