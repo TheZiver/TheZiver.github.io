@@ -174,9 +174,9 @@
     box-shadow: 0 8px 30px rgba(249, 104, 84, 0.15);
     border-color: rgba(249, 104, 84, 0.6);
 }
-/* Whole hero card is a link — undo global link styles, keep card hover */
-a.card-featured { text-decoration: none !important; cursor: pointer; }
-a.card-featured:hover { transform: translateY(-4px); text-shadow: none; }
+/* Whole card is a link — undo global link styles, keep card hover */
+a.support-card { text-decoration: none !important; cursor: pointer; }
+a.support-card:hover { transform: translateY(-4px); text-shadow: none; }
 .card-icon-lg { width: 80px; height: 80px; font-size: 2.4em; margin-bottom: 14px; }
 .card-heading-lg { font-size: 2em; letter-spacing: 4px; }
 .card-desc-lg { font-size: 1em; max-width: 420px; }
@@ -230,6 +230,9 @@ a.card-featured:hover { transform: translateY(-4px); text-shadow: none; }
 .store-image-link { display: block; margin: 0 auto 20px; max-width: 200px; transition: transform 0.3s ease; }
 .store-image-link:hover { transform: scale(1.05); }
 .store-image { width: 100%; height: auto; border-radius: 12px; display: block; }
+/* Image must fill its centered frame (beats the global img width:auto rule).
+   translateX optically centers the right-heavy fish art; drop-shadow adds a gold glow in the same style. */
+.store-section .store-image-link .store-image { width: 100% !important; max-width: 100% !important; transform: translateX(-3%); filter: drop-shadow(0 0 22px rgba(212, 175, 55, 0.35)); }
 .store-quote { font-style: italic; color: #b0b0b0; margin: 0 auto 22px; max-width: 520px; line-height: 1.7; font-size: 0.9em; border-left: 3px solid rgba(212, 175, 55, 0.4); padding-left: 18px; text-align: left; }
 .store-btn {
     display: inline-flex; align-items: center; gap: 8px;
