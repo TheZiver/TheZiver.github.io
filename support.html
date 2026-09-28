@@ -47,28 +47,38 @@
                 <p class="support-subhead">For Building and Maintaining the FISH ＜＞＜ COMMUNITY</p>
             </header>
 
-            <div class="support-cards">
-                <div class="support-card card-patreon">
-                    <div class="card-accent"></div>
-                    <div class="card-icon-wrap">
-                        <i class="fa-brands fa-patreon"></i>
-                    </div>
-                    <h3 class="card-heading">PATREON</h3>
-                    <p class="card-desc">Support Monthly</p>
-                    <a href="https://www.patreon.com/TheZiver" target="_blank" rel="noopener noreferrer" class="card-btn patreon-btn">
-                        <i class="fa-brands fa-patreon"></i> Become a Patron
-                    </a>
+            <!-- PATREON HERO — main focus, whole card links to Patreon -->
+            <a href="https://www.patreon.com/TheZiver" target="_blank" rel="noopener noreferrer" class="support-card card-patreon card-featured" id="patreon-hero">
+                <div class="card-accent"></div>
+                <div class="card-icon-wrap card-icon-lg">
+                    <i class="fa-brands fa-patreon"></i>
                 </div>
+                <h3 class="card-heading card-heading-lg">PATREON</h3>
+                <p class="card-desc card-desc-lg" id="patreon-goal-desc">My goal is to get $100 / month</p>
+
+                <div class="patreon-goal" id="patreon-goal">
+                    <div class="goal-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Patreon goal progress">
+                        <div class="goal-fill" id="patreon-goal-fill"></div>
+                        <span class="goal-bar-text" id="patreon-goal-bar-text">currently I'm at $…</span>
+                    </div>
+                </div>
+
+                <span class="card-btn patreon-btn">
+                    <i class="fa-brands fa-patreon"></i> Become a Patron
+                </span>
+            </a>
+
+            <div class="support-cards support-cards-secondary">
                 <div class="support-card card-kofi">
                     <div class="card-accent"></div>
-                    <div class="card-icon-wrap">
+                    <div class="card-icon-wrap card-icon-lg">
                         <i class="fa-solid fa-mug-hot"></i>
                     </div>
-                    <h3 class="card-heading">KO-FI</h3>
-                    <p class="card-desc">One Time Support</p>
-                    <div class="kofi-button-container">
-                        <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support me on Ko-fi', '#72a4f2', 'M4M4XDJ7M');kofiwidget2.draw();</script>
-                    </div>
+                    <h3 class="card-heading card-heading-lg">KO-FI</h3>
+                    <p class="card-desc card-desc-lg">One Time Support</p>
+                    <a href="https://ko-fi.com/theziver" target="_blank" rel="noopener noreferrer" class="card-btn kofi-btn">
+                        <i class="fa-solid fa-mug-hot"></i> Support me on Ko-fi
+                    </a>
                 </div>
             </div>
 
@@ -115,6 +125,7 @@
     <script src="js/swimming-fish.js"></script>
     <script src="js/back-to-top.js"></script>
     <script src="js/lazy-loading.js"></script>
+    <script src="js/patreon-goal.js"></script>
     <button id="back-to-top" aria-label="Back to top"></button>
 </body>
 

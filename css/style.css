@@ -124,6 +124,7 @@
     display: flex; flex-direction: column; align-items: center;
     padding: 32px 24px 28px; border-radius: 16px;
     position: relative; overflow: hidden;
+    box-sizing: border-box;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .support-card:hover { transform: translateY(-4px); }
@@ -159,8 +160,59 @@
 .patreon-btn { background: linear-gradient(135deg, #f96854, #e85a46); color: #fff !important; box-shadow: 0 4px 15px rgba(249, 104, 84, 0.3); }
 .patreon-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(249, 104, 84, 0.5); background: linear-gradient(135deg, #ff7a66, #f96854); }
 
-/* Ko-fi button spacing inside card */
-.card-kofi .kofi-button-container { position: relative; z-index: 1; }
+/* Ko-fi button — same .card-btn sizing as Patreon, Ko-fi blue theme */
+.kofi-btn { background: linear-gradient(135deg, #29abe0, #1e8fc3); color: #fff !important; box-shadow: 0 4px 15px rgba(41, 171, 224, 0.3); }
+.kofi-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(41, 171, 224, 0.5); background: linear-gradient(135deg, #5fc8f7, #29abe0); }
+/* Identical button widths regardless of label length */
+.support-page .card-btn { min-width: 240px; justify-content: center; }
+
+/* --- Patreon featured hero (main focus, same card language) --- */
+.card-featured {
+    margin: 30px 0 10px;
+    padding: 36px 28px 32px;
+    border-width: 1px;
+    box-shadow: 0 8px 30px rgba(249, 104, 84, 0.15);
+    border-color: rgba(249, 104, 84, 0.6);
+}
+/* Whole hero card is a link — undo global link styles, keep card hover */
+a.card-featured { text-decoration: none !important; cursor: pointer; }
+a.card-featured:hover { transform: translateY(-4px); text-shadow: none; }
+.card-icon-lg { width: 80px; height: 80px; font-size: 2.4em; margin-bottom: 14px; }
+.card-heading-lg { font-size: 2em; letter-spacing: 4px; }
+.card-desc-lg { font-size: 1em; max-width: 420px; }
+
+.support-cards-secondary { margin-top: 24px; }
+/* Same width and padding as the Patreon hero so both cards align */
+.support-cards-secondary .support-card { width: 100%; padding: 36px 28px 32px; }
+/* Kill the global min-height so no empty space sits under the Ko-fi button */
+.support-cards-secondary .kofi-button-container { min-height: 0; margin-top: 0; }
+
+/* --- Patreon goal progress (simple flat bar) --- */
+.patreon-goal {
+    width: 100%; max-width: 440px; margin: 0 auto 24px;
+    position: relative; z-index: 1; box-sizing: border-box;
+}
+.goal-bar {
+    position: relative; height: 26px; border-radius: 999px; overflow: hidden;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(249, 104, 84, 0.35);
+}
+.goal-fill {
+    height: 100%; width: 0%;
+    border-radius: 999px;
+    background: #f96854;
+    transition: width 0.8s ease;
+}
+.goal-bar-text {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 14px; box-sizing: border-box;
+    font-size: 0.8em; font-weight: 600; letter-spacing: 0.5px;
+    color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+    pointer-events: none; white-space: nowrap;
+}
+.patreon-goal.goal-reached .goal-fill { background: #ffd700; }
+.patreon-goal.goal-reached .goal-bar-text { color: #3a2b00; text-shadow: none; }
 
 /* --- Store Section --- */
 .store-section { text-align: center; padding: 28px 24px; border-radius: 16px; border: 1px solid rgba(212, 175, 55, 0.3); background: rgba(212, 175, 55, 0.04); }
@@ -223,6 +275,12 @@
     .members-heading { font-size: 1.1em; }
     .member-card { min-width: 140px; padding: 14px; }
     .member-image { width: 100px; }
+    .card-featured { padding: 28px 18px 24px; }
+    .support-cards-secondary .support-card { padding: 28px 18px 24px; }
+    .support-page .card-btn { min-width: 200px; }
+    .card-icon-lg { width: 64px; height: 64px; font-size: 2em; }
+    .card-heading-lg { font-size: 1.6em; }
+    .patreon-goal { padding: 14px 14px; }
 }
 
 /* Soundboard page */
