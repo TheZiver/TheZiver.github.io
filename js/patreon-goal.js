@@ -3,7 +3,7 @@
 //   "My goal is to get $100 / month, currently I'm at $52, I'm 52% there :D"
 //   "My goal is to get $100 / month, currently I'm at $100, I HAVE REACHED MY GOAL YAY! :D"
 (function () {
-  var GIST_RAW_URL = "https://gist.githubusercontent.com/TheZiver/58c8aec7bf60605487648f507597f882/raw/8ae65f9c48d512721c4f904db45d8f51627bddbf/patreon-goal.txt";
+  var GIST_RAW_URL = "https://gist.githubusercontent.com/TheZiver/58c8aec7bf60605487648f507597f882/raw/patreon-goal.txt";
 
   function parseGoalText(text) {
     var clean = (text || "").trim().replace(/\s+/g, " ");
