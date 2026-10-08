@@ -187,32 +187,80 @@ a.support-card:hover { transform: translateY(-4px); text-shadow: none; }
 /* Kill the global min-height so no empty space sits under the Ko-fi button */
 .support-cards-secondary .kofi-button-container { min-height: 0; margin-top: 0; }
 
-/* --- Patreon goal progress (simple flat bar) --- */
+/* --- Patreon goal: fish jar with faucet — fish fall in, 1 🐟 per $1, then keep swimming --- */
 .patreon-goal {
-    width: 100%; max-width: 440px; margin: 0 auto 24px;
+    width: 100%; max-width: 440px; margin: 0 auto;
+    display: flex; justify-content: center;
     position: relative; z-index: 1; box-sizing: border-box;
+    padding-top: 105px;
+    overflow: visible;
 }
-.goal-bar {
-    position: relative; height: 26px; border-radius: 999px; overflow: hidden;
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(249, 104, 84, 0.35);
+.fish-jar { width: 230px; display: flex; flex-direction: column; align-items: center; position: relative; cursor: crosshair; }
+/* faucet: one piece — long tube outside the jar on the right, squared bend
+   at the top, short down-spout with its head just inside the jar.
+   Positioned in % so it tracks the jar size on mobile too. */
+.fish-faucet { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+/* single-piece gooseneck in jar coordinates (1 unit = 1px): tube outside
+   right, bent top, short head just inside the jar */
+.tube-all { position: absolute; right: -35px; top: -128px; width: 265px; height: 400px; overflow: visible; }
+/* falling-fish layer: fish spawn at the spout and drop through the open mouth */
+.fish-jar-fall-layer {
+    position: absolute; left: -60px; right: -60px; top: -220px; bottom: 0;
+    pointer-events: none; z-index: 8; overflow: visible;
 }
-.goal-fill {
-    height: 100%; width: 0%;
-    border-radius: 999px;
-    background: #f96854;
-    transition: width 0.8s ease;
+.fish-jar-fall-layer span {
+    position: absolute; top: 0; left: 0; line-height: 1;
+    will-change: transform; user-select: none;
 }
-.goal-bar-text {
+/* simple jar body — open-top U shape, flat outline, no top edge */
+.fish-jar-body {
+    position: relative; width: 230px; height: 300px; margin-top: 0;
+    border: 3px solid #aebac3; border-top: none;
+    border-radius: 0 0 24px 24px;
+    background: rgba(255,255,255,0.04);
+    overflow: hidden; box-sizing: border-box; z-index: 2;
+}
+/* water: canvas with animated waves (drawn by patreon-goal.js),
+   hugs the jar's rounded bottom */
+.fish-jar-water {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    border-radius: 0 0 18px 18px;
+    pointer-events: none;
+}
+.fish-jar-fishes {
     position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    padding: 0 14px; box-sizing: border-box;
-    font-size: 0.8em; font-weight: 600; letter-spacing: 0.5px;
-    color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
-    pointer-events: none; white-space: nowrap;
+    overflow: hidden; pointer-events: none;
 }
-.patreon-goal.goal-reached .goal-fill { background: #ffd700; }
-.patreon-goal.goal-reached .goal-bar-text { color: #3a2b00; text-shadow: none; }
+.fish-jar-fishes span {
+    position: absolute; display: inline-block; line-height: 1;
+    left: 0; top: 0; will-change: transform;
+    user-select: none;
+}
+.fish-jar-pct {
+    position: absolute; inset: 0; z-index: 5;
+    display: flex; align-items: flex-end; justify-content: center; text-align: center;
+    padding: 0 16px 12px; box-sizing: border-box;
+    font-size: 0.9em; font-weight: 700; letter-spacing: 0.5px; line-height: 1.4;
+    color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    pointer-events: none; white-space: normal;
+}
+.patreon-goal.goal-reached .fish-jar-water { background: #ffd700; }
+.patreon-goal.goal-reached .fish-jar-pct { color: #3a2b00; text-shadow: none; }
+/* "$1 = 1 fish" rate note above the jar */
+.fish-rate {
+    margin: 2px 0 20px; text-align: center;
+    font-size: 0.85em; font-weight: 700; letter-spacing: 2px;
+    color: #7fd4f2; text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    position: relative; z-index: 1;
+}
+.fish-rate-above { margin: 12px 0 0; }
+/* hint under the jar: fish can be shoved aside to read the numbers */
+.fish-hint {
+    margin: 1px 0 0; text-align: center;
+    font-size: 0.7em; font-style: italic;
+    color: #8a9aa5;
+    position: relative; z-index: 1;
+}
 
 /* --- Store Section --- */
 .store-section { text-align: center; padding: 28px 24px; border-radius: 16px; border: 1px solid rgba(212, 175, 55, 0.3); background: rgba(212, 175, 55, 0.04); }
@@ -283,7 +331,11 @@ a.support-card:hover { transform: translateY(-4px); text-shadow: none; }
     .support-page .card-btn { min-width: 200px; }
     .card-icon-lg { width: 64px; height: 64px; font-size: 2em; }
     .card-heading-lg { font-size: 1.6em; }
-    .patreon-goal { padding: 14px 14px; }
+    .patreon-goal { padding: 105px 14px 0; }
+    .fish-jar { width: 200px; }
+    .fish-jar-body { width: 200px; height: 260px; }
+    .fish-faucet { z-index: 3; }
+    .tube-all { left: auto; right: -31px; top: -111px; width: 230px; height: 348px; }
 }
 
 /* Soundboard page */

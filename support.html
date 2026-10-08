@@ -56,16 +56,31 @@
                 <h3 class="card-heading card-heading-lg">PATREON</h3>
                 <p class="card-desc card-desc-lg" id="patreon-goal-desc">My goal is to get $100 / month</p>
 
-                <div class="patreon-goal" id="patreon-goal">
-                    <div class="goal-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Patreon goal progress">
-                        <div class="goal-fill" id="patreon-goal-fill"></div>
-                        <span class="goal-bar-text" id="patreon-goal-bar-text">currently I'm at $…</span>
-                    </div>
-                </div>
-
                 <span class="card-btn patreon-btn">
                     <i class="fa-brands fa-patreon"></i> Become a Patron
                 </span>
+                <p class="fish-rate fish-rate-above">$1 = 1 🐟</p>
+
+                <!-- Patreon fish jar: fish fall from the faucet, 1 🐟 per $1, then keep swimming -->
+                <div class="patreon-goal" id="patreon-goal">
+                    <div class="fish-jar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Patreon goal progress" id="patreon-goal-bar" title="psst — poke the fish!">
+                        <div class="fish-faucet" aria-hidden="true">
+                            <svg class="tube-all" viewBox="-5 -100 265 400" aria-hidden="true">
+                                <path d="M248,250 L248,-28 Q248,-60 216,-60 L204,-60 Q172,-60 172,-28 L172,12"
+                                      fill="none" stroke="#9aa5b1" stroke-width="18" stroke-linecap="round" />
+                                <ellipse id="patreon-spout" cx="172" cy="14" rx="5" ry="4" fill="#4a5157" />
+                            </svg>
+                        </div>
+                        <div class="fish-jar-fall-layer" id="patreon-goal-fall" aria-hidden="true"></div>
+                        <div class="fish-jar-body">
+                            <canvas class="fish-jar-water" id="patreon-water" aria-hidden="true"></canvas>
+                            <div class="fish-jar-fishes" id="patreon-goal-fishes" aria-hidden="true"></div>
+                            <span class="fish-jar-pct" id="patreon-goal-bar-text">currently I'm at $…</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="fish-hint">if you can't see the numbers just move the fish with your mouse</p>
+                <p class="fish-hint">if you're on your phone idk lol</p>
             </a>
 
             <div class="support-cards support-cards-secondary">
