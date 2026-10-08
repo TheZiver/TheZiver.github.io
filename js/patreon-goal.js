@@ -11,6 +11,8 @@
   var GIST_RAW_URL = "https://gist.githubusercontent.com/TheZiver/58c8aec7bf60605487648f507597f882/raw/patreon-goal.txt";
   var FISH_VISUAL_CAP = 150;
   var jarGen = 0; // bumped per rebuild; stale animation loops exit on mismatch
+  var sharedPoke = { x: 0, y: 0, active: false }; // one poke state for all pours
+  var pointerWatched = false;
 
   function parseGoalText(text) {
     var clean = (text || "").trim().replace(/\s+/g, " ");
@@ -73,6 +75,7 @@
     if (!ctx) return;
     var W = 0, H = 0, dpr = 1, gradCache = null, gradLvl = -9999;
     function fit() {
+      if (gen !== jarGen) return; // superseded pour: stay out of the way
       W = sizer.clientWidth || 194;
       H = sizer.clientHeight || 257;
       dpr = Math.min(1.5, window.devicePixelRatio || 1);
@@ -81,7 +84,7 @@
       gradCache = null; // rebuilt lazily on next draw
     }
     fit();
-    if (!canvas._fitWatched) { canvas._fitWatched = true; window.addEventListener("resize", fit); }
+    window.addEventListener("resize", fit);
 
     // Water starts empty and rises toward the goal level as fish land
     var lvl = reduceMotion ? displayH : 0;
@@ -241,11 +244,14 @@
 
     // Pointer poke: hovering or touching the jar scatters nearby fish.
     // Works for mouse + touch; coordinates are mapped into fall-layer space.
-    var poke = { x: 0, y: 0, active: false };
+    // State lives at module scope (not per-pour): listeners are attached once
+    // and every rebuild reads the same object, so resizing can never orphan
+    // the poke the way per-pour closures did.
+    var poke = sharedPoke;
     (function watchPointer() {
       var jarEl = fallLayer.parentElement;
-      if (!jarEl || !jarEl.addEventListener || jarEl._pokeWatched) return;
-      jarEl._pokeWatched = true;
+      if (!jarEl || !jarEl.addEventListener || pointerWatched) return;
+      pointerWatched = true;
       function toFall(cx, cy) {
         var r = fallLayer.getBoundingClientRect();
         return [cx - r.left, cy - r.top];
