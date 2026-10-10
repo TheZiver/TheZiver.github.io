@@ -4,7 +4,7 @@
 //   "My goal is to get $100 / month, currently I'm at $100, I HAVE REACHED MY GOAL YAY! :D"
 //
 // Simple jar: canvas water fills to the goal %, and 1 fish per $1 pours in
-// from the faucet. Fish bounce off the glass and each other, float on the
+// from above. Fish bounce off the glass and each other, float on the
 // water, and mill around forever. Everything is laid out in pixels at load,
 // so crossing the mobile size breakpoint rebuilds the whole pour cleanly.
 (function () {
@@ -227,8 +227,8 @@
       return;
     }
 
-    // Fish pour from the faucet spout: measure its tip, fall back to the
-    // jar mouth centre if measuring fails.
+    // Fish pour in from above the jar mouth (measured live if a spout
+    // element exists, otherwise the jar mouth centre).
     var spoutX = fallW / 2, spoutY = fallH - bodyH - 40;
     try {
       var spoutEl = document.getElementById("patreon-spout");
@@ -291,7 +291,7 @@
       fallLayer.appendChild(el);
       fishes.push({
         el: el,
-        x: Math.max(wallL, Math.min(wallR - size, spoutX - 9 + (Math.random() - 0.5) * 2)),
+        x: Math.max(wallL, Math.min(wallR - size, spoutX + (Math.random() - 0.5) * 2)),
         y: spoutY - Math.random() * 20,
         vx: (Math.random() - 0.5) * 0.4, // straight down out of the head
         vy: 0,

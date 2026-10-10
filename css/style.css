@@ -187,23 +187,16 @@ a.support-card:hover { transform: translateY(-4px); text-shadow: none; }
 /* Kill the global min-height so no empty space sits under the Ko-fi button */
 .support-cards-secondary .kofi-button-container { min-height: 0; margin-top: 0; }
 
-/* --- Patreon goal: fish jar with faucet — fish fall in, 1 🐟 per $1, then keep swimming --- */
+/* --- Patreon goal: fish jar — 1 🐟 per $1 falls in, school floats on the water --- */
 .patreon-goal {
     width: 100%; max-width: 440px; margin: 0 auto;
     display: flex; justify-content: center;
     position: relative; z-index: 1; box-sizing: border-box;
-    padding-top: 105px;
+    padding-top: 10px;
     overflow: visible;
 }
 .fish-jar { width: 230px; display: flex; flex-direction: column; align-items: center; position: relative; cursor: crosshair; }
-/* faucet: one piece — long tube outside the jar on the right, squared bend
-   at the top, short down-spout with its head just inside the jar.
-   Positioned in % so it tracks the jar size on mobile too. */
-.fish-faucet { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-/* single-piece gooseneck in jar coordinates (1 unit = 1px): tube outside
-   right, bent top, short head just inside the jar */
-.tube-all { position: absolute; right: -35px; top: -128px; width: 265px; height: 400px; overflow: visible; }
-/* falling-fish layer: fish spawn at the spout and drop through the open mouth */
+/* falling-fish layer: fish spawn above the jar and drop through the open mouth */
 .fish-jar-fall-layer {
     position: absolute; left: -60px; right: -60px; top: -220px; bottom: 0;
     pointer-events: none; z-index: 8; overflow: visible;
@@ -331,11 +324,9 @@ a.support-card:hover { transform: translateY(-4px); text-shadow: none; }
     .support-page .card-btn { min-width: 200px; }
     .card-icon-lg { width: 64px; height: 64px; font-size: 2em; }
     .card-heading-lg { font-size: 1.6em; }
-    .patreon-goal { padding: 105px 14px 0; }
+    .patreon-goal { padding: 0 14px; }
     .fish-jar { width: 200px; }
     .fish-jar-body { width: 200px; height: 260px; }
-    .fish-faucet { z-index: 3; }
-    .tube-all { left: auto; right: -31px; top: -111px; width: 230px; height: 348px; }
 }
 
 /* Soundboard page */
