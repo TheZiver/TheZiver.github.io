@@ -66,12 +66,12 @@
 .daily-warning-heading { text-align: center; color: #ff8f00; margin-bottom: 15px; }
 
 /* Principles section */
-.principle-item { margin-bottom: 10px; }
+.principle-item { margin-bottom: 12px; line-height: 1.65; }
 .principles-container { display: flex; flex-wrap: wrap; justify-content: space-between; font-size: 0.95em; }
 .principles-col { flex: 1; min-width: 300px; }
 .principles-col:first-child { margin-right: 15px; }
 .principles-heading { font-size: 1.5em; margin-bottom: 15px; }
-.principles-note { font-style: italic; padding: 15px; margin-top: 20px; line-height: 1.5; font-size: 0.9em; }
+.principles-note { font-style: italic; padding: 15px 15px 15px 18px; margin-top: 20px; line-height: 1.7; font-size: 0.9em; border-left: 3px solid rgba(76, 175, 80, 0.4); background: rgba(0, 0, 0, 0.2); border-radius: 0 8px 8px 0; }
 .principles-note-icon { display: block; text-align: center; margin-top: 10px; font-size: 1.2em; }
 .text-muted { color: #a0a0a0; }
 
@@ -535,39 +535,6 @@ a:active { transform: translateY(1px) scale(0.98); transition-duration: 0.1s; }
 @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 208, 225, 0.4); } 50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(0, 208, 225, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 208, 225, 0); } }
 .main-nav a.active { position: relative; z-index: 1; }
 .main-nav a.active:hover { animation: pulse 1.5s infinite; }
-
-/* Disable heavy hover transforms inside tweet feed to avoid layout shifting */
-.feed-wrapper .tweet a {
-    position: static;
-    text-decoration: underline;
-    transition: color 0.2s ease, text-shadow 0.2s ease;
-}
-.feed-wrapper .tweet a:hover {
-    /* Keep it visually clickable, but without moving layout */
-    color: var(--accent-color);
-    text-shadow: 0 0 8px rgba(0, 247, 255, 0.7);
-    transform: none;
-}
-
-/* FISH NEWS: keep YouTube embeds from causing layout jumps */
-.feed-wrapper .video-container {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
-    overflow: hidden;
-    border-radius: 12px;
-    border: 1px solid var(--feed-border);
-    background: #000;
-}
-
-.feed-wrapper .video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-}
 
 .warning { color: #ffc107; font-weight: bold; }
 hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
@@ -1508,14 +1475,102 @@ iframe { width: 100%; max-width: 100%; border: 1px solid #444; margin-top: 1.5em
 /* Navigation Bar */
 .main-nav { background-color: #1e1e1e; padding: 10px 0; margin-bottom: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border-bottom: 1px solid #333337; position: sticky; top: 0; z-index: 100; width: 100%; }
 .main-nav ul { list-style: none; padding: 0; margin: 0; text-align: center; }
+
+/* Global sticky header: quick bar + nav move as ONE unit, so no seam can appear.
+   Slim, opaque, no animation (NNGroup guidance). */
+.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+}
+
+.quick-bar {
+    position: static;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    min-height: 52px;
+    max-height: 52px;
+    padding: 4px 12px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    background: #121212;
+    border-bottom: 1px solid #333337;
+}
+
+.quick-bar + .main-nav,
+.quick-bar ~ .main-nav,
+.sticky-top .main-nav {
+    position: static;
+    top: auto;
+}
+
+.quick-bar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 4px 16px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid #333337;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.quick-bar-btn:hover {
+    color: #ffffff;
+    border-color: var(--accent-color);
+    background: #222;
+}
+
+.quick-bar-btn .fa-discord {
+    color: #7289da;
+    font-size: 1.1em;
+}
+
+.quick-bar-btn .si-vrchat {
+    color: #ffffff;
+    font-size: 1.1em;
+}
+
+.quick-bar-btn .fa-rotate-left {
+    color: #6e9f94;
+}
+
+@media (max-width: 420px) {
+    .quick-bar {
+        gap: 6px;
+        padding: 4px 8px;
+    }
+
+    .quick-bar-btn {
+        padding: 4px 10px;
+        font-size: 0.78em;
+        gap: 6px;
+    }
+}
+
+/* WCAG C34: un-fix sticky header on short landscape screens so content keeps room */
+@media (max-height: 500px) {
+    .sticky-top {
+        position: static;
+    }
+}
 .main-nav li { display: inline-block; margin: 0 10px; }
 .main-nav a { color: #cccccc; text-decoration: none; font-size: 1.1em; padding: 8px 15px; border-radius: 4px; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px; }
 .main-nav a.active { background-color: #4dd0e1; color: #121212; font-weight: bold; }
 @media (max-width: 767px) { .main-nav ul { white-space: normal; padding: 5px 0; display: flex; flex-wrap: wrap; justify-content: center; } .main-nav li { margin: 3px 5px; } .main-nav a { font-size: 1em; padding: 6px 10px; width: auto; min-width: 80px; text-align: center; } body { font-size: 16px; } p, li, a, div, span { word-wrap: normal; overflow-wrap: normal; word-break: normal; hyphens: none; } h1 { font-size: 2em; } h2 { font-size: 1.7em; } h3 { font-size: 1.4em; } table { display: block; width: 100%; overflow-x: auto; } }
 @media (max-width: 480px) { .main-nav li { margin: 2px 3px; } .main-nav a { font-size: 0.85em; padding: 5px 7px; min-width: 65px; } }
 
-/* Ensure anchor targets are not hidden behind sticky nav */
-[id] { scroll-margin-top: 70px; }
+/* Ensure anchor targets are not hidden behind sticky bars */
+[id] { scroll-margin-top: 130px; }
 
 /* Page-specific themes (condensed) */
 body.theme-rosefish { background-color: #000000; color: #801B23; } body.theme-rosefish .container { background-color: #000000; color: #801B23; border: 1px solid #801B23; box-shadow: 0 0 15px rgba(128,27,35,0.3); } body.theme-rosefish a { color: #801B23; } body.theme-rosefish a:hover { color: #A52A2A; } body.theme-rosefish hr { border-top-color: #801B23; } body.theme-rosefish h1, body.theme-rosefish h2, body.theme-rosefish h3 { background: none; background-clip: initial; -webkit-background-clip: initial; color: #801B23; -webkit-text-fill-color: initial; animation: none; } body.theme-rosefish #rosefish-members-list li { border-bottom-color: #801B23; }
@@ -1583,28 +1638,6 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
     100% { filter: hue-rotate(360deg) drop-shadow(0 0 20px rgba(255, 0, 255, 0.9)) drop-shadow(0 0 50px rgba(255, 0, 255, 0.5)) drop-shadow(0 28px 48px rgba(0,0,0,0.6)); }
 }
 @media (max-width: 600px) { .embed-with-longcat { overflow: hidden; } .longcat-overlay { bottom: 72px; } .longcat-spin { max-width: min(360px, 90vw); max-height: min(240px, 30vh); transform: scale(4.8); animation: longcat-spin 4s linear infinite, rgb-glow 2s linear infinite; filter: none; } @keyframes longcat-spin { from { transform: scale(4.8) rotate(0deg); } to { transform: scale(4.8) rotate(360deg); } } }
-
-/* --- MERGED FROM NEWS.HTML INLINE <STYLE> --- */
-.feed-wrapper { max-width: 700px; margin: 0 0 0 auto; }
-.feed-wrapper .loading { padding: 40px; text-align: center; color: var(--text-secondary); font-style: italic; }
-.feed-wrapper .tweet { display: flex; padding: 16px; border-bottom: 1px solid var(--feed-border); transition: background-color 0.2s; }
-.feed-wrapper .tweet:last-child { border-bottom: none; }
-.feed-wrapper .tweet:hover { background-color: var(--feed-hover); }
-.feed-wrapper .avatar-col { margin-right: 12px; flex-shrink: 0; }
-.feed-wrapper .avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background-color: #333; display: block; }
-.feed-wrapper .content-col { flex: 1; min-width: 0; }
-.feed-wrapper .tweet-header { display: flex; align-items: baseline; margin-bottom: 4px; flex-wrap: wrap; }
-.feed-wrapper .display-name { font-weight: 700; color: var(--text-color, #e0e0e0); margin-right: 6px; font-size: 1.1em; }
-.feed-wrapper .handle, .feed-wrapper .time { color: var(--text-secondary); font-size: 0.95em; }
-.feed-wrapper .handle { margin-right: 6px; }
-.feed-wrapper .dot { margin: 0 6px; color: var(--text-secondary); }
-.feed-wrapper .tweet-text { font-size: 1em; line-height: 1.6; word-wrap: break-word; color: var(--text-color, #e0e0e0); }
-.feed-wrapper .tweet-text a { color: var(--link-color, #4dd0e1); text-decoration: none; }
-.feed-wrapper .tweet-text a:hover { text-decoration: underline; }
-.feed-wrapper .tweet-content-html { margin-top: 8px; }
-.feed-wrapper .tweet-content-html img, .feed-wrapper .tweet-content-html video { max-width: 100%; height: auto; border-radius: 12px; margin-top: 12px; border: 1px solid var(--feed-border); display: block; }
-
-.feed-wrapper iframe[src*="platform.twitter.com"] { max-width: 700px; margin: 8px 0 8px auto; display: block; border: none; border-radius: 12px; overflow: hidden; }
 
 /* --- MERGED FROM DATABASE.HTML INLINE <STYLE> --- */
 .db-pills { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:8px 0; }
@@ -1693,8 +1726,9 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
 .hero-subtitle {
     font-size: 1.1em;
     color: #a0a0a0;
-    margin: 0 0 15px 0;
+    margin: 0 0 22px 0;
     font-weight: normal;
+    letter-spacing: 0.02em;
 }
 
 .hero-image-link {
@@ -1712,67 +1746,6 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
 
 .hero-image-link:hover .hero-image {
     transform: scale(1.1) rotateY(8deg);
-}
-
-/* Hero Actions */
-.hero-actions {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 15px;
-    flex-wrap: wrap;
-}
-
-.hero-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-size: 0.9em;
-    font-weight: bold;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 2px solid;
-    color: #ffffff;
-}
-
-.discord-btn {
-    border-color: rgba(82, 101, 242, 0.6);
-    background: rgba(82, 101, 242, 0.1);
-    color: #7289da;
-}
-
-.discord-btn:hover {
-    border-color: #5265f2;
-    background: rgba(82, 101, 242, 0.2);
-    box-shadow: 0 4px 15px rgba(82, 101, 242, 0.3);
-    transform: translateY(-2px);
-    color: #ffffff;
-}
-
-.appeal-btn {
-    border-color: rgba(110, 159, 148, 0.6);
-    background: rgba(110, 159, 148, 0.1);
-    color: #6e9f94;
-}
-
-.appeal-btn:hover {
-    border-color: #6e9f94;
-    background: rgba(110, 159, 148, 0.2);
-    box-shadow: 0 4px 15px rgba(110, 159, 148, 0.3);
-    transform: translateY(-2px);
-    color: #ffffff;
-}
-
-.hero-btn svg {
-    width: 18px;
-    height: 18px;
-}
-
-.fish-groups-section {
-    margin: 12px 0;
-    text-align: center;
 }
 
 /* Quick Actions Section */
@@ -2171,6 +2144,198 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
     .principles-footer {
         padding: 20px;
     }
+
+    .framework-section {
+        padding: 30px 20px;
+    }
+
+    .framework-section h1,
+    .framework-section h2 {
+        font-size: 2em;
+    }
+
+    .framework-plain p {
+        font-size: 1em;
+    }
+}
+
+/* Homepage framework: editorial readability (left-aligned, ~60ch measure,
+   clear hierarchy, generous spacing, sparing highlights) */
+
+.framework-section {
+    margin-bottom: 40px;
+    padding: 44px 36px;
+    border-radius: 12px;
+    border: 1px solid rgba(77, 208, 225, 0.3);
+    text-align: left;
+}
+
+.framework-section h1,
+.framework-section h2 {
+    margin: 0 0 20px 0;
+    font-size: 2.6em;
+    max-width: 20ch;
+    line-height: 1.15;
+    text-align: left;
+    text-wrap: balance;
+}
+
+.framework-plain p {
+    max-width: 62ch;
+    margin: 0 0 18px 0;
+    line-height: 1.8;
+    font-size: 1.06em;
+    color: #a0a0a0;
+    text-align: left;
+}
+
+.framework-plain p strong {
+    color: #e0e0e0;
+}
+
+/* Thesis lines: brighter and larger so the point lands first */
+.framework-plain .framework-lead {
+    font-size: 1.1em;
+}
+
+.framework-section h1 + .framework-lead {
+    font-size: 1.18em;
+    color: #e8e8e8;
+    max-width: 56ch;
+}
+
+/* Key terms pop so the eye catches the 4 words and the 2 focus phrases */
+.framework-plain .framework-lead strong,
+.framework-plain .framework-a strong {
+    color: #4dd0e1;
+    font-weight: bold;
+}
+
+/* Each question starts a clear new step with breathing room above */
+.framework-plain .framework-q {
+    margin-top: 30px;
+    margin-bottom: 6px;
+    font-size: 1.15em;
+    line-height: 1.5;
+}
+
+.framework-plain .framework-q strong {
+    color: #ffffff;
+}
+
+/* Answer sits tight under its question, slightly indented with an accent edge */
+.framework-plain .framework-a {
+    margin-top: 0;
+    margin-bottom: 6px;
+    padding-left: 14px;
+    border-left: 2px solid rgba(77, 208, 225, 0.45);
+}
+
+.framework-plain .framework-inline-link {
+    display: inline-block;
+    padding: 6px 16px;
+    margin: 10px 0 2px 18px;
+    border: 2px solid rgba(76, 175, 80, 0.6);
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1));
+    color: #4caf50;
+    font-weight: bold;
+    font-size: 0.9em;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.framework-plain .framework-inline-link:hover {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.5), rgba(76, 175, 80, 0.2));
+    border-color: #4caf50;
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    text-decoration: none;
+}
+
+.framework-plain .framework-closer {
+    margin-top: 26px;
+    color: #e8e8e8;
+}
+
+.framework-plain .framework-plea {
+    color: #e8e8e8;
+    font-style: italic;
+}
+
+.meaning-below-framework {
+    display: block;
+    margin: 20px auto 0 auto;
+}
+
+.framework-plain p:last-child {
+    margin-bottom: 0;
+}
+
+/* FISH COMMUNITY - one place for everything fish, below the framework */
+.fish-section {
+    margin-bottom: 40px;
+    padding: 30px 25px;
+    border-radius: 12px;
+    border: 1px solid rgba(77, 208, 225, 0.3);
+}
+
+.fish-section .hero-section,
+.fish-section .about-section,
+.fish-section .principles-section {
+    border: none;
+    border-radius: 0;
+    background: none;
+    padding: 0;
+    margin: 0 0 30px 0;
+    animation: none;
+}
+
+.fish-section .hero-section {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fish-section .about-section {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fish-intro {
+    max-width: 62ch;
+    margin: 0 auto 18px auto;
+    line-height: 1.8;
+    font-size: 1.08em;
+    color: #d5d5d5;
+    text-align: left;
+}
+
+.fish-intro-sub {
+    max-width: 62ch;
+    margin: 0 auto 4px auto;
+    line-height: 1.8;
+    text-align: left;
+}
+
+.fish-section .hero-section .explore-btn {
+    margin-top: 20px;
+}
+
+.fish-section .principles-section {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fish-section .video-section {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
 }
 
 /* Lazy loading animations (moved from lazy-loading.js) */

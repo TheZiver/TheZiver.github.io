@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
        }
    }
 
-   function loadFishGroups(data: { community_groups?: Array<{
+    function loadFishGroups(data: { community_groups?: Array<{
         group_name?: string;
         owner?: string;
         tags?: string[];

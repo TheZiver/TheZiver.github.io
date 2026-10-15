@@ -61,25 +61,6 @@ interface DailyVRChatData {
     }>;
 }
 
-// ─── News Feed ───
-interface NewsFeedMedia {
-    type: 'image' | 'video';
-    url: string;
-}
-
-interface NewsFeedItem {
-    author: string;
-    author_avatar?: string;
-    date: string;
-    html_content: string;
-    media?: NewsFeedMedia[];
-    url?: string;
-}
-
-interface NewsFeedData {
-    items: NewsFeedItem[];
-}
-
 // ─── Fish Status ───
 type FishStatus = 'FISH_VERIFIED' | 'FISH_CERTIFIED' | 'FISH' | 'SYSTEM' | 'FISH_KNOWN';
 
