@@ -1507,7 +1507,8 @@ iframe { width: 100%; max-width: 100%; border: 1px solid #444; margin-top: 1.5em
     top: auto;
 }
 
-.quick-bar-btn {
+/* Scoped under .sticky-top so page themes can never recolor these buttons */
+.sticky-top .quick-bar-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1524,23 +1525,27 @@ iframe { width: 100%; max-width: 100%; border: 1px solid #444; margin-top: 1.5em
     text-decoration: none;
 }
 
-.quick-bar-btn:hover {
+.sticky-top .quick-bar-btn:hover {
     color: #ffffff;
     border-color: var(--accent-color);
     background: #222;
 }
 
-.quick-bar-btn .fa-discord {
+.sticky-top .quick-bar-btn span {
+    color: inherit;
+}
+
+.sticky-top .quick-bar-btn .fa-discord {
     color: #7289da;
     font-size: 1.1em;
 }
 
-.quick-bar-btn .si-vrchat {
+.sticky-top .quick-bar-btn .si-vrchat {
     color: #ffffff;
     font-size: 1.1em;
 }
 
-.quick-bar-btn .fa-rotate-left {
+.sticky-top .quick-bar-btn .fa-rotate-left {
     color: #6e9f94;
 }
 
@@ -1550,7 +1555,7 @@ iframe { width: 100%; max-width: 100%; border: 1px solid #444; margin-top: 1.5em
         padding: 4px 8px;
     }
 
-    .quick-bar-btn {
+    .sticky-top .quick-bar-btn {
         padding: 4px 10px;
         font-size: 0.78em;
         gap: 6px;
