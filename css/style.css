@@ -1496,8 +1496,8 @@ iframe { width: 100%; max-width: 100%; border: 1px solid #444; margin-top: 1.5em
     box-sizing: border-box;
     white-space: nowrap;
     overflow: hidden;
-    background: #121212;
-    border-bottom: 1px solid #333337;
+    background: transparent;
+    border-bottom: none;
 }
 
 .quick-bar + .main-nav,
@@ -2185,7 +2185,7 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
     margin: 0 0 18px 0;
     line-height: 1.8;
     font-size: 1.06em;
-    color: #a0a0a0;
+    color: #b9b9b9;
     text-align: left;
 }
 
@@ -2204,17 +2204,17 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
     max-width: 56ch;
 }
 
-/* Key terms pop so the eye catches the 4 words and the 2 focus phrases */
+/* Key terms in flat cyan */
 .framework-plain .framework-lead strong,
 .framework-plain .framework-a strong {
     color: #4dd0e1;
     font-weight: bold;
 }
 
-/* Each question starts a clear new step with breathing room above */
+/* Each question opens a new step: space above, tight answer below */
 .framework-plain .framework-q {
-    margin-top: 30px;
-    margin-bottom: 6px;
+    margin-top: 28px;
+    margin-bottom: 4px;
     font-size: 1.15em;
     line-height: 1.5;
 }
@@ -2223,22 +2223,19 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
     color: #ffffff;
 }
 
-/* Answer sits tight under its question, slightly indented with an accent edge */
+/* Answer sits directly under its question */
 .framework-plain .framework-a {
-    margin-top: 0;
-    margin-bottom: 6px;
-    padding-left: 14px;
-    border-left: 2px solid rgba(77, 208, 225, 0.45);
+    margin: 0 0 6px 0;
 }
 
 .framework-plain .framework-inline-link {
     display: inline-block;
     padding: 6px 16px;
-    margin: 10px 0 2px 18px;
-    border: 2px solid rgba(76, 175, 80, 0.6);
+    margin: 10px 0 2px 0;
+    border: 2px solid rgba(77, 208, 225, 0.6);
     border-radius: 8px;
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1));
-    color: #4caf50;
+    background: linear-gradient(135deg, rgba(77, 208, 225, 0.25), rgba(77, 208, 225, 0.08));
+    color: #4dd0e1;
     font-weight: bold;
     font-size: 0.9em;
     text-decoration: none;
@@ -2246,20 +2243,20 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
 }
 
 .framework-plain .framework-inline-link:hover {
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.5), rgba(76, 175, 80, 0.2));
-    border-color: #4caf50;
+    background: linear-gradient(135deg, rgba(77, 208, 225, 0.45), rgba(77, 208, 225, 0.18));
+    border-color: #4dd0e1;
     color: #ffffff;
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 4px 15px rgba(77, 208, 225, 0.3);
     text-decoration: none;
 }
 
 .framework-plain .framework-closer {
     margin-top: 26px;
-    color: #e8e8e8;
+    color: #f0f0f0;
 }
 
 .framework-plain .framework-plea {
-    color: #e8e8e8;
+    color: #b9b9b9;
     font-style: italic;
 }
 
