@@ -31,7 +31,7 @@
         try {
             const r: Response = await fetch(DATA_URL);
             const d: CommunityGroupsResponse = await r.json() as CommunityGroupsResponse;
-            cache = (d.community_groups || []).slice(0, 100);
+            cache = d.community_groups || [];
             cacheTime = now;
             return cache;
         } catch {
@@ -42,11 +42,8 @@
     async function spawn(container: HTMLElement): Promise<void> {
         container.innerHTML = '';
         fish = [];
-        let groups: CommunityGroup[] = await fetchGroups();
+        const groups: CommunityGroup[] = await fetchGroups();
         if (!groups.length) return;
-
-        // Fewer fish on small screens so the animation stays smooth.
-        if (window.innerWidth <= 768) groups = groups.slice(0, 40);
 
         const sw: number = window.innerWidth, sh: number = window.innerHeight;
         const cols: number = Math.ceil(Math.sqrt(groups.length * (sw / sh)));
@@ -62,16 +59,27 @@
 
             const s: FishStatus = status(g.tags);
             el.classList.add(size(s));
-            el.style.left = ((i % cols) * cw + rand(cw * 0.7)) + 'px';
-            el.style.top = (Math.floor(i / cols) * ch + rand(ch * 0.7)) + 'px';
+            el.classList.add('status-' + s.toLowerCase());
+
+            const px: number = (i % cols) * cw + rand(cw * 0.7);
+            const py: number = Math.floor(i / cols) * ch + rand(ch * 0.7);
+            el.dataset.x = px.toString();
+            el.dataset.y = py.toString();
             el.dataset.sx = (0.3 + rand(0.4)).toFixed(2);
             el.dataset.sy = (0.2 + rand(0.3)).toFixed(2);
             el.dataset.dx = (rand(1) > 0.5 ? 1 : -1).toString();
             el.dataset.dy = (rand(1) > 0.5 ? 1 : -1).toString();
             el.dataset.wo = (i * 1.5 + rand(5)).toString();
+            el.style.transform = 'translate3d(' + px + 'px, ' + py + 'px, 0)';
 
             container.appendChild(el);
             fish.push(el);
+        });
+
+        // Measure once after appending instead of every animation frame.
+        fish.forEach(function(el: HTMLImageElement) {
+            el.dataset.w = (el.offsetWidth || 60).toString();
+            el.dataset.h = (el.offsetHeight || 60).toString();
         });
     }
 
@@ -86,17 +94,13 @@
         const t: number = Date.now() / 1000;
         const sw: number = window.innerWidth, sh: number = window.innerHeight;
 
-        const dims: Array<{w: number; h: number}> = fish.map(function(el: HTMLImageElement) {
-            return { w: el.offsetWidth || 60, h: el.offsetHeight || 60 };
-        });
-
         for (let i: number = 0; i < fish.length; i++) {
             const el: HTMLImageElement = fish[i];
-            const d: {w: number; h: number} = dims[i];
-            const w: number = d.w, h: number = d.h;
+            const w: number = parseFloat(el.dataset.w || '60');
+            const h: number = parseFloat(el.dataset.h || '60');
 
-            let x: number = parseFloat(el.style.left) || 0;
-            let y: number = parseFloat(el.style.top) || 0;
+            let x: number = parseFloat(el.dataset.x || '0');
+            let y: number = parseFloat(el.dataset.y || '0');
             const sx: number = parseFloat(el.dataset.sx || '0.5');
             const sy: number = parseFloat(el.dataset.sy || '0.3');
             let dx: number = parseFloat(el.dataset.dx || '1');
@@ -113,11 +117,11 @@
             if (rand(1) < 0.001) dx *= -1;
             if (rand(1) < 0.001) dy *= -1;
 
-            el.style.left = x + 'px';
-            el.style.top = y + 'px';
+            el.dataset.x = x.toString();
+            el.dataset.y = y.toString();
             el.dataset.dx = dx.toString();
             el.dataset.dy = dy.toString();
-            el.style.transform = 'scaleX(' + (dx > 0 ? '1' : '-1') + ') rotate(' + (Math.sin(t + wo) * 3) + 'deg)';
+            el.style.transform = 'translate3d(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px, 0) scaleX(' + (dx > 0 ? '1' : '-1') + ') rotate(' + (Math.sin(t + wo) * 3).toFixed(2) + 'deg)';
         }
 
         animId = requestAnimationFrame(tick);
