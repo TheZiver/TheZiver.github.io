@@ -2385,3 +2385,93 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
     -webkit-background-clip: initial !important;
     background-clip: initial !important;
 }
+
+/* Aquarium: mobile data-usage consent (injected by swimming-fish.js on mobile only) */
+.fish-consent-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    background: rgba(8, 12, 16, 0.78);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+.fish-consent-modal {
+    width: 100%;
+    max-width: 360px;
+    padding: 26px 22px 22px;
+    border-radius: 16px;
+    background: #1a1a1a;
+    border: 1px solid rgba(77, 208, 225, 0.45);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
+    text-align: center;
+}
+.fish-consent-icon {
+    font-size: 1.5em;
+    letter-spacing: 3px;
+    color: #4dd0e1;
+    margin-bottom: 10px;
+}
+.fish-consent-title {
+    width: auto;
+    margin: 0 0 12px;
+    font-size: 1.5em;
+    letter-spacing: 2px;
+    color: #e8e8e8;
+}
+.fish-consent-text {
+    margin: 0 0 20px;
+    font-size: 1em;
+    line-height: 1.6;
+    color: #c8c8c8;
+}
+.fish-consent-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.fish-consent-btn {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+.fish-consent-accept {
+    border: none;
+    background: linear-gradient(135deg, #4dd0e1, #66bb6a);
+    color: #0d2129;
+}
+.fish-consent-accept:hover { filter: brightness(1.08); }
+.fish-consent-decline {
+    background: transparent;
+    color: #a0a0a0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.fish-consent-decline:hover { color: #e0e0e0; border-color: rgba(255, 255, 255, 0.4); }
+body.fish-consent-open { overflow: hidden; }
+.fish-load-button {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    z-index: 2000;
+    padding: 10px 20px;
+    border: 1px solid rgba(77, 208, 225, 0.5);
+    border-radius: 9999px;
+    background: rgba(26, 26, 26, 0.92);
+    color: #4dd0e1;
+    font-family: inherit;
+    font-size: 0.95em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+.fish-load-button:hover { background: rgba(77, 208, 225, 0.15); }

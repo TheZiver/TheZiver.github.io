@@ -143,12 +143,7 @@
         }
         animId = requestAnimationFrame(tick);
     }
-    function init() {
-        const mobile = window.innerWidth <= 768;
-        // Detect via the body class (URL may be "/aquarium" without ".html").
-        const aquarium = document.body.classList.contains('theme-aquarium');
-        if (mobile && !aquarium)
-            return;
+    function getContainer() {
         let c = document.getElementById('swimming-images-background');
         if (!c) {
             c = document.createElement('div');
@@ -157,11 +152,76 @@
             const body = document.body;
             body.insertBefore(c, body.firstChild);
         }
-        spawn(c).then(function () {
+        return c;
+    }
+    function start(container) {
+        spawn(container).then(function () {
             if (animId !== null)
                 cancelAnimationFrame(animId);
             tick();
         });
+    }
+    // Mobile-only warning: the aquarium downloads a lot of image data.
+    function showConsent() {
+        return new Promise(function (resolve) {
+            const overlay = document.createElement('div');
+            overlay.className = 'fish-consent-overlay';
+            overlay.innerHTML =
+                '<div class="fish-consent-modal" role="dialog" aria-modal="true" aria-labelledby="fish-consent-title">' +
+                    '<div class="fish-consent-icon" aria-hidden="true">＜＞＜</div>' +
+                    '<h2 id="fish-consent-title" class="fish-consent-title">HEADS UP</h2>' +
+                    '<p class="fish-consent-text">The aquarium loads a lot of images. It can use a lot of mobile data and may lag on slower connections or older devices.</p>' +
+                    '<div class="fish-consent-actions">' +
+                    '<button type="button" class="fish-consent-btn fish-consent-accept">Load the fish</button>' +
+                    '<button type="button" class="fish-consent-btn fish-consent-decline">Not now</button>' +
+                    '</div>' +
+                    '</div>';
+            document.body.appendChild(overlay);
+            document.body.classList.add('fish-consent-open');
+            const accept = overlay.querySelector('.fish-consent-accept');
+            const decline = overlay.querySelector('.fish-consent-decline');
+            function close(result) {
+                overlay.remove();
+                document.body.classList.remove('fish-consent-open');
+                resolve(result);
+            }
+            if (accept) {
+                accept.addEventListener('click', function () { close(true); });
+                accept.focus();
+            }
+            if (decline)
+                decline.addEventListener('click', function () { close(false); });
+        });
+    }
+    function showLoadButton(onClick) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'fish-load-button';
+        btn.textContent = 'Load the fish';
+        btn.addEventListener('click', function () {
+            btn.remove();
+            onClick();
+        });
+        document.body.appendChild(btn);
+    }
+    function init() {
+        const mobile = window.innerWidth <= 768;
+        // Detect via the body class (URL may be "/aquarium" without ".html").
+        const aquarium = document.body.classList.contains('theme-aquarium');
+        if (mobile && !aquarium)
+            return;
+        const c = getContainer();
+        // Mobile: ask before downloading the (heavy) fish images.
+        if (mobile) {
+            showConsent().then(function (accepted) {
+                if (accepted)
+                    start(c);
+                else
+                    showLoadButton(function () { start(c); });
+            });
+            return;
+        }
+        start(c);
     }
     function stopAnimation() {
         if (animId !== null) {
