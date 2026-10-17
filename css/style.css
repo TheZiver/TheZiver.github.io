@@ -41,6 +41,16 @@
 
 /* Daily page shared styles */
 .daily-heading { text-align: center; margin-top: 0; margin-bottom: 15px; font-size: 1.4em; }
+/* DAILY VRCHAT title matches the burning-fish logo (orange -> yellow) */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+    .daily-title {
+        background-image: linear-gradient(180deg, #f5731d, #fcd331);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+    }
+}
 .daily-col-heading { font-size: 0.95em; }
 .daily-list { margin: 5px 0 0 10px; line-height: 1.4; }
 .daily-rule-item { margin-bottom: 15px; }
@@ -468,21 +478,21 @@ h1 {
 @media (min-width: 600px) { h1 { font-size: 2.8em; margin-bottom: 20px; } }
 
 h2 {
-    --gradient-angle: 135deg;
     font-size: 1.8em;
     margin-top: 40px;
     margin-bottom: 20px;
-    color: #e0e0e0;
+    color: #e8e8e8;
 }
 @media (min-width: 600px) { h2 { font-size: 2em; margin-top: 50px; margin-bottom: 25px; } }
 
 h3 { font-size: 1.3em; margin-top: 30px; margin-bottom: 15px; color: #bbbbbb; }
 @media (min-width: 600px) { h3 { font-size: 1.4em; margin-top: 35px; } }
 
-/* Shared title gradient: one simple 2-color gradient, static so it renders
-   identically on desktop AND mobile (no animation, no touch-media reset). */
+/* Main page title (h1): cyan -> green brand gradient, static so it renders
+   identically on desktop AND mobile. Section titles (h2) stay a solid color
+   for clear hierarchy and maximum legibility. */
 @supports (background-clip: text) or (-webkit-background-clip: text) {
-    h1, h2 {
+    h1 {
         background-image: linear-gradient(
             var(--gradient-angle, 135deg),
             #4dd0e1, #66bb6a
