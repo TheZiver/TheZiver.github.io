@@ -42,8 +42,11 @@
     async function spawn(container: HTMLElement): Promise<void> {
         container.innerHTML = '';
         fish = [];
-        const groups: CommunityGroup[] = await fetchGroups();
+        let groups: CommunityGroup[] = await fetchGroups();
         if (!groups.length) return;
+
+        // Fewer fish on small screens so the animation stays smooth.
+        if (window.innerWidth <= 768) groups = groups.slice(0, 40);
 
         const sw: number = window.innerWidth, sh: number = window.innerHeight;
         const cols: number = Math.ceil(Math.sqrt(groups.length * (sw / sh)));
@@ -122,7 +125,8 @@
 
     function init(): void {
         const mobile: boolean = window.innerWidth <= 768;
-        const aquarium: boolean = window.location.pathname.includes('aquarium.html');
+        // Detect via the body class (URL may be "/aquarium" without ".html").
+        const aquarium: boolean = document.body.classList.contains('theme-aquarium');
         if (mobile && !aquarium) return;
 
         let c: HTMLElement | null = document.getElementById('swimming-images-background');
