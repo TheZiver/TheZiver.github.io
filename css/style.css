@@ -113,7 +113,7 @@
 
 /* --- Header --- */
 .support-header { text-align: center; padding: 30px 0 20px; }
-.support-title { font-size: 2.8em; margin: 0 0 10px; letter-spacing: 3px; color: #f96854; }
+.support-title { font-size: 2.8em; margin: 0 auto 10px; letter-spacing: 3px; color: #f96854; }
 /* Matches the Patreon card accent color */
 @supports (background-clip: text) or (-webkit-background-clip: text) {
     .support-title {
@@ -269,7 +269,7 @@ a.support-card:hover { transform: translateY(-4px); text-shadow: none; }
 /* --- Store Section --- */
 .store-section { text-align: center; padding: 28px 24px; border-radius: 16px; border: 1px solid rgba(212, 175, 55, 0.3); background: rgba(212, 175, 55, 0.04); }
 .store-icon-wrap { font-size: 2em; color: #d4af37; margin-bottom: 12px; }
-.store-heading { font-size: 1.5em; margin: 0 0 24px; letter-spacing: 2px; color: #ffd700; }
+.store-heading { font-size: 1.5em; width: fit-content; max-width: 100%; margin: 0 auto 24px; letter-spacing: 2px; color: #ffd700; }
 /* Matches the luxury trash (Booth store) gold */
 @supports (background-clip: text) or (-webkit-background-clip: text) {
     .store-heading {
@@ -472,7 +472,12 @@ h1 {
     --gradient-angle: 135deg;
     font-size: 2.4em;
     letter-spacing: -0.02em;
+    /* Hug the text so gradient titles map identically on every screen width */
+    width: fit-content;
+    max-width: 100%;
     margin-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
     color: #e0e0e0;
 }
 @media (min-width: 600px) { h1 { font-size: 2.8em; margin-bottom: 20px; } }
@@ -2368,4 +2373,15 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
 }
 .lazy-image-error {
     filter: grayscale(100%);
+}
+
+/* Communities page: all titles solid white */
+.container.communities-page h1,
+.container.communities-page h2,
+.container.communities-page h3 {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
 }
