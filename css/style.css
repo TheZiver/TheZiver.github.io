@@ -2402,22 +2402,24 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
     max-width: 320px;
     padding: 20px;
     border-radius: 10px;
-    background: #1a1a1a;
-    border: 1px solid #333333;
+    background: #201a0c;
+    border: 2px solid #ffb300;
+    box-shadow: 0 0 26px rgba(255, 179, 0, 0.3);
     text-align: center;
 }
 .fish-consent-title {
     width: auto;
     margin: 0 0 8px;
-    font-size: 1.2em;
+    font-size: 1.25em;
     font-weight: bold;
-    color: #e8e8e8;
+    letter-spacing: 1px;
+    color: #ffb300;
 }
 .fish-consent-text {
     margin: 0 0 16px;
     font-size: 0.95em;
     line-height: 1.5;
-    color: #b0b0b0;
+    color: #d8d8d8;
 }
 .fish-consent-actions {
     display: flex;
@@ -2434,10 +2436,11 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
 }
 .fish-consent-accept {
     border: none;
-    background: #4dd0e1;
-    color: #0d2129;
+    background: #ffb300;
+    color: #241c00;
+    font-weight: bold;
 }
-.fish-consent-accept:hover { background: #6fdcff; }
+.fish-consent-accept:hover { background: #ffc533; }
 .fish-consent-decline {
     background: transparent;
     color: #a0a0a0;

@@ -155,11 +155,11 @@
     }
 
     function hasConsent(): boolean {
-        try { return window.localStorage.getItem(CONSENT_KEY) === '1'; } catch { return false; }
+        try { return window.sessionStorage.getItem(CONSENT_KEY) === '1'; } catch { return false; }
     }
 
     function rememberConsent(): void {
-        try { window.localStorage.setItem(CONSENT_KEY, '1'); } catch { /* ignore */ }
+        try { window.sessionStorage.setItem(CONSENT_KEY, '1'); } catch { /* ignore */ }
     }
 
     // Mobile-only warning: the aquarium downloads a lot of image data.
@@ -169,7 +169,7 @@
             overlay.className = 'fish-consent-overlay';
             overlay.innerHTML =
                 '<div class="fish-consent-modal" role="dialog" aria-modal="true" aria-labelledby="fish-consent-title">' +
-                    '<h2 id="fish-consent-title" class="fish-consent-title">Heads up</h2>' +
+                    '<h2 id="fish-consent-title" class="fish-consent-title">⚠️WARNING⚠️</h2>' +
                     '<p class="fish-consent-text">The aquarium loads many images. It may use a lot of mobile data and lag.</p>' +
                     '<div class="fish-consent-actions">' +
                         '<button type="button" class="fish-consent-btn fish-consent-accept">Continue</button>' +

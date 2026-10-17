@@ -164,7 +164,7 @@
     }
     function hasConsent() {
         try {
-            return window.localStorage.getItem(CONSENT_KEY) === '1';
+            return window.sessionStorage.getItem(CONSENT_KEY) === '1';
         }
         catch {
             return false;
@@ -172,7 +172,7 @@
     }
     function rememberConsent() {
         try {
-            window.localStorage.setItem(CONSENT_KEY, '1');
+            window.sessionStorage.setItem(CONSENT_KEY, '1');
         }
         catch { /* ignore */ }
     }
@@ -183,7 +183,7 @@
             overlay.className = 'fish-consent-overlay';
             overlay.innerHTML =
                 '<div class="fish-consent-modal" role="dialog" aria-modal="true" aria-labelledby="fish-consent-title">' +
-                    '<h2 id="fish-consent-title" class="fish-consent-title">Heads up</h2>' +
+                    '<h2 id="fish-consent-title" class="fish-consent-title">⚠️WARNING⚠️</h2>' +
                     '<p class="fish-consent-text">The aquarium loads many images. It may use a lot of mobile data and lag.</p>' +
                     '<div class="fish-consent-actions">' +
                     '<button type="button" class="fish-consent-btn fish-consent-accept">Continue</button>' +
