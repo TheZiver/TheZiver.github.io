@@ -2394,67 +2394,56 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 22px;
-    background: rgba(8, 12, 16, 0.78);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
 }
 .fish-consent-modal {
     width: 100%;
-    max-width: 360px;
-    padding: 26px 22px 22px;
-    border-radius: 16px;
+    max-width: 320px;
+    padding: 20px;
+    border-radius: 10px;
     background: #1a1a1a;
-    border: 1px solid rgba(77, 208, 225, 0.45);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
+    border: 1px solid #333333;
     text-align: center;
-}
-.fish-consent-icon {
-    font-size: 1.5em;
-    letter-spacing: 3px;
-    color: #4dd0e1;
-    margin-bottom: 10px;
 }
 .fish-consent-title {
     width: auto;
-    margin: 0 0 12px;
-    font-size: 1.5em;
-    letter-spacing: 2px;
+    margin: 0 0 8px;
+    font-size: 1.2em;
+    font-weight: bold;
     color: #e8e8e8;
 }
 .fish-consent-text {
-    margin: 0 0 20px;
-    font-size: 1em;
-    line-height: 1.6;
-    color: #c8c8c8;
+    margin: 0 0 16px;
+    font-size: 0.95em;
+    line-height: 1.5;
+    color: #b0b0b0;
 }
 .fish-consent-actions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 .fish-consent-btn {
     width: 100%;
-    padding: 13px 16px;
-    border-radius: 10px;
+    padding: 11px 14px;
+    border-radius: 8px;
     font-family: inherit;
-    font-size: 1em;
-    font-weight: bold;
-    letter-spacing: 1px;
+    font-size: 0.95em;
     cursor: pointer;
 }
 .fish-consent-accept {
     border: none;
-    background: linear-gradient(135deg, #4dd0e1, #66bb6a);
+    background: #4dd0e1;
     color: #0d2129;
 }
-.fish-consent-accept:hover { filter: brightness(1.08); }
+.fish-consent-accept:hover { background: #6fdcff; }
 .fish-consent-decline {
     background: transparent;
     color: #a0a0a0;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid #3a3a3a;
 }
-.fish-consent-decline:hover { color: #e0e0e0; border-color: rgba(255, 255, 255, 0.4); }
+.fish-consent-decline:hover { color: #e0e0e0; border-color: #555555; }
 body.fish-consent-open { overflow: hidden; }
 .fish-load-button {
     position: fixed;
@@ -2463,15 +2452,12 @@ body.fish-consent-open { overflow: hidden; }
     transform: translateX(-50%);
     z-index: 2000;
     padding: 10px 20px;
-    border: 1px solid rgba(77, 208, 225, 0.5);
-    border-radius: 9999px;
-    background: rgba(26, 26, 26, 0.92);
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    background: #1a1a1a;
     color: #4dd0e1;
     font-family: inherit;
     font-size: 0.95em;
-    font-weight: bold;
-    letter-spacing: 1px;
     cursor: pointer;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
 }
-.fish-load-button:hover { background: rgba(77, 208, 225, 0.15); }
+.fish-load-button:hover { border-color: #4dd0e1; }

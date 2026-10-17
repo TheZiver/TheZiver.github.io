@@ -3,6 +3,7 @@
     const DATA_URL = "https://gist.githubusercontent.com/TheZiver/9fdd3f8c495098ffa0beceece373d382/raw";
     const FALLBACK = 'images/fish_known.png';
     const CACHE_TTL = 30 * 60 * 1000;
+    const CONSENT_KEY = 'aquarium-fish-consent';
     let fish = [];
     let animId = null;
     let cache = null;
@@ -161,6 +162,20 @@
             tick();
         });
     }
+    function hasConsent() {
+        try {
+            return window.localStorage.getItem(CONSENT_KEY) === '1';
+        }
+        catch {
+            return false;
+        }
+    }
+    function rememberConsent() {
+        try {
+            window.localStorage.setItem(CONSENT_KEY, '1');
+        }
+        catch { /* ignore */ }
+    }
     // Mobile-only warning: the aquarium downloads a lot of image data.
     function showConsent() {
         return new Promise(function (resolve) {
@@ -168,11 +183,10 @@
             overlay.className = 'fish-consent-overlay';
             overlay.innerHTML =
                 '<div class="fish-consent-modal" role="dialog" aria-modal="true" aria-labelledby="fish-consent-title">' +
-                    '<div class="fish-consent-icon" aria-hidden="true">＜＞＜</div>' +
-                    '<h2 id="fish-consent-title" class="fish-consent-title">HEADS UP</h2>' +
-                    '<p class="fish-consent-text">The aquarium loads a lot of images. It can use a lot of mobile data and may lag on slower connections or older devices.</p>' +
+                    '<h2 id="fish-consent-title" class="fish-consent-title">Heads up</h2>' +
+                    '<p class="fish-consent-text">The aquarium loads many images. It may use a lot of mobile data and lag.</p>' +
                     '<div class="fish-consent-actions">' +
-                    '<button type="button" class="fish-consent-btn fish-consent-accept">Load the fish</button>' +
+                    '<button type="button" class="fish-consent-btn fish-consent-accept">Continue</button>' +
                     '<button type="button" class="fish-consent-btn fish-consent-decline">Not now</button>' +
                     '</div>' +
                     '</div>';
@@ -211,13 +225,24 @@
         if (mobile && !aquarium)
             return;
         const c = getContainer();
-        // Mobile: ask before downloading the (heavy) fish images.
+        // Mobile: ask before downloading the (heavy) fish images, and remember
+        // the answer so the warning only shows once.
         if (mobile) {
+            if (hasConsent()) {
+                start(c);
+                return;
+            }
             showConsent().then(function (accepted) {
-                if (accepted)
+                if (accepted) {
+                    rememberConsent();
                     start(c);
-                else
-                    showLoadButton(function () { start(c); });
+                }
+                else {
+                    showLoadButton(function () {
+                        rememberConsent();
+                        start(c);
+                    });
+                }
             });
             return;
         }
