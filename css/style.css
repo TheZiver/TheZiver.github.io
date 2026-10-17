@@ -103,7 +103,17 @@
 
 /* --- Header --- */
 .support-header { text-align: center; padding: 30px 0 20px; }
-.support-title { font-size: 2.8em; margin: 0 0 10px; letter-spacing: 3px; }
+.support-title { font-size: 2.8em; margin: 0 0 10px; letter-spacing: 3px; color: #f96854; }
+/* Matches the Patreon card accent color */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+    .support-title {
+        background-image: linear-gradient(135deg, #f96854, #ff8a75);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+    }
+}
 .support-subhead { font-size: 1.1em; color: #a0a0a0; margin: 0; line-height: 1.5; }
 
 /* --- Section Divider --- */
@@ -249,7 +259,17 @@ a.support-card:hover { transform: translateY(-4px); text-shadow: none; }
 /* --- Store Section --- */
 .store-section { text-align: center; padding: 28px 24px; border-radius: 16px; border: 1px solid rgba(212, 175, 55, 0.3); background: rgba(212, 175, 55, 0.04); }
 .store-icon-wrap { font-size: 2em; color: #d4af37; margin-bottom: 12px; }
-.store-heading { font-size: 1.5em; margin: 0 0 24px; letter-spacing: 2px; }
+.store-heading { font-size: 1.5em; margin: 0 0 24px; letter-spacing: 2px; color: #ffd700; }
+/* Matches the luxury trash (Booth store) gold */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+    .store-heading {
+        background-image: linear-gradient(135deg, #ffd700, #d4af37);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+    }
+}
 .store-image-link { display: block; margin: 0 auto 20px; max-width: 200px; transition: transform 0.3s ease; }
 .store-image-link:hover { transform: scale(1.05); }
 .store-image { width: 100%; height: auto; border-radius: 12px; display: block; }
