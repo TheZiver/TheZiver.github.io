@@ -40,7 +40,7 @@
 .info-box-dark { line-height: 1.6; max-width: 800px; margin: 15px auto; padding: 15px; border: 1px solid #333337; border-radius: 8px; }
 
 /* Daily page shared styles */
-.daily-heading { text-align: center; margin-top: 0; margin-bottom: 15px; font-size: 1.4em; color: #4dd0e1; background: none; -webkit-background-clip: initial; background-clip: initial; -webkit-text-fill-color: initial; }
+.daily-heading { text-align: center; margin-top: 0; margin-bottom: 15px; font-size: 1.4em; }
 .daily-col-heading { font-size: 0.95em; }
 .daily-list { margin: 5px 0 0 10px; line-height: 1.4; }
 .daily-rule-item { margin-bottom: 15px; }
@@ -103,16 +103,7 @@
 
 /* --- Header --- */
 .support-header { text-align: center; padding: 30px 0 20px; }
-.support-title { font-size: 2.8em; margin: 0 0 10px; letter-spacing: 3px; color: #f96854; }
-@supports (background-clip: text) or (-webkit-background-clip: text) {
-    .support-title {
-        background: linear-gradient(135deg, #f96854, #ffd700, #29abe0);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-    }
-}
+.support-title { font-size: 2.8em; margin: 0 0 10px; letter-spacing: 3px; }
 .support-subhead { font-size: 1.1em; color: #a0a0a0; margin: 0; line-height: 1.5; }
 
 /* --- Section Divider --- */
@@ -258,16 +249,7 @@ a.support-card:hover { transform: translateY(-4px); text-shadow: none; }
 /* --- Store Section --- */
 .store-section { text-align: center; padding: 28px 24px; border-radius: 16px; border: 1px solid rgba(212, 175, 55, 0.3); background: rgba(212, 175, 55, 0.04); }
 .store-icon-wrap { font-size: 2em; color: #d4af37; margin-bottom: 12px; }
-.store-heading { font-size: 1.5em; margin: 0 0 24px; letter-spacing: 2px; color: #ffd700; }
-@supports (background-clip: text) or (-webkit-background-clip: text) {
-    .store-heading {
-        background: linear-gradient(135deg, #ffd700, #d4af37);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-    }
-}
+.store-heading { font-size: 1.5em; margin: 0 0 24px; letter-spacing: 2px; }
 .store-image-link { display: block; margin: 0 auto 20px; max-width: 200px; transition: transform 0.3s ease; }
 .store-image-link:hover { transform: scale(1.05); }
 .store-image { width: 100%; height: auto; border-radius: 12px; display: block; }
@@ -287,7 +269,7 @@ a.support-card:hover { transform: translateY(-4px); text-shadow: none; }
 /* --- Members Section --- */
 .members-section { text-align: center; padding: 28px 24px; border-radius: 16px; border: 1px solid rgba(138, 43, 226, 0.3); background: rgba(138, 43, 226, 0.04); }
 .members-icon-wrap { font-size: 2em; color: #8a2be2; margin-bottom: 12px; }
-.members-heading { font-size: 1.3em; margin: 0 0 22px; letter-spacing: 2px; color: #8a2be2; background: none; -webkit-background-clip: initial; background-clip: initial; -webkit-text-fill-color: initial; }
+.members-heading { font-size: 1.3em; margin: 0 0 22px; letter-spacing: 2px; }
 .members-grid { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; }
 .member-card {
     display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -477,31 +459,18 @@ h2 {
 h3 { font-size: 1.3em; margin-top: 30px; margin-bottom: 15px; color: #bbbbbb; }
 @media (min-width: 600px) { h3 { font-size: 1.4em; margin-top: 35px; } }
 
-@keyframes gradientFlow {
-    0% { background-position: 0% 0%; }
-    50% { background-position: 100% 100%; }
-    100% { background-position: 0% 0%; }
-}
-
+/* Shared title gradient: one simple 2-color gradient, static so it renders
+   identically on desktop AND mobile (no animation, no touch-media reset). */
 @supports (background-clip: text) or (-webkit-background-clip: text) {
     h1, h2 {
-        background: linear-gradient(
+        background-image: linear-gradient(
             var(--gradient-angle, 135deg),
-            #00bcd4, #ff4081, #4caf50, #ffc107, #00bcd4
+            #4dd0e1, #66bb6a
         );
-        background-size: 200% 200%;
         background-clip: text;
         -webkit-background-clip: text;
         color: transparent;
         -webkit-text-fill-color: transparent;
-        animation: gradientFlow 8s ease-in-out infinite;
-    }
-    @media (hover: none) and (pointer: coarse) {
-        h1, h2 {
-            animation: none;
-            color: #e0e0e0;
-            -webkit-text-fill-color: #e0e0e0;
-        }
     }
 }
 
@@ -625,14 +594,6 @@ img[src="images/meaning_of_fish.png"] { max-width: 480px !important; width: 100%
 #known-info ul {
     color: #FFFFFF; /* White text for paragraphs and list items */
     /* Font-size, line-height, and margins will be inherited from global p, ul, ol styles */
-}
-
-#verified-info h3,
-#certified-info h3,
-#registered-info h3,
-#known-info h3 {
-    color: #F0F0F0 !important; /* Light gray H3 - consistent with original .fish-verified-theme h3 */
-    /* Font-size and margins will be inherited from global h3 styles */
 }
 
 #verified-info a,
@@ -1705,14 +1666,6 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
     margin: 0 0 5px 0;
     font-size: 2.8em;
     line-height: 1.2;
-    color: #ffffff;
-    -webkit-text-fill-color: #ffffff;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-}
-@supports (background-clip: text) or (-webkit-background-clip: text) {
-    .hero-title {
-        -webkit-text-fill-color: transparent;
-    }
 }
 
 @media (max-width: 768px) {
