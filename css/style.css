@@ -531,9 +531,13 @@ hr { border: 0; border-top: 1px solid #4dd0e1; margin: 40px 0; }
 
 .swimming-images-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
 .swimming-image { position: absolute; top: 0; left: 0; opacity: 0.4; border-radius: 50%; object-fit: contain; will-change: transform; backface-visibility: hidden; -webkit-font-smoothing: subpixel-antialiased; background-color: rgba(0,0,0,0.1); filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.1)); }
-.swimming-image.size-small { width: 60px; height: 60px; }
-.swimming-image.size-medium { width: 80px; height: 80px; }
-.swimming-image.size-large { width: 100px; height: 100px; }
+/* !important so the fallback image (fish_known.png) keeps the class size.
+   The global img[src="images/fish_known.png"] rule otherwise forces
+   width/height:auto !important, making fallback fish render at 117x122 while
+   the animation still thinks they are 60px -> edge-wrap flicker + shaking. */
+.swimming-image.size-small { width: 60px !important; height: 60px !important; }
+.swimming-image.size-medium { width: 80px !important; height: 80px !important; }
+.swimming-image.size-large { width: 100px !important; height: 100px !important; }
 .swimming-image.status-fish_verified, .swimming-image.status-system { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8)); opacity: 0.5; }
 .swimming-image.status-fish_certified, .swimming-image.status-fish { filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5)); opacity: 0.45; }
 .swimming-image.status-fish_known { filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2)); opacity: 0.4; }

@@ -109,21 +109,27 @@
             const wo = parseFloat(el.dataset.wo || '0');
             x += dx * sx + (dx * Math.sin((t + wo + 2) * 0.5) * 0.2);
             y += dy * sy + (Math.sin((t + wo) * 0.3) * 1.0);
-            if (x < -w) {
-                x = sw + 10;
+            // Wrap only in the direction of travel and land exactly on the far
+            // edge, so the same wrap can't re-trigger next frame. The old ±10
+            // margin made a fish bounce between both edges every frame, which
+            // re-rolled y each time -> visible "shaking" at the screen edge.
+            if (dx > 0 && x > sw) {
+                x = -w;
                 y += rand(40) - 20;
             }
-            if (x > sw + 10) {
-                x = -w - 10;
+            else if (dx < 0 && x < -w) {
+                x = sw;
                 y += rand(40) - 20;
             }
+            // Aim the fish inward on contact instead of just flipping dy, so the
+            // sine term can't make it flip-flop while pinned to the top/bottom.
             if (y < 0) {
                 y = 0;
-                dy *= -1;
+                dy = 1;
             }
-            if (y > sh - h) {
+            else if (y > sh - h) {
                 y = sh - h;
-                dy *= -1;
+                dy = -1;
             }
             if (rand(1) < 0.001)
                 dx *= -1;
