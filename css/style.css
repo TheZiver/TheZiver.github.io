@@ -81,7 +81,7 @@
 .principles-col { flex: 1; min-width: 300px; }
 .principles-col:first-child { margin-right: 15px; }
 .principles-heading { font-size: 1.5em; margin-bottom: 15px; }
-.principles-note { font-style: italic; padding: 15px 15px 15px 18px; margin-top: 20px; line-height: 1.7; font-size: 0.9em; border-left: 3px solid rgba(76, 175, 80, 0.4); background: rgba(0, 0, 0, 0.2); border-radius: 0 8px 8px 0; }
+.principles-note { font-style: italic; padding: 15px 18px; margin-top: 20px; line-height: 1.7; font-size: 0.9em; background: rgba(0, 0, 0, 0.2); border-radius: 8px; }
 .principles-note-icon { display: block; text-align: center; margin-top: 10px; font-size: 1.2em; }
 .text-muted { color: #a0a0a0; }
 
@@ -502,6 +502,11 @@ h3 { font-size: 1.3em; margin-top: 30px; margin-bottom: 15px; color: #bbbbbb; }
         color: transparent;
         -webkit-text-fill-color: transparent;
     }
+
+    /* Homepage hero title: matches the "View All Communities" button (cyan) */
+    #framework-heading {
+        background-image: linear-gradient(135deg, #4dd0e1, #80deea);
+    }
 }
 
 .discord-invite-section { text-align: center; margin-top: 25px; margin-bottom: 30px; font-size: 1.2em; font-weight: bold; line-height: 1.5; color: #e0e0e0; }
@@ -566,6 +571,9 @@ body.theme-aquarium .swimming-image { opacity: 1.0; }
 
 .community-image, .meaning-image, .verified-image { max-width: 100%; height: auto; display: block; margin: 5px auto 20px auto; border-radius: 5px; transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
 .community-image:hover, .meaning-image:hover, .verified-image:hover { transform: scale(1.08) perspective(500px) rotateY(5deg); box-shadow: 0 5px 20px rgba(100, 181, 246, 0.7); filter: brightness(1.1); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+/* The meaning-of-fish chart is informational, not clickable: no hover motion */
+.meaning-image { cursor: default; }
+.meaning-image:hover { transform: none; box-shadow: none; filter: none; }
 /* Daily VRChat image clickable indicator */
 img[src="images/daily_vrchat.webp"]:hover { transform: scale(1.1) perspective(600px) rotateY(8deg); box-shadow: 0 8px 25px rgba(255, 165, 0, 0.8), 0 0 20px rgba(255, 200, 0, 0.5); filter: brightness(1.15) drop-shadow(0 0 10px rgba(255, 200, 0, 0.6)); }
 .meaning-image { max-width: 650px !important; width: 100% !important; height: auto !important; margin-top: 30px; margin-bottom: 30px; object-fit: contain !important; }
@@ -2307,6 +2315,18 @@ body.theme-aquarium { background-color: #000000; overflow-x: hidden; }
     margin: 0 auto 4px auto;
     line-height: 1.8;
     text-align: left;
+}
+
+/* Fish-head art shown under the FISH COMMUNITY intro paragraph.
+   !important so it beats the global img[src^="images/"] 80px cap. */
+.fish-head-image {
+    display: block;
+    width: 100% !important;
+    max-width: 340px !important;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    margin: 22px auto 6px auto;
 }
 
 .fish-section .hero-section .explore-btn {
